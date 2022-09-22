@@ -1,10 +1,13 @@
-#' Loads and merges multiple gene expression matrices
+#' Load and merge multiple gene expression matrices
 #'
 #' Gene expression matrices should have features in rows and spots in columns.
 #'
 #' @details The merging process makes sure that all genes detected are present in the merged output.
 #' This means that if a gene is missing in a certain dataset, the spots in that dataset will
 #' be assigned with 0 expression.
+#'
+#' @family pre-processing
+#' @describeIn load-data
 #'
 #' @param samplefiles Character vector of file/directory paths. Paths should specify .h5 or
 #' .tsv/.tsv.gz files. Alternatively, the paths could specify directories including barcodes.tsv,

@@ -10,6 +10,7 @@
 #' }
 #'
 #' @name mbrain_dataset
+#' @family datasets
 NULL
 
 #' Visium mouse colon dataset
@@ -24,4 +25,5 @@ NULL
 #' }
 #'
 #' @name mcolon_dataset
+#' @family datasets
 NULL

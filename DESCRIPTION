@@ -1,6 +1,6 @@
 Package: STUtility2
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Process, analyze and visualize Spatially Resolved Transcriptomcis data.
 Version: 0.1.0
 Authors@R:
     c(person(
@@ -14,7 +14,7 @@ Authors@R:
         role = c("aut")
     ))
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
-Description: STutility collects useful tools for Spatial Transcriptomics data analysis within R.
+Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis within R. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

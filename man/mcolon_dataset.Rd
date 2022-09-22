@@ -13,3 +13,8 @@ A Visium dataset obtained from a "swiss roll" of a mouse colon
    \item{\strong{mousebrain/spatial/scalefactors_json.json}: \cr JSON file with scalefactors}
 }
 }
+\seealso{
+Other datasets: 
+\code{\link{mbrain_dataset}}
+}
+\concept{datasets}

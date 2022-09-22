@@ -13,3 +13,8 @@ A Visium dataset obtained from a coronal tissue section of a mouse brain.
    \item{\strong{mousebrain/spatial/scalefactors_json.json}: \cr JSON file with scalefactors}
 }
 }
+\seealso{
+Other datasets: 
+\code{\link{mcolon_dataset}}
+}
+\concept{datasets}
