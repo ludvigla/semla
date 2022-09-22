@@ -26,12 +26,16 @@ This function takes an `magick-image` object as input and applies translations
 \examples{
 
 library(magick)
+library(STUtility2)
 frink <- image_read("https://jeroen.github.io/images/frink.png")
+frink
 
 # rotate image 45 degrees clockwise, move image 100 pixels to the right and 100 pixels down
 frink_transformed <- ImageTransform(frink, angle = 45, xy_offset = c(100, 100))
+frink_transformed
 
 # rotate image 45 degrees counter-clockwise, move image 100 pixels to the left and 20 pixels up
 frink_transformed <- ImageTransform(frink, angle = -45, xy_offset = c(-100, 20))
+frink_transformed
 
 }
