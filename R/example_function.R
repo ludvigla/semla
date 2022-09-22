@@ -42,6 +42,7 @@ MyPlot <- function (
 
   # Create plot
   ggplot(data = df, aes_string(colx, coly)) +
-    geom_point(color = col, ...)
+    geom_point(color = col, ...) +
+    labs(title="Hello there")
 
 }
