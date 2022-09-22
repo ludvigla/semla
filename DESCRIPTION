@@ -1,0 +1,28 @@
+Package: STUtility2
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R:
+    c(person(
+        "Ludvig", "Larsson",
+        email = "ludvig.larsson@scilifelab.se",
+        role = c("aut", "cre")
+    ),
+    person(
+        "Lovisa", "Franzen",
+        email = "lovisa.franzen@scilifelab.se",
+        role = c("aut")
+    ))
+Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
+Description: STutility collects useful tools for Spatial Transcriptomics data analysis within R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+  Seurat (>= 4.0.0),
+  ggplot2 (>= 3.2.0)
+VignetteBuilder: knitr
+RoxygenNote: 7.2.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
