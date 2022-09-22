@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_data.R
 \name{LoadAndMergeMatrices}
 \alias{LoadAndMergeMatrices}
-\title{Loads and merges multiple gene expression matrices}
+\title{Load and merge multiple gene expression matrices}
 \usage{
 LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 }
@@ -24,6 +24,11 @@ The merging process makes sure that all genes detected are present in the merged
 This means that if a gene is missing in a certain dataset, the spots in that dataset will
 be assigned with 0 expression.
 }
+\section{Functions}{
+\itemize{
+\item \code{LoadAndMergeMatrices()}: 
+
+}}
 \examples{
 \donttest{
 # Load and merge two gene expression matrices
@@ -33,3 +38,4 @@ mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 
 }
+\concept{pre-processing}
