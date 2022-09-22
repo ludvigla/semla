@@ -18,7 +18,7 @@ scalefactors output by spaceranger.}
 \item{verbose}{Print messages}
 }
 \value{
-An object of class `DataFrame``
+An object of class `DFrame``
 }
 \description{
 Load image related data from \strong{'tissue_hires_image.png'} files.
