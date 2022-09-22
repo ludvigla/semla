@@ -7,14 +7,14 @@
 LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 }
 \arguments{
-\item{samplefiles}{Character vector of file/directory paths. Paths should specify .h5 or
-.tsv/.tsv.gz files. Alternatively, the paths could specify directories including barcodes.tsv,
-features.tsv and matrix.mtx files.}
+\item{samplefiles}{Character vector of file/directory paths. Paths should specify `.h5` or
+`.tsv`/`.tsv.gz` files. Alternatively, the paths could specify directories including `barcodes.tsv`,
+`features.tsv` and `matrix.mtx` files.}
 
 \item{verbose}{Print messages}
 }
 \value{
-A sparse matrix of class 'dgCMatrix'
+A sparse matrix of class `dgCMatrix`
 }
 \description{
 Gene expression matrices should have features in rows and spots in columns.
@@ -23,12 +23,14 @@ Gene expression matrices should have features in rows and spots in columns.
 The merging process makes sure that all genes detected are present in the merged output.
 This means that if a gene is missing in a certain dataset, the spots in that dataset will
 be assigned with 0 expression.
-}
-\section{Functions}{
-\itemize{
-\item \code{LoadAndMergeMatrices()}: 
 
-}}
+Spot IDs are renamed to be unique. Usually, the spots are named something similar to:
+\code{"ACGCCTGACACGCGCT-1", "TACCGATCCAACACTT-1"}
+
+Since spot barcodes are shared across datasets, there is a risk that some of the spot IDs
+will be duplicated after merging. To avoid this, the prefix (e.g. "-1") is replaced by
+a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
+}
 \examples{
 \donttest{
 # Load and merge two gene expression matrices
@@ -38,4 +40,9 @@ mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 
 }
-\concept{pre-processing}
+\seealso{
+Other pre-process: 
+\code{\link{LoadImageData}()},
+\code{\link{LoadSpatialCoordinates}()}
+}
+\concept{pre-process}
