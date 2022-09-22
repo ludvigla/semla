@@ -2,12 +2,14 @@
 % Please edit documentation in R/load_data.R
 \name{LoadAndMergeMatrices}
 \alias{LoadAndMergeMatrices}
-\title{Create a merged expression matrix from multiple expression matrices stored on disk}
+\title{Loads and merges multiple gene expression matrices}
 \usage{
 LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 }
 \arguments{
-\item{samplefiles}{File paths to}
+\item{samplefiles}{Character vector of file/directory paths. Paths should specify .h5 or
+.tsv/.tsv.gz files. Alternatively, the paths could specify directories including barcodes.tsv,
+features.tsv and matrix.mtx files.}
 
 \item{verbose}{Print messages}
 }
@@ -15,13 +17,18 @@ LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 A sparse matrix of class 'dgCMatrix'
 }
 \description{
-The merging makes sure that all genes detected are present in the merged output.
-This means that if a gene is missing in a certain dataset, the spots in that
-dataset will be assigned with 0 expression.
+Gene expression matrices should have features in rows and spots in columns.
+}
+\details{
+The merging process makes sure that all genes detected are present in the merged output.
+This means that if a gene is missing in a certain dataset, the spots in that dataset will
+be assigned with 0 expression.
 }
 \examples{
 \donttest{
-samples <- list.files(...)
+# Load and merge two gene expression matrices
+samples <- c(system.file("extdata/mousebrain", "filtered_feature_bc_matrix.h5", package = "STUtility2"),
+             system.file("extdata/mousecolon", "filtered_feature_bc_matrix.h5", package = "STUtility2"))
 mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 

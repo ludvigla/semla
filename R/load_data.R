@@ -1,17 +1,23 @@
-#' Create a merged expression matrix from multiple expression matrices stored on disk
+#' Loads and merges multiple gene expression matrices
 #'
-#' The merging makes sure that all genes detected are present in the merged output.
-#' This means that if a gene is missing in a certain dataset, the spots in that
-#' dataset will be assigned with 0 expression.
+#' Gene expression matrices should have features in rows and spots in columns.
 #'
-#' @param samplefiles File paths to
+#' @details The merging process makes sure that all genes detected are present in the merged output.
+#' This means that if a gene is missing in a certain dataset, the spots in that dataset will
+#' be assigned with 0 expression.
+#'
+#' @param samplefiles Character vector of file/directory paths. Paths should specify .h5 or
+#' .tsv/.tsv.gz files. Alternatively, the paths could specify directories including barcodes.tsv,
+#' features.tsv and matrix.mtx files.
 #' @param verbose Print messages
 #'
 #' @return A sparse matrix of class 'dgCMatrix'
 #'
 #' @examples
 #' \donttest{
-#' samples <- list.files(...)
+#' # Load and merge two gene expression matrices
+#' samples <- c(system.file("extdata/mousebrain", "filtered_feature_bc_matrix.h5", package = "STUtility2"),
+#'              system.file("extdata/mousecolon", "filtered_feature_bc_matrix.h5", package = "STUtility2"))
 #' mergedMatrix <- LoadAndMergeMatrices(samples)
 #' }
 #'
@@ -42,7 +48,8 @@ LoadAndMergeMatrices <- function (
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
       }
     }
-    if (verbose) inform(c("v" = sprintf("  Finished loading expression matrix %s", i)))
+    if (verbose) inform(c("v" = glue::glue("  Finished loading expression matrix {i}")))
+    colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
     return(exprMat)
   })
 
@@ -54,15 +61,15 @@ LoadAndMergeMatrices <- function (
                                                   "x" = "  Are you sure that the matrices share the same gene IDs?",
                                                   "x" = "  Are the datasets from the same species?"))
   # Merge matrices
-  if (verbose) inform(c("i" = "Merging matrices:"))
-  mergedMat <- SeuratObject::RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
+  if (length(exprMats) > 1) {
+    if (verbose) inform(c("i" = "Merging matrices:"))
+    mergedMat <- SeuratObject::RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
+    if (verbose) inform(c("v" = glue::glue("  There are {nrow(mergedMat)} features and {ncol(mergedMat)} spots in the merged matrix.")))
+    return(mergedMat)
+  } else {
+    inform(c("i" = "only 1 expression matrix loaded."))
+    if (verbose) inform(c("v" = glue::glue("  There are {nrow(exprMats[[1]])} features and {ncol(exprMats[[1]])} spots in the matrix.")))
+    return(exprMats[[1]])
+  }
 
-  # Return merged matrix
-  if (verbose) inform(c("v" = glue::glue("  There are {nrow(mergedMat)} features and {ncol(mergedMat)} spots in the merged matrix.")))
-  return(mergedMat)
 }
-
-samples <- c("~/targeted_vs_untargeted/data_curated/spaceranger_output/colon/V10S29-108_B1/filtered_feature_bc_matrix.h5",
-             "~/targeted_vs_untargeted/data_curated/spaceranger_output/mousebone/V11B18-362_C1/filtered_feature_bc_matrix.h5")
-myMat <- LoadAndMergeMatrices(samples)
-myMat <- LoadAndMergeMatrices(c("hubba", "bubba"))
