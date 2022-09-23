@@ -9,6 +9,7 @@
 #' @param xy_offset A numeric vector of length 2 providing the offsets along
 #' the x- and y-axis given as pixels. These values should not exceed the image dimensions.
 #'
+#' @family transforms
 #'
 #' @return An object of class `magick-image`
 #'
@@ -33,11 +34,14 @@
 #' @export
 ImageTranslate <- function (
     im,
-    xy_offset
+    xy_offset = NULL
 ) {
 
   # get image info (width and height)
   info <- image_info(im)
+
+  # Set xy_offset to (0, 0) if NULL
+  xy_offset <- xy_offset %||% c(0, 0)
 
   # Define crop window depending on x, y offsets
   # x_crop & y_crop defines a "crop window" to trim image along the x or y axis
@@ -86,12 +90,15 @@ ImageTranslate <- function (
 #' @description This function takes an `magick-image` object as input and applies translations
 #'  defined by the \code{angle} and \code{xy_offset} arguments. The output image dimensions
 #'  will remain the same as the input image dimensions, meaning that the transformation might
-#'  result in cropping the image.
+#'  result in cropping the image. If you don't want this behavior, you should use `image_rotate`
+#'  from the `magick` R package instead.
 #'
 #' @param im An image of class `magick-image`
 #' @param angle An integer value specifying the rotation angle (0-360)
 #' @param xy_offset A numeric vector of length 2 providing the offsets along
 #' the x- and y-axis given as pixels. These values should not exceed the image dimensions.
+#'
+#' @family tranforms
 #'
 #' @importFrom magick image_info image_rotate image_blank image_extent image_composite
 #'
@@ -118,12 +125,18 @@ ImageTransform <- function (
     angle,
     xy_offset
 ) {
+  # Get width/height of input image
   info <- image_info(im)
+  # Rotate image and get width/height of roaated image
   im_rot <- image_rotate(im, degrees = angle)
   rot_info <- image_info(im_rot)
+  # Create a blank image with the same dimensions as the rotated image
   im_blank <- image_blank(width = rot_info$width, rot_info$height, color = "#FFFFFFFF")
+  # Place rotated image on top of blank image and apply translations
+  # The first step is required to be able to crop the image later
   im_combined <- image_composite(im_blank, composite_image = im_rot) |>
     ImageTranslate(xy_offset)
+  # Crop rotated image at center so that it get the same dimensions as the input image
   gmtry <- paste0(info$width, "x", info$height)
   im_crop <- image_extent(im_combined, geometry = gmtry)
   return(im_crop)

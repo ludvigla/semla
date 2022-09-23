@@ -97,7 +97,7 @@ LoadAndMergeMatrices <- function (
 #' @param coordinatefiles Character vector of file paths. Paths should specify `.csv` files output by spaceranger.
 #' @param verbose Print messages
 #'
-#' @return An object of class `tibble`
+#' @return An object of class `tbl` (`tibble`)
 #'
 #' @examples
 #' \donttest{

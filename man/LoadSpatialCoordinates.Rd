@@ -12,7 +12,7 @@ LoadSpatialCoordinates(coordinatefiles, verbose = TRUE)
 \item{verbose}{Print messages}
 }
 \value{
-An object of class `tibble`
+An object of class `tbl` (`tibble`)
 }
 \description{
 Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a `tibble`.
