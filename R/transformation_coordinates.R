@@ -225,7 +225,7 @@ CoordTransform <- function (
   deg2rad <- function(deg) {(deg * pi) / (180)}
 
   # Convert angle to radians
-  rad <- deg2rad(-angle)
+  rad <- deg2rad(angle)
 
   # Create rotation matrix
   rotTr <- matrix(c(cos(rad), -sin(rad), 0,
@@ -248,7 +248,8 @@ CoordTransform <- function (
   # Apply transformations to input coordinates
   xy_coords_transformed <- (combTr%*%rbind(xy_coords |> t(), 1) |> t())[, 1:2] |>
     tibble::as_tibble(.name_repair = "minimal") |>
-    setNames(nm  = c("tr_x", "tr_y"))
+    setNames(nm  = c("tr_x", "tr_y")) #|>
+    #select(tr_x, tr_y)
 
   return(xy_coords_transformed)
 }
@@ -297,11 +298,14 @@ CoordAndImageTransform <- function (
 
   # Get image width and height and calculate the center of the image
   info <- image_info(im)
-  imcenter <- c(info$width/2, info$height/2)
+  imcenter <- c(info$height - info$height/2, info$width/2)
 
   # Apply transformations
   im_transformed <- ImageTransform(im, angle, xy_offset)
-  xy_coords_transformed <- CoordTransform(xy_coords, angle, center = imcenter)
+  xy_coords_transformed <- CoordTransform(xy_coords, -angle, center = imcenter, xy_offset = xy_offset)
+  xy_coords_transformed <- xy_coords_transformed |>
+    dplyr::rename(tr_x = tr_y, tr_y = tr_x) |>
+    select(tr_x, tr_y)
 
   # Return list of results
   return(list(im_transf = im_transformed, xy_transf = xy_coords_transformed))
