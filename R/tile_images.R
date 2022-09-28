@@ -1,0 +1,157 @@
+#' Tile an H&E image
+#'
+#' This function takes an image of class `magick-image` and create a tile
+#' map. The size of each tile is 256x256 pixels and the number of zoom levels
+#' are determined rom the
+#'
+#' @param im An image of class `magick-image`
+#' @param maxZoom Max zoom level
+#' @param nCores Number of cores to use for threading
+#'
+#' @importFrom parallel detectCores mclapply
+#'
+#' @return Path to tiles
+#'
+#' @examples
+#' \donttest{
+#' library(magick)
+#' library(shiny)
+#' library(leaflet)
+#'
+#' # Load H&E image with magick
+#' imfile <- system.file("extdata/mousecolon/spatial", "tissue_hires_image.png", package = "STUtility2")
+#' im <- image_read(imfile)
+#'
+#' # tile image and return path to tiles
+#' tile_res <- TileImage(im)
+#'
+#' # Create a simple viewer with leaflet
+#' ui <- fluidPage(
+#'   leafletOutput("map", height = 512, width = 512),
+#' )
+#'
+#' server <- function(input, output, session) {
+#'   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
+#'   output$map <- renderLeaflet({
+#'     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%
+#'       addTiles(urlTemplate = "/mytiles/{z}_{x}_{y}.jpg",
+#'                options = tileOptions(continuousWorld = TRUE,
+#'                                      tileSize = "256",
+#'                                      minZoom = paste0(res$minZoomLevel),
+#'                                      maxZoom = paste0(res$maxZoomLevel)))
+#'   })
+#' }
+#'
+#' shinyApp(ui, server)
+#' }
+#'
+#' @export
+TileImage <- function (
+    im,
+    outpath = NULL,
+    maxImgWidth = 1e4,
+    nCores = detectCores() - 1
+) {
+
+  # Define max Zoom level
+  info <- image_info(im)
+  nLevels <- floor(max(log2(ceiling(info$width/256)), log2(ceiling(info$height/256)))):0
+  scaled_dims <- tibble::tibble(scaled_widths = info$width/(2^nLevels),
+                                scaled_heigths = info$width/(2^nLevels))
+  lower_limit <- apply(scaled_dims, 1, max) > 256
+  upper_limit <- apply(scaled_dims, 1, max) < maxImgWidth
+  nLevels <- nLevels[lower_limit & upper_limit]
+
+  # Create output path
+  outpath <- outpath %||% tempdir()
+  outpath <- paste0(outpath, "/tiles")
+  dir.create(outpath)
+
+  # Zoom levels
+  tiles <- list()
+  for (n in seq_along(nLevels)) {
+
+    if (nLevels[n] > 0) {
+      im_scaled <- image_scale(im, geometry = paste0(info$width/(2^nLevels[n])))
+    } else {
+      im_scaled <- im
+    }
+    info_scaled <- image_info(im_scaled)
+
+    # Create crops
+    nRows <- floor(info_scaled$height/256)
+    nRowsMar <- info_scaled$height %% 256
+    nCols <- floor(info_scaled$width/256)
+    nColsMar <- info_scaled$width %% 256
+
+    # Create crop windows
+    if (nRowsMar > 0) {
+      rowHeights <- c(rep(256, nRows), nRowsMar)
+    } else {
+      rowHeights <- rep(256, nRows)
+    }
+    rowOffsets <- c(0, cumsum(rowHeights)[1:length(rowHeights) - 1])
+    if (nColsMar > 0) {
+      colWidths <- c(rep(256, nCols), nColsMar)
+    } else {
+      colWidths <- rep(256, nCols)
+    }
+    colOffsets <- c(0, cumsum(colWidths)[1:(length(colWidths) - 1)])
+
+    # Create tiles
+    for (i in seq_along(colWidths)) {
+      for (j in seq_along(rowHeights)) {
+        crop.geom <- paste0(colWidths[i], "x", rowHeights[j], "+", colOffsets[i], "+", rowOffsets[j])
+        im_cropped <- image_crop(im_scaled, geometry = crop.geom)
+        if (image_info(im_cropped)$width < 256 | image_info(im_cropped)$height < 256) {
+          im_blank <- image_blank(color = "#FFFFFFFF", width = 256, height = 256)
+          im_cropped <- image_composite(im_blank, composite_image = im_cropped)
+        }
+        tiles <- c(tiles, setNames(list(im_cropped), nm = paste0(n, "_", i - 1, "_", j - 1)))
+      }
+    }
+  }
+
+  # Export tiles
+  results <- mclapply(names(tiles), function(tileName) {
+    image_write(tiles[[tileName]], path = paste0(outpath, "/", tileName, ".jpg"))
+  }, mc.cores = nCores)
+
+  return(list(tilepath = outpath, minZoomLevel = ifelse(length(nLevels) > 1, nLevels[length(nLevels)] + 1, 1), maxZoomLevel = nLevels[1] + 1))
+}
+
+# library(shiny)
+# library(leaflet)
+# library(rlang)
+# library(magick)
+# library(parallel)
+# library(leaflet.extras)
+#
+# imfile <- "~/Garvan/images/V12M07-071_A1_small.jpg"
+# #imfile <- "~/targeted_vs_untargeted/data_curated/spaceranger_output/colon/V10S29-108_B1/spatial/tissue_hires_image.png"
+# im <- image_read(imfile)
+# res <- TileImage(im, outpath = "/Users/ludviglarsson/Downloads/")
+#
+#
+# ui <- fluidPage(
+#   tags$head(
+#     tags$style(HTML(".leaflet-container { background: #ffffff; }"))
+#   ),
+#   leafletOutput("map", height = 800, width = 800),
+# )
+#
+# server <- function(input, output, session) {
+#   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
+#   output$map <- renderLeaflet({
+#     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%
+#       addTiles(urlTemplate = "/mytiles/{z}_{x}_{y}.jpg",
+#                options = tileOptions(continuousWorld = FALSE,
+#                                      tileSize = "256",
+#                                      worldCopyJump = FALSE,
+#                                      minZoom = paste0(res$minZoomLevel),
+#                                      maxZoom = paste0(res$maxZoomLevel)))
+#   })
+# }
+#
+# shinyApp(ui, server)
+#
