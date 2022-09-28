@@ -62,7 +62,7 @@ Need to fix add mirror as an option.
 ### Matrix factorization
 
 - [ ] `RunNMF` : modify STUtility function to work with RcppML
-- [x] `SeddedNMF` : seed matrix factorization with a priori information fro single-cell data
+- [x] `SeededNMF` : seed matrix factorization with a priori information fro single-cell data
 - [ ] `RunMixedNMF` : under development
 
 ### Spatial autocorelation
