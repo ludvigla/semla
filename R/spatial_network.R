@@ -16,6 +16,8 @@
 #' @param minK Minimum nearest neighbors [default: 0]. Spots with fewer neighbors will be discarded.
 #' Useful if you want to remove spots with few or no neighbors.
 #'
+#' @family network-methods
+#'
 #' @return A list of tibbles, each containing information about the nearest neighbors of each spot.
 #' For one spot in the column "from", its nearest neighboring spots are provided in the "to" column.
 #' Distances correspond to distances between "to" and "from", and usually correspond to H&E image
@@ -40,7 +42,6 @@
 #' }
 #'
 #' @export
-
 GetSpatialNetwork <- function (
     xys,
     nNeighbours = 6,

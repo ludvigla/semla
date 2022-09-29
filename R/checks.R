@@ -4,7 +4,7 @@
 #' @param message An error message
 #'
 #' @importFrom rlang abort
-#' @importFrom rland glue
+#' @importFrom glue glue
 #'
 .check_seurat_object <- function (
     object
