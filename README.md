@@ -68,7 +68,7 @@ Need to fix add mirror as an option.
 ### Spatial autocorelation
 
 - [x] : migrate `GetSpatNet` from STUtility
-- [ ] : migrate `CorSpatialGenes` from STUtility
+- [x] : migrate `CorSpatialGenes` from STUtility
 - [ ] : migrate `CorSpatialDims` from STUtility
 
 ### Neighborhood analysis
