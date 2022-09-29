@@ -69,6 +69,7 @@ Need to fix add mirror as an option.
 
 - [x] : migrate `GetSpatNet` from STUtility
 - [x] : migrate `CorSpatialGenes` from STUtility
+- [ ] : add working example to `CorSpatialGenes`
 - [ ] : migrate `CorSpatialDims` from STUtility
 
 ### Neighborhood analysis
