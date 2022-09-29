@@ -9,6 +9,8 @@
 #' @param nCores Number of cores to use for threading
 #'
 #' @importFrom parallel detectCores mclapply
+#' @importFrom magick image_read image_info image_crop image_scale image_blank image_composite image_transparent image_write
+#' @importFrom tibble tibble
 #'
 #' @return Path to tiles
 #'
@@ -56,8 +58,8 @@ TileImage <- function (
   # Define max Zoom level
   info <- image_info(im)
   nLevels <- floor(max(log2(ceiling(info$width/256)), log2(ceiling(info$height/256)))):0
-  scaled_dims <- tibble::tibble(scaled_widths = info$width/(2^nLevels),
-                                scaled_heigths = info$width/(2^nLevels))
+  scaled_dims <- tibble(scaled_widths = info$width/(2^nLevels),
+                        scaled_heigths = info$width/(2^nLevels))
   lower_limit <- apply(scaled_dims, 1, max) > 256
   upper_limit <- apply(scaled_dims, 1, max) < maxImgWidth
   nLevels <- nLevels[lower_limit & upper_limit]
