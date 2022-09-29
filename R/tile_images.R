@@ -104,8 +104,9 @@ TileImage <- function (
         crop.geom <- paste0(colWidths[i], "x", rowHeights[j], "+", colOffsets[i], "+", rowOffsets[j])
         im_cropped <- image_crop(im_scaled, geometry = crop.geom)
         if (image_info(im_cropped)$width < 256 | image_info(im_cropped)$height < 256) {
-          im_blank <- image_blank(color = "#FFFFFFFF", width = 256, height = 256)
+          im_blank <- image_blank(color = "white", width = 256, height = 256)
           im_cropped <- image_composite(im_blank, composite_image = im_cropped)
+          im_cropped <- image_transparent(im_cropped, color = "white")
         }
         tiles <- c(tiles, setNames(list(im_cropped), nm = paste0(n, "_", i - 1, "_", j - 1)))
       }
@@ -119,39 +120,3 @@ TileImage <- function (
 
   return(list(tilepath = outpath, minZoomLevel = ifelse(length(nLevels) > 1, nLevels[length(nLevels)] + 1, 1), maxZoomLevel = nLevels[1] + 1))
 }
-
-# library(shiny)
-# library(leaflet)
-# library(rlang)
-# library(magick)
-# library(parallel)
-# library(leaflet.extras)
-#
-# imfile <- "~/Garvan/images/V12M07-071_A1_small.jpg"
-# #imfile <- "~/targeted_vs_untargeted/data_curated/spaceranger_output/colon/V10S29-108_B1/spatial/tissue_hires_image.png"
-# im <- image_read(imfile)
-# res <- TileImage(im, outpath = "/Users/ludviglarsson/Downloads/")
-#
-#
-# ui <- fluidPage(
-#   tags$head(
-#     tags$style(HTML(".leaflet-container { background: #ffffff; }"))
-#   ),
-#   leafletOutput("map", height = 800, width = 800),
-# )
-#
-# server <- function(input, output, session) {
-#   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
-#   output$map <- renderLeaflet({
-#     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%
-#       addTiles(urlTemplate = "/mytiles/{z}_{x}_{y}.jpg",
-#                options = tileOptions(continuousWorld = FALSE,
-#                                      tileSize = "256",
-#                                      worldCopyJump = FALSE,
-#                                      minZoom = paste0(res$minZoomLevel),
-#                                      maxZoom = paste0(res$maxZoomLevel)))
-#   })
-# }
-#
-# shinyApp(ui, server)
-#
