@@ -16,7 +16,10 @@ ReadVisiumData(infoTable, assay = "Spatial", verbose = TRUE, ...)
 \item{...}{Parameters passed to \code{\link{CreateSeuratObject}}}
 }
 \description{
-Read spaceranger output files
+This function serves as a wrapper for \code{\link{LoadAndMergeMatrices}} and
+\code{\link{LoadSpatialCoordinates}} to load spaceranger output files and create
+a Seurat object. The spatial information, i.e. images and spot coordinates, are
+stored inside the tools slot of the `Seurat` object in an object called `Staffli`.
 }
 \examples{
 # Assemble spaceranger output files
@@ -26,9 +29,18 @@ spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility
 json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
 
 # Create a tibble/data.frame with file paths
+library(tibble)
 infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 
 # Create Seurat object
 se <- ReadVisiumData(infoTable = infoTable)
+se
 
 }
+\seealso{
+Other pre-process: 
+\code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImageData}()},
+\code{\link{LoadSpatialCoordinates}()}
+}
+\concept{pre-process}

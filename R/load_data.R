@@ -215,6 +215,13 @@ LoadImageData <- function (
 
 #' Read spaceranger output files
 #'
+#' This function serves as a wrapper for \code{\link{LoadAndMergeMatrices}} and
+#' \code{\link{LoadSpatialCoordinates}} to load spaceranger output files and create
+#' a Seurat object. The spatial information, i.e. images and spot coordinates, are
+#' stored inside the tools slot of the `Seurat` object in an object called `Staffli`.
+#'
+#' @family pre-process
+#'
 #' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
 #' @param assay Assay name (default = "Spatial")
 #' @param verbose Print messages
@@ -232,10 +239,12 @@ LoadImageData <- function (
 #' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
+#' library(tibble)
 #' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 #'
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable)
+#' se
 #'
 #' @export
 #'

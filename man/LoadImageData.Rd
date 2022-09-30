@@ -45,6 +45,7 @@ imgData <- LoadImageData(imgFiles, jsonfiles)
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
-\code{\link{LoadSpatialCoordinates}()}
+\code{\link{LoadSpatialCoordinates}()},
+\code{\link{ReadVisiumData}()}
 }
 \concept{pre-process}
