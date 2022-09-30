@@ -220,10 +220,29 @@ LoadImageData <- function (
 #' a Seurat object. The spatial information, i.e. images and spot coordinates, are
 #' stored inside the tools slot of the `Seurat` object in an object called `Staffli`.
 #'
+#' @details
+#' \code{ReadVisiumData} takes a `data.frame` like table as input that should hold
+#' certain spaceranger output file paths. The table should consist of four columns:
+#' "samples", "imgs", "spotfiles" and "json".
+#'
+#' \itemize{
+#'    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
+#'    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.png`}
+#'    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
+#'    \item{"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`}
+#' }
+#'
+#' @section Load data outside tissue:
+#' Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you
+#' need to explore transcripts captured outside of the tissue. In this case, you can
+#' provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
+#' and set `remove_spots_outside_tissue = FALSE`.
+#'
 #' @family pre-process
 #'
 #' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
 #' @param assay Assay name (default = "Spatial")
+#' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
 #'
@@ -251,6 +270,7 @@ LoadImageData <- function (
 ReadVisiumData <- function (
     infoTable,
     assay = "Spatial",
+    remove_spots_outside_tissue = TRUE,
     verbose = TRUE,
     ...
 ) {
@@ -272,10 +292,13 @@ ReadVisiumData <- function (
   }
 
   # Read expression matrices
-  mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples, verbose = verbose)
+  mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
+                                    verbose = verbose)
 
   # Read spot coordinates
-  coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles, verbose = verbose)
+  coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles,
+                                        remove_spots_outside_tissue = remove_spots_outside_tissue,
+                                        verbose = verbose)
 
   # Make sure that coordinates and expression matrix are compatible
   if (!all(colnames(mergedMat) %in% coordinates$barcode)) {
