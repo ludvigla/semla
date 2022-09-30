@@ -305,6 +305,6 @@ ReadVisiumData <- function (
   object@tools$Staffli <- staffli_object
   if (verbose) inform(c(">" = "  Loaded spatial data into the 'Seurat' object"))
 
-  if (verbose) inform(c("i" = glue("Returning a 'Seurat' object with {nrow(se)} features and {ncol(se)} spots")))
+  if (verbose) inform(c("i" = glue("Returning a 'Seurat' object with {nrow(object)} features and {ncol(object)} spots")))
   return(object)
 }
