@@ -238,6 +238,11 @@ LoadImageData <- function (
 #' provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
 #' and set `remove_spots_outside_tissue = FALSE`.
 #'
+#' @section Filter data:
+#' If you want to filter out spots and features, you can pass the `min.cells` and
+#' `min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
+#' however, we using the \code{\link{SubsetVisiumData}} function for filtering.
+#'
 #' @family pre-process
 #'
 #' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
@@ -249,6 +254,8 @@ LoadImageData <- function (
 #' @importFrom rlang abort inform
 #' @importFrom glue glue
 #' @importFrom Seurat CreateSeuratObject
+#'
+#' @return A \code{\link{Seurat}} object with additional spatial information
 #'
 #' @examples
 #' # Assemble spaceranger output files

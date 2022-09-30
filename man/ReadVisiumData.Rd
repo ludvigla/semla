@@ -23,6 +23,9 @@ ReadVisiumData(
 
 \item{...}{Parameters passed to \code{\link{CreateSeuratObject}}}
 }
+\value{
+A \code{\link{Seurat}} object with additional spatial information
+}
 \description{
 This function serves as a wrapper for \code{\link{LoadAndMergeMatrices}} and
 \code{\link{LoadSpatialCoordinates}} to load spaceranger output files and create
@@ -47,6 +50,13 @@ Sometimes it can be useful to load data for all spots in a 10x Visium dataset, i
 need to explore transcripts captured outside of the tissue. In this case, you can
 provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
 and set `remove_spots_outside_tissue = FALSE`.
+}
+
+\section{Filter data}{
+
+If you want to filter out spots and features, you can pass the `min.cells` and
+`min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
+however, we using the \code{\link{SubsetVisiumData}} function for filtering.
 }
 
 \examples{
