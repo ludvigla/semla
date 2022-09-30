@@ -1,61 +1,72 @@
-#' Create Spatial Networks
+#' @include generics.R
 #'
-#' Create spatial networks from spatial coordinates. The function expects a `data.frame` or `tibble`
-#' containing barcodes, coordinates and sample ids. One spatial network is created per sample and
-#' the results are returned as a list.
+NULL
+
+#' @importFrom dplyr group_by mutate ungroup filter left_join
+#' @importFrom tibble tibble
 #'
-#' @param xys An object of class `tbl` or `data.frame` with four columns "barcode", "x", "y"
-#' and "sample" holding the coordinates for a set of spots. The "barcode" column is a character
-#' vector with spatial barcodes, "x", "y" hold numeric values representing the spot coordinates and
-#' "sample" is a character vector with unique sample IDs.
+#' @param object An object
 #' @param nNeighbours Number of nearest neighbors to calculate for each spot. The default
-#' number of neighbors is 6 for the 'Visium' platform and 4 for the '1k' and '2k' platforms.
+#' number of neighbors is 6 given the hexagonal pattern of 10x Visium arrays.
 #' @param maxDist Distance cut-off for nearest neighbors to consider. If set to NULL (default),
 #' `maxDist` is estimated from the data by taking the minimum neighbor distance multiplied by
 #' a factor of `1.2`.
 #' @param minK Minimum nearest neighbors [default: 0]. Spots with fewer neighbors will be discarded.
 #' Useful if you want to remove spots with few or no neighbors.
 #'
-#' @family network-methods
-#'
-#' @return A list of tibbles, each containing information about the nearest neighbors of each spot.
-#' For one spot in the column "from", its nearest neighboring spots are provided in the "to" column.
-#' Distances correspond to distances between "to" and "from", and usually correspond to H&E image
-#' pixels. "numK" defines the number of nearest neighbors for "from" spots selected by `GetSpatialNetwork`.
-#' "x_start", "y_start" are the spatial coordinates for "from" spots while "x_end", "y_end" are the
-#' spatial coordinates for the neighboring "to" spots.
-#'
-#' @importFrom dplyr group_by mutate ungroup filter left_join
-#' @importFrom tibble tibble
+#' @rdname get-network
 #'
 #' @examples
 #' \dontrun{
 #' library(ggplot2)
 #'
-#' # Create a spatial network from a data.frame (xys)
+#' # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs
+#' coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
+#'                 system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
+#'
+#' # Load coorinate data into a tibble
+#' xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
+#'   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
+#'   coords$sample <- paste0(i)
+#'   coords <- coords |>
+#'     dplyr::filter(selection == 1) |>
+#'     dplyr::select(barcode, x, y, sample) |>
+#'     tibble::as_tibble()
+#'   return(coords)
+#' }))
+#'
+#' # Create spatial networks
 #' spatnet <- GetSpatialNetwork(xys)
 #'
 #' # Plot network
-#' ggplot(spatnet[["1"]], aes(x = x_start, xend = x_end, y = y_start, yend = y_end)) +
-#'    geom_segment()
+#' p1 <- ggplot(spatnet[["1"]], aes(x = x_start, xend = x_end, y = y_start, yend = y_end)) +
+#'   geom_segment() +
+#'   scale_y_reverse()
 #'
+#' p2 <- ggplot(spatnet[["2"]], aes(x = x_start, xend = x_end, y = y_start, yend = y_end)) +
+#'   geom_segment() +
+#'   scale_y_reverse()
+#'
+#' p1 + p2
 #' }
 #'
 #' @export
-GetSpatialNetwork <- function (
-    xys,
+#'
+GetSpatialNetwork.default <- function (
+    object,
     nNeighbours = 6,
     maxDist = NULL,
     minK = 0
 ) {
 
-  # Check xys object class
-  if (!class(xys) %in% c("data.frame", "matrix", "tbl"))
-    abort(glue("Invalid class '{class(xys)}'."))
-  if (ncol(xys) != 4)
-    abort(glue("Invalid number of columns '{ncol(xys)}'. Expected 4."))
+  # Check object object class
+  print(class(object))
+  if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
+    abort(glue("Invalid class '{class(object)}'."))
+  if (ncol(object) != 4)
+    abort(glue("Invalid number of columns '{ncol(object)}'. Expected 4."))
   if (!all(
-    xys |> summarize(
+    object |> summarize(
       check_barcode = is.character(barcode),
       check_x = is.numeric(x),
       check_y = is.numeric(y),
@@ -72,7 +83,7 @@ GetSpatialNetwork <- function (
   # Set number of nearest neighbors if NULL
   nNeighbours <- nNeighbours %||% 6
   # Split coordinates by sample
-  xys.list <- split(xys, xys$sample)[unique(xys$sample)]
+  xys.list <- split(object, object$sample)[unique(object$sample)]
 
   # Compute network
   knn_long.list <- setNames(lapply(names(xys.list), function(sampleID) {
