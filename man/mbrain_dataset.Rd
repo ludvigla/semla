@@ -11,6 +11,7 @@ A Visium dataset obtained from a coronal tissue section of a mouse brain.
    \item{\strong{mousebrain/spatial/tissue_hires_image.png}: \cr H&E image (2000x1882) pixels}
    \item{\strong{mousebrain/spatial/tissue_positions_list.csv}: \cr CSV file with spot coordinates}
    \item{\strong{mousebrain/spatial/scalefactors_json.json}: \cr JSON file with scalefactors}
+   \item{\strong{mousebrain/se_mbrain}: \cr Seurat object stored as an .Rds file with the top 100 most variable features}
 }
 }
 \seealso{

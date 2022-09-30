@@ -27,3 +27,16 @@ RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Collate: 
+    'STUtility2-package.R'
+    'checks.R'
+    'example_function.R'
+    'extdata.R'
+    'generics.R'
+    'load_data.R'
+    'spatial_autocorrelation.R'
+    'spatial_network.R'
+    'tile_images.R'
+    'transformation_coordinates.R'
+    'transformations_image.R'
+    'zzz.R'
