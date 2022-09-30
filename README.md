@@ -77,9 +77,11 @@ Need to fix add mirror as an option.
 
 - [x] : migrate `GetSpatNet` from STUtility
 - [x] : add working example to `GetSpatNet`
-- [x] : migrate `CorSpatialGenes` from STUtility
-- [ ] : add working example to `CorSpatialGenes`
-- [ ] : migrate `CorSpatialDims` from STUtility
+- [x] : migrate `CorSpatialGenes` from STUtility and rename it to `CorSpatialFeatures`. This is a 
+more general function that takes any type of feature as input, not just genes. This could for 
+example be dimensionality reduction results instead.
+- [x] : add working example to `CorSpatialFeatures`. Here I have provided an example for how to 
+calculate spatial autocorrelation of genes and for principal components.
 
 ### Neighborhood analysis
 

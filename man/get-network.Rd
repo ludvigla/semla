@@ -50,7 +50,7 @@ library(ggplot2)
 coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
                 system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
 
-# Load coorinate data into a tibble
+# Load coordinate data into a tibble
 xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
   coords$sample <- paste0(i)
@@ -79,6 +79,6 @@ p1 + p2
 }
 \seealso{
 Other network-methods: 
-\code{\link{CorSpatialGenes}()}
+\code{\link{CorSpatialFeatures}()}
 }
 \concept{network-methods}

@@ -1,56 +1,15 @@
-#' Find features with high spatial autocorrelation
+#' @include generics.R
 #'
-#' This function can be used to find genes with high spatial autocorrelation in SRT data.
-#' A more detailed description of the algorithm is outlined in the Details section below.
-#'
-#' @section Spatial autocorrelation:
-#' Spatial autocorrelation of genes is the term used to describe the presence of systematic spatial
-#' variation in the expression of a gene. Positive spatial autocorrelation of a gene is the tendency
-#' for regions that are close together in space to have similar expression levels.
-#'
-#' A simple example is when you have an anatomical structure or a tissue type that spans
-#' across multple neighboring spots in an SRT experiment, for example a gland, an immune
-#' infiltrate or a region of the brain. Inside such structures, you might find that the
-#' expression levels of certain genes are highly similar and hence these genes have a
-#' positive spatial autocorrelation.
-#'
-#' The method provided in `STUtility2` is relatively simple and fast. For each gene and spot,
-#' the expression is averaged across all neighboring spots (typically the 6 closest neighbors)
-#' to produce a lag expression vector. Since this vector represents the average of the surrounding
-#' spots, we can use it to test if the expression in those spots is similar to the center spot.
-#' One simple strategy is to calculate the pearson correlation between a genes' lag vector and
-#' the original expression vector which typically captures the spatial autocorrelation well.
-#'
-#' @section Method steps:
-#' \itemize{
-#'    \item{Load a matrix with features in rows and spots in columns: \eqn{X_{expr}}}
-#'    \item{Convert the corresponding spatial network to wide format and construct a nearest
-#'    neighbor matrix \eqn{N_{neighbors}} in which neighboring spots have a value of 1
-#'    and the remaining spots have a value of 0
-#'    }
-#'    \item{\eqn{N_{neighbors}} is then multiplied with the \eqn{X_{expr}} to
-#'    calculate a lag vector for each gene: \cr \cr
-#'    \eqn{X_{lagexpr} = (N_{neighbors}*X_{expr})/n_{neighbors}} \cr \cr
-#'    where \eqn{n_{neighbors}} is the number of neighbors for each spot.
-#'    }
-#'    \item{The spatial autocorrelation score for a genes is the 'pearson' correlation of the
-#'    lag vector and the initial expression vector: \cr \cr
-#'    \eqn{spatcor_{gene} = cor(X_{lagexpr}[gene, ], X_{expr}[gene, ])}
-#'    }
-#' }
-#'
-#'
-#' @param x A matrix-like object with features in columns and spots in rows
-#' @param spatnet A list of spatial networks created with `GetSpatialNetwork`. The spots in these
-#' networks should match the spots in `x`.
+NULL
+
+
+#' @param spatnet A list of spatial networks created with \code{\link{GetSpatialNetwork}}. The spots in these
+#' networks should match the spots in the feature matrix.
 #' @param across_all Should the autocorrelation scores be calculated across all samples?
+#' @param nCores Number of cores to use for the spatial autocorrelation calculation
 #' @param verbose Print messages
 #'
-#' @family network-methods
-#'
-#' @inheritParams GetSpatialNetwork
-#'
-#' @return Either a list of tibbles or a tibble with gene names and correlation scores for each gene in `x`
+#' @rdname cor-features
 #'
 #' @importFrom stats cor
 #' @importFrom parallel mclapply detectCores
@@ -63,14 +22,49 @@
 #'
 #' @examples
 #' \dontrun{
-#' # TODO
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+#' featureMat <- FetchData(se_mbrain, vars = VariableFeatures(se_mbrain)[1:100])
+#'
+#' coordfile <- system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2")
+#'
+#' # Load coordinate data into a tibble
+#' xys <- setNames(read.csv(coordfile, header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
+#' xys$sample <- paste0(1)
+#' xys <- xys |>
+#'   dplyr::mutate(barcode = paste0(barcode, "_", 1)) |>
+#'   dplyr::filter(selection == 1) |>
+#'   dplyr::select(barcode, x, y, sample) |>
+#'   tibble::as_tibble()
+#'
+#' # Create spatial networks
+#' spatnet <- GetSpatialNetwork(xys)
+#' spatgenes <- CorSpatialFeatures(featureMat, spatnet)
+#'
+#' # Check genes with highest spatial autocorrelation
+#' head(spatgenes[[1]])
+#'
+#' # Note that the top variable genes are blood related (hemoglobin genes)
+#' # These genes have lower spatial autocorrelation since blood vessels
+#' # typically only cover a few spots and more randomly dispersed throughput the tissue
+#' head(VariableFeatures(se_mbrain))
+#'
+#' # The same principle can be used to estimate spatial autocorrelation for other features,
+#' # for example dimensionality reduction vectors
+#' dimMat <- se_mbrain |>
+#' ScaleData() |>
+#'   RunPCA() |>
+#'   FetchData(vars = paste0("PC_", 1:10))
+#'
+#' # Calculate spatial autocorrelation scores for principal components
+#' spatPCs <- CorSpatialFeatures(dimMat, spatnet)
+#' head(spatPCs)
 #' }
 #'
 #' @export
 #'
 #' @md
-CorSpatialGenes <- function (
-    x,
+CorSpatialFeatures.default <- function (
+    object,
     spatnet,
     across_all = FALSE,
     nCores = detectCores() - 1,
@@ -80,17 +74,22 @@ CorSpatialGenes <- function (
   if (verbose) inform(c("i" = "Checking objects..."))
 
   # Check objects
-  if (!class(x) %in% c("dgRMatrix", "dgCMatrix", "matrix", "data.frame")) abort(glue("Invalid format of x: '{class(x)}'"))
-  if (any(dim(x) == 0)) abort(glue("Invalid dimensions of x: '{paste(dim(x), collapse = 'x')}'"))
+  if (!class(object) %in% c("dgRMatrix", "dgCMatrix", "matrix", "data.frame")) abort(glue("Invalid format of feature matrix: '{class(object)}'"))
+  if (any(dim(object) == 0)) abort(glue("Invalid dimensions of feature matrix: '{paste(dim(object), collapse = 'x')}'"))
   if (!class(spatnet) == "list") abort(glue("Invalid format of spatnet: '{class(spatnet)}'"))
+
+  # Convert object to sparse matrix
+  if (class(object) != "dgCMatrix") {
+    object <- as(as.matrix(object), "dgCMatrix")
+  }
 
   # get all spatial network spot barcode IDs
   all_spatial_network_spots <- Reduce(c, lapply(spatnet, function(x) x$from))
 
   # Check that objects match
-  spots_in_spatnets <- !unique(all_spatial_network_spots) %in% rownames(x)
-  if (any(spots_in_spatnets)) abort(glue("{sum(spots_in_spatnets)} spots in the spatial networks could not be found in x.",
-                                    "i" = "Make sure that the spatial networks were generated from the same dataset as x."))
+  spots_in_spatnets <- !unique(all_spatial_network_spots) %in% rownames(object)
+  if (any(spots_in_spatnets)) abort(glue("{sum(spots_in_spatnets)} spots in the spatial networks could not be found in the feature matrix.",
+                                    "i" = "Make sure that the spatial networks were generated from the same dataset as feature matrix."))
   if (verbose) inform(c("v" = "Passed check!"))
 
   results <- lapply(seq_along(spatnet), function (i) {
@@ -110,7 +109,7 @@ CorSpatialGenes <- function (
     CN <- as(CN, "dgCMatrix")
 
     # Subset feature data to only include spots with neighbors
-    x_subset <- x[colnames(CN), ]
+    x_subset <- object[colnames(CN), ]
     if (verbose) inform(c("v" = "  Cleaned out spots without neighbors"))
 
     # Calculate lag matrix
@@ -123,7 +122,7 @@ CorSpatialGenes <- function (
     }
 
     # Calculate spatial autocorrelation for each gene
-    spatial_autocorrelation <- unlist(mclapply(1:ncol(x), function(i) {
+    spatial_autocorrelation <- unlist(mclapply(1:ncol(x_subset), function(i) {
       cor(as.numeric(x_subset[rownames(lagMat), i]), as.numeric(lagMat[, i]))
     }, mc.cores = nCores))
     if (verbose) inform(c("v" = "  Computed spatial autocorrelation scores for features"))
@@ -141,12 +140,12 @@ CorSpatialGenes <- function (
     if (verbose) inform(c("", "i" = "Computing spatial autocorrelation scores across all samples"))
     lagMat <- do.call(rbind, results)
     # Calculate spatial autocorrelation for each gene
-    spatial_autocorrelation <- unlist(mclapply(1:ncol(x), function(i) {
-      cor(as.numeric(x[rownames(lagMat), i]), as.numeric(lagMat[, i]))
+    spatial_autocorrelation <- unlist(mclapply(1:ncol(object), function(i) {
+      cor(as.numeric(object[rownames(lagMat), i]), as.numeric(lagMat[, i]))
     }, mc.cores = nCores))
     if (verbose) inform(c("v" = "Computation finished"))
     # Summarize results
-    results <- tibble(gene = colnames(x), cor = spatial_autocorrelation) |>
+    results <- tibble(gene = colnames(object), cor = spatial_autocorrelation) |>
       arrange(-spatial_autocorrelation)
   }
 

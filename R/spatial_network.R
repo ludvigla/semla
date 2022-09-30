@@ -2,7 +2,7 @@
 #'
 NULL
 
-#' @importFrom dplyr group_by mutate ungroup filter left_join
+#' @importFrom dplyr group_by mutate ungroup filter left_join summarize
 #' @importFrom tibble tibble
 #'
 #' @param object An object
@@ -24,7 +24,7 @@ NULL
 #' coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
 #'                 system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
 #'
-#' # Load coorinate data into a tibble
+#' # Load coordinate data into a tibble
 #' xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
 #'   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
 #'   coords$sample <- paste0(i)
