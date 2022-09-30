@@ -2,7 +2,15 @@
 
 ## TODO
 
+### External data
+
+- [x] : An external data resource with mouse brain data. Contains spaceranger output files and a prepared Seurat object. These 
+files can be accessed with `system.file("extdata/mousebrain", "path_to_file", package = "STUtility2")` 
+- [x] : An external data resource with mouse colon data. Contains spaceranger output files and a prepared Seurat object. These 
+files can be accessed with `system.file("extdata/mousecolon", "path_to_file", package = "STUtility2")`
+
 ### Data loading
+
 - [x] `LoadAndMergeMatrices` : load and merge gene expression matrices
 - [x] `LoadSpatialCoordinates` : load and merge spatial coordinates
 - [ ] `InputFromTable` : wrapper for `LoadAndMergeMatrices` and 
@@ -68,6 +76,7 @@ Need to fix add mirror as an option.
 ### Spatial autocorelation
 
 - [x] : migrate `GetSpatNet` from STUtility
+- [x] : add working example to `GetSpatNet`
 - [x] : migrate `CorSpatialGenes` from STUtility
 - [ ] : add working example to `CorSpatialGenes`
 - [ ] : migrate `CorSpatialDims` from STUtility
