@@ -4,10 +4,16 @@
 \alias{LoadSpatialCoordinates}
 \title{Load and merge multiple coordinate tables}
 \usage{
-LoadSpatialCoordinates(coordinatefiles, verbose = TRUE)
+LoadSpatialCoordinates(
+  coordinatefiles,
+  remove_spots_outside_tissue = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{coordinatefiles}{Character vector of file paths. Paths should specify `.csv` files output by spaceranger.}
+\item{coordinatefiles}{Character vector of file paths. Paths should specify `.csv` files output by spaceranger}
+
+\item{remove_spots_outside_tissue}{Should spots outside the tissue be removed?}
 
 \item{verbose}{Print messages}
 }

@@ -36,6 +36,10 @@ GetSpatialNetwork <- function(object, ...) {
 #' @details The default method expects a matrix-like object with features in columns and spots in rows
 #' and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
 #'
+#' If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
+#' across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
+#' a list.
+#'
 #' @section Spatial autocorrelation:
 #' Spatial autocorrelation is the term used to describe the presence of systematic spatial
 #' variation. Positive spatial autocorrelation of a feature is the tendency for regions that

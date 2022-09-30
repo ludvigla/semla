@@ -40,6 +40,10 @@ A more detailed description of the algorithm is outlined in the Details section 
 \details{
 The default method expects a matrix-like object with features in columns and spots in rows
 and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
+
+If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
+across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
+a list.
 }
 \section{Spatial autocorrelation}{
 

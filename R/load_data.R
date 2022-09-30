@@ -94,7 +94,8 @@ LoadAndMergeMatrices <- function (
 #'
 #' @family pre-process
 #'
-#' @param coordinatefiles Character vector of file paths. Paths should specify `.csv` files output by spaceranger.
+#' @param coordinatefiles Character vector of file paths. Paths should specify `.csv` files output by spaceranger
+#' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #'
 #' @return An object of class `tbl` (`tibble`)
@@ -110,6 +111,7 @@ LoadAndMergeMatrices <- function (
 #' @export
 LoadSpatialCoordinates <- function (
     coordinatefiles,
+    remove_spots_outside_tissue = TRUE,
     verbose = TRUE
 ) {
 
@@ -125,6 +127,10 @@ LoadSpatialCoordinates <- function (
     coords <- read.csv(file = coordinatefiles[i], header = FALSE) |>
       tibble::as_tibble() |>
       setNames(nm = c("barcode", "selected", "y", "x", "pxl_col_in_fullres", "pxl_row_in_fullres"))
+    if (remove_spots_outside_tissue) {
+      coords <- coords |>
+        filter(selected == 1)
+    }
     if (verbose) inform(c("v" = glue::glue("  Finished loading coordinates for sample {i}")))
     coords$barcode <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = coords$barcode)
     coords$sampleID <- i
@@ -204,4 +210,92 @@ LoadImageData <- function (
   })))
 
   return(imgData)
+}
+
+
+#' Read spaceranger output files
+#'
+#' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
+#' @param assay Assay name (default = "Spatial")
+#' @param verbose Print messages
+#' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
+#'
+#' @importFrom rlang abort inform
+#' @importFrom glue glue
+#' @importFrom Seurat CreateSeuratObject
+#'
+#' @examples
+#' # Assemble spaceranger output files
+#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
+#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
+#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
+#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+#'
+#' # Create a tibble/data.frame with file paths
+#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#'
+#' # Create Seurat object
+#' se <- ReadVisiumData(infoTable = infoTable)
+#'
+#' @export
+#'
+ReadVisiumData <- function (
+    infoTable,
+    assay = "Spatial",
+    verbose = TRUE,
+    ...
+) {
+
+  # Check infoTable
+  if (!any(class(infoTable) %in% c("tbl", "data.frame"))) abort(glue("Invalid class '{class(infoTable)}' of 'infoTable'."))
+  if (nrow(infoTable) == 0) abort(glue("'infoTable' is empty."))
+  if (!all(sapply(infoTable, class) %in% "character")) abort(glue("Invalid column classes in 'infoTable'. Expecting 'character vectors.'"))
+  missing_files <- infoTable |>
+    select(samples, imgs, spotfiles, json) |>
+    mutate(across(samples:json, ~ file.exists(.x))) |>
+    summarize(across(samples:json, ~ any(!.x))) |>
+    unlist()
+  if (any(missing_files)) {
+    checks <- missing_files[missing_files]
+    sapply(names(checks), function(n) {
+      abort(glue("Missing file(s) in the '{n}' column."))
+    })
+  }
+
+  # Read expression matrices
+  mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples, verbose = verbose)
+
+  # Read spot coordinates
+  coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles, verbose = verbose)
+
+  # Make sure that coordinates and expression matrix are compatible
+  if (!all(colnames(mergedMat) %in% coordinates$barcode)) {
+    abort(glue("{sum(!colnames(mergedMat) %in% coordinates$barcode)} spots found in expression data but not in coordinate files."))
+  }
+  if (!all(coordinates$barcode %in% colnames(mergedMat))) {
+    abort(glue("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data."))
+  }
+  if (verbose) inform(c("v" = "Expression matrices and coordinates are compatible"))
+
+  # Sort coordinates
+  coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
+
+  # Create a Seurat object from expression matrix
+  object <- CreateSeuratObject(counts = mergedMat,
+                               assay = assay,
+                               ...)
+  if (verbose) inform(c(">" = "  Created the 'Seurat' object"))
+
+  # Create a Stafli object
+  staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
+                                        meta_data = coordinates |>
+                                          select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID))
+  if (verbose) inform(c(">" = "  Created the 'Staffli' object"))
+
+  # Place Staffli object inside the tools slot of the Seurat object
+  object@tools$Staffli <- staffli_object
+  if (verbose) inform(c(">" = "  Loaded spatial data into the 'Seurat' object"))
+
+  if (verbose) inform(c("i" = glue("Returning a 'Seurat' object with {nrow(se)} features and {ncol(se)} spots")))
+  return(object)
 }

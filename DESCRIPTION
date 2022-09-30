@@ -36,6 +36,7 @@ Collate:
     'load_data.R'
     'spatial_autocorrelation.R'
     'spatial_network.R'
+    'staffli_object.R'
     'tile_images.R'
     'transformation_coordinates.R'
     'transformations_image.R'
