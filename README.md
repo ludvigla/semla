@@ -13,9 +13,8 @@ files can be accessed with `system.file("extdata/mousecolon", "path_to_file", pa
 
 - [x] `LoadAndMergeMatrices` : load and merge gene expression matrices
 - [x] `LoadSpatialCoordinates` : load and merge spatial coordinates
-- [ ] `InputFromTable` : wrapper for `LoadAndMergeMatrices` and 
-`LoadSpatialCoordinates` to load all data into a Seurat object. Drop compatibility with "1k" and 
-"2k" arrays.
+- [x] `ReadVisiumData` : wrapper for `LoadAndMergeMatrices` and `LoadSpatialCoordinates` to load all data into a Seurat object. Dropped 
+compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTable`.
 
 ### On load
 
