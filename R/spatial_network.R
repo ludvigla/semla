@@ -35,7 +35,7 @@ NULL
 #'   return(coords)
 #' }))
 #'
-#' # Create spatial networks
+#' # Create spatial networks from xys coordinates
 #' spatnet <- GetSpatialNetwork(xys)
 #'
 #' # Plot network

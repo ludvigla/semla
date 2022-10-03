@@ -3,11 +3,14 @@
 \name{GetSpatialNetwork}
 \alias{GetSpatialNetwork}
 \alias{GetSpatialNetwork.default}
+\alias{GetSpatialNetwork.Seurat}
 \title{Create Spatial Networks}
 \usage{
 GetSpatialNetwork(object, ...)
 
 \method{GetSpatialNetwork}{default}(object, nNeighbours = 6, maxDist = NULL, minK = 0)
+
+\method{GetSpatialNetwork}{Seurat}(object, nNeighbours = 6, maxDist = NULL, minK = 0)
 }
 \arguments{
 \item{object}{An object}
@@ -61,7 +64,7 @@ xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
   return(coords)
 }))
 
-# Create spatial networks
+# Create spatial networks from xys coordinates
 spatnet <- GetSpatialNetwork(xys)
 
 # Plot network
