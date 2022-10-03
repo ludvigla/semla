@@ -16,6 +16,12 @@ files can be accessed with `system.file("extdata/mousecolon", "path_to_file", pa
 - [x] `ReadVisiumData` : wrapper for `LoadAndMergeMatrices` and `LoadSpatialCoordinates` to load all data into a Seurat object. Dropped 
 compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTable`.
 
+### Subset and Merge
+
+- [ ] : Add working examples including image data
+- [x] : `SubsetSTData` for subsetting `Seurat` objects created with `STUtility2`
+- [x] : `MergeSTData` for merging `Seurat` objects created with `STUtility2`
+
 ### On load
 
 - [x] `.onAttach` : on load message when loading R package
