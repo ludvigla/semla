@@ -99,10 +99,11 @@ GetSpatialNetwork.default <- function (
     knn_long$from <- spotnames[knn_long$from]
     knn_long$to <- spotnames[knn_long$to]
     knn_long <- knn_long |>
-      filter(distance <= maxDist, numK > minK) |>
-      group_by(from) |>
-      mutate(numK = n()) |>
-      ungroup()
+      add_count(from) |>
+      filter(distance <= maxDist, n > minK) |>
+      add_count(from, name = "nn") |>
+      select(-n)
+
     # Merge with coordinates
     knn_long <-
       left_join(
@@ -123,3 +124,27 @@ GetSpatialNetwork.default <- function (
   return(knn_long.list)
 }
 
+#' @rdname get-network
+#' @export
+#' @method GetSpatialNetwork Seurat
+#'
+GetSpatialNetwork.Seurat <- function (
+    object,
+    nNeighbours = 6,
+    maxDist = NULL,
+    minK = 0
+) {
+
+  # Check Seurat object
+  .check_seurat_object(object)
+
+  # Get coordinates
+  xys <- GetStaffli(object)@meta_data |>
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+
+  # get spatial networks
+  spatnet <- GetSpatialNetwork(xys, nNeighbours = nNeighbours, maxDist = maxDist, minK = minK)
+
+  # Return spatial networks
+  return(spatnet)
+}
