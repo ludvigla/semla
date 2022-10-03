@@ -34,6 +34,7 @@ Collate:
     'extdata.R'
     'generics.R'
     'load_data.R'
+    'neighborhood_analysis.R'
     'spatial_autocorrelation.R'
     'spatial_network.R'
     'staffli_object.R'

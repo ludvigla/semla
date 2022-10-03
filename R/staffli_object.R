@@ -29,6 +29,7 @@ Staffli <- setClass (
     meta_data = 'tbl',
     image_height = 'numeric',
     image_info = 'ANY',
+    scalefactors = 'ANY',
     pixels_per_um = 'numeric',
     version = 'package_version'
   )
@@ -55,7 +56,9 @@ Staffli <- setClass (
 CreateStaffliObject <- function (
     imgs = NULL,
     meta_data,
-    image_height = 400
+    image_height = 400,
+    image_info,
+    scalefactors
 ) {
   if (!all(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID") %in% colnames(meta_data))) abort("Invalid meta_data columns.")
 
@@ -64,6 +67,8 @@ CreateStaffliObject <- function (
     imgs = imgs,
     meta_data = meta_data,
     image_height = image_height,
+    image_info = image_info,
+    scalefactors = scalefactors,
     version = packageVersion(pkg = 'STUtility2')
   )
 

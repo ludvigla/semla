@@ -2,7 +2,7 @@
 #'
 NULL
 
-#' @importFrom dplyr group_by mutate ungroup filter left_join summarize
+#' @importFrom dplyr group_by mutate ungroup filter left_join summarize n
 #' @importFrom tibble tibble
 #'
 #' @param object An object
@@ -99,11 +99,10 @@ GetSpatialNetwork.default <- function (
     knn_long$from <- spotnames[knn_long$from]
     knn_long$to <- spotnames[knn_long$to]
     knn_long <- knn_long |>
+      filter(distance <= maxDist, numK > minK) |>
       group_by(from) |>
       mutate(numK = n()) |>
-      ungroup() |>
-      filter(distance <= maxDist, numK > minK)
-
+      ungroup()
     # Merge with coordinates
     knn_long <-
       left_join(
@@ -123,3 +122,4 @@ GetSpatialNetwork.default <- function (
 
   return(knn_long.list)
 }
+

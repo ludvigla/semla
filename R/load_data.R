@@ -43,7 +43,7 @@ LoadAndMergeMatrices <- function (
   if (any(is.na(checks$is))) abort(c("Invalid path(s):", glue::glue("{checks$samplefiles[is.na(checks$is)]}")))
 
   # Load expression matrices
-  if (verbose) inform(c("i" = "Loading expression matrices:"))
+  if (verbose) inform(c("i" = "Loading matrices:"))
   exprMats <- lapply(seq_along(samplefiles), function(i) {
     if (checks$is[i] == "dir") {
       # Assumes that the directory contains matrix, barcodes and genes
@@ -73,11 +73,13 @@ LoadAndMergeMatrices <- function (
   if (length(exprMats) > 1) {
     if (verbose) inform(c("i" = "Merging matrices:"))
     mergedMat <- SeuratObject::RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
-    if (verbose) inform(c("v" = glue::glue("  There are {nrow(mergedMat)} features and {ncol(mergedMat)} spots in the merged matrix.")))
+    if (verbose) inform(c("v" = glue::glue("  There are {cli::col_br_blue(nrow(mergedMat))}",
+                                           " features and {cli::col_br_magenta(ncol(mergedMat))} spots in the merged matrix.")))
     return(mergedMat)
   } else {
     inform(c("i" = "only 1 expression matrix loaded."))
-    if (verbose) inform(c("v" = glue::glue("  There are {nrow(exprMats[[1]])} features and {ncol(exprMats[[1]])} spots in the matrix.")))
+    if (verbose) inform(c("v" = glue::glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
+                                           " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix.")))
     return(exprMats[[1]])
   }
 
@@ -138,7 +140,7 @@ LoadSpatialCoordinates <- function (
   })))
 
   # Return coordinates
-  if (verbose) inform(c("v" = glue::glue("  Collected coordinates for {nrow(coordDF)} spots.")))
+  if (verbose) inform(c("v" = glue::glue("  Collected coordinates for {cli::col_br_magenta(nrow(coordDF))} spots.")))
   return(coordDF)
 }
 
@@ -254,6 +256,8 @@ LoadImageData <- function (
 #' @importFrom rlang abort inform
 #' @importFrom glue glue
 #' @importFrom Seurat CreateSeuratObject
+#' @importFrom magick image_read image_info
+#' @importFrom jsonlite read_json
 #'
 #' @return A \code{\link{Seurat}} object with additional spatial information
 #'
@@ -281,6 +285,8 @@ ReadVisiumData <- function (
     verbose = TRUE,
     ...
 ) {
+
+  if (verbose) cli::cli_h2("Read 10x Visium data")
 
   # Check infoTable
   if (!any(class(infoTable) %in% c("tbl", "data.frame"))) abort(glue("Invalid class '{class(infoTable)}' of 'infoTable'."))
@@ -314,7 +320,34 @@ ReadVisiumData <- function (
   if (!all(coordinates$barcode %in% colnames(mergedMat))) {
     abort(glue("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data."))
   }
+  if (verbose) inform(""); cli::cli_h3(text = "Creating `Seurat` object")
   if (verbose) inform(c("v" = "Expression matrices and coordinates are compatible"))
+
+  # Read image info
+  image_info <- do.call(rbind, lapply(seq_along(infoTable$imgs), function(i) {
+    f <- infoTable$imgs[i]
+    image_data <- image_read(f) |>
+      image_info() |>
+      mutate(sampleID = paste0(i),
+             type = case_when(basename(f) == "tissue_hires_image.png" ~ "tissue_hires",
+                              basename(f) == "tissue_lowres_image.png" ~ "tissue_lowres"))
+    return(image_data)
+  })) |> as_tibble()
+
+  # Read scalefactors
+  scalefactors <- do.call(rbind, lapply(seq_along(infoTable$json), function(i) {
+    json_data <- data.frame(read_json(infoTable$json[i])) |> mutate(sampleID = paste0(i))
+    return(json_data)
+  })) |> as_tibble()
+
+  # Add full res image dimensions to image data
+  image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
+    mutate(full_width = case_when(type == "tissue_lowres" ~ width/tissue_lowres_scalef,
+                                  type == "tissue_hires" ~ width/tissue_hires_scalef),
+           full_height = case_when(type == "tissue_lowres" ~ height/tissue_lowres_scalef,
+                                   type == "tissue_hires" ~ height/tissue_hires_scalef)) |>
+    select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+
 
   # Sort coordinates
   coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
@@ -323,18 +356,33 @@ ReadVisiumData <- function (
   object <- CreateSeuratObject(counts = mergedMat,
                                assay = assay,
                                ...)
-  if (verbose) inform(c(">" = "  Created the 'Seurat' object"))
+  if (verbose) inform(c(">" = "Created `Seurat` object"))
 
   # Create a Stafli object
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
                                         meta_data = coordinates |>
-                                          select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID))
-  if (verbose) inform(c(">" = "  Created the 'Staffli' object"))
+                                          select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID),
+                                        image_info = image_info,
+                                        scalefactors = scalefactors)
+  if (verbose) inform(c(">" = "Created `Staffli` object"))
 
   # Place Staffli object inside the tools slot of the Seurat object
   object@tools$Staffli <- staffli_object
-  if (verbose) inform(c(">" = "  Loaded spatial data into the 'Seurat' object"))
+  if (verbose) inform(c(">" = "Loaded spatial data into the `Seurat` object"))
 
-  if (verbose) inform(c("i" = glue("Returning a 'Seurat' object with {nrow(object)} features and {ncol(object)} spots")))
+  if (verbose) inform(c("v" = glue("Returning a `Seurat` object with {cli::col_br_blue(nrow(object))}",
+                                   " features and {cli::col_br_magenta(ncol(object))} spots")))
   return(object)
 }
+
+
+samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
+imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
+spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
+json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+
+# Create a tibble/data.frame with file paths
+library(tibble)
+infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+
+se <- ReadVisiumData(infoTable)
