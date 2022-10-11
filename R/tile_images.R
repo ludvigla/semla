@@ -36,7 +36,7 @@
 #'   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
 #'   output$map <- renderLeaflet({
 #'     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%
-#'       addTiles(urlTemplate = "/mytiles/{z}_{x}_{y}.jpg",
+#'       addTiles(urlTemplate = "/mytiles/{z}/{x}_{y}.jpg",
 #'                options = tileOptions(continuousWorld = TRUE,
 #'                                      tileSize = "256",
 #'                                      minZoom = paste0(res$minZoomLevel),
@@ -72,6 +72,8 @@ TileImage <- function (
   # Zoom levels
   tiles <- list()
   for (n in seq_along(nLevels)) {
+
+    dir.create(paste0(outpath, "/", n))
 
     if (nLevels[n] > 0) {
       im_scaled <- image_scale(im, geometry = paste0(info$width/(2^nLevels[n])))
@@ -110,7 +112,7 @@ TileImage <- function (
           im_cropped <- image_composite(im_blank, composite_image = im_cropped)
           im_cropped <- image_transparent(im_cropped, color = "white")
         }
-        tiles <- c(tiles, setNames(list(im_cropped), nm = paste0(n, "_", i - 1, "_", j - 1)))
+        tiles <- c(tiles, setNames(list(im_cropped), nm = paste0(n, "/", i - 1, "_", j - 1)))
       }
     }
   }
