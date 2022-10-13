@@ -42,4 +42,5 @@ Collate:
     'tile_images.R'
     'transformation_coordinates.R'
     'transformations_image.R'
+    'visualization_spatial.R'
     'zzz.R'

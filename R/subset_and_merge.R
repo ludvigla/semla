@@ -20,7 +20,7 @@ NULL
 #' all objects. See \code{\link{merge.Seurat}} for details.
 #' @param project \code{\link{Project}} name for the Seurat object
 #'
-#' @importFrom dplyr select mutate group_split ungroup cur_group_id group_by
+#' @importFrom dplyr select mutate group_split ungroup cur_group_id group_by bind_rows
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr separate unite drop_na
 #' @importFrom Seurat RenameCells
@@ -69,6 +69,7 @@ MergeSTData <- function (
     }
   } else {
     .check_seurat_object(y)
+    y <- list(y)
   }
 
   # Obtain Staffli objects
@@ -201,6 +202,10 @@ MergeSTData <- function (
 #' @param spots A vector of spots to keep
 #' @param features A vector of features to keep
 #' @param idents A vector of identity classes to keep
+#'
+#' @importFrom dplyr mutate group_by ungroup filter pull arrange
+#' @importFrom tidyr unite separate
+#' @importFrom Seurat WhichCells RenameCells
 #'
 #' @return A filtered Seurat object
 #'
