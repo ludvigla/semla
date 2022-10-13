@@ -91,3 +91,48 @@ GetSpatialNetwork <- function(object, ...) {
 CorSpatialFeatures <- function(object, ...) {
   UseMethod(generic = 'CorSpatialFeatures', object = object)
 }
+
+
+#' Map numeric features or categorical labels in 2D space
+#'
+#' \code{MapFeatures} can be used to map numeric features as colors on spot
+#' coordinates in 2D space. If multiple features and samples are provided, these
+#' will be plotted individually and arranged into a grid of subplots.
+#'
+#' @details Note that you can only plot numeric features with \code{MapFeatures},
+#' for example: gene expression, QC metrics or dimensionality reduction vectors.
+#' If you want to plot categorical features, use \code{\link{MapLabels}} instead.
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family visualization
+#' @rdname visualize-features
+#'
+#' @export
+#'
+MapFeatures <- function(object, ...) {
+  UseMethod(generic = 'MapFeatures', object = object)
+}
+
+
+#' Map labels in 2D
+#'
+#' \code{MapLabels} colors spot coordinates in 2D space based on the values of
+#' a categorical feature. Only 1 feature can be provided.
+#'
+#' @details Note that you can only plot categorical features with \code{MapLabels},
+#' for example: spot annotations or clusters.
+#' If you want to plot numerical features, use \code{\link{MapFeatures}} instead.
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family visualization
+#' @rdname visualize-labels
+#'
+#' @export
+#'
+MapLabels <- function(object, ...) {
+  UseMethod(generic = 'MapLabels', object = object)
+}

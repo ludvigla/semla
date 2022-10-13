@@ -43,7 +43,7 @@ server <- function(input, output, session) {
   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
   output$map <- renderLeaflet({
     leaflet(options = leafletOptions(preferCanvas = TRUE)) \%>\%
-      addTiles(urlTemplate = "/mytiles/{z}_{x}_{y}.jpg",
+      addTiles(urlTemplate = "/mytiles/{z}/{x}_{y}.jpg",
                options = tileOptions(continuousWorld = TRUE,
                                      tileSize = "256",
                                      minZoom = paste0(res$minZoomLevel),

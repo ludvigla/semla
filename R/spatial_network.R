@@ -2,7 +2,7 @@
 #'
 NULL
 
-#' @importFrom dplyr group_by mutate ungroup filter left_join summarize n
+#' @importFrom dplyr group_by mutate ungroup filter left_join summarize n add_count
 #' @importFrom tibble tibble
 #'
 #' @param object An object

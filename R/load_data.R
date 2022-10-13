@@ -100,6 +100,8 @@ LoadAndMergeMatrices <- function (
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #'
+#' @importFrom rlang inject
+#'
 #' @return An object of class `tbl` (`tibble`)
 #'
 #' @examples
@@ -128,7 +130,7 @@ LoadSpatialCoordinates <- function (
   coordDF <- inject(rbind(!!!lapply(seq_along(coordinatefiles), function(i) {
     coords <- read.csv(file = coordinatefiles[i], header = FALSE) |>
       tibble::as_tibble() |>
-      setNames(nm = c("barcode", "selected", "y", "x", "pxl_col_in_fullres", "pxl_row_in_fullres"))
+      setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres"))
     if (remove_spots_outside_tissue) {
       coords <- coords |>
         filter(selected == 1)
