@@ -15,6 +15,7 @@ files can be accessed with `system.file("extdata/mousecolon", "path_to_file", pa
 - [x] `LoadSpatialCoordinates` : load and merge spatial coordinates
 - [x] `ReadVisiumData` : wrapper for `LoadAndMergeMatrices` and `LoadSpatialCoordinates` to load all data into a Seurat object. Dropped 
 compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTable`.
+- [x] `LoadImages` : load H&E images into Seurat object
 
 ### Subset and Merge
 
@@ -73,6 +74,7 @@ gene expression, PCs, QC metrics etc.
 - [x] `MapLabels` : similar to `ST.FeaturePlot` but only works with categorical features such as
 clusters, conditions etc.
 - [ ] `FactorGeneLoadingPlot` : migrate STUtility function. Name change?
+- [x] `ImagePlot` : plots H&E images stored in a Seurat object
 
 ### Matrix factorization
 
