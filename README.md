@@ -104,7 +104,7 @@ calculate spatial autocorrelation of genes and for principal components.
 
 ### STUtility2 website
 
-- [ ] : _getting started_
+- [x] : _getting started_
 - [ ] : _visualization_
 - [ ] : _matrix factorization_
 
