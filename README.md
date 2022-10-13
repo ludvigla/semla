@@ -100,7 +100,7 @@ calculate spatial autocorrelation of genes and for principal components.
 
 ### Staffli
 
-- [ ] : migrate and modify STUtility S4 class object `Staffli`
+- [x] : migrate and modify STUtility S4 class object `Staffli`
 
 ### STUtility2 website
 
