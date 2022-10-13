@@ -136,3 +136,21 @@ MapFeatures <- function(object, ...) {
 MapLabels <- function(object, ...) {
   UseMethod(generic = 'MapLabels', object = object)
 }
+
+
+#' Load images
+#'
+#' @section Seurat:
+#' If a \code{Seurat} object is provided, the images will be loaded as rasters
+#' into the \code{Staffli} object that is located in the \code{tools} slot.
+#'
+#' @param image_paths A character vector of image files
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname load-images
+#'
+#' @export
+#'
+LoadImages <- function(image_paths, ...) {
+  UseMethod(generic = 'LoadImages', object = image_paths)
+}
