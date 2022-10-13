@@ -8,14 +8,18 @@
 \usage{
 LoadImages(image_paths, ...)
 
-\method{LoadImages}{default}(image_paths, image_height = 400)
+\method{LoadImages}{default}(image_paths, image_height = 400, verbose = TRUE)
 
-\method{LoadImages}{Seurat}(object, image_height = 400)
+\method{LoadImages}{Seurat}(object, image_height = 400, verbose = TRUE)
 }
 \arguments{
-\item{image_paths}{A character vector of image files}
+\item{image_paths}{a character vector of paths to images in JPEG or PNG format}
 
 \item{...}{Arguments passed to other methods}
+
+\item{image_height}{an integer value specifying the heigh of the downscaled images}
+
+\item{verbose}{print messages}
 
 \item{object}{An object}
 }
@@ -28,3 +32,16 @@ If a \code{Seurat} object is provided, the images will be loaded as rasters
 into the \code{Staffli} object that is located in the \code{tools} slot.
 }
 
+\examples{
+
+#' library(STUtility2)
+
+# Load example Visium data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon)
+
+# Load images
+se_merged <- LoadImages(se_merged)
+
+}

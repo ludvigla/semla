@@ -2,9 +2,13 @@
 #'
 NULL
 
-#' @importFrom rlang abort
+#' @param image_paths a character vector of paths to images in JPEG or PNG format
+#' @param image_height an integer value specifying the heigh of the downscaled images
+#' @param verbose print messages
+#'
+#' @importFrom rlang abort inform
 #' @importFrom glue glue
-#' @importFrom magick image_read image_scale geometry_area
+#' @importFrom magick image_read image_scale geometry_area image_info
 #' @importFrom tools file_ext
 #'
 #' @rdname load-images
@@ -13,8 +17,11 @@ NULL
 #'
 LoadImages.default <- function (
   image_paths,
-  image_height = 400
+  image_height = 400,
+  verbose = TRUE
 ) {
+
+  if (verbose) cli::cli_h2("Load H&E images")
 
   # Check files
   if (!is.character(image_paths)) abort("Invalid class '{class(image_paths)}', expected a 'character' vector.")
@@ -25,12 +32,20 @@ LoadImages.default <- function (
 
   # Load images
   raw_rasters <- lapply(image_paths, function(f) {
-    f |>
-      image_read() |>
+    if (verbose) inform(c("i" = glue("Loading image from {f}")))
+    im <- f |>
+      image_read()
+    info <- im |>
+      image_info()
+    rst <- im |>
       image_scale(geometry = geometry_area(height = image_height)) |>
       as.raster()
+
+    if (verbose) inform(c("v" = glue("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")))
+    return(rst)
   })
 
+  if (verbose) inform(c("i" = glue("Saving loaded H&E images as 'rasters' in Seurat object")))
   return(raw_rasters)
 }
 
@@ -39,11 +54,24 @@ LoadImages.default <- function (
 #'
 #' @rdname load-images
 #'
+#' @examples
+#'
+#' #' library(STUtility2)
+#'
+#' # Load example Visium data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#' se_merged <- MergeSTData(se_mbrain, se_mcolon)
+#'
+#' # Load images
+#' se_merged <- LoadImages(se_merged)
+#'
 #' @export
 #'
 LoadImages.Seurat <- function (
     object,
-    image_height = 400
+    image_height = 400,
+    verbose = TRUE
 ) {
 
   # validate Seurat object
@@ -53,7 +81,7 @@ LoadImages.Seurat <- function (
   st_object <- GetStaffli(object)
 
   # Load images
-  raw_rasters <- LoadImages(st_object@imgs, image_height = image_height)
+  raw_rasters <- LoadImages(st_object@imgs, image_height = image_height, verbose = verbose)
 
   # Save loaded images in object
   st_object@rasterlists$raw <- raw_rasters
