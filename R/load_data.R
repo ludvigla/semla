@@ -291,6 +291,8 @@ ReadVisiumData <- function (
   if (verbose) cli::cli_h2("Read 10x Visium data")
 
   # Check infoTable
+  if (!all(c("samples", "imgs", "spotfiles", "json") %in% colnames(infoTable)))
+    abort("One or several of 'samples', 'imgs', 'spotfiles' and 'json' are missing from infoTable.")
   if (!any(class(infoTable) %in% c("tbl", "data.frame"))) abort(glue("Invalid class '{class(infoTable)}' of 'infoTable'."))
   if (nrow(infoTable) == 0) abort(glue("'infoTable' is empty."))
   if (!all(sapply(infoTable, class) %in% "character")) abort(glue("Invalid column classes in 'infoTable'. Expecting 'character vectors.'"))
@@ -306,6 +308,14 @@ ReadVisiumData <- function (
     })
   }
 
+  # Keep additional infoTable columns
+  if (ncol(infoTable) > 5) {
+    additionalMetaData <- infoTable |>
+      select(-samples, -imgs, -spotfiles, -json)
+  } else {
+    additionalMetaData
+  }
+
   # Read expression matrices
   mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
                                     verbose = verbose)
@@ -314,6 +324,20 @@ ReadVisiumData <- function (
   coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles,
                                         remove_spots_outside_tissue = remove_spots_outside_tissue,
                                         verbose = verbose)
+
+  # Create Seurat meta data
+  if (!is.null(additionalMetaData)) {
+    metaData <- coordinates |>
+      select(barcode) |>
+      bind_cols(
+        additionalMetaData |>
+          mutate(count = table(coordinates$sampleID) |> as.numeric()) |>
+          uncount(count)
+      ) |>
+      data.frame(row.names = 1)
+  } else {
+    metaData <- NULL
+  }
 
   # Make sure that coordinates and expression matrix are compatible
   if (!all(colnames(mergedMat) %in% coordinates$barcode)) {
@@ -357,6 +381,7 @@ ReadVisiumData <- function (
   # Create a Seurat object from expression matrix
   object <- CreateSeuratObject(counts = mergedMat,
                                assay = assay,
+                               meta.data = metaData,
                                ...)
   if (verbose) inform(c(">" = "Created `Seurat` object"))
 
