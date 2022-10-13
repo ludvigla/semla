@@ -1,0 +1,77 @@
+---
+title: "Getting started with STUtility2"
+format: html
+editor: visual
+---
+
+## Introduction
+
+STUtility2 is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data. This package is an updated version of STUtility, with major speed and usability updates.
+
+## Installation
+
+To install STUtility2, run the following command from R:
+
+```{r}
+remotes::install_github("ludvigla/STUtility2")
+```
+
+Load libraries
+
+```{r}
+library(STUtility2)
+library(tibble)
+```
+
+## Load data
+
+Currently, STUtility2 only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files produced by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object that can be used for `readVisiumData`.
+
+-   `samples` : file paths to expression matrices
+
+-   `imgs` : file paths to H&E images
+
+-   `spotfiles` : file paths to spot coordinate tables
+
+-   `json` : file paths to scale factor json files
+
+We can also any number of columns to our `infoTable` which will be passed as meta data columns in our `Seurat` object. This can for example be useful when you want to add clinical metadata, experimental information etc. Here we add a `sample_id` column describing what tissue type we have.
+
+```{r}
+samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+                                   "/*/filtered_feature_bc_matrix.h5"))
+imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                                "/*/spatial/tissue_hires_image.png"))
+spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                                     "/*/spatial/tissue_positions_list.csv"))
+json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                                "/*/spatial/scalefactors_json.json"))
+
+infoTable <- tibble(samples, imgs, spotfiles, json, 
+                    sample_id = c("mousebrain", "mousecolon"))
+infoTable
+```
+
+Now we are ready to load the 10x Visium data into a `Seurat` object:
+
+```{r}
+se <- ReadVisiumData(infoTable)
+se
+```
+
+We can now use the `Mapfeatures` and `MapLabels` to plot features in 2D space. `Mapfeatures` can be used to plot numeric features while `MapLabels` should be used to plot categorical features.
+
+```{r fig.width=2.5, fig.height=2}
+MapFeatures(se, 
+            features = "nFeature_Spatial", 
+            ncol = 2, 
+            colors = viridis::magma(n = 11, direction = -1),
+            override_plot_dims = TRUE)
+```
+
+```{r fig.width=3.5, fig.height=2}
+MapLabels(se, 
+          column_name = "orig.ident", 
+          ncol = 2, 
+          override_plot_dims = TRUE)
+```
