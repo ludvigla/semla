@@ -40,15 +40,18 @@ NULL
 #' library(tibble)
 #' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 #'
-#' # Create Seurat object
+#' # Create Seurat object and load H&E images
 #' se.list <- lapply(1:nrow(infoTable), function(i) {
-#'   ReadVisiumData(infoTable = infoTable[i, ])
+#'   ReadVisiumData(infoTable = infoTable[i, ]) |> LoadImages()
 #' })
 #' se.list
 #'
 #' # Merge a mousebrain dataset with two mousecolon datasets
 #' se.merged <- MergeSTData(x = se.list[[1]], y = c(se.list[2], se.list[2]))
 #' se.merged
+#'
+#' # Plot H&E images
+#' ImagePlot(se.merged)
 #' }
 #'
 #' @export
@@ -182,6 +185,11 @@ MergeSTData <- function (
       scalefactors = scalefactors
     )
 
+  # Add images
+  if (!is.null(available_images)) {
+    st_object_merged@rasterlists <- rasterlists
+  }
+
   # Return Seurat object
   object_merged@tools$Staffli <- st_object_merged
   return(object_merged)
@@ -223,7 +231,7 @@ MergeSTData <- function (
 #' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 #'
 #' # Create Seurat object
-#' se <- ReadVisiumData(infoTable = infoTable)
+#' se <- ReadVisiumData(infoTable = infoTable) |> LoadImages()
 #' se
 #'
 #' # Subset by spot IDs (first 100)

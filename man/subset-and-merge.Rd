@@ -70,15 +70,18 @@ json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
 library(tibble)
 infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 
-# Create Seurat object
+# Create Seurat object and load H&E images
 se.list <- lapply(1:nrow(infoTable), function(i) {
-  ReadVisiumData(infoTable = infoTable[i, ])
+  ReadVisiumData(infoTable = infoTable[i, ]) |> LoadImages()
 })
 se.list
 
 # Merge a mousebrain dataset with two mousecolon datasets
 se.merged <- MergeSTData(x = se.list[[1]], y = c(se.list[2], se.list[2]))
 se.merged
+
+# Plot H&E images
+ImagePlot(se.merged)
 }
 
 \dontrun{
@@ -92,7 +95,7 @@ library(tibble)
 infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
 
 # Create Seurat object
-se <- ReadVisiumData(infoTable = infoTable)
+se <- ReadVisiumData(infoTable = infoTable) |> LoadImages()
 se
 
 # Subset by spot IDs (first 100)

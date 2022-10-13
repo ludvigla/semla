@@ -19,7 +19,7 @@ compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTa
 
 ### Subset and Merge
 
-- [ ] : Add working examples including image data
+- [x] : Add working examples including image data
 - [x] : `SubsetSTData` for subsetting `Seurat` objects created with `STUtility2`
 - [x] : `MergeSTData` for merging `Seurat` objects created with `STUtility2`
 
