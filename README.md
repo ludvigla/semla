@@ -65,11 +65,13 @@ Need to fix add mirror as an option.
 - [ ] add side bar for image selection
 
 ### Visualization tools
-
+ 
 - [ ] `FeatureOverlay` : modify STUtility function, fix axes
 - [ ] `DimOverlay` : modify STUtility function, fix axes
-- [ ] `ST.FeaturePlot` : modify STUtility function, fix axes`. Change name?
-- [ ] `ST.DimPlot` : modify STUtility function, fix axes. Change name?
+- [x] `MapFeatures` : similar to `ST.FeaturePlot` and `ST.DimPlot` but only works with numeric features such as
+gene expression, PCs, QC metrics etc.
+- [x] `MapLabels` : similar to `ST.FeaturePlot` but only works with categorical features such as
+clusters, conditions etc.
 - [ ] `FactorGeneLoadingPlot` : migrate STUtility function. Name change?
 
 ### Matrix factorization
