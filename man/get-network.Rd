@@ -8,16 +8,16 @@
 \usage{
 GetSpatialNetwork(object, ...)
 
-\method{GetSpatialNetwork}{default}(object, nNeighbours = 6, maxDist = NULL, minK = 0)
+\method{GetSpatialNetwork}{default}(object, nNeighbors = 6, maxDist = NULL, minK = 0)
 
-\method{GetSpatialNetwork}{Seurat}(object, nNeighbours = 6, maxDist = NULL, minK = 0)
+\method{GetSpatialNetwork}{Seurat}(object, nNeighbors = 6, maxDist = NULL, minK = 0)
 }
 \arguments{
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
 
-\item{nNeighbours}{Number of nearest neighbors to calculate for each spot. The default
+\item{nNeighbors}{Number of nearest neighbors to calculate for each spot. The default
 number of neighbors is 6 given the hexagonal pattern of 10x Visium arrays.}
 
 \item{maxDist}{Distance cut-off for nearest neighbors to consider. If set to NULL (default),
@@ -56,10 +56,10 @@ coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list
 # Load coordinate data into a tibble
 xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
-  coords$sample <- paste0(i)
+  coords$sampleID <- i
   coords <- coords |>
     dplyr::filter(selection == 1) |>
-    dplyr::select(barcode, x, y, sample) |>
+    dplyr::select(barcode, x, y, sampleID) |>
     tibble::as_tibble()
   return(coords)
 }))

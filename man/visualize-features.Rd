@@ -30,6 +30,7 @@ MapFeatures(object, ...)
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  section_number = NULL,
   label_by = NULL,
   ncol = NULL,
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
@@ -88,6 +89,8 @@ active when \code{blend = TRUE}. See color blending for more information.}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
+
+\item{section_number}{an integer select a tissue section number to subset data by}
 
 \item{override_plot_dims}{a logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
