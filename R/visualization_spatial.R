@@ -379,6 +379,9 @@ MapLabels.default <- function (
     select(-barcode, -pxl_col_in_fullres, -pxl_row_in_fullres, -sampleID, -all_of(label_by)) |>
     colnames()
 
+  # Check if label column only contains NA values
+  if (object |> pull(all_of(label)) |> is.na() |> all()) abort(glue("Selected feature only contains NA values."))
+
   # Convert label column to factor
   object <- object |>
     mutate(across(all_of(label), ~ factor(.x)))
@@ -397,7 +400,7 @@ MapLabels.default <- function (
   }
 
   # Obtain colors
-  colors <- colors %||% .gg_color_hue(length(unique(object |> select(all_of(label)) |> pull(all_of(label)))))
+  colors <- colors %||% .gg_color_hue(length(levels(object |> select(all_of(label)) |> pull(all_of(label)))))
 
   # get image dimensions
   dims <- .get_dims(data, dims)
@@ -1068,7 +1071,10 @@ MapLabels.Seurat <- function (
   return(wrapped_plots)
 }
 
-
+#' Generate colors
+#'
+#' @param n integer specifying the number of colors to generate
+#'
 .gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]

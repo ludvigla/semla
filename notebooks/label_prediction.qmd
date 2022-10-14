@@ -1,0 +1,158 @@
+---
+title: "HER2 label prediction"
+format: html
+editor: visual
+---
+
+## Load data
+
+```{r warning=FALSE, message=FALSE}
+library(STUtility2)
+library(tibble)
+```
+
+```{r}
+samples <- Sys.glob("~/BC_data/*/filtered_feature_bc_matrix.h5")
+imgs <- Sys.glob("~/BC_data/*/spatial/tissue_hires_image.png")
+spotfiles <- Sys.glob("~/BC_data/*/spatial/tissue_positions_list.csv")
+json <- Sys.glob("~/BC_data/*/spatial/scalefactors_json.json")
+
+infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("S1", "S2"))
+
+bc <- ReadVisiumData(infoTable)
+```
+
+## Analysis
+
+Run a simple analysis workflow
+
+```{r}
+bc <- bc |>
+  NormalizeData() |>
+  ScaleData() |>
+  FindVariableFeatures() |>
+  RunPCA() |>
+  FindNeighbors(reduction = "pca", dims = 1:30) |>
+  FindClusters() |>
+  RunUMAP(reduction = "pca", dims = 1:30)
+```
+
+Plot clusters and sample IDs on UMAP embbedding
+
+```{r fig.width=10, fig.height=5}
+DimPlot(bc, group.by = "sample_id") | DimPlot(bc)
+```
+
+Get data to use for training and testing. We'll use the top 1000 variable genes and add the cluster labels as the response variable.
+
+```{r}
+# Model data
+exprMat <- FetchData(bc, vars = VariableFeatures(bc)[1:1000])
+
+# add response
+modelData <- cbind(cluster = bc$seurat_clusters, exprMat)
+```
+
+Create a model recipe using the tidymodels `recipes` R package:
+
+-   assign cluster an outcome role
+
+-   assign all numeric variables a predictor role
+
+-   remove predictors with zero variance
+
+-   center data
+
+-   scale data
+
+-   add a PCA step to avoid modelling correlated predictors
+
+```{r}
+
+library(recipes)
+
+# Create recipe
+rec <- recipe(modelData) |>
+  update_role(cluster, new_role = "outcome") |>
+  update_role(all_numeric(), new_role = "predictor") |>
+  step_zv(all_predictors()) |>
+  step_center(all_predictors()) |>
+  step_scale(all_predictors()) |>
+  step_pca(all_predictors(), num_comp = 20)
+```
+
+Create a model workflow using the tidymodels `workflows` R package. Here we'll use a KNN spec from the tidymodels `pasnip` R package.
+
+```{r}
+
+library(parsnip)
+library(workflows)
+
+# Create workflow
+knn_spec <- nearest_neighbor(mode = "classification", 
+                             neighbors = 10, weight_func = "cos")
+
+knn_wflow <- workflow() |>
+  add_model(knn_spec) |>
+  add_recipe(rec)
+```
+
+Split data into training and testing data. We'll split the data by sample.
+
+```{r}
+# Split data
+modelData_train <- modelData[bc$sample_id == "S1", ]
+modelData_test <- modelData[bc$sample_id == "S2", ]
+```
+
+Fit model to training dataset
+
+```{r}
+# fit model
+knn_fit <- knn_wflow |>
+  fit(modelData_train)
+```
+
+Predict labels from testing dataset
+
+```{r}
+# Predict
+pred_res <- predict(knn_fit, modelData_test)
+```
+
+Evaluate model
+
+```{r}
+# Evaluate model
+knn_testing_pred <- 
+  predict(knn_fit, modelData_test) %>% 
+  bind_cols(predict(knn_fit, modelData_test, type = "prob")) %>% 
+  bind_cols(modelData_test %>% select(cluster))
+```
+
+ROC AUC
+
+```{r}
+
+library(yardstick)
+
+# ROC AUC
+knn_testing_pred %>% 
+  roc_auc(truth = cluster, .pred_0:.pred_16, estimator = "hand_till")
+knn_testing_pred %>%
+  accuracy(truth = cluster, .pred_class)
+```
+
+Add predictions to Seurat object
+
+```{r}
+df <- data.frame(pred = knn_testing_pred$.pred_class, row.names = rownames(modelData_test))
+
+bc$pred <- df[colnames(bc), "pred", drop = TRUE]
+```
+
+Plot predictions
+
+```{r fig.width=10, fig.height=5}
+DimPlot(bc, group.by = "seurat_clusters", label = TRUE) | DimPlot(bc, group.by = "pred", label = TRUE)
+```
