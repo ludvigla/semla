@@ -299,6 +299,9 @@ SubsetSTData <- function (
     object <- RenameCells(object, new.names = st_meta_data$barcode)
   }
 
+  # Add st_meta_data to STaffli object
+  st_object@meta_data <- st_meta_data
+
   # Subset each slot in Staffli object
   if (length(st_object@imgs) > 0) {
     st_object@imgs <- st_object@imgs[remaining_samples]

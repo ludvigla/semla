@@ -260,6 +260,9 @@ LoadImageData <- function (
 #' @importFrom Seurat CreateSeuratObject
 #' @importFrom magick image_read image_info
 #' @importFrom jsonlite read_json
+#' @importFrom dplyr select bind_cols mutate case_when left_join
+#' @importFrom tibble as_tibble
+#' @importFrom tidyr uncount
 #'
 #' @return A \code{\link{Seurat}} object with additional spatial information
 #'
@@ -288,7 +291,7 @@ ReadVisiumData <- function (
     ...
 ) {
 
-  if (verbose) cli::cli_h2("Read 10x Visium data")
+  if (verbose) cli::cli_h2("Reading 10x Visium data")
 
   # Check infoTable
   if (!all(c("samples", "imgs", "spotfiles", "json") %in% colnames(infoTable)))
@@ -309,11 +312,11 @@ ReadVisiumData <- function (
   }
 
   # Keep additional infoTable columns
-  if (ncol(infoTable) > 5) {
+  if (ncol(infoTable) > 4) {
     additionalMetaData <- infoTable |>
       select(-samples, -imgs, -spotfiles, -json)
   } else {
-    additionalMetaData
+    additionalMetaData <- NULL
   }
 
   # Read expression matrices
