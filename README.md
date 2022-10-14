@@ -94,7 +94,7 @@ calculate spatial autocorrelation of genes and for principal components.
 
 ### Neighborhood analysis
 
-- [ ] : migrate `RegionNeighbours` from STUtility
+- [x] : migrate `RegionNeighbours` from STUtility
 - [ ] : `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
 - [ ] : `GroupClusteringTest` : (function name??) under development. Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
 
