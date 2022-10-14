@@ -154,3 +154,22 @@ MapLabels <- function(object, ...) {
 LoadImages <- function(image_paths, ...) {
   UseMethod(generic = 'LoadImages', object = image_paths)
 }
+
+
+#' Find region neighbors
+#'
+#' @section Seurat:
+#' If a \code{Seurat} object is provided, the identified neighbors will be
+#' stored as new columns in the meta data column with the names prefixed by
+#' \code{column_key}
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname region-neighbors
+#'
+#' @export
+#'
+RegionNeighbors <- function(object, ...) {
+  UseMethod(generic = 'RegionNeighbors', object = object)
+}
