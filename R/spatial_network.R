@@ -6,7 +6,7 @@ NULL
 #' @importFrom tibble tibble
 #'
 #' @param object An object
-#' @param nNeighbours Number of nearest neighbors to calculate for each spot. The default
+#' @param nNeighbors Number of nearest neighbors to calculate for each spot. The default
 #' number of neighbors is 6 given the hexagonal pattern of 10x Visium arrays.
 #' @param maxDist Distance cut-off for nearest neighbors to consider. If set to NULL (default),
 #' `maxDist` is estimated from the data by taking the minimum neighbor distance multiplied by
@@ -27,10 +27,10 @@ NULL
 #' # Load coordinate data into a tibble
 #' xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
 #'   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
-#'   coords$sample <- paste0(i)
+#'   coords$sampleID <- i
 #'   coords <- coords |>
 #'     dplyr::filter(selection == 1) |>
-#'     dplyr::select(barcode, x, y, sample) |>
+#'     dplyr::select(barcode, x, y, sampleID) |>
 #'     tibble::as_tibble()
 #'   return(coords)
 #' }))
@@ -54,13 +54,12 @@ NULL
 #'
 GetSpatialNetwork.default <- function (
     object,
-    nNeighbours = 6,
+    nNeighbors = 6,
     maxDist = NULL,
     minK = 0
 ) {
 
   # Check object object class
-  print(class(object))
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
     abort(glue("Invalid class '{class(object)}'."))
   if (ncol(object) != 4)
@@ -70,7 +69,7 @@ GetSpatialNetwork.default <- function (
       check_barcode = is.character(barcode),
       check_x = is.numeric(x),
       check_y = is.numeric(y),
-      check_sample = is.character(sample)
+      check_sample = is.numeric(sampleID)
     ) |>
     unlist()
   )) {
@@ -81,18 +80,18 @@ GetSpatialNetwork.default <- function (
   if (!requireNamespace("dbscan")) install.packages("dbscan")
 
   # Set number of nearest neighbors if NULL
-  nNeighbours <- nNeighbours %||% 6
+  nNeighbors <- nNeighbors %||% 6
   # Split coordinates by sample
-  xys.list <- split(object, object$sample)[unique(object$sample)]
+  xys.list <- split(object, object$sampleID)[unique(object$sampleID)]
 
   # Compute network
   knn_long.list <- setNames(lapply(names(xys.list), function(sampleID) {
 
     xys_subset <- xys.list[[sampleID]]
     spotnames <- setNames(xys_subset$barcode, nm = c(1:nrow(xys_subset)) |> paste0())
-    knn_spatial <- dbscan::kNN(x = xys_subset[, c("x", "y")] |> as.matrix(), k = nNeighbours)
+    knn_spatial <- dbscan::kNN(x = xys_subset[, c("x", "y")] |> as.matrix(), k = nNeighbors)
     maxDist <- maxDist %||% (apply(knn_spatial$dist, 1, min) |> min())*1.2
-    knn_long <- tibble::tibble(from = rep(1:nrow(knn_spatial$id), nNeighbours),
+    knn_long <- tibble::tibble(from = rep(1:nrow(knn_spatial$id), nNeighbors),
                                        to = as.vector(knn_spatial$id),
                                        distance = as.vector(knn_spatial$dist))
 
@@ -125,12 +124,15 @@ GetSpatialNetwork.default <- function (
 }
 
 #' @rdname get-network
+#'
+#' @importFrom dplyr select rename
+#'
 #' @export
 #' @method GetSpatialNetwork Seurat
 #'
 GetSpatialNetwork.Seurat <- function (
     object,
-    nNeighbours = 6,
+    nNeighbors = 6,
     maxDist = NULL,
     minK = 0
 ) {
@@ -140,10 +142,11 @@ GetSpatialNetwork.Seurat <- function (
 
   # Get coordinates
   xys <- GetStaffli(object)@meta_data |>
-    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |>
+    rename(x = pxl_col_in_fullres, y = pxl_row_in_fullres)
 
   # get spatial networks
-  spatnet <- GetSpatialNetwork(xys, nNeighbours = nNeighbours, maxDist = maxDist, minK = minK)
+  spatnet <- GetSpatialNetwork(xys, nNeighbors = nNeighbors, maxDist = maxDist, minK = minK)
 
   # Return spatial networks
   return(spatnet)
