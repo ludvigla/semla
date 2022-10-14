@@ -170,6 +170,7 @@ MapFeatures.default <- function (
 #'
 #' @param features a character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
+#' @param section_number an integer select a tissue section number to subset data by
 #' @param override_plot_dims a logical specifying whether the image dimensions should
 #' be used to define the plot area. Setting \code{override_plot_dims} can be useful
 #' in situations where the tissue section only covers a small fraction of the capture
@@ -260,6 +261,7 @@ MapFeatures.Seurat <- function (
     pt_size = 1,
     pt_alpha = 1,
     pt_stroke = 0,
+    section_number = NULL,
     label_by = NULL,
     ncol = NULL,
     colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
@@ -282,6 +284,17 @@ MapFeatures.Seurat <- function (
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features) |> as_tibble())
+
+  # Subset by section number
+  if (!is.null(section_number)) {
+    if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for 'section_number, expected an integer"))
+    if (length(section_number) != 1) abort(glue("Invalid length {length(section_number)} for 'section_number, ",
+                                                 "expected an integer vector of length 1"))
+    if (!section_number %in% unique(data_use$sampleID)) abort(glue("{section_number} out of range. ",
+                                                                   "Select a number between {paste(range(data_use$sampleID), collapse = '-')}"))
+    data_use <- data_use |>
+      filter(sampleID == section_number)
+  }
 
   # Add label_by column if present
   if (!is.null(label_by)) {
@@ -763,10 +776,8 @@ MapLabels.Seurat <- function (
           legend.title = element_text(vjust = 0.8)) +
     # Add colors
     scale_fill_manual(values = colors) +
-    #scale_fill_manual(values = c("1" = "red", "0" = "blue", "2" = "grey", "3" = "orange",
-    #                             "4" = "green", "5" = "yellow", "6" = "lightgray", "7" = "magenta")) +
     # Create a title
-    labs(title = ifelse(!is.null(cur_label), cur_label, NA)) +
+    labs(title = ifelse(!is.null(cur_label), cur_label, NA), fill = lbl) +
     # Fix coordinates so that plot cannot be stretched
     coord_fixed()
 
@@ -867,6 +878,7 @@ MapLabels.Seurat <- function (
 #' groups in the label column
 #'
 #' @importFrom dplyr mutate across all_of case_when filter
+#' @importFrom forcats fct_drop
 #'
 #' @return a list of tibbles holding spot coordinates, a tibble with information
 #' about plot dimensions and a character vector of colors stored together in a list
@@ -879,7 +891,7 @@ MapLabels.Seurat <- function (
   colors
 ) {
   section_number <- section_number %||% {
-    warn("No section_number selected. Selecting the section 1.")
+    warn("No section_number selected. Selecting section 1.")
     1
   }
   if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for",
