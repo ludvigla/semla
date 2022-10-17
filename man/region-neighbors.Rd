@@ -68,6 +68,7 @@ stored as new columns in the meta data column with the names prefixed by
 
 
 library(STUtility2)
+library(dplyr)
 
 se_mbrain <- readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/mousebrain/se_mbrain")))
 

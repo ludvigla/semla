@@ -22,11 +22,23 @@ Depends:
   Seurat (>= 4.0.0),
   ggplot2 (>= 3.2.0),
   rlang (>= 1.0.4)
-VignetteBuilder: knitr
+Imports:
+  methods,
+  dplyr (>= 1.0.9),
+  forcats (>= 0.5.2),
+  glue (>= 1.6.2),
+  jsonlite (>= 1.8.0),
+  magick (>= 2.7.3),
+  Matrix (>= 1.4-1),
+  patchwork (>= 1.1.2),
+  scales (>= 1.2.1),
+  tibble (>= 3.1.8),
+  tidyr (>= 1.2.0),
+  zeallot (>= 0.1.0),
+  pillar (>= 1.8.1)
 RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
-Config/testthat/edition: 3
 Collate: 
     'STUtility2-package.R'
     'checks.R'
@@ -42,7 +54,7 @@ Collate:
     'staffli_object.R'
     'subset_and_merge.R'
     'tile_images.R'
-    'transformation_coordinates.R'
+    'transformations_coordinates.R'
     'transformations_image.R'
     'visualization_spatial.R'
     'zzz.R'

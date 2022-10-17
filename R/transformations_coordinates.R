@@ -52,6 +52,8 @@
 #' the x-axis, y-axis or both.
 #' @param center Optional point (x, y) specifying the center of reflection.
 #'
+#' @importFrom rlang %||%
+#'
 #' @family transforms
 #'
 #' @return A `tbl` object with transformed coordinates
@@ -184,6 +186,8 @@ CoordMirror <- function (
 #' for  counter-clockwise rotation.
 #' @param center Optional point (x, y) specifying the center of rotation.
 #' @param xy_offset Optional point (x, y) specifying the translation.
+#'
+#' @importFrom rlang %||%
 #'
 #' @family transforms
 #'

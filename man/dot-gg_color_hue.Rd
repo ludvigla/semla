@@ -9,6 +9,9 @@
 \arguments{
 \item{n}{integer specifying the number of colors to generate}
 }
+\value{
+a character vector with color ids
+}
 \description{
 Generate colors
 }

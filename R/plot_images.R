@@ -5,15 +5,17 @@ NULL
 #' Plot H&E images
 #'
 #' @param object a Seurat object
+#' @param label_by a string specifying a meta data column to label plots by
 #' @param type image type, for example 'raw'
 #' @param section_numbers an integer vector with section numbers to plot
 #' @param ncol integer value specifying the number of columns in the plot
 #' grid
 #' @param mar margins around each plot. See \code{\link{par}} for details.
 #'
-#' @importFrom rlang abort
+#' @importFrom rlang abort %||%
 #' @importFrom graphics layout
 #' @importFrom dplyr select bind_cols
+#' @importFrom graphics par title
 #'
 #' @return draws a plot of the H&E images
 #'
@@ -27,7 +29,9 @@ NULL
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
 #'
 #' # ImagePlot will throw an error if no images are loaded
+#' \dontrun{
 #' ImagePlot(se_merged)
+#' }
 #'
 #' # Load images
 #' se_merged <- LoadImages(se_merged)

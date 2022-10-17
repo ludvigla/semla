@@ -45,11 +45,15 @@ Staffli <- setClass (
 #' required columns 'barcode' representing the spot IDs, 'pxl_col_in_fullres' and 'pxl_row_in_fullres'
 #' which specifies the 10x Visium array coordinates and a 'sampleID' column with sample IDs
 #' @param image_height Specifies the height of the scaled images in pixels [default: 400 pixels]
+#' @param image_info a tibble with image information
+#' @param scalefactors a tibble with scalefactors sued to transform coordinates from
+#' the original image space to the downscaled images
 #'
 #' @importFrom utils packageVersion
 #' @importFrom Matrix colSums
 #' @importFrom stats setNames
 #' @importFrom rlang abort
+#' @importFrom methods new
 #'
 #' @export
 #'
@@ -106,6 +110,8 @@ setMethod (
 #' Method to extract images from a Staffli object
 #'
 #' @param object A Staffli or Seurat object
+#' @param type A string specifying the mage type to get
+#'
 #' @export
 #' @docType methods
 #' @rdname GetImages

@@ -16,8 +16,10 @@
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  scale_alpha = FALSE,
   cur_label = NULL,
-  coords_columns
+  coords_columns,
+  drop_na = FALSE
 )
 }
 \arguments{
@@ -44,7 +46,19 @@ used for blending features}
 \item{pt_alpha}{point opacity ranging from 0 to 1 passed to geom_point.
 0 = fully transparent, 1 = fully opaque}
 
-\item{pt-stroke}{point stroke width}
+\item{pt_stroke}{point stroke width}
+
+\item{scale_alpha}{should the spot opacity be scaled along with the feature values?}
+
+\item{cur_label}{string to use as title}
+
+\item{coords_columns}{a character vector of length 2 specifying names of
+columns in which spatial coordinates are located}
+
+\item{drop_na}{should NA values be dropped from the data?}
+}
+\value{
+a `ggplot` object with a spatial plot
 }
 \description{
 Plot numeric features in 2D

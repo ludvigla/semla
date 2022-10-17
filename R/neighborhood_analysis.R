@@ -22,7 +22,7 @@ NULL
 #'
 #' @rdname region-neighbors
 #'
-#' @importFrom rlang inform
+#' @importFrom rlang inform warn
 #' @importFrom dplyr filter mutate
 #'
 #' @export
@@ -84,13 +84,14 @@ RegionNeighbors.default <- function (
 #' @rdname region-neighbors
 #'
 #' @importFrom glue glue
-#' @importFrom rlang inform abort
+#' @importFrom rlang inform abort %||%
 #' @importFrom dplyr bind_cols select left_join filter bind_cols pull distinct sym all_of
 #' @importFrom tibble tibble
 #'
 #' @examples
 #'
 #' library(STUtility2)
+#' library(dplyr)
 #'
 #' se_mbrain <- readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/mousebrain/se_mbrain")))
 #'

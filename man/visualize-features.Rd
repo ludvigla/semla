@@ -10,9 +10,12 @@ MapFeatures(object, ...)
 
 \method{MapFeatures}{default}(
   object,
+  crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  scale_alpha = FALSE,
+  section_number = NULL,
   label_by = NULL,
   ncol = NULL,
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
@@ -20,6 +23,8 @@ MapFeatures(object, ...)
   arrange_features = c("col", "row"),
   dims = NULL,
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+  return_plot_list = FALSE,
+  drop_na = FALSE,
   blend = FALSE,
   blend_order = 1:3
 )
@@ -27,9 +32,13 @@ MapFeatures(object, ...)
 \method{MapFeatures}{Seurat}(
   object,
   features,
+  image_use = NULL,
+  coords_use = "raw",
+  crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
   ncol = NULL,
@@ -40,7 +49,8 @@ MapFeatures(object, ...)
   blend_order = 1:3,
   override_plot_dims = FALSE,
   max_cutoff = NULL,
-  min_cutoff = NULL
+  min_cutoff = NULL,
+  return_plot_list = FALSE
 )
 }
 \arguments{
@@ -55,6 +65,12 @@ to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
 \item{pt_stroke}{numeric specifying the point stroke width}
+
+\item{scale_alpha}{logical specifying if the spot colors should be scaled together with
+the feature values. This can be useful when you want to highlight regions with higher
+feature values while making the background tissue visible.}
+
+\item{section_number}{an integer select a tissue section number to subset data by}
 
 \item{label_by}{character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
@@ -82,6 +98,10 @@ computed directly from the spatial coordinates provided in \code{object}.}
 \item{coords_columns}{a character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
 
+\item{return_plot_list}{logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
+By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
+if you want to manipulate each sub plot independently.}
+
 \item{blend}{a logical specifying whether blending should be used. See color blending for more information.}
 
 \item{blend_order}{an integer vector of length 2-3 specifying the order to blend features by. Only
@@ -89,8 +109,6 @@ active when \code{blend = TRUE}. See color blending for more information.}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
-
-\item{section_number}{an integer select a tissue section number to subset data by}
 
 \item{override_plot_dims}{a logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful

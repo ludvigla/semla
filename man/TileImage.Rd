@@ -4,14 +4,25 @@
 \alias{TileImage}
 \title{Tile an H&E image}
 \usage{
-TileImage(im, outpath = NULL, maxImgWidth = 10000, nCores = detectCores() - 1)
+TileImage(
+  im,
+  outpath = NULL,
+  maxZoomLevel = 4,
+  maxImgWidth = 10000,
+  nCores = detectCores() - 1
+)
 }
 \arguments{
 \item{im}{An image of class `magick-image`}
 
-\item{nCores}{Number of cores to use for threading}
+\item{outpath}{A string specifying an output directory to save the tiled image in.
+If this is not provided, a temporary directory will be created}
 
-\item{maxZoom}{Max zoom level}
+\item{maxZoomLevel}{Max zoom level}
+
+\item{maxImgWidth}{Safety threshold to make sure that the zoom level doesn't get too deep.}
+
+\item{nCores}{Number of cores to use for threading}
 }
 \value{
 Path to tiles

@@ -15,6 +15,7 @@
 #'
 #' @importFrom magick image_info image_blank image_crop image_append
 #' @importFrom dplyr mutate case_when
+#' @importFrom rlang %||%
 #'
 #' @examples
 #'

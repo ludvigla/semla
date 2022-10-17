@@ -3,7 +3,7 @@
 \name{MergeSTData}
 \alias{MergeSTData}
 \alias{SubsetSTData}
-\title{Merge 10x Visium data}
+\title{Merge and subset 10x Visium data}
 \usage{
 MergeSTData(
   x,
@@ -51,13 +51,6 @@ images and spot coordinates are correctly structured.
 If you use the default \code{\link{merge}} function you will not be able
 to use any of the STUtility2 visualization methods on the output object as
 the `Staffli` object will be broken.
-
-Subset a Seurat object containing SRT data while making sure that the
-images and spot coordinates are correctly structured.
-If you use the default \code{\link{subset}} function you will not be able
-to use any of the STUtility2 visualization methods on the output object as
-the `Staffli` object will be broken. This is however not the case if the
-filtering is only done at the feature level.
 }
 \examples{
 \dontrun{

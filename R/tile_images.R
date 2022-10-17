@@ -5,12 +5,16 @@
 #' are determined rom the
 #'
 #' @param im An image of class `magick-image`
-#' @param maxZoom Max zoom level
+#' @param outpath A string specifying an output directory to save the tiled image in.
+#' If this is not provided, a temporary directory will be created
+#' @param maxZoomLevel Max zoom level
+#' @param maxImgWidth Safety threshold to make sure that the zoom level doesn't get too deep.
 #' @param nCores Number of cores to use for threading
 #'
 #' @importFrom parallel detectCores mclapply
 #' @importFrom magick image_read image_info image_crop image_scale image_blank image_composite image_transparent image_write
 #' @importFrom tibble tibble
+#' @importFrom rlang %||%
 #'
 #' @return Path to tiles
 #'
@@ -51,6 +55,7 @@
 TileImage <- function (
     im,
     outpath = NULL,
+    maxZoomLevel = 4,
     maxImgWidth = 1e4,
     nCores = detectCores() - 1
 ) {

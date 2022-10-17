@@ -2,7 +2,7 @@
 #'
 NULL
 
-#' Merge 10x Visium data
+#' Merge and subset 10x Visium data
 #'
 #' Merges two or more Seurat objects containing SRT data while making sure that the
 #' images and spot coordinates are correctly structured.
@@ -24,6 +24,7 @@ NULL
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr separate unite drop_na
 #' @importFrom Seurat RenameCells
+#' @importFrom rlang warn
 #'
 #' @return A merged Seurat object
 #'
@@ -196,8 +197,6 @@ MergeSTData <- function (
 }
 
 
-#' Subset 10x Visium data
-#'
 #' Subset a Seurat object containing SRT data while making sure that the
 #' images and spot coordinates are correctly structured.
 #' If you use the default \code{\link{subset}} function you will not be able
@@ -214,6 +213,7 @@ MergeSTData <- function (
 #' @importFrom dplyr mutate group_by ungroup filter pull arrange
 #' @importFrom tidyr unite separate
 #' @importFrom Seurat WhichCells RenameCells
+#' @importFrom rlang enquo
 #'
 #' @return A filtered Seurat object
 #'

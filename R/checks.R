@@ -1,10 +1,11 @@
 #' Check if a Seurat object has been processed with STUtility
 #'
 #' @param object A Seurat object
-#' @param message An error message
 #'
 #' @importFrom rlang abort
 #' @importFrom glue glue
+#'
+#' @return an error message if conditions are not met
 #'
 .check_seurat_object <- function (
     object

@@ -17,6 +17,8 @@ GetImages(object, type = "raw")
 }
 \arguments{
 \item{object}{A Staffli or Seurat object}
+
+\item{type}{A string specifying the mage type to get}
 }
 \description{
 Method to extract images from a Staffli object

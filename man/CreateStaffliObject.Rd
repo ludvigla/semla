@@ -20,6 +20,11 @@ required columns 'barcode' representing the spot IDs, 'pxl_col_in_fullres' and '
 which specifies the 10x Visium array coordinates and a 'sampleID' column with sample IDs}
 
 \item{image_height}{Specifies the height of the scaled images in pixels [default: 400 pixels]}
+
+\item{image_info}{a tibble with image information}
+
+\item{scalefactors}{a tibble with scalefactors sued to transform coordinates from
+the original image space to the downscaled images}
 }
 \description{
 Create a Staffli object from a set of images and associated spot coordinates

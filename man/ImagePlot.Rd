@@ -16,6 +16,8 @@ ImagePlot(
 \arguments{
 \item{object}{a Seurat object}
 
+\item{label_by}{a string specifying a meta data column to label plots by}
+
 \item{type}{image type, for example 'raw'}
 
 \item{section_numbers}{an integer vector with section numbers to plot}
@@ -41,7 +43,9 @@ se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "S
 se_merged <- MergeSTData(se_mbrain, se_mcolon)
 
 # ImagePlot will throw an error if no images are loaded
+\dontrun{
 ImagePlot(se_merged)
+}
 
 # Load images
 se_merged <- LoadImages(se_merged)

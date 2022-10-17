@@ -22,6 +22,8 @@ plot dimensions}
 a list of tibbles similar to input data but in which the feature
 columns have been replaced by a color vector with blended colors called
 \code{encoded_cols}
+
+a list of tibbles containing coordinates and a color vector
 }
 \description{
 Blend values

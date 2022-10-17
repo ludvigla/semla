@@ -10,6 +10,7 @@ NULL
 #' @importFrom glue glue
 #' @importFrom magick image_read image_scale geometry_area image_info
 #' @importFrom tools file_ext
+#' @importFrom grDevices as.raster
 #'
 #' @rdname load-images
 #'

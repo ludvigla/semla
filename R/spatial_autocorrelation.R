@@ -19,6 +19,7 @@ NULL
 #' @importFrom dplyr mutate select
 #' @importFrom glue glue
 #' @importFrom rlang abort
+#' @importFrom methods as
 #'
 #' @examples
 #' \dontrun{

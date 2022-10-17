@@ -1,0 +1,221 @@
+---
+title: "Plotting tips and tricks"
+format: html
+editor: visual
+---
+
+## Introduction
+
+In this notebook, we'll have a look at different ways of rearranging plots produced with STUtility2. Functions such as `MapFeatures` and `MapLabels` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate plots after they have been created. The `patchwork` R package is extremely versatile and has a fantastic API to achieve pretty much anything you want :-) Here we'll have a look at a couple of tips and tricks using the patchwork R package
+
+```{r}
+library(tibble)
+library(STUtility2)
+```
+
+## Load data
+
+First we need to load some 10x Visium data
+
+```{r}
+samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+                                   "/*/filtered_feature_bc_matrix.h5"))
+imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+                                "/*/spatial/tissue_hires_image.png"))
+spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+                                     "/*/spatial/tissue_positions_list.csv"))
+json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+                                "/*/spatial/scalefactors_json.json"))
+
+# Create a tibble/data.frame with file paths
+infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+
+# Create Seurat object
+se <- ReadVisiumData(infoTable = infoTable) |>
+  NormalizeData()
+```
+
+## Map features
+
+And now let's map a couple of features on the spatial coordinates of our two Visium datasets:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"))
+p
+```
+
+### Transpose patchwork layout
+
+By default, `MapFeatures` arranges features in columns and samples in rows. We can transpose the plot by setting `arrange_features` to "row":
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row")
+p
+```
+
+### Independent color bars
+
+The color bars are now identical for each feature. `MapFeatures` calculates the range for each feature and uses this range to determine the limits of the color bars. If you want to change this behavior to scale the values independently, you can set `scale = "free"`:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), scale = "free")
+p
+```
+
+### Override plot dimensions
+
+`MapFeatures` used the image dimensions to define the plot area dimensions. Sometimes, if you have a very small piece of tissue, you will end up with a lot of white space. You can override this behavior by setting `override_plot_dims = TRUE` which will make `MapFeatures` compute the dimensions based on your coordinates. Notice how the tissues are expanded:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), override_plot_dims = TRUE)
+p
+```
+
+### Controlling themes
+
+Themes can be modified by adding a new ggplot theme using the `&` operator. This operator will make sure that the theme is added to each subplot in our patchwork. As an example, let's say that we want to place the legends on the right side of our plots instead:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu")) &
+  theme(legend.position = "right", legend.text = element_text(angle = 0))
+p
+```
+
+We can also remove the color legends entirely:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu")) &
+  theme(legend.position = "none")
+p
+```
+
+Or remove everything except the spatial feature map:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu")) &
+  theme(legend.position = "none", 
+        plot.title = element_blank(), 
+        plot.subtitle = element_blank())
+p
+```
+
+### Reduce the number of color bars
+
+If we don't want to have the same color bar next to each tissue section, we can collect identical color bars and place them on the side. We can use `plot_layout(guides = "collect")` to modify this. Note that if we want to place the color bar on the right side of the plots, we need to set `arrange_features = "row"`\` and adjust the legend position:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", legend.text = element_text(angle = 0))
+p
+```
+
+This already looks quite good, but the color bars are a bit misplaced. We can adjust their placement by modifying the legend margins:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", 
+        legend.text = element_text(angle = 0),
+        legend.margin = margin(t = 50, r = 0, b = 100, l = 0))
+p
+```
+
+#### Do not do this
+
+If we set `scale = "free"`, the color bars are no longer unique and it doesn't make sense to collect the color bars anymore:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", scale = "free") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", 
+        legend.text = element_text(angle = 0),
+        legend.margin = margin(t = 50, r = 0, b = 100, l = 0))
+p
+```
+
+#### Do not do this
+
+If we set `arrange_features = "col"`, the placement of the color bar will not make much sense anymore. The color bars are now located on the right side, but the features are arranged by row:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", 
+        legend.text = element_text(angle = 0),
+        legend.margin = margin(t = 50, r = 0, b = 100, l = 0))
+p
+```
+
+Instead, if we want to arrange features by columns, it would make more sense to place the color bars on top of each column and adjust the legend margins accordingly:
+
+```{r fig.width=8, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col") +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top", 
+        legend.text = element_text(angle = 0),
+        legend.margin = margin(t = 0, r = 100, b = 0, l = 10))
+p
+```
+
+## Map labels
+
+For categorical data, we use `MapLabels` instead of `MapFeatures`. This function allows us to color our spots based on some column of our Seurat object containing categorical data:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "sample_id") &
+  theme(legend.position = "right")
+```
+
+Categorical data can be represented as character vectors or factors, but with factors it's easier to control the order of the labels as well as their colors. If we want to customize the order, we can convert our column into a factor and set the levels as we please:
+
+```{r fig.width=7, fig.height=3}
+se$sample_id_factor <- factor(se$sample_id, levels = c("mousecolon", "mousebrain"))
+MapLabels(se, column_name = "sample_id_factor") &
+  theme(legend.position = "right")
+```
+
+If we pass a named vector of colors we can control the coloring of our labels:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "sample_id_factor", 
+          colors = c("mousecolon" = "lightblue", "mousebrain" = "mistyrose")) &
+  theme(legend.position = "right")
+```
+
+Let's run an unsupervised clustering on our data to get slightly more interesting results to work with:
+
+```{r fig.width=7, fig.height=3, message=FALSE, warning=FALSE}
+se <- se |>
+  NormalizeData() |>
+  ScaleData() |>
+  FindVariableFeatures() |>
+  RunPCA() |>
+  FindNeighbors(reduction = "pca", dims = 1:10) |>
+  FindClusters(resolution = 0.2)
+```
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "seurat_clusters") &
+  theme(legend.position = "right")
+```
+
+Sometimes it can get cluttered in the plot and difficult to see where each cluster is located in the tissue, especially when there are many clusters and some of them have very similar colors. In this case, `MapLabels` can split the data into separate panels, one for each label:
+
+```{r fig.width=7, fig.height=7}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE) &
+  theme(legend.position = "right")
+```
+
+When you split data, you can only do it for one section which is why a warning is thrown and the first available section is selected. If you want to use a different section, you can specify which one to use with `section_number`:
+
+```{r fig.width=7, fig.height=4}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, section_number = 2) &
+  theme(legend.position = "right")
+```
+
+```{r fig.width=7, fig.height=4}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, section_number = 2) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", legend.direction = "vertical")
+```

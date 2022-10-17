@@ -10,6 +10,7 @@ MapLabels(object, ...)
 
 \method{MapLabels}{default}(
   object,
+  crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
@@ -19,12 +20,17 @@ MapLabels(object, ...)
   ncol = NULL,
   colors = NULL,
   dims = NULL,
-  coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres")
+  coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+  return_plot_list = FALSE,
+  drop_na = FALSE
 )
 
 \method{MapLabels}{Seurat}(
   object,
   column_name,
+  image_use = NULL,
+  coords_use = "raw",
+  crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
@@ -33,13 +39,24 @@ MapLabels(object, ...)
   split_labels = FALSE,
   ncol = NULL,
   colors = NULL,
-  override_plot_dims = FALSE
+  override_plot_dims = FALSE,
+  return_plot_list = FALSE,
+  drop_na = FALSE
 )
 }
 \arguments{
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
+
+\item{crop_area}{a numeric vector of length 4 specifying a rectangular area to crop
+the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
+right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
+specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
+will be used on all tissue sections and cannot be set for each section individually.
+using crop areas of different sizes on different sections can lead to unwanted side
+effects as the point sizes will remain constant. In this case it is better to generate
+separate plots for different tissue sections.}
 
 \item{pt_size}{numeric value specifying the point size passed to \code{geom_point}}
 
@@ -66,16 +83,24 @@ computed directly from the spatial coordinates provided in \code{object}.}
 \item{coords_columns}{a character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
 
+\item{return_plot_list}{logical specifying whether the plots should be return as a list of
+`ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
+into a `patchwork`}
+
+\item{drop_na}{a logical specifying if NA values should be dropped}
+
 \item{column_name}{a string specifying a meta data column holding the categorical
 feature vector}
 
 \item{override_plot_dims}{a logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
 in situations where the tissue section only covers a small fraction of the capture
-area, which will create a lot of white space in the plots.}
+area, which will create a lot of white space in the plots. The same effect can be
+achieved with the \code{crop_area} but the crop area is instead determined directly
+from the data.}
 }
 \value{
-A patchwork object
+A `patchwork` object or a list of `ggplot` objects
 }
 \description{
 \code{MapLabels} colors spot coordinates in 2D space based on the values of
@@ -137,6 +162,12 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 
 }
 \seealso{
+Other visualization: 
+\code{\link{MapFeatures}()}
+
+Other visualization: 
+\code{\link{MapFeatures}()}
+
 Other visualization: 
 \code{\link{MapFeatures}()}
 }

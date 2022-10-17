@@ -18,12 +18,20 @@
 
 \item{colors}{a character vector of colors}
 
+\item{label_by}{a column name from which to fetch labels from}
+
 \item{scale}{one of "free" or "shared". "free" will fix the value limits for each
 feature separately and "shared" will fix the value limits for all plots to be identical}
 
 \item{arrange_features}{one of "row" or "col". "col" will put the features in columns
 and samples in rows and "row" will transpose the arrangement}
+
+\item{coords_columns}{a character vector with column names for spot coordinates}
+}
+\value{
+nothing
 }
 \description{
-Check input for compatibility
+This function is used internally by `MapLabels` and `MapFeatures` to validate
+input parameters.
 }

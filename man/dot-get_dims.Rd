@@ -4,11 +4,9 @@
 \alias{.get_dims}
 \title{Get plot dimensions}
 \usage{
-.get_dims(data, dims)
+.get_dims(dims)
 }
 \arguments{
-\item{data}{a list of tibbles containing coordinates and feature values}
-
 \item{dims}{either NULL or a tibble from \code{\link{GetSfaffli(se)@image_info}}}
 }
 \value{

@@ -8,8 +8,9 @@
 }
 \arguments{
 \item{object}{A Seurat object}
-
-\item{message}{An error message}
+}
+\value{
+an error message if conditions are not met
 }
 \description{
 Check if a Seurat object has been processed with STUtility

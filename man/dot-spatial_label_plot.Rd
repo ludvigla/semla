@@ -14,7 +14,8 @@
   pt_alpha = 1,
   pt_stroke = 0,
   coords_columns,
-  cur_label
+  cur_label,
+  drop_na = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@
 \item{nm}{sample ID}
 
 \item{lbl}{label column name}
+
+\item{colors}{a character vector of colors IDs}
 
 \item{dims}{tibble containing information about the dimensions
 of the plotting area}
@@ -34,7 +37,15 @@ of the plotting area}
 
 \item{pt_stroke}{point stroke width}
 
-\item{all_features}{a character vector with all features, only used}
+\item{coords_columns}{character vector of length 2 specifying names of
+columns in which the spatial coordinates are stored}
+
+\item{cur_label}{string with a title}
+
+\item{drop_na}{logical specifying whether NA values should be dropped}
+}
+\value{
+a `ggplot` object with a spatial plot
 }
 \description{
 Plot labels in 2D

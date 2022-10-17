@@ -20,6 +20,8 @@
 #' `features.tsv` and `matrix.mtx` files.
 #' @param verbose Print messages
 #'
+#' @importFrom methods as
+#'
 #' @return A sparse matrix of class `dgCMatrix`
 #'
 #' @examples
@@ -52,7 +54,7 @@ LoadAndMergeMatrices <- function (
       ext <- tools::file_ext(samplefiles[i])
       if (ext == "h5") {
         exprMat <- Seurat::Read10X_h5(samplefiles[i])
-      } else if (ext %in% c("tsv", tsv.gz)) {
+      } else if (ext %in% c("tsv", "tsv.gz")) {
         exprMat <- data.frame(data.table::fread(samplefiles[i], sep = "\t", header = TRUE), row.names = 1)
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
       }
@@ -101,6 +103,7 @@ LoadAndMergeMatrices <- function (
 #' @param verbose Print messages
 #'
 #' @importFrom rlang inject
+#' @importFrom utils read.csv
 #'
 #' @return An object of class `tbl` (`tibble`)
 #'

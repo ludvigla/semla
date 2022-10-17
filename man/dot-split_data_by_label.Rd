@@ -4,19 +4,19 @@
 \alias{.split_data_by_label}
 \title{Split data by label}
 \usage{
-.split_data_by_label(data, dims, section_number, label, colors)
+.split_data_by_label(data, dims, label, colors, drop_na = FALSE)
 }
 \arguments{
 \item{data}{a list of tibbles containing spot coordinates and label columns}
 
 \item{dims}{a tibble with information about plot dimensions to use}
 
-\item{section_number}{an integer specifying the section to keep for splitting}
-
 \item{label}{a string specifying the name of the label column}
 
 \item{colors}{a character vector of colors that should match the number of
 groups in the label column}
+
+\item{drop_na}{should NA values be dropped?}
 }
 \value{
 a list of tibbles holding spot coordinates, a tibble with information
