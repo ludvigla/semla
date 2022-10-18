@@ -67,8 +67,10 @@ Need to fix add mirror as an option.
 
 ### Visualization tools
  
-- [ ] `FeatureOverlay` : modify STUtility function, fix axes
-- [ ] `DimOverlay` : modify STUtility function, fix axes
+- [x] `FeatureOverlay` : this function has now been removed and instead we use `MapFeatures` which now takes an argument
+`image_use` to inject images under the plot.
+- [x] `DimOverlay` : this function has now been removed and instead we use `MapFeatures` which now takes an argument
+`image_use` to inject images under the plot.
 - [x] `MapFeatures` : similar to `ST.FeaturePlot` and `ST.DimPlot` but only works with numeric features such as
 gene expression, PCs, QC metrics etc.
 - [x] `MapLabels` : similar to `ST.FeaturePlot` but only works with categorical features such as
