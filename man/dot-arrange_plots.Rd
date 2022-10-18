@@ -6,16 +6,14 @@
 \usage{
 .arrange_plots(
   wrapped_plots,
-  images = NULL,
   features = NULL,
   blend = FALSE,
-  arrange_features = "col"
+  arrange_features = "col",
+  ncol = NULL
 )
 }
 \arguments{
 \item{wrapped_plots}{A list of `ggplot` objects}
-
-\item{images}{A list of `raster` objects}
 
 \item{features}{A character vector of feature names}
 
@@ -23,6 +21,9 @@
 
 \item{arrange_features}{A string specifying how features should
 be arranged}
+
+\item{ncol}{An integer specifying the number of columns to arrange the
+`patchwork` by}
 }
 \description{
 Arrange plots

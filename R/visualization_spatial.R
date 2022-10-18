@@ -202,23 +202,7 @@ MapFeatures.default <- function (
 
   # Create final patchwork
   if (!return_plot_list) {
-    # rearrange plots
-    if (!blend) {
-      sample_plots <- Reduce(c, sample_plots)
-      new_order <- match(names(sample_plots), features) |> order()
-      sample_plots <- sample_plots[new_order]
-    }
-    if (length(features) == 1 | length(data) == 1 | blend) {
-      ncol <- ncol %||% ceiling(sqrt(length(features)))
-      wrapped_plots <- wrap_plots(sample_plots, ncol = ncol)
-    } else {
-      if (!is.null(ncol)) warn("'ncol' will not be used when more than 1 feature is provided")
-      if (arrange_features == "col") {
-        wrapped_plots <- wrap_plots(sample_plots, ncol = length(features), byrow = FALSE)
-      } else {
-        wrapped_plots <- wrap_plots(sample_plots, nrow = length(features), byrow = TRUE)
-      }
-    }
+    wrapped_plots <- .arrange_plots(sample_plots, features, blend, arrange_features, ncol)
   } else {
     # return list of ggplot objects if return_plot_list = TRUE
     wrapped_plots <- sample_plots
@@ -227,6 +211,7 @@ MapFeatures.default <- function (
   return(wrapped_plots)
 }
 
+# TODO: alpha scale doesn't work for crop_area, ncol is broken for crop_area
 #' Map numeric features in 2D using a Seurat object
 #'
 #' @param features a character vector of features to plot. These features need to be
@@ -363,6 +348,12 @@ MapFeatures.Seurat <- function (
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features) |> as_tibble())
 
+  # Add label_by column if present
+  if (!is.null(label_by)) {
+    data_use <- data_use |>
+      bind_cols(FetchData(object, vars = label_by))
+  }
+
   # Subset by section number
   if (!is.null(section_number)) {
     if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for 'section_number, expected an integer"))
@@ -374,15 +365,9 @@ MapFeatures.Seurat <- function (
       filter(sampleID == section_number)
   }
 
-  # Add label_by column if present
-  if (!is.null(label_by)) {
-    data_use <- data_use |>
-      bind_cols(FetchData(object, vars = label_by))
-  }
-
   # Get images if image_use is provided
   if (!is.null(image_use)) {
-    images <- .get_images(object, GetStaffli(object)@meta_data, image_use, section_number)
+    images <- .get_images(object, GetStaffli(object), image_use, section_number)
   }
 
   # Set coords_columns
@@ -392,11 +377,14 @@ MapFeatures.Seurat <- function (
   if (override_plot_dims) {
     # Split data by sampleID
     image_dims <- GetStaffli(object)@image_info
+    if (!is.null(section_number)) {
+      image_dims <- image_dims[image_dims$sampleID == section_number, ]
+    }
     new_dims <- .get_limits(data_use)
     crop_area <- c(min(new_dims$x_start/image_dims$full_width),
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
-                   max(new_dims$full_height/image_dims$full_width))
+                   max(new_dims$full_height/image_dims$full_height))
   }
 
   # crop images if a crop_area is set
@@ -436,6 +424,11 @@ MapFeatures.Seurat <- function (
   # Inject images if image_use is provided
   if (!is.null(image_use)) {
     wrapped_plots <- .inject_images(image_use, features, arrange_features, wrapped_plots, images, ncol, return_plot_list, blend)
+    if (!return_plot_list) {
+      # Create final patchwork
+      ncol <- ncol %||% ceiling(sqrt(length(wrapped_plots)))
+      wrapped_plots <- .arrange_plots(wrapped_plots, features, blend, arrange_features, ncol)
+    }
   }
 
   return(wrapped_plots)
@@ -603,7 +596,7 @@ MapLabels.default <- function (
   }
 }
 
-
+# TODO: section_number is broken
 #' @param column_name a string specifying a meta data column holding the categorical
 #' feature vector
 #' @param image_use string specifying image type to use
@@ -712,7 +705,6 @@ MapLabels.Seurat <- function (
   # Get images if image_use is provided
   if (!is.null(image_use)) {
     images <- .get_images(data_use, GetStaffli(object), image_use, section_number, column_name, split_labels)
-    print(names(images))
   }
 
   # Set coords_columns
@@ -726,7 +718,7 @@ MapLabels.Seurat <- function (
     crop_area <- c(min(new_dims$x_start/image_dims$full_width),
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
-                   max(new_dims$full_height/image_dims$full_width))
+                   max(new_dims$full_height/image_dims$full_height))
   }
 
 
@@ -900,10 +892,14 @@ MapLabels.Seurat <- function (
     # Set plot dimensions (reverse y axis)
     scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
                                   dims[dims$sampleID == nm, "full_width", drop = TRUE]),
-                       expand = c(0, 0)) +
+                       expand = c(0, 0),
+                       breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], length.out = 11),
+                       labels = seq(0, 1, length.out = 11) |> paste0()) +
     scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
                                dims[dims$sampleID == nm, "y_start", drop = TRUE]),
-                    expand = c(0, 0)) +
+                    expand = c(0, 0),
+                    breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], length.out = 11),
+                    labels = seq(0, 1, length.out = 11) |> paste0()) +
     # Add themes
     theme_void() +
     theme(legend.position = "top",
@@ -1428,7 +1424,6 @@ MapLabels.Seurat <- function (
     images <- st_object@rasterlists[[image_use]]
     if (is.null(images)) abort("Images have not yet been loaded. Did you run LoadImages()?")
     images <- setNames(images, paste0(seq_along(images)))
-    # TODO: validate section number with utility function
     if (!is.null(section_number)) {
       images <- images[section_number]
     }
@@ -1439,7 +1434,6 @@ MapLabels.Seurat <- function (
         images[[1]]
       }), nm = lvls)
     }
-    print(names(images))
   }
   return(images)
 }
@@ -1584,20 +1578,21 @@ MapLabels.Seurat <- function (
 #' Arrange plots
 #'
 #' @param wrapped_plots A list of `ggplot` objects
-#' @param images A list of `raster` objects
 #' @param features A character vector of feature names
 #' @param blend A logical specifying if colors are blended or not
 #' @param arrange_features A string specifying how features should
 #' be arranged
+#' @param ncol An integer specifying the number of columns to arrange the
+#' `patchwork` by
 #'
 #' @importFrom patchwork wrap_plots
 #'
 .arrange_plots <- function (
     wrapped_plots,
-    images = NULL,
     features = NULL,
     blend = FALSE,
-    arrange_features = "col"
+    arrange_features = "col",
+    ncol = NULL
 ) {
   if (!blend) {
     wrapped_plots <- Reduce(c, wrapped_plots)
@@ -1605,7 +1600,7 @@ MapLabels.Seurat <- function (
     new_order <- match(names(wrapped_plots), features) |> order()
     wrapped_plots <- wrapped_plots[new_order]
   }
-  if (length(features) == 1 | length(images) == 1 | blend) {
+  if (length(features) == 1 | blend) {
     ncol <- ncol %||% {
       if (!blend) {
         ceiling(sqrt(length(features)))
@@ -1615,7 +1610,6 @@ MapLabels.Seurat <- function (
     }
     wrapped_plots <- wrap_plots(wrapped_plots, ncol = ncol)
   } else {
-    if (!is.null(ncol)) warn("'ncol' will not be used when more than 1 feature is provided")
     if (arrange_features == "col") {
       wrapped_plots <- wrap_plots(wrapped_plots, ncol = length(features), byrow = FALSE)
     } else {

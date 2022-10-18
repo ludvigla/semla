@@ -1,12 +1,12 @@
 ---
-title: "Plotting tips and tricks"
+title: "Mapping features spatially with STUtility2"
 format: html
 editor: visual
 ---
 
 ## Introduction
 
-In this notebook, we'll have a look at different ways of rearranging plots produced with STUtility2. Functions such as `MapFeatures` and `MapLabels` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate plots after they have been created. The `patchwork` R package is extremely versatile and has a fantastic API to achieve pretty much anything you want :-) Here we'll have a look at a couple of tips and tricks using the patchwork R package
+In this notebook, we'll have a look at different ways of creating spatial plots with *STUtility2*. Functions such as `MapFeatures` and `MapLabels` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. The *patchwork* R package is extremely versatile and has a fantastic API to customize your figures! Here we'll have a look at some options that comes with `MapFeatures` and `MapLabels` a couple of tips and tricks for how to use the *patchwork* R package.
 
 ```{r}
 library(tibble)
@@ -15,7 +15,7 @@ library(STUtility2)
 
 ## Load data
 
-First we need to load some 10x Visium data
+First we need to load some 10x Visium data. here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with *STUtility2*.
 
 ```{r}
 samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
@@ -35,12 +35,33 @@ se <- ReadVisiumData(infoTable = infoTable) |>
   NormalizeData()
 ```
 
-## Map features
+## A note about features
 
-And now let's map a couple of features on the spatial coordinates of our two Visium datasets:
+In *STUtility2*, we can use `MapFeatures` and `MapLabels` to make spatial plots showing the distribution of numeric or categorical features. For those who are familiar with *Seurat*, these functions are similar to `SpatialFeaturePlot` and `SpatialDimPlot` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"))
+## Map numeric features
+
+Let's get started with `MapFeatures`. The most basic usage is to map gene expression spatially:
+
+```{r fig.width=6, fig.height=8}
+cols <- c("lightgrey", "mistyrose", "red", "darkred")
+p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols)
+p
+```
+
+If we want to create a map with the H&E images we can do this by setting `image_use = raw`. But before we can do this, we need to load the images into our *Seurat* object:
+
+```{r fig.width=6, fig.height=8}
+se <- LoadImages(se)
+p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", colors = cols)
+p
+```
+
+Right now it's quite difficult to see the tissue underneath the spots. We can add some opacity to the colors which is scaled by the feature values to make spots with low expression transparent:
+
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
+                 colors = cols, scale_alpha = TRUE)
 p
 ```
 
@@ -48,8 +69,8 @@ p
 
 By default, `MapFeatures` arranges features in columns and samples in rows. We can transpose the plot by setting `arrange_features` to "row":
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row")
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", color = cols)
 p
 ```
 
@@ -57,7 +78,7 @@ p
 
 The color bars are now identical for each feature. `MapFeatures` calculates the range for each feature and uses this range to determine the limits of the color bars. If you want to change this behavior to scale the values independently, you can set `scale = "free"`:
 
-```{r fig.width=8, fig.height=8}
+```{r fig.width=6, fig.height=8}
 p <- MapFeatures(se, features = c("Th", "Clu"), scale = "free")
 p
 ```
@@ -66,8 +87,8 @@ p
 
 `MapFeatures` used the image dimensions to define the plot area dimensions. Sometimes, if you have a very small piece of tissue, you will end up with a lot of white space. You can override this behavior by setting `override_plot_dims = TRUE` which will make `MapFeatures` compute the dimensions based on your coordinates. Notice how the tissues are expanded:
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), override_plot_dims = TRUE)
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), override_plot_dims = TRUE, color = cols)
 p
 ```
 
@@ -76,23 +97,23 @@ p
 Themes can be modified by adding a new ggplot theme using the `&` operator. This operator will make sure that the theme is added to each subplot in our patchwork. As an example, let's say that we want to place the legends on the right side of our plots instead:
 
 ```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu")) &
+p <- MapFeatures(se, features = c("Th", "Clu"), color = cols) &
   theme(legend.position = "right", legend.text = element_text(angle = 0))
 p
 ```
 
 We can also remove the color legends entirely:
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu")) &
+```{r fig.width=6, fig.height=6}
+p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols) &
   theme(legend.position = "none")
 p
 ```
 
 Or remove everything except the spatial feature map:
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu")) &
+```{r fig.width=6, fig.height=6}
+p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols) &
   theme(legend.position = "none", 
         plot.title = element_blank(), 
         plot.subtitle = element_blank())
@@ -104,7 +125,7 @@ p
 If we don't want to have the same color bar next to each tissue section, we can collect identical color bars and place them on the side. We can use `plot_layout(guides = "collect")` to modify this. Note that if we want to place the color bar on the right side of the plots, we need to set `arrange_features = "row"`\` and adjust the legend position:
 
 ```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row") +
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", colors = cols) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right", legend.text = element_text(angle = 0))
 p
@@ -113,11 +134,11 @@ p
 This already looks quite good, but the color bars are a bit misplaced. We can adjust their placement by modifying the legend margins:
 
 ```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row") +
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", color = cols) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right", 
         legend.text = element_text(angle = 0),
-        legend.margin = margin(t = 50, r = 0, b = 100, l = 0))
+        legend.margin = margin(t = 50, r = 0, b = 100, l = 0, unit = "native"))
 p
 ```
 
@@ -126,7 +147,8 @@ p
 If we set `scale = "free"`, the color bars are no longer unique and it doesn't make sense to collect the color bars anymore:
 
 ```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", scale = "free") +
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", 
+                 scale = "free", colors = cols) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right", 
         legend.text = element_text(angle = 0),
@@ -134,12 +156,12 @@ p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", scale 
 p
 ```
 
-#### Do not do this
+#### Do not do this either
 
-If we set `arrange_features = "col"`, the placement of the color bar will not make much sense anymore. The color bars are now located on the right side, but the features are arranged by row:
+If we set `arrange_features = "col"`, the placement of the color bar will not make sense in this case either. The color bars are now located on the right side, but the features are arranged by row:
 
 ```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col") +
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col", colors = cols) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right", 
         legend.text = element_text(angle = 0),
@@ -149,13 +171,79 @@ p
 
 Instead, if we want to arrange features by columns, it would make more sense to place the color bars on top of each column and adjust the legend margins accordingly:
 
-```{r fig.width=8, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col") +
+```{r fig.width=7, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "col", color = cols) +
   plot_layout(guides = "collect") &
   theme(legend.position = "top", 
         legend.text = element_text(angle = 0),
         legend.margin = margin(t = 0, r = 100, b = 0, l = 10))
 p
+```
+
+### Remove plot margins
+
+If you still think that there's too much empty space in the patchwork, you can remove the plot margins for each subplot:
+
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), override_plot_dims = TRUE, color = cols) &
+  theme(plot.margin = margin(0, 0, 0, 0))
+p
+```
+
+### Crop
+
+If you set `override_plot_dims = TRUE`, the image will also be cropped to fit the new plot dimensions. This can be particularly useful when working with small tissue sections that only cover a small portion of the 10x Visium capture area.
+
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
+                 override_plot_dims = TRUE, color = cols)
+p
+```
+
+Note that the plots dimensions are calculated for the entire dataset when `override_plot_dims = TRUE`, in this case for the mouse brain and the mouse colon section. In other words the plot dimensions are defined to fit both datasets. If you don't want this behavior, it is better to make two separate plots:
+
+```{r fig.width=6, fig.height=8}
+p1 <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
+                 override_plot_dims = TRUE, color = cols, section_number = 1)
+p2 <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
+                 override_plot_dims = TRUE, color = cols, section_number = 2, 
+                 crop_area = c(0.2078578, 0.1519477, 0.7806282, 0.6897283))
+p1 / p2
+```
+
+We can also crop the images manually by defining a `crop_area`. The `crop_area` should be a vector of length four defining the corners of a rectangle, where the x- and y-axes are defined from 0-1.
+
+In order to decide how this rectangle should be defined, you can get some help by adding a grid to the plot:
+
+```{r fig.width=6, fig.height=8}
+p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
+                 color = cols, pt_alpha = 0.5) &
+  theme(panel.grid.major = element_line(linetype = "dashed"), axis.text = element_text())
+p
+```
+
+Now if we want to crop out the GALT tissue in the mouse colon sample we can cu the image at left=0.45, bottom=0.55, right=0.65, top=0.7:
+
+```{r fig.width=6, fig.height=4}
+p <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw", 
+                 pt_size = 3, section_number = 2, 
+                 color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7))
+p
+```
+
+And we can patch together a nice figure showing the expression both at a global level and inside the GALT:
+
+```{r fig.width=6, fig.height=6}
+p_global <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw", 
+                 pt_size = 1, section_number = 2, color = cols, override_plot_dims = TRUE)
+p_GALT <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw", 
+                 pt_size = 3, section_number = 2, 
+                 color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7)) &
+  theme(plot.title = element_blank(), 
+        plot.subtitle = element_blank(), 
+        legend.position = "none")
+
+(p_global / p_GALT)
 ```
 
 ## Map labels
@@ -219,3 +307,4 @@ MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, section_numb
   plot_layout(guides = "collect") &
   theme(legend.position = "right", legend.direction = "vertical")
 ```
+
