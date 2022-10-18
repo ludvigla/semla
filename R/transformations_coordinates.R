@@ -289,16 +289,19 @@ CoordAndImageTransform <- function (
   xy_offset = NULL
 ) {
 
+  # Set global variables to NULL
+  tr_x <- tr_y <- NULL
+
   # Read image
-  if (class(im) == "StoredSpatialImage") im <- image_read(im@path)
-  if (class(im) == "raster") im <- image_read(im)
-  if (class(im) == "character") {
+  if (inherits(im, what = "StoredSpatialImage")) im <- image_read(im@path)
+  if (inherits(im, what = "raster")) im <- image_read(im)
+  if (inherits(im, what = "character")) {
     if (!file.exists(im)) abort("File doesn't exist.")
     im <- image_read(im)
   }
 
   # make sure that image is of class "magick-image"
-  if (!class(im) == "magick-image") abort("Invalid image format.")
+  if (!inherits(im, what = "magick-image")) abort("Invalid image format.")
 
   # Get image width and height and calculate the center of the image
   info <- image_info(im)

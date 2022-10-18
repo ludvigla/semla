@@ -12,7 +12,8 @@ CorSpatialFeatures(object, ...)
   spatnet,
   across_all = FALSE,
   nCores = detectCores() - 1,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 }
 \arguments{
@@ -90,10 +91,14 @@ lag vector and the initial expression vector: \cr \cr
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
 featureMat <- FetchData(se_mbrain, vars = VariableFeatures(se_mbrain)[1:100])
 
-coordfile <- system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2")
+coordfile <-
+  system.file("extdata/mousebrain/spatial",
+              "tissue_positions_list.csv",
+              package = "STUtility2")
 
 # Load coordinate data into a tibble
-xys <- setNames(read.csv(coordfile, header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
+xys <- setNames(read.csv(coordfile, header = FALSE),
+                nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
 xys$sample <- paste0(1)
 xys <- xys |>
   dplyr::mutate(barcode = paste0(barcode, "_", 1)) |>

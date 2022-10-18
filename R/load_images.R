@@ -2,8 +2,7 @@
 #'
 NULL
 
-#' @param image_paths a character vector of paths to images in JPEG or PNG format
-#' @param image_height an integer value specifying the heigh of the downscaled images
+#' @param image_height an integer value specifying the height of the down-scaled images
 #' @param verbose print messages
 #'
 #' @importFrom rlang abort inform
@@ -12,27 +11,38 @@ NULL
 #' @importFrom tools file_ext
 #' @importFrom grDevices as.raster
 #'
+#' @section Seurat:
+#' If a Seurat object is provided, the images will be loaded as `raster` objects
+#' and stored inside the \code{Staffli} object that is located in the \code{tools}
+#' slot.
+#'
+#' @section default method:
+#' If a character vector of image paths are provided, the images will be loaded,
+#' then down-scaled based on \code{image_height} and returned as a list of `raster`
+#' objects. Only JPEG and PNG images are supported.
+#'
 #' @rdname load-images
 #'
 #' @export
 #'
 LoadImages.default <- function (
-  image_paths,
+  object,
   image_height = 400,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 ) {
 
   if (verbose) cli::cli_h2("Load H&E images")
 
   # Check files
-  if (!is.character(image_paths)) abort("Invalid class '{class(image_paths)}', expected a 'character' vector.")
-  for (f in image_paths) {
+  if (!is.character(object)) abort("Invalid class '{class(object)}', expected a 'character' vector.")
+  for (f in object) {
     if (!file_ext(f) %in% c("png", "jpg", "jpeg")) abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
     if (!file.exists(f)) abort(glue("File {f} doesn't exist."))
   }
 
   # Load images
-  raw_rasters <- lapply(image_paths, function(f) {
+  raw_rasters <- lapply(object, function(f) {
     if (verbose) inform(c("i" = glue("Loading image from {f}")))
     im <- f |>
       image_read()
@@ -50,8 +60,7 @@ LoadImages.default <- function (
   return(raw_rasters)
 }
 
-
-#' @param object An object
+#' @importFrom rlang %||%
 #'
 #' @rdname load-images
 #'
@@ -72,7 +81,8 @@ LoadImages.default <- function (
 LoadImages.Seurat <- function (
     object,
     image_height = 400,
-    verbose = TRUE
+    verbose = TRUE,
+    ...
 ) {
 
   # validate Seurat object

@@ -21,12 +21,12 @@ SubsetSTData(object, expression, spots = NULL, features = NULL, idents = NULL)
 \item{y}{A Seurat object or a list of Seurat objects}
 
 \item{merge.data}{Merge the data slots instead of just merging the counts
-(which requires renormalization); this is recommended if the same normalization
-approach was applied to all objects. See \code{\link{merge.Seurat}} for details.}
+(which requires re-normalization); this is recommended if the same normalization
+approach was applied to all objects. See \code{\link{merge}} for details.}
 
 \item{merge.dr}{Merge specified DimReducs that are present in all objects; will
 only merge the embeddings slots for the first N dimensions that are shared across
-all objects. See \code{\link{merge.Seurat}} for details.}
+all objects. See \code{\link{merge}} for details.}
 
 \item{project}{\code{\link{Project}} name for the Seurat object}
 
@@ -54,10 +54,18 @@ the `Staffli` object will be broken.
 }
 \examples{
 \dontrun{
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+samples <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/filtered_feature_bc_matrix.h5"))
+imgs <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_hires_image.png"))
+spotfiles <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_positions_list.csv"))
+json <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/scalefactors_json.json"))
 
 # Create a tibble/data.frame with file paths
 library(tibble)
@@ -78,10 +86,18 @@ ImagePlot(se.merged)
 }
 
 \dontrun{
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+samples <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/filtered_feature_bc_matrix.h5"))
+imgs <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_hires_image.png"))
+spotfiles <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_positions_list.csv"))
+json <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/scalefactors_json.json"))
 
 # Create a tibble/data.frame with file paths
 library(tibble)

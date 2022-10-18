@@ -32,6 +32,8 @@
 \item{feature_limits}{list of tibbles containing information about
 the feature value range}
 
+\item{colors}{a character vector of colors to use for scale bar}
+
 \item{dims}{tibble containing information about the dimensions
 of the plotting area}
 

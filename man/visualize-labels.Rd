@@ -22,7 +22,8 @@ MapLabels(object, ...)
   dims = NULL,
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
-  drop_na = FALSE
+  drop_na = FALSE,
+  ...
 )
 
 \method{MapLabels}{Seurat}(
@@ -41,7 +42,8 @@ MapLabels(object, ...)
   colors = NULL,
   override_plot_dims = FALSE,
   return_plot_list = FALSE,
-  drop_na = FALSE
+  drop_na = FALSE,
+  ...
 )
 }
 \arguments{
@@ -66,10 +68,14 @@ and a value of 1 will make the points completely opaque.}
 
 \item{pt_stroke}{numeric specifying the point stroke width}
 
+\item{section_number}{an integer select a tissue section number to subset data by}
+
 \item{label_by}{character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.}
+
+\item{split_labels}{logical specifying if labels should be split}
 
 \item{ncol}{integer value specifying the number of columns in the output patchwork.}
 
@@ -91,6 +97,10 @@ into a `patchwork`}
 
 \item{column_name}{a string specifying a meta data column holding the categorical
 feature vector}
+
+\item{image_use}{string specifying image type to use}
+
+\item{coords_use}{string specifying coordinate type to use}
 
 \item{override_plot_dims}{a logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
@@ -131,10 +141,12 @@ se_mbrain <- se_mbrain |>
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2)
 
 # Plot clusters in split view
-MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5, section_number = 1, split_labels = TRUE, ncol = 4)
+MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
+          section_number = 1, split_labels = TRUE, ncol = 4)
 
 # Combine plots with different labels
-MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") | MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.3")
+MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |
+  MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.3")
 
 # Move legend to the right side of the plot
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2) &
@@ -150,7 +162,8 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 
 # Factor are to used to determine the color order. If you change the
 # levels of your label of interest, the labels and colors will change order
-se_mbrain$Spatial_snn_res.0.2 <- factor(se_mbrain$Spatial_snn_res.0.2, levels = sample(paste0(0:7), size = 8))
+se_mbrain$Spatial_snn_res.0.2 <- factor(se_mbrain$Spatial_snn_res.0.2,
+                                        levels = sample(paste0(0:7), size = 8))
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
 
 # Control what group label colors by naming the color vector
@@ -162,13 +175,7 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 
 }
 \seealso{
-Other visualization: 
-\code{\link{MapFeatures}()}
-
-Other visualization: 
-\code{\link{MapFeatures}()}
-
-Other visualization: 
+Other visualization methods: 
 \code{\link{MapFeatures}()}
 }
-\concept{visualization}
+\concept{visualization methods}

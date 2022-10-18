@@ -26,7 +26,8 @@ MapFeatures(object, ...)
   return_plot_list = FALSE,
   drop_na = FALSE,
   blend = FALSE,
-  blend_order = 1:3
+  blend_order = 1:3,
+  ...
 )
 
 \method{MapFeatures}{Seurat}(
@@ -50,13 +51,23 @@ MapFeatures(object, ...)
   override_plot_dims = FALSE,
   max_cutoff = NULL,
   min_cutoff = NULL,
-  return_plot_list = FALSE
+  return_plot_list = FALSE,
+  ...
 )
 }
 \arguments{
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
+
+\item{crop_area}{a numeric vector of length 4 specifying a rectangular area to crop
+the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
+right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
+specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
+will be used on all tissue sections and cannot be set for each section individually.
+using crop areas of different sizes on different sections can lead to unwanted side
+effects as the point sizes will remain constant. In this case it is better to generate
+separate plots for different tissue sections.}
 
 \item{pt_size}{numeric value specifying the point size passed to \code{geom_point}}
 
@@ -91,6 +102,9 @@ determine how the color bars are structured. If scale is set to "shared", the co
 feature values will be shared across samples. If scale is set to "free", the color bars
 will be independent.}
 
+\item{arrange_features}{one of "row" or "col". "col" will put the features in columns
+and samples in rows and "row" will transpose the arrangement}
+
 \item{dims}{a tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 computed directly from the spatial coordinates provided in \code{object}.}
@@ -102,6 +116,8 @@ computed directly from the spatial coordinates provided in \code{object}.}
 By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
 if you want to manipulate each sub plot independently.}
 
+\item{drop_na}{a logical specifying if NA values should be dropped}
+
 \item{blend}{a logical specifying whether blending should be used. See color blending for more information.}
 
 \item{blend_order}{an integer vector of length 2-3 specifying the order to blend features by. Only
@@ -109,6 +125,10 @@ active when \code{blend = TRUE}. See color blending for more information.}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
+
+\item{image_use}{string specifying image type to use}
+
+\item{coords_use}{string specifying coordinate type to use}
 
 \item{override_plot_dims}{a logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
@@ -150,6 +170,9 @@ first feature is "red", the second is "green" and the last feature is "blue".
 \examples{
 
 library(STUtility2)
+if (!requireNamespace("viridis"))
+  install.packages("viridis")
+library(viridis)
 
 # Load example Visium data
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
@@ -162,13 +185,15 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon)
 selected_features <- c("Clu", "Slc6a3", "Vip")
 
 # Plot selected features with custom colors
-MapFeatures(se_merged, features = selected_features, colors = viridis::magma(n = 11, direction = -1))
+MapFeatures(se_merged, features = selected_features, colors = magma(n = 11, direction = -1))
 
 # Plot selected features with color bars scaled individually for each feature and sample
 MapFeatures(se_merged, features = selected_features, scale = "free")
 
 # Plot selected features and add custom labels for subplots
-se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == "1", "mouse brain", "mouse colon")
+se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == "1",
+                              "mouse brain",
+                              "mouse colon")
 MapFeatures(se_merged, features = selected_features, label_by = "sample_id")
 
 # Plot selected features arranged by rows instead of columns
@@ -193,7 +218,8 @@ MapFeatures(se_mbrain, features = selected_feature, pt_size = 2) &
         plot.subtitle = element_blank())
 
 # Create a dark theme
-MapFeatures(se_mbrain, features = selected_feature, pt_size = 2, colors = viridis::viridis(n = 11)) &
+MapFeatures(se_mbrain, features = selected_feature, pt_size = 2,
+            colors = viridis(n = 11)) &
   theme(plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
         plot.title = element_text(colour = "white"),
@@ -217,7 +243,7 @@ MapFeatures(se_mbrain, features = selected_feature, pt_size = 2) &
 
 }
 \seealso{
-Other visualization: 
+Other visualization methods: 
 \code{\link{MapLabels}()}
 }
-\concept{visualization}
+\concept{visualization methods}

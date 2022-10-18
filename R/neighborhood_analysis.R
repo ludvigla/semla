@@ -15,7 +15,16 @@ NULL
 #' You can also activate the `keep.within.id` parameter to include all spots of the selected region in the output,
 #' otherwise only the spots along the region border will be kept.
 #'
-#' @param spatnet A list of spatial networks generated with \code{\link{GetSpatialNetwork}}
+#' @section Seurat:
+#' If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
+#' finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
+#' their  nearest neighbors.
+#'
+#' @section default method:
+#' The default method takes a list of spatial networks generated with \code{\link{GetSpatialNetwork}}
+#' together with a vector of spot IDs and returns the spot IDs for the nearest neighbors.
+#'
+#' @param object A list of spatial networks generated with \code{\link{GetSpatialNetwork}}
 #' @param spots A character vector with spot IDs present in `spatnet`
 #' @param keep.within.id If set to TRUE, all id spots are kept, otherwise only the spots with outside neighbors are kept
 #' @param verbose Print messages
@@ -32,15 +41,19 @@ NULL
 #' }
 #'
 RegionNeighbors.default <- function (
-    spatnet,
+    object,
     spots,
     keep.within.id = FALSE,
-    verbose = FALSE
+    verbose = FALSE,
+    ...
 ) {
 
+  # Set global variables to NULL
+  from <- to <- NULL
+
   # Combine spatial networks into one tibble
-  spatnet_combined <- do.call(rbind, lapply(seq_along(spatnet), function(i) {
-    spnet <- spatnet[[i]]
+  spatnet_combined <- do.call(rbind, lapply(seq_along(object), function(i) {
+    spnet <- object[[i]]
     spnet$sampleID <- i
     return(spnet)
   }))
@@ -71,7 +84,6 @@ RegionNeighbors.default <- function (
   return(spatnet_combined$to)
 }
 
-#' @param object an object
 #' @param column_name string specifying a column name in your meta data
 #' with labels, e.g. clusters or manual selections
 #' @param column_labels character vector with labels to find nearest neighbors for.
@@ -93,7 +105,9 @@ RegionNeighbors.default <- function (
 #' library(STUtility2)
 #' library(dplyr)
 #'
-#' se_mbrain <- readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/mousebrain/se_mbrain")))
+#' se_mbrain <-
+#'   readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                   "/mousebrain/se_mbrain")))
 #'
 #' # Create Seurat object
 #' se_mbrain <- se_mbrain |>
@@ -114,7 +128,8 @@ RegionNeighbors.default <- function (
 #'                         TRUE ~ NA_character_)) |>
 #'   pull(cl)
 #'
-#' MapLabels(se_mbrain, column_name = "selected_clusters") | MapLabels(se_mbrain, column_name = "nb_to_10")
+#' MapLabels(se_mbrain, column_name = "selected_clusters") |
+#'   MapLabels(se_mbrain, column_name = "nb_to_10")
 #'
 #' # Find neighbors to clusters 10 and 13
 #' se_mbrain$selected_clusters <- se_mbrain[[]] |>
@@ -155,6 +170,9 @@ RegionNeighbors.Seurat <- function (
     verbose = TRUE,
     ...
 ) {
+
+  # Set global variables to NULL
+  barcode <- NULL
 
   # validate Seurat object
   .check_seurat_object(object)

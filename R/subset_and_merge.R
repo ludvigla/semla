@@ -13,11 +13,11 @@ NULL
 #' @param x A Seurat object
 #' @param y A Seurat object or a list of Seurat objects
 #' @param merge.data Merge the data slots instead of just merging the counts
-#' (which requires renormalization); this is recommended if the same normalization
-#' approach was applied to all objects. See \code{\link{merge.Seurat}} for details.
+#' (which requires re-normalization); this is recommended if the same normalization
+#' approach was applied to all objects. See \code{\link{merge}} for details.
 #' @param merge.dr Merge specified DimReducs that are present in all objects; will
 #' only merge the embeddings slots for the first N dimensions that are shared across
-#' all objects. See \code{\link{merge.Seurat}} for details.
+#' all objects. See \code{\link{merge}} for details.
 #' @param project \code{\link{Project}} name for the Seurat object
 #'
 #' @importFrom dplyr select mutate group_split ungroup cur_group_id group_by bind_rows
@@ -32,10 +32,18 @@ NULL
 #'
 #' @examples
 #' \dontrun{
-#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+#' samples <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/filtered_feature_bc_matrix.h5"))
+#' imgs <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_hires_image.png"))
+#' spotfiles <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_positions_list.csv"))
+#' json <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
 #' library(tibble)
@@ -64,6 +72,9 @@ MergeSTData <- function (
     merge.dr = NULL,
     project = "SeuratProject"
 ) {
+
+  # Set global variables to NULL
+  uniqueID <- barcode <- new_sampleID <- old_names <- sampleID <- NULL
 
   # Check Seurat object
   .check_seurat_object(x)
@@ -221,10 +232,18 @@ MergeSTData <- function (
 #'
 #' @examples
 #' \dontrun{
-#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+#' samples <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/filtered_feature_bc_matrix.h5"))
+#' imgs <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_hires_image.png"))
+#' spotfiles <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_positions_list.csv"))
+#' json <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
 #' library(tibble)
@@ -256,6 +275,9 @@ SubsetSTData <- function (
     features = NULL,
     idents = NULL
 ) {
+
+  # Set global variables to NULL
+  barcode <- sampleID <- NULL
 
   # Check that a Staffli object is present
   .check_seurat_object(object)

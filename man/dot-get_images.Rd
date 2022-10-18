@@ -4,10 +4,19 @@
 \alias{.get_images}
 \title{Validate and get images for plotting}
 \usage{
-.get_images(object, image_use, section_number, column_name, split_labels)
+.get_images(
+  object,
+  st_object,
+  image_use = NULL,
+  section_number = NULL,
+  column_name = NULL,
+  split_labels = FALSE
+)
 }
 \arguments{
-\item{object}{a Seurat object}
+\item{object}{a `Seurat` object}
+
+\item{st_object}{a `Staffli` object}
 
 \item{image_use}{string specifying images to use}
 

@@ -34,8 +34,19 @@ a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
 \examples{
 \donttest{
 # Load and merge two gene expression matrices
-samples <- c(system.file("extdata/mousebrain", "filtered_feature_bc_matrix.h5", package = "STUtility2"),
-             system.file("extdata/mousecolon", "filtered_feature_bc_matrix.h5", package = "STUtility2"))
+samples <-
+  c(
+    system.file(
+      "extdata/mousebrain",
+      "filtered_feature_bc_matrix.h5",
+      package = "STUtility2"
+    ),
+    system.file(
+      "extdata/mousecolon",
+      "filtered_feature_bc_matrix.h5",
+      package = "STUtility2"
+    )
+  )
 mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 

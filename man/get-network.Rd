@@ -8,9 +8,9 @@
 \usage{
 GetSpatialNetwork(object, ...)
 
-\method{GetSpatialNetwork}{default}(object, nNeighbors = 6, maxDist = NULL, minK = 0)
+\method{GetSpatialNetwork}{default}(object, nNeighbors = 6, maxDist = NULL, minK = 0, ...)
 
-\method{GetSpatialNetwork}{Seurat}(object, nNeighbors = 6, maxDist = NULL, minK = 0)
+\method{GetSpatialNetwork}{Seurat}(object, nNeighbors = 6, maxDist = NULL, minK = 0, ...)
 }
 \arguments{
 \item{object}{An object}
@@ -50,12 +50,17 @@ coordinates and "sample" is a character vector with unique sample IDs.
 library(ggplot2)
 
 # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs
-coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
-                system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
+coordfiles <- c(system.file("extdata/mousebrain/spatial",
+                            "tissue_positions_list.csv",
+                            package = "STUtility2"),
+                system.file("extdata/mousecolon/spatial",
+                            "tissue_positions_list.csv",
+                            package = "STUtility2"))
 
 # Load coordinate data into a tibble
 xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
-  coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
+  coords <- setNames(read.csv(coordfiles[i], header = FALSE),
+                     nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
   coords$sampleID <- i
   coords <- coords |>
     dplyr::filter(selection == 1) |>

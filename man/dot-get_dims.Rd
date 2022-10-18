@@ -7,7 +7,7 @@
 .get_dims(dims)
 }
 \arguments{
-\item{dims}{either NULL or a tibble from \code{\link{GetSfaffli(se)@image_info}}}
+\item{dims}{either NULL or a tibble with the plots dimensions}
 }
 \value{
 a tibble with plot dimension information

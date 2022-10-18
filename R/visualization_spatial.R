@@ -6,6 +6,14 @@ NULL
 # Plot functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#' @param crop_area a numeric vector of length 4 specifying a rectangular area to crop
+#' the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
+#' right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
+#' specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
+#' will be used on all tissue sections and cannot be set for each section individually.
+#' using crop areas of different sizes on different sections can lead to unwanted side
+#' effects as the point sizes will remain constant. In this case it is better to generate
+#' separate plots for different tissue sections.
 #' @param pt_size numeric value specifying the point size passed to \code{geom_point}
 #' @param pt_alpha numeric value between 0 and 1 specifying the point opacity passed
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
@@ -29,6 +37,8 @@ NULL
 #' determine how the color bars are structured. If scale is set to "shared", the color bars for
 #' feature values will be shared across samples. If scale is set to "free", the color bars
 #' will be independent.
+#' @param arrange_features one of "row" or "col". "col" will put the features in columns
+#' and samples in rows and "row" will transpose the arrangement
 #' @param dims a tibble with information about the tissue sections. This information is used to
 #' determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 #' computed directly from the spatial coordinates provided in \code{object}.
@@ -40,6 +50,7 @@ NULL
 #' @param blend a logical specifying whether blending should be used. See color blending for more information.
 #' @param blend_order an integer vector of length 2-3 specifying the order to blend features by. Only
 #' active when \code{blend = TRUE}. See color blending for more information.
+#' @param drop_na a logical specifying if NA values should be dropped
 #'
 #' @importFrom patchwork wrap_plots
 #' @importFrom dplyr select group_by group_split all_of pull
@@ -81,8 +92,12 @@ MapFeatures.default <- function (
   return_plot_list = FALSE,
   drop_na = FALSE,
   blend = FALSE,
-  blend_order = 1:3
+  blend_order = 1:3,
+  ...
 ) {
+
+  # Set global variables to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
 
   # Check data
   .prep_data_for_plotting(object, colors, label_by, scale, arrange_features, coords_columns)
@@ -216,6 +231,8 @@ MapFeatures.default <- function (
 #'
 #' @param features a character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
+#' @param image_use string specifying image type to use
+#' @param coords_use string specifying coordinate type to use
 #' @param section_number an integer select a tissue section number to subset data by
 #' @param override_plot_dims a logical specifying whether the image dimensions should
 #' be used to define the plot area. Setting \code{override_plot_dims} can be useful
@@ -234,6 +251,9 @@ MapFeatures.default <- function (
 #' @examples
 #'
 #' library(STUtility2)
+#' if (!requireNamespace("viridis"))
+#'   install.packages("viridis")
+#' library(viridis)
 #'
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
@@ -246,13 +266,15 @@ MapFeatures.default <- function (
 #' selected_features <- c("Clu", "Slc6a3", "Vip")
 #'
 #' # Plot selected features with custom colors
-#' MapFeatures(se_merged, features = selected_features, colors = viridis::magma(n = 11, direction = -1))
+#' MapFeatures(se_merged, features = selected_features, colors = magma(n = 11, direction = -1))
 #'
 #' # Plot selected features with color bars scaled individually for each feature and sample
 #' MapFeatures(se_merged, features = selected_features, scale = "free")
 #'
 #' # Plot selected features and add custom labels for subplots
-#' se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == "1", "mouse brain", "mouse colon")
+#' se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == "1",
+#'                               "mouse brain",
+#'                               "mouse colon")
 #' MapFeatures(se_merged, features = selected_features, label_by = "sample_id")
 #'
 #' # Plot selected features arranged by rows instead of columns
@@ -277,7 +299,8 @@ MapFeatures.default <- function (
 #'         plot.subtitle = element_blank())
 #'
 #' # Create a dark theme
-#' MapFeatures(se_mbrain, features = selected_feature, pt_size = 2, colors = viridis::viridis(n = 11)) &
+#' MapFeatures(se_mbrain, features = selected_feature, pt_size = 2,
+#'             colors = viridis(n = 11)) &
 #'   theme(plot.background = element_rect(fill = "black"),
 #'         panel.background = element_rect(fill = "black"),
 #'         plot.title = element_text(colour = "white"),
@@ -322,8 +345,12 @@ MapFeatures.Seurat <- function (
     override_plot_dims = FALSE,
     max_cutoff = NULL,
     min_cutoff = NULL,
-    return_plot_list = FALSE
+    return_plot_list = FALSE,
+    ...
 ) {
+
+  # Set global variables to NULL
+  sampleID <- NULL
 
   # Match args
   scale <- match.arg(scale, choices = c("shared", "free"))
@@ -355,7 +382,7 @@ MapFeatures.Seurat <- function (
 
   # Get images if image_use is provided
   if (!is.null(image_use)) {
-    images <- .get_images(object, image_use, section_number, column_name, FALSE)
+    images <- .get_images(object, GetStaffli(object)@meta_data, image_use, section_number)
   }
 
   # Set coords_columns
@@ -407,7 +434,9 @@ MapFeatures.Seurat <- function (
   )
 
   # Inject images if image_use is provided
-  wrapped_plots <- .inject_images(image_use, features, arrange_features, wrapped_plots, images, ncol, return_plot_list, blend)
+  if (!is.null(image_use)) {
+    wrapped_plots <- .inject_images(image_use, features, arrange_features, wrapped_plots, images, ncol, return_plot_list, blend)
+  }
 
   return(wrapped_plots)
 
@@ -427,6 +456,7 @@ MapFeatures.Seurat <- function (
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
 #' @param pt_stroke numeric specifying the point stroke width
+#' @param section_number an integer select a tissue section number to subset data by
 #' @param label_by character of length 1 providing a column name in \code{object} with
 #' labels that can be used to provide a title for each subplot. This column should have
 #' 1 label per tissue section. This can be useful when you need to provide more detailed
@@ -449,7 +479,6 @@ MapFeatures.Seurat <- function (
 #' @importFrom zeallot %<-%
 #' @importFrom rlang %||% warn
 #'
-#' @family visualization
 #' @rdname visualize-labels
 #'
 #' @return A `patchwork` object or a list of `ggplot` objects
@@ -470,8 +499,12 @@ MapLabels.default <- function (
     dims = NULL,
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
-    drop_na = FALSE
+    drop_na = FALSE,
+    ...
 ) {
+
+  # Set global variables to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
 
   # Check data
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
@@ -573,6 +606,9 @@ MapLabels.default <- function (
 
 #' @param column_name a string specifying a meta data column holding the categorical
 #' feature vector
+#' @param image_use string specifying image type to use
+#' @param coords_use string specifying coordinate type to use
+#' @param split_labels logical specifying if labels should be split
 #' @param override_plot_dims a logical specifying whether the image dimensions should
 #' be used to define the plot area. Setting \code{override_plot_dims} can be useful
 #' in situations where the tissue section only covers a small fraction of the capture
@@ -580,7 +616,6 @@ MapLabels.default <- function (
 #' achieved with the \code{crop_area} but the crop area is instead determined directly
 #' from the data.
 #'
-#' @family visualization
 #' @rdname visualize-labels
 #'
 #' @examples
@@ -603,10 +638,12 @@ MapLabels.default <- function (
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2)
 #'
 #' # Plot clusters in split view
-#' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5, section_number = 1, split_labels = TRUE, ncol = 4)
+#' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
+#'           section_number = 1, split_labels = TRUE, ncol = 4)
 #'
 #' # Combine plots with different labels
-#' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") | MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.3")
+#' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |
+#'   MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.3")
 #'
 #' # Move legend to the right side of the plot
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2) &
@@ -622,7 +659,8 @@ MapLabels.default <- function (
 #'
 #' # Factor are to used to determine the color order. If you change the
 #' # levels of your label of interest, the labels and colors will change order
-#' se_mbrain$Spatial_snn_res.0.2 <- factor(se_mbrain$Spatial_snn_res.0.2, levels = sample(paste0(0:7), size = 8))
+#' se_mbrain$Spatial_snn_res.0.2 <- factor(se_mbrain$Spatial_snn_res.0.2,
+#'                                         levels = sample(paste0(0:7), size = 8))
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
 #'
 #' # Control what group label colors by naming the color vector
@@ -650,7 +688,8 @@ MapLabels.Seurat <- function (
     colors = NULL,
     override_plot_dims = FALSE,
     return_plot_list = FALSE,
-    drop_na = FALSE
+    drop_na = FALSE,
+    ...
 ) {
 
   # Check Seurat object
@@ -672,7 +711,8 @@ MapLabels.Seurat <- function (
 
   # Get images if image_use is provided
   if (!is.null(image_use)) {
-    images <- .get_images(object, image_use, section_number, column_name, split_labels)
+    images <- .get_images(data_use, GetStaffli(object), image_use, section_number, column_name, split_labels)
+    print(names(images))
   }
 
   # Set coords_columns
@@ -717,7 +757,23 @@ MapLabels.Seurat <- function (
   )
 
   # Inject images if image_use is provided
-  wrapped_plots <- .inject_images(image_use, wrapped_plots, images, ncol, return_plot_list)
+  if (!is.null(image_use)) {
+    wrapped_plots <- .inject_images(
+      image_use = image_use,
+      features = NULL,
+      arrange_features = NULL,
+      wrapped_plots = wrapped_plots,
+      images = images,
+      ncol = ncol,
+      return_plot_list = return_plot_list,
+      blend = FALSE
+    )
+    # Create final patchwork
+    if (!return_plot_list) {
+      ncol <- ncol %||% ceiling(sqrt(length(wrapped_plots)))
+      wrapped_plots <- wrap_plots(wrapped_plots, ncol = ncol)
+    }
+  }
 
   return(wrapped_plots)
 }
@@ -735,6 +791,7 @@ MapLabels.Seurat <- function (
 #' @param ftr feature name
 #' @param feature_limits list of tibbles containing information about
 #' the feature value range
+#' @param colors a character vector of colors to use for scale bar
 #' @param dims tibble containing information about the dimensions
 #' of the plotting area
 #' @param all_features a character vector with all features, only used
@@ -775,6 +832,9 @@ MapLabels.Seurat <- function (
     coords_columns,
     drop_na = FALSE
 ) {
+
+  # Set global variables to NULL
+  encoded_cols <- value <- alpha <- x <- y <- color <- NULL
 
   # Should NA values be dropped?
   if (drop_na) {
@@ -928,6 +988,9 @@ MapLabels.Seurat <- function (
     drop_na = FALSE
 ) {
 
+  # Set global variables to NULL
+  variable <- NULL
+
   # Create input data.frame for ggplot
   gg <- gg |>
     select(all_of(c(coords_columns, lbl))) |>
@@ -1022,6 +1085,9 @@ MapLabels.Seurat <- function (
     arrange_features,
     coords_columns
 ) {
+
+  # Set global variables to NULL
+  merged_cols <- barcode <- sampleID <- NULL
 
   # check colors
   if (!missing(colors)) {
@@ -1157,8 +1223,8 @@ MapLabels.Seurat <- function (
     # set new column values to background, then set all other values
     # to NA or background
     data[[1]] |> mutate(across(all_of(label), ~ case_when(
-      .x != lvl ~ ifelse(drop_na, NA_character_, "background"),
-      TRUE ~ lvl
+      .x == lvl ~ lvl,
+      TRUE ~ ifelse(drop_na, NA_character_, "background")
     ))) |>
       mutate(across(all_of(label), ~ factor(.x, levels = c(
         lvls, ifelse(drop_na, NA_character_, "background")
@@ -1197,6 +1263,10 @@ MapLabels.Seurat <- function (
 #' @return a tibble with limits
 #'
 .get_limits <- function(x) {
+
+  # Set global variables to NULL
+  sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
+
   # Get min/max values for the coordinates
   x |>
     group_by(sampleID) |>
@@ -1210,7 +1280,7 @@ MapLabels.Seurat <- function (
 
 #' Get plot dimensions
 #'
-#' @param dims either NULL or a tibble from \code{\link{GetSfaffli(se)@image_info}}
+#' @param dims either NULL or a tibble with the plots dimensions
 #'
 #' @importFrom rlang abort
 #' @importFrom glue glue
@@ -1222,6 +1292,9 @@ MapLabels.Seurat <- function (
 .get_dims <- function (
     dims
 ) {
+
+  # Set global variables to NULL
+  full_width <- full_height <- sampleID <- x_start <- y_start <- NULL
 
   if (!any(class(dims) %in% "tbl")) abort(glue("Invalid class of dims object '{class(dims)[1]}'"))
   if (!any(c("full_width", "full_height") %in% colnames(dims))) abort(glue("Couldn't find 'full_width' or 'full_height' in dims object."))
@@ -1250,6 +1323,9 @@ MapLabels.Seurat <- function (
   coords_columns,
   scale = c("shared", "free")
 ) {
+
+  # Set global variables to NULL
+  barcode <- sampleID <- NULL
 
   if (scale == "free") {
     feature_limits <- lapply(data, function(x) {
@@ -1283,6 +1359,7 @@ MapLabels.Seurat <- function (
 #' @importFrom glue glue
 #' @importFrom scales rescale
 #' @importFrom dplyr select mutate bind_cols everything
+#' @importFrom farver encode_colour
 #'
 #' @return a list of tibbles similar to input data but in which the feature
 #' columns have been replaced by a color vector with blended colors called
@@ -1325,7 +1402,8 @@ MapLabels.Seurat <- function (
 
 #' Validate and get images for plotting
 #'
-#' @param object a Seurat object
+#' @param object a `Seurat` object
+#' @param st_object a `Staffli` object
 #' @param image_use string specifying images to use
 #' @param section_number an integer value specifying a section number to subset
 #' images by
@@ -1335,10 +1413,11 @@ MapLabels.Seurat <- function (
 #'
 .get_images <- function (
     object,
-    image_use,
-    section_number,
-    column_name,
-    split_labels
+    st_object,
+    image_use = NULL,
+    section_number = NULL,
+    column_name = NULL,
+    split_labels = FALSE
 ) {
   # Get images if image_use is provided
   if (!is.null(image_use)) {
@@ -1346,7 +1425,7 @@ MapLabels.Seurat <- function (
     if (!is.character(image_use) & (length(image_use) == 1))
       abort(glue("'image_use' is invalid. Expected a character of length 1."))
     image_use <- match.arg(image_use, choices = c("raw"))
-    images <- GetStaffli(object)@rasterlists[[image_use]]
+    images <- st_object@rasterlists[[image_use]]
     if (is.null(images)) abort("Images have not yet been loaded. Did you run LoadImages()?")
     images <- setNames(images, paste0(seq_along(images)))
     # TODO: validate section number with utility function
@@ -1354,11 +1433,13 @@ MapLabels.Seurat <- function (
       images <- images[section_number]
     }
     if (split_labels) {
-      lvls <- levels(object[[]] |> pull(all_of(column_name)))
+      lvls <- levels(object |> pull(all_of(column_name)))
+      print(lvls)
       images <- setNames(lapply(lvls, function(lvl) {
         images[[1]]
       }), nm = lvls)
     }
+    print(names(images))
   }
   return(images)
 }
@@ -1411,6 +1492,9 @@ MapLabels.Seurat <- function (
     coords_columns
 ) {
 
+  # Set global variables to NULL
+  full_width <- full_height <- NULL
+
   dims <- dims |>
     mutate(x_start = full_width*crop_area[1],
            y_start = full_height*crop_area[2],
@@ -1450,6 +1534,7 @@ MapLabels.Seurat <- function (
 #'
 #' @importFrom patchwork inset_element wrap_plots
 #' @importFrom rlang %||% warn
+#' @importFrom ggplot2 is.ggplot
 #'
 #' @return `patchwork` or a list of `ggplot` objects
 #'
@@ -1491,33 +1576,52 @@ MapLabels.Seurat <- function (
       }
       return(plot)
     }), nm = names(wrapped_plots))
-    if (!return_plot_list) {
-      if (!blend) {
-        wrapped_plots <- Reduce(c, wrapped_plots)
-        # rearrange plots
-        new_order <- match(names(wrapped_plots), features) |> order()
-        wrapped_plots <- wrapped_plots[new_order]
-      }
-      if (length(features) == 1 | length(images) == 1 | blend) {
-        ncol <- ncol %||% {
-          if (!blend) {
-            ceiling(sqrt(length(features)))
-          } else {
-            ceiling(sqrt(length(images)))
-          }
-        }
-        wrapped_plots <- wrap_plots(wrapped_plots, ncol = ncol)
-      } else {
-        if (!is.null(ncol)) warn("'ncol' will not be used when more than 1 feature is provided")
-        if (arrange_features == "col") {
-          wrapped_plots <- wrap_plots(wrapped_plots, ncol = length(features), byrow = FALSE)
-        } else {
-          wrapped_plots <- wrap_plots(wrapped_plots, nrow = length(features), byrow = TRUE)
-        }
-      }
-    }
   }
   return(wrapped_plots)
+}
+
+
+#' Arrange plots
+#'
+#' @param wrapped_plots A list of `ggplot` objects
+#' @param images A list of `raster` objects
+#' @param features A character vector of feature names
+#' @param blend A logical specifying if colors are blended or not
+#' @param arrange_features A string specifying how features should
+#' be arranged
+#'
+#' @importFrom patchwork wrap_plots
+#'
+.arrange_plots <- function (
+    wrapped_plots,
+    images = NULL,
+    features = NULL,
+    blend = FALSE,
+    arrange_features = "col"
+) {
+  if (!blend) {
+    wrapped_plots <- Reduce(c, wrapped_plots)
+    # rearrange plots
+    new_order <- match(names(wrapped_plots), features) |> order()
+    wrapped_plots <- wrapped_plots[new_order]
+  }
+  if (length(features) == 1 | length(images) == 1 | blend) {
+    ncol <- ncol %||% {
+      if (!blend) {
+        ceiling(sqrt(length(features)))
+      } else {
+        ceiling(sqrt(length(images)))
+      }
+    }
+    wrapped_plots <- wrap_plots(wrapped_plots, ncol = ncol)
+  } else {
+    if (!is.null(ncol)) warn("'ncol' will not be used when more than 1 feature is provided")
+    if (arrange_features == "col") {
+      wrapped_plots <- wrap_plots(wrapped_plots, ncol = length(features), byrow = FALSE)
+    } else {
+      wrapped_plots <- wrap_plots(wrapped_plots, nrow = length(features), byrow = TRUE)
+    }
+  }
 }
 
 #' Get coords_columns
@@ -1548,14 +1652,11 @@ MapLabels.Seurat <- function (
 #'
 #' @param n integer specifying the number of colors to generate
 #'
+#' @importFrom grDevices hcl
+#'
 #' @return a character vector with color ids
 #'
 .gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]
-}
-
-
-grid_theme <- function () {
-  theme(panel.grid.major = element_line(linetype = "dashed"), axis.text = element_text())
 }

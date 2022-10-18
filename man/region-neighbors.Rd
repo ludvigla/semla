@@ -8,7 +8,7 @@
 \usage{
 RegionNeighbors(object, ...)
 
-\method{RegionNeighbors}{default}(spatnet, spots, keep.within.id = FALSE, verbose = FALSE)
+\method{RegionNeighbors}{default}(object, spots, keep.within.id = FALSE, verbose = FALSE, ...)
 
 \method{RegionNeighbors}{Seurat}(
   object,
@@ -21,11 +21,9 @@ RegionNeighbors(object, ...)
 )
 }
 \arguments{
-\item{object}{an object}
+\item{object}{A list of spatial networks generated with \code{\link{GetSpatialNetwork}}}
 
 \item{...}{Arguments passed to other methods}
-
-\item{spatnet}{A list of spatial networks generated with \code{\link{GetSpatialNetwork}}}
 
 \item{spots}{A character vector with spot IDs present in `spatnet`}
 
@@ -60,6 +58,17 @@ otherwise only the spots along the region border will be kept.
 If a \code{Seurat} object is provided, the identified neighbors will be
 stored as new columns in the meta data column with the names prefixed by
 \code{column_key}
+
+
+If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
+finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
+their  nearest neighbors.
+}
+
+\section{default method}{
+
+The default method takes a list of spatial networks generated with \code{\link{GetSpatialNetwork}}
+together with a vector of spot IDs and returns the spot IDs for the nearest neighbors.
 }
 
 \examples{
@@ -70,7 +79,9 @@ stored as new columns in the meta data column with the names prefixed by
 library(STUtility2)
 library(dplyr)
 
-se_mbrain <- readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/mousebrain/se_mbrain")))
+se_mbrain <-
+  readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                                  "/mousebrain/se_mbrain")))
 
 # Create Seurat object
 se_mbrain <- se_mbrain |>
@@ -91,7 +102,8 @@ se_mbrain$selected_clusters <- se_mbrain[[]] |>
                         TRUE ~ NA_character_)) |>
   pull(cl)
 
-MapLabels(se_mbrain, column_name = "selected_clusters") | MapLabels(se_mbrain, column_name = "nb_to_10")
+MapLabels(se_mbrain, column_name = "selected_clusters") |
+  MapLabels(se_mbrain, column_name = "nb_to_10")
 
 # Find neighbors to clusters 10 and 13
 se_mbrain$selected_clusters <- se_mbrain[[]] |>

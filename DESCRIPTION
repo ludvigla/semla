@@ -1,6 +1,6 @@
 Package: STUtility2
 Type: Package
-Title: Process, analyze and visualize Spatially Resolved Transcriptomcis data.
+Title: Process, analyze and visualize Spatially Resolved Transcriptomcis data
 Version: 0.1.0
 Authors@R:
     c(person(
@@ -14,35 +14,40 @@ Authors@R:
         role = c("aut")
     ))
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
-Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis within R. 
+Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Depends:
-  Seurat (>= 4.0.0),
-  ggplot2 (>= 3.2.0),
-  rlang (>= 1.0.4)
+    Seurat (>= 4.0.0),
+    SeuratObject (>= 4.0.0),
+    ggplot2 (>= 3.2.0),
+    rlang (>= 1.0.4)
 Imports:
-  methods,
-  dplyr (>= 1.0.9),
-  forcats (>= 0.5.2),
-  glue (>= 1.6.2),
-  jsonlite (>= 1.8.0),
-  magick (>= 2.7.3),
-  Matrix (>= 1.4-1),
-  patchwork (>= 1.1.2),
-  scales (>= 1.2.1),
-  tibble (>= 3.1.8),
-  tidyr (>= 1.2.0),
-  zeallot (>= 0.1.0),
-  pillar (>= 1.8.1)
+    methods,
+    dplyr (>= 1.0.9),
+    forcats (>= 0.5.2),
+    glue (>= 1.6.2),
+    jsonlite (>= 1.8.0),
+    magick (>= 2.7.3),
+    Matrix (>= 1.4-1),
+    patchwork (>= 1.1.2),
+    scales (>= 1.2.1),
+    tibble (>= 3.1.8),
+    tidyr (>= 1.2.0),
+    zeallot (>= 0.1.0),
+    pillar (>= 1.8.1),
+    cli (>= 3.3.0),
+    farver (>= 2.1.1)
 RoxygenNote: 7.2.1
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    dbscan (>= 1.1-10),
+    data.table (>= 1.14.2),
+    BiocManager (>= 1.30.18),
+    SpatialExperiment (>= 1.6.1)
 Collate: 
     'STUtility2-package.R'
     'checks.R'
-    'example_function.R'
     'extdata.R'
     'generics.R'
     'load_data.R'

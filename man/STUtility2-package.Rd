@@ -4,9 +4,9 @@
 \name{STUtility2-package}
 \alias{STUtility2}
 \alias{STUtility2-package}
-\title{STUtility2: Process, analyze and visualize Spatially Resolved Transcriptomcis data.}
+\title{STUtility2: Process, analyze and visualize Spatially Resolved Transcriptomcis data}
 \description{
-STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis within R.
+STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 }
 \author{
 \strong{Maintainer}: Ludvig Larsson \email{ludvig.larsson@scilifelab.se}

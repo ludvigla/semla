@@ -56,15 +56,24 @@ and set `remove_spots_outside_tissue = FALSE`.
 
 If you want to filter out spots and features, you can pass the `min.cells` and
 `min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
-however, we using the \code{\link{SubsetVisiumData}} function for filtering.
+however, it is recommended to use the \code{\link{SubsetSTData}} function for filtering
+after the object has been created.
 }
 
 \examples{
 # Assemble spaceranger output files
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+samples <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/filtered_feature_bc_matrix.h5"))
+imgs <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_hires_image.png"))
+spotfiles <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/tissue_positions_list.csv"))
+json <-
+  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                          "/*/spatial/scalefactors_json.json"))
 
 # Create a tibble/data.frame with file paths
 library(tibble)

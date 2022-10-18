@@ -18,7 +18,7 @@ scalefactors output by spaceranger.}
 \item{verbose}{Print messages}
 }
 \value{
-An object of class `DFrame``
+An object of class `DFrame`
 }
 \description{
 Load image related data from \strong{'tissue_hires_image.png'} files.
@@ -26,12 +26,27 @@ Load image related data from \strong{'tissue_hires_image.png'} files.
 \examples{
 \donttest{
 # Collect spaeranger output files
-lowres.imagefiles <- c(system.file("extdata/mousebrain/spatial", "tissue_lowres_image.png", package = "STUtility2"),
-             system.file("extdata/mousecolon/spatial", "tissue_lowres_image.png", package = "STUtility2"))
-hires.imagefiles <- c(system.file("extdata/mousebrain/spatial", "tissue_hires_image.png", package = "STUtility2"),
-             system.file("extdata/mousecolon/spatial", "tissue_hires_image.png", package = "STUtility2"))
-jsonfiles <- c(system.file("extdata/mousebrain/spatial", "scalefactors_json.json", package = "STUtility2"),
-             system.file("extdata/mousecolon/spatial", "scalefactors_json.json", package = "STUtility2"))
+lowres.imagefiles <-
+  c(system.file("extdata/mousebrain/spatial",
+                "tissue_lowres_image.png",
+                package = "STUtility2"),
+    system.file("extdata/mousecolon/spatial",
+                "tissue_lowres_image.png",
+                package = "STUtility2"))
+hires.imagefiles <-
+  c(system.file("extdata/mousebrain/spatial",
+                "tissue_hires_image.png",
+                package = "STUtility2"),
+    system.file("extdata/mousecolon/spatial",
+                "tissue_hires_image.png",
+                package = "STUtility2"))
+jsonfiles <-
+  c(system.file("extdata/mousebrain/spatial",
+                "scalefactors_json.json",
+                package = "STUtility2"),
+    system.file("extdata/mousecolon/spatial",
+                "scalefactors_json.json",
+                package = "STUtility2"))
 
 # Load lowres/hires image data for two samples
 imgFiles <- tibble::tibble(lowres.imagefiles, hires.imagefiles)

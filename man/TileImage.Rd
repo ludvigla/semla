@@ -34,16 +34,23 @@ are determined rom the
 }
 \examples{
 \donttest{
+if (!requireNamespace("shiny"))
+  install.packages("shiny")
+if (!requireNamespace("leaflet"))
+  install.packages("leaflet")
 library(magick)
 library(shiny)
 library(leaflet)
 
 # Load H&E image with magick
-imfile <- system.file("extdata/mousecolon/spatial", "tissue_hires_image.png", package = "STUtility2")
+imfile <-
+  system.file("extdata/mousecolon/spatial",
+              "tissue_hires_image.png",
+              package = "STUtility2")
 im <- image_read(imfile)
 
 # tile image and return path to tiles
-tile_res <- TileImage(im)
+tile_res <- TileImage(im, nCores = 2)
 
 # Create a simple viewer with leaflet
 ui <- fluidPage(

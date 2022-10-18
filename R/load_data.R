@@ -21,14 +21,32 @@
 #' @param verbose Print messages
 #'
 #' @importFrom methods as
+#' @importFrom Seurat Read10X Read10X_h5
+#' @importFrom SeuratObject RowMergeSparseMatrices
+#' @importFrom glue glue
+#' @importFrom rlang abort inform
+#' @importFrom dplyr case_when mutate
+#' @importFrom tibble tibble
+#' @importFrom tools file_ext
 #'
 #' @return A sparse matrix of class `dgCMatrix`
 #'
 #' @examples
 #' \donttest{
 #' # Load and merge two gene expression matrices
-#' samples <- c(system.file("extdata/mousebrain", "filtered_feature_bc_matrix.h5", package = "STUtility2"),
-#'              system.file("extdata/mousecolon", "filtered_feature_bc_matrix.h5", package = "STUtility2"))
+#' samples <-
+#'   c(
+#'     system.file(
+#'       "extdata/mousebrain",
+#'       "filtered_feature_bc_matrix.h5",
+#'       package = "STUtility2"
+#'     ),
+#'     system.file(
+#'       "extdata/mousecolon",
+#'       "filtered_feature_bc_matrix.h5",
+#'       package = "STUtility2"
+#'     )
+#'   )
 #' mergedMatrix <- LoadAndMergeMatrices(samples)
 #' }
 #'
@@ -40,8 +58,8 @@ LoadAndMergeMatrices <- function (
 
   # Run checks
   if (!is.character(samplefiles)) abort("'samplefiles' must be a character vector.")
-  checks <- tibble::tibble(samplefiles) |>
-    dplyr::mutate(is = dplyr::case_when(file.exists(samplefiles) ~ "file", dir.exists(samplefiles) ~ "dir"))
+  checks <- tibble(samplefiles) |>
+    mutate(is = case_when(file.exists(samplefiles) ~ "file", dir.exists(samplefiles) ~ "dir"))
   if (any(is.na(checks$is))) abort(c("Invalid path(s):", glue::glue("{checks$samplefiles[is.na(checks$is)]}")))
 
   # Load expression matrices
@@ -49,17 +67,18 @@ LoadAndMergeMatrices <- function (
   exprMats <- lapply(seq_along(samplefiles), function(i) {
     if (checks$is[i] == "dir") {
       # Assumes that the directory contains matrix, barcodes and genes
-      exprMat <- Seurat::Read10X(data.dir = samplefiles[i])
+      exprMat <- Read10X(data.dir = samplefiles[i])
     } else if (checks$is[i] == "file") {
-      ext <- tools::file_ext(samplefiles[i])
+      ext <- file_ext(samplefiles[i])
       if (ext == "h5") {
-        exprMat <- Seurat::Read10X_h5(samplefiles[i])
+        exprMat <- Read10X_h5(samplefiles[i])
       } else if (ext %in% c("tsv", "tsv.gz")) {
+        if (!requireNamespace("data.table")) install.packages("data.table")
         exprMat <- data.frame(data.table::fread(samplefiles[i], sep = "\t", header = TRUE), row.names = 1)
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
       }
     }
-    if (verbose) inform(c("v" = glue::glue("  Finished loading expression matrix {i}")))
+    if (verbose) inform(c("v" = glue("  Finished loading expression matrix {i}")))
     colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
     return(exprMat)
   })
@@ -68,20 +87,20 @@ LoadAndMergeMatrices <- function (
   all.genes <- lapply(exprMats, function(exprMat) {rownames(exprMat)})
   intersecting.genes <- Reduce(intersect, all.genes)
   if (length(intersecting.genes) == 0) abort("No shared genes shared across datasets.")
-  if (length(intersecting.genes) < 1000) inform(c("x" = glue::glue("There are only {length(intersecting.genes)} gene shared across all matrices:"),
+  if (length(intersecting.genes) < 1000) inform(c("x" = glue("There are only {length(intersecting.genes)} gene shared across all matrices:"),
                                                   "x" = "  Are you sure that the matrices share the same gene IDs?",
                                                   "x" = "  Are the datasets from the same species?"))
   # Merge matrices
   if (length(exprMats) > 1) {
     if (verbose) inform(c("i" = "Merging matrices:"))
-    mergedMat <- SeuratObject::RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
-    if (verbose) inform(c("v" = glue::glue("  There are {cli::col_br_blue(nrow(mergedMat))}",
-                                           " features and {cli::col_br_magenta(ncol(mergedMat))} spots in the merged matrix.")))
+    mergedMat <- RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
+    if (verbose) inform(c("v" = glue("  There are {cli::col_br_blue(nrow(mergedMat))}",
+                                     " features and {cli::col_br_magenta(ncol(mergedMat))} spots in the merged matrix.")))
     return(mergedMat)
   } else {
     inform(c("i" = "only 1 expression matrix loaded."))
-    if (verbose) inform(c("v" = glue::glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
-                                           " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix.")))
+    if (verbose) inform(c("v" = glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
+                                     " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix.")))
     return(exprMats[[1]])
   }
 
@@ -110,8 +129,13 @@ LoadAndMergeMatrices <- function (
 #' @examples
 #' \donttest{
 #' # Load and merge coordinates from two samples
-#' coordinatefiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
-#'              system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
+#' coordinatefiles <-
+#'   c(system.file("extdata/mousebrain/spatial",
+#'                 "tissue_positions_list.csv",
+#'                 package = "STUtility2"),
+#'     system.file("extdata/mousecolon/spatial",
+#'                 "tissue_positions_list.csv",
+#'                 package = "STUtility2"))
 #' coordinates <- LoadSpatialCoordinates(coordinatefiles)
 #' }
 #'
@@ -121,6 +145,9 @@ LoadSpatialCoordinates <- function (
     remove_spots_outside_tissue = TRUE,
     verbose = TRUE
 ) {
+
+  # Set global variables to NULL
+  selected <- NULL
 
   # Run checks
   if (!is.character(coordinatefiles)) abort("'coordinatefiles' must be a character vector.")
@@ -163,17 +190,36 @@ LoadSpatialCoordinates <- function (
 #' scalefactors output by spaceranger.
 #' @param verbose Print messages
 #'
-#' @return An object of class `DFrame``
+#' @importFrom glue glue
+#' @importFrom rlang abort inform
+#' @importFrom tools file_ext
+#'
+#' @return An object of class `DFrame`
 #'
 #' @examples
 #' \donttest{
 #' # Collect spaeranger output files
-#' lowres.imagefiles <- c(system.file("extdata/mousebrain/spatial", "tissue_lowres_image.png", package = "STUtility2"),
-#'              system.file("extdata/mousecolon/spatial", "tissue_lowres_image.png", package = "STUtility2"))
-#' hires.imagefiles <- c(system.file("extdata/mousebrain/spatial", "tissue_hires_image.png", package = "STUtility2"),
-#'              system.file("extdata/mousecolon/spatial", "tissue_hires_image.png", package = "STUtility2"))
-#' jsonfiles <- c(system.file("extdata/mousebrain/spatial", "scalefactors_json.json", package = "STUtility2"),
-#'              system.file("extdata/mousecolon/spatial", "scalefactors_json.json", package = "STUtility2"))
+#' lowres.imagefiles <-
+#'   c(system.file("extdata/mousebrain/spatial",
+#'                 "tissue_lowres_image.png",
+#'                 package = "STUtility2"),
+#'     system.file("extdata/mousecolon/spatial",
+#'                 "tissue_lowres_image.png",
+#'                 package = "STUtility2"))
+#' hires.imagefiles <-
+#'   c(system.file("extdata/mousebrain/spatial",
+#'                 "tissue_hires_image.png",
+#'                 package = "STUtility2"),
+#'     system.file("extdata/mousecolon/spatial",
+#'                 "tissue_hires_image.png",
+#'                 package = "STUtility2"))
+#' jsonfiles <-
+#'   c(system.file("extdata/mousebrain/spatial",
+#'                 "scalefactors_json.json",
+#'                 package = "STUtility2"),
+#'     system.file("extdata/mousecolon/spatial",
+#'                 "scalefactors_json.json",
+#'                 package = "STUtility2"))
 #'
 #' # Load lowres/hires image data for two samples
 #' imgFiles <- tibble::tibble(lowres.imagefiles, hires.imagefiles)
@@ -198,10 +244,14 @@ LoadImageData <- function (
   if (verbose) inform(c("i" = glue::glue("Reading image data for {nrow(images)} samples.")))
   imgData <- inject(rbind(!!!lapply(1:nrow(images), function(i) {
     png.files <- unlist(images[i, ])
-    exts <- tools::file_ext(png.files)
+    exts <- file_ext(png.files)
     check <- exts %in% "png"
     if (!all(check)) abort(glue::glue("Invalid image format: '{exts[!check]}'"))
-    DF <- readImgData(
+    if (!requireNamespace("BiocManager"))
+      install.packages("BiocManager")
+
+    BiocManager::install("SpatialExperiment")
+    DF <- SpatialExperiment::readImgData(
       imageSources = unlist(images[i, ]),
       scaleFactors = jsonfiles[i],
       sample_id = paste0(i),
@@ -210,7 +260,7 @@ LoadImageData <- function (
     if (verbose)
       sapply(basename(unlist(images[i, ])), function(impath) {
         inform(c(
-          "v" = glue::glue("  Finished reading '{impath}' image data for sample {i}")
+          "v" = glue("  Finished reading '{impath}' image data for sample {i}")
         ))
       })
     return(DF)
@@ -248,7 +298,8 @@ LoadImageData <- function (
 #' @section Filter data:
 #' If you want to filter out spots and features, you can pass the `min.cells` and
 #' `min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
-#' however, we using the \code{\link{SubsetVisiumData}} function for filtering.
+#' however, it is recommended to use the \code{\link{SubsetSTData}} function for filtering
+#' after the object has been created.
 #'
 #' @family pre-process
 #'
@@ -266,15 +317,24 @@ LoadImageData <- function (
 #' @importFrom dplyr select bind_cols mutate case_when left_join
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr uncount
+#' @importFrom cli cli_h2 cli_h3
 #'
 #' @return A \code{\link{Seurat}} object with additional spatial information
 #'
 #' @examples
 #' # Assemble spaceranger output files
-#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/tissue_positions_list.csv"))
-#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), "/*/spatial/scalefactors_json.json"))
+#' samples <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/filtered_feature_bc_matrix.h5"))
+#' imgs <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_hires_image.png"))
+#' spotfiles <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/tissue_positions_list.csv"))
+#' json <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                           "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
 #' library(tibble)
@@ -294,7 +354,11 @@ ReadVisiumData <- function (
     ...
 ) {
 
-  if (verbose) cli::cli_h2("Reading 10x Visium data")
+  # Set global variables to NULL
+  samples <- imgs <- spotfiles <- json <- barcode <- width <- height <- full_width <- full_height <- NULL
+  colorspace <- density <- sampleID <- type <- pxl_col_in_fullres <- pxl_row_in_fullres <- filesize <- NULL
+
+  if (verbose) cli_h2("Reading 10x Visium data")
 
   # Check infoTable
   if (!all(c("samples", "imgs", "spotfiles", "json") %in% colnames(infoTable)))
@@ -352,7 +416,7 @@ ReadVisiumData <- function (
   if (!all(coordinates$barcode %in% colnames(mergedMat))) {
     abort(glue("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data."))
   }
-  if (verbose) inform(""); cli::cli_h3(text = "Creating `Seurat` object")
+  if (verbose) inform(""); cli_h3(text = "Creating `Seurat` object")
   if (verbose) inform(c("v" = "Expression matrices and coordinates are compatible"))
 
   # Read image info

@@ -6,30 +6,36 @@
 \alias{LoadImages.Seurat}
 \title{Load images}
 \usage{
-LoadImages(image_paths, ...)
+LoadImages(object, ...)
 
-\method{LoadImages}{default}(image_paths, image_height = 400, verbose = TRUE)
+\method{LoadImages}{default}(object, image_height = 400, verbose = TRUE, ...)
 
-\method{LoadImages}{Seurat}(object, image_height = 400, verbose = TRUE)
+\method{LoadImages}{Seurat}(object, image_height = 400, verbose = TRUE, ...)
 }
 \arguments{
-\item{image_paths}{a character vector of paths to images in JPEG or PNG format}
+\item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
 
-\item{image_height}{an integer value specifying the heigh of the downscaled images}
+\item{image_height}{an integer value specifying the height of the down-scaled images}
 
 \item{verbose}{print messages}
-
-\item{object}{An object}
 }
 \description{
 Load images
 }
 \section{Seurat}{
 
-If a \code{Seurat} object is provided, the images will be loaded as rasters
-into the \code{Staffli} object that is located in the \code{tools} slot.
+If a Seurat object is provided, the images will be loaded as `raster` objects
+and stored inside the \code{Staffli} object that is located in the \code{tools}
+slot.
+}
+
+\section{default method}{
+
+If a character vector of image paths are provided, the images will be loaded,
+then down-scaled based on \code{image_height} and returned as a list of `raster`
+objects. Only JPEG and PNG images are supported.
 }
 
 \examples{

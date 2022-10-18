@@ -23,12 +23,17 @@ NULL
 #' library(ggplot2)
 #'
 #' # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs
-#' coordfiles <- c(system.file("extdata/mousebrain/spatial", "tissue_positions_list.csv", package = "STUtility2"),
-#'                 system.file("extdata/mousecolon/spatial", "tissue_positions_list.csv", package = "STUtility2"))
+#' coordfiles <- c(system.file("extdata/mousebrain/spatial",
+#'                             "tissue_positions_list.csv",
+#'                             package = "STUtility2"),
+#'                 system.file("extdata/mousecolon/spatial",
+#'                             "tissue_positions_list.csv",
+#'                             package = "STUtility2"))
 #'
 #' # Load coordinate data into a tibble
 #' xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {
-#'   coords <- setNames(read.csv(coordfiles[i], header = FALSE), nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
+#'   coords <- setNames(read.csv(coordfiles[i], header = FALSE),
+#'                      nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
 #'   coords$sampleID <- i
 #'   coords <- coords |>
 #'     dplyr::filter(selection == 1) |>
@@ -58,8 +63,12 @@ GetSpatialNetwork.default <- function (
     object,
     nNeighbors = 6,
     maxDist = NULL,
-    minK = 0
+    minK = 0,
+    ...
 ) {
+
+  # Set global variables to NULL
+  barcode <- x <- y <- sampleID <- from <- distance <- NULL
 
   # Check object object class
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
@@ -136,8 +145,12 @@ GetSpatialNetwork.Seurat <- function (
     object,
     nNeighbors = 6,
     maxDist = NULL,
-    minK = 0
+    minK = 0,
+    ...
 ) {
+
+  # Set global variable to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
 
   # Check Seurat object
   .check_seurat_object(object)

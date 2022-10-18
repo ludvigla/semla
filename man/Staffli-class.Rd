@@ -23,6 +23,9 @@ in `raster` format and additional information about these images.
 
 \item{\code{image_info}}{A tibble with information about the raw images}
 
+\item{\code{scalefactors}}{A tibble with information about scalefactors used to convert coordinates
+between the original image and down-scaled representations such as "tissue_lowres_image.png"}
+
 \item{\code{pixels_per_um}}{Numeric vector specifying the number of pixels in the raw images that
 corresponds to 1 micrometer}
 

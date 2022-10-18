@@ -13,6 +13,8 @@ NULL
 #' @slot meta_data A tibble with spot coordinates and additional meta data
 #' @slot image_height The height of the scaled images in pixels
 #' @slot image_info A tibble with information about the raw images
+#' @slot scalefactors A tibble with information about scalefactors used to convert coordinates
+#' between the original image and down-scaled representations such as "tissue_lowres_image.png"
 #' @slot pixels_per_um Numeric vector specifying the number of pixels in the raw images that
 #' corresponds to 1 micrometer
 #' @slot version Package version.
@@ -218,8 +220,6 @@ setMethod (
 #' @aliases show,Staffli,Staffli-method
 #'
 #' @param object object to print preselected attributes for
-#'
-#' @export
 #'
 setMethod (
   f = "show",
