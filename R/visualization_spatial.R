@@ -97,7 +97,7 @@ MapFeatures.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
+  barcode <- sampleID <- NULL
 
   # Check data
   .prep_data_for_plotting(object, colors, label_by, scale, arrange_features, coords_columns)
@@ -109,7 +109,7 @@ MapFeatures.default <- function (
 
   # get features
   features <- object |>
-    select(-barcode, -pxl_col_in_fullres, -pxl_row_in_fullres, -sampleID, -all_of(label_by)) |>
+    select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
     colnames()
 
   # Split data by sampleID
@@ -178,7 +178,7 @@ MapFeatures.default <- function (
           drop_na = drop_na
         )
       })
-      # Arrange features by col or row
+      # Add names to feature_plots
       p <- setNames(feature_plots, nm = features)
     } else {
       p <- .spatial_feature_plot(
@@ -211,7 +211,7 @@ MapFeatures.default <- function (
   return(wrapped_plots)
 }
 
-# TODO: alpha scale doesn't work for crop_area, ncol is broken for crop_area
+
 #' Map numeric features in 2D using a Seurat object
 #'
 #' @param features a character vector of features to plot. These features need to be
@@ -380,7 +380,7 @@ MapFeatures.Seurat <- function (
     if (!is.null(section_number)) {
       image_dims <- image_dims[image_dims$sampleID == section_number, ]
     }
-    new_dims <- .get_limits(data_use)
+    new_dims <- .get_limits(data_use, coords_columns)
     crop_area <- c(min(new_dims$x_start/image_dims$full_width),
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
@@ -423,10 +423,9 @@ MapFeatures.Seurat <- function (
 
   # Inject images if image_use is provided
   if (!is.null(image_use)) {
-    wrapped_plots <- .inject_images(image_use, features, arrange_features, wrapped_plots, images, ncol, return_plot_list, blend)
+    wrapped_plots <- .inject_images(image_use, features, arrange_features, wrapped_plots, images, NULL, return_plot_list, blend)
     if (!return_plot_list) {
       # Create final patchwork
-      ncol <- ncol %||% ceiling(sqrt(length(wrapped_plots)))
       wrapped_plots <- .arrange_plots(wrapped_plots, features, blend, arrange_features, ncol)
     }
   }
@@ -497,14 +496,14 @@ MapLabels.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
+  barcode <- sampleID <- NULL
 
   # Check data
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
 
   # get features
   label <- object |>
-    select(-barcode, -pxl_col_in_fullres, -pxl_row_in_fullres, -sampleID, -all_of(label_by)) |>
+    select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
     colnames()
 
   # Check if label column only contains NA values
@@ -714,7 +713,7 @@ MapLabels.Seurat <- function (
   if (override_plot_dims) {
     # Split data by sampleID
     image_dims <- GetStaffli(object)@image_info
-    new_dims <- .get_limits(data_use)
+    new_dims <- .get_limits(data_use, coords_columns)
     crop_area <- c(min(new_dims$x_start/image_dims$full_width),
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
@@ -1255,22 +1254,26 @@ MapLabels.Seurat <- function (
 #' Get limits for pixel coordinates
 #'
 #' @param x a tibble with spot coordinates
+#' @param coords_columns a character vector specifying the columns
+#' names for the spot coordinate vectors
+#'
+#' @importFrom dplyr summarize sym
 #'
 #' @return a tibble with limits
 #'
-.get_limits <- function(x) {
-
-  # Set global variables to NULL
-  sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
+.get_limits <- function (
+    x,
+    coords_columns
+) {
 
   # Get min/max values for the coordinates
   x |>
-    group_by(sampleID) |>
+    group_by(!! sym("sampleID")) |>
     summarize(
-      x_start = min(pxl_col_in_fullres),
-      y_start = min(pxl_row_in_fullres),
-      full_width = max(pxl_col_in_fullres),
-      full_height = max(pxl_row_in_fullres)
+      x_start = min(!! sym(coords_columns[1])),
+      y_start = min(!! sym(coords_columns[2])),
+      full_width = max(!! sym(coords_columns[1])),
+      full_height = max(!! sym(coords_columns[2]))
     )
 }
 
@@ -1429,7 +1432,6 @@ MapLabels.Seurat <- function (
     }
     if (split_labels) {
       lvls <- levels(object |> pull(all_of(column_name)))
-      print(lvls)
       images <- setNames(lapply(lvls, function(lvl) {
         images[[1]]
       }), nm = lvls)
@@ -1594,22 +1596,36 @@ MapLabels.Seurat <- function (
     arrange_features = "col",
     ncol = NULL
 ) {
+
+  # Set global variables to NULL
+  nSamples <- NULL
+
+  # When blend = FALSE, wrapped_plots will be a nested list where the
+  # first layer contains samples and the second layer contains features.
+  # In order to create the final patchwork, the nested list is first unlisted
+  # and reordered
   if (!blend) {
+    nSamples <- length(wrapped_plots)
     wrapped_plots <- Reduce(c, wrapped_plots)
     # rearrange plots
     new_order <- match(names(wrapped_plots), features) |> order()
     wrapped_plots <- wrapped_plots[new_order]
   }
-  if (length(features) == 1 | blend) {
+  # If there's only 1 feature 1 sample or if blend is active,
+  # a patchwork will be created that ignores arrange_features
+  if ((length(features) == 1) | (nSamples == 1) | blend) {
     ncol <- ncol %||% {
-      if (!blend) {
-        ceiling(sqrt(length(features)))
-      } else {
-        ceiling(sqrt(length(images)))
-      }
+      #if (!blend) {
+      #  ceiling(sqrt(length(wrapped_plots)))
+      #} else {
+      #  ceiling(sqrt(length(images)))
+      #}
+      ceiling(sqrt(length(wrapped_plots)))
     }
     wrapped_plots <- wrap_plots(wrapped_plots, ncol = ncol)
   } else {
+    # arrange_features is only active when there are multiple samples
+    # and features so that a grid can be created
     if (arrange_features == "col") {
       wrapped_plots <- wrap_plots(wrapped_plots, ncol = length(features), byrow = FALSE)
     } else {
