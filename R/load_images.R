@@ -2,6 +2,7 @@
 #'
 NULL
 
+# TODO: stop LoadImages from loading images in a higher resolution that input
 #' @param image_height an integer value specifying the height of the down-scaled images
 #' @param verbose print messages
 #'

@@ -4,10 +4,13 @@
 \alias{.get_limits}
 \title{Get limits for pixel coordinates}
 \usage{
-.get_limits(x)
+.get_limits(x, coords_columns)
 }
 \arguments{
 \item{x}{a tibble with spot coordinates}
+
+\item{coords_columns}{a character vector specifying the columns
+names for the spot coordinate vectors}
 }
 \value{
 a tibble with limits

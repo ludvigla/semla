@@ -10,7 +10,10 @@ In this notebook, we'll have a look at different ways of creating spatial plots 
 
 ```{r}
 library(tibble)
+library(ggplot2)
+library(patchwork)
 library(STUtility2)
+library(scico)
 ```
 
 ## Load data
@@ -44,10 +47,12 @@ In *STUtility2*, we can use `MapFeatures` and `MapLabels` to make spatial plots 
 Let's get started with `MapFeatures`. The most basic usage is to map gene expression spatially:
 
 ```{r fig.width=6, fig.height=8}
-cols <- c("lightgrey", "mistyrose", "red", "darkred")
+cols <- viridis::viridis(n = 11) #c("lightgrey", "mistyrose", "red", "darkred")
 p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols)
 p
 ```
+
+### Overlay maps on images
 
 If we want to create a map with the H&E images we can do this by setting `image_use = raw`. But before we can do this, we need to load the images into our *Seurat* object:
 
@@ -60,6 +65,7 @@ p
 Right now it's quite difficult to see the tissue underneath the spots. We can add some opacity to the colors which is scaled by the feature values to make spots with low expression transparent:
 
 ```{r fig.width=6, fig.height=8}
+
 p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
                  colors = cols, scale_alpha = TRUE)
 p
@@ -79,7 +85,7 @@ p
 The color bars are now identical for each feature. `MapFeatures` calculates the range for each feature and uses this range to determine the limits of the color bars. If you want to change this behavior to scale the values independently, you can set `scale = "free"`:
 
 ```{r fig.width=6, fig.height=8}
-p <- MapFeatures(se, features = c("Th", "Clu"), scale = "free")
+p <- MapFeatures(se, features = c("Th", "Clu"), scale = "free", colors = cols)
 p
 ```
 
@@ -138,7 +144,7 @@ p <- MapFeatures(se, features = c("Th", "Clu"), arrange_features = "row", color 
   plot_layout(guides = "collect") &
   theme(legend.position = "right", 
         legend.text = element_text(angle = 0),
-        legend.margin = margin(t = 50, r = 0, b = 100, l = 0, unit = "native"))
+        legend.margin = margin(t = 50, r = 0, b = 100, l = 0))
 p
 ```
 
@@ -206,8 +212,7 @@ Note that the plots dimensions are calculated for the entire dataset when `overr
 p1 <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
                  override_plot_dims = TRUE, color = cols, section_number = 1)
 p2 <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
-                 override_plot_dims = TRUE, color = cols, section_number = 2, 
-                 crop_area = c(0.2078578, 0.1519477, 0.7806282, 0.6897283))
+                 override_plot_dims = TRUE, color = cols, section_number = 2)
 p1 / p2
 ```
 
@@ -233,12 +238,15 @@ p
 
 And we can patch together a nice figure showing the expression both at a global level and inside the GALT:
 
-```{r fig.width=6, fig.height=6}
-p_global <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw", 
-                 pt_size = 1, section_number = 2, color = cols, override_plot_dims = TRUE)
-p_GALT <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw", 
-                 pt_size = 3, section_number = 2, 
-                 color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7)) &
+```{r fig.width=6.5, fig.height=6}
+p_global <- MapFeatures(se, features = c("Ms4a1", "Clu"), 
+                        image_use = "raw", scale_alpha = TRUE,
+                        pt_size = 1, section_number = 2, color = cols, 
+                        override_plot_dims = TRUE)
+p_GALT <- MapFeatures(se, features = c("Ms4a1", "Clu"), 
+                      image_use = "raw", scale_alpha = TRUE, 
+                      pt_size = 3, section_number = 2, 
+                      color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7)) &
   theme(plot.title = element_blank(), 
         plot.subtitle = element_blank(), 
         legend.position = "none")
@@ -246,14 +254,46 @@ p_GALT <- MapFeatures(se, features = c("Ms4a1", "Clu"), image_use = "raw",
 (p_global / p_GALT)
 ```
 
-## Map labels
+### Increase resolution
 
-For categorical data, we use `MapLabels` instead of `MapFeatures`. This function allows us to color our spots based on some column of our Seurat object containing categorical data:
+Right now, you can see that the resolution of zoomed in image is quite low. The reason for this is that the images were loaded to have a height of 400 pixels which is the default setting for `LoadImages`. If you want to, you can reload the images in higher resolution given that you provided higher resolution images as input. For example, if you used the "tissue_hires_image.png" files as input for `ReadVisiumData`, these images are roughly 2000x2000 pixels in size, so you can reload the images in higher resolution. If we run `LoadImages` again and set `image_height = 1000` we should be able to view the H%&E images in slightly higher resolution.
+
+```{r}
+se_high_res <- LoadImages(se, image_height = 1000)
+
+# Check object sizes
+print(object.size(se), units = "MB")
+print(object.size(se_high_res), units = "MB")
+```
+
+Note that these higher resolution images will take up more space and might slow down the plotting considerably.
+
+```{r fig.width=6.5, fig.height=6}
+p_global <- MapFeatures(se_high_res, features = c("Ms4a1", "Clu"), 
+                        image_use = "raw", scale_alpha = TRUE,
+                        pt_size = 1, section_number = 2, color = cols, 
+                        override_plot_dims = TRUE)
+p_GALT <- MapFeatures(se_high_res, features = c("Ms4a1", "Clu"), 
+                      image_use = "raw", scale_alpha = TRUE, 
+                      pt_size = 3, section_number = 2, 
+                      color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7)) &
+  theme(plot.title = element_blank(), 
+        plot.subtitle = element_blank(), 
+        legend.position = "none")
+
+(p_global / p_GALT)
+```
+
+## Map categorical features
+
+For categorical data, we use `MapLabels` instead of `MapFeatures`. This function allows us to color our spots based on some column of our Seurat object containing categorical data.
 
 ```{r fig.width=7, fig.height=3}
 MapLabels(se, column_name = "sample_id") &
   theme(legend.position = "right")
 ```
+
+### Order of categories
 
 Categorical data can be represented as character vectors or factors, but with factors it's easier to control the order of the labels as well as their colors. If we want to customize the order, we can convert our column into a factor and set the levels as we please:
 
@@ -263,11 +303,13 @@ MapLabels(se, column_name = "sample_id_factor") &
   theme(legend.position = "right")
 ```
 
+### Colors
+
 If we pass a named vector of colors we can control the coloring of our labels:
 
 ```{r fig.width=7, fig.height=3}
 MapLabels(se, column_name = "sample_id_factor", 
-          colors = c("mousecolon" = "lightblue", "mousebrain" = "mistyrose")) &
+          colors = c("mousecolon" = "#4477AA", "mousebrain" = "#CC6677")) &
   theme(legend.position = "right")
 ```
 
@@ -283,28 +325,86 @@ se <- se |>
   FindClusters(resolution = 0.2)
 ```
 
+### Map clusters
+
 ```{r fig.width=7, fig.height=3}
 MapLabels(se, column_name = "seurat_clusters") &
   theme(legend.position = "right")
 ```
 
+### Format legend
+
+#### Point size
+
+If you want to increase the size of the spots in the color legend, you can override the `fill` aesthetic that controls the appearance of the points without changing the size of the points in the plot. We can do this by using `guides(fill = guide_legend(override.aes = list(size = ...)))`:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "seurat_clusters") &
+  guides(fill = guide_legend(override.aes = list(size = 3))) &
+  theme(legend.position = "right")
+```
+
+#### Legend arrangement
+
+Another useful option is to adjust the arrangement of the color legend. For example, if you have a lot of different categories, it might be easier to read the labels if they are arranged in multiple columns:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "seurat_clusters") &
+  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2)) &
+  theme(legend.position = "right")
+```
+
+#### Collect legends
+
+Since all sub plots share the same color legends, we can collect them and place them on the side of the plot:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "seurat_clusters") +
+  plot_layout(guides = "collect") &
+  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2)) &
+  theme(legend.position = "right")
+```
+
+### Overlay maps on images
+
+And just as with `MapFeatures`, we can add our H&E images to the plots:
+
+```{r fig.width=7, fig.height=3}
+MapLabels(se, column_name = "seurat_clusters", image_use = "raw", 
+          override_plot_dims = TRUE) +
+  plot_layout(guides = "collect") &
+  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2)) &
+  theme(legend.position = "right")
+```
+
+### Split labels
+
 Sometimes it can get cluttered in the plot and difficult to see where each cluster is located in the tissue, especially when there are many clusters and some of them have very similar colors. In this case, `MapLabels` can split the data into separate panels, one for each label:
 
-```{r fig.width=7, fig.height=7}
-MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE) &
+```{r fig.width=7, fig.height=6}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE) +
+  plot_layout(guides = "collect") &
   theme(legend.position = "right")
 ```
 
 When you split data, you can only do it for one section which is why a warning is thrown and the first available section is selected. If you want to use a different section, you can specify which one to use with `section_number`:
 
-```{r fig.width=7, fig.height=4}
-MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, section_number = 2) &
+```{r fig.width=7, fig.height=8}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, 
+          section_number = 2, ncol = 2) +
+  plot_layout(guides = "collect") &
   theme(legend.position = "right")
 ```
 
-```{r fig.width=7, fig.height=4}
-MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, section_number = 2) +
-  plot_layout(guides = "collect") &
-  theme(legend.position = "right", legend.direction = "vertical")
-```
+#### Remove background
 
+When mapping categorical features in split view it might be more useful to see the underlying image. If you set `drop_na = TRUE`, the background spots will be removed:
+
+```{r fig.width=6.5, fig.height=6}
+MapLabels(se, column_name = "seurat_clusters", split_labels = TRUE, 
+          image_use = "raw", drop_na = TRUE, override_plot_dims = TRUE) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", 
+        plot.title = element_blank(), 
+        plot.margin = margin(0, 5, 5, 0))
+```
