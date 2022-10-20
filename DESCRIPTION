@@ -54,6 +54,7 @@ Collate:
     'load_images.R'
     'neighborhood_analysis.R'
     'plot_images.R'
+    'rigid_transform.R'
     'spatial_autocorrelation.R'
     'spatial_network.R'
     'staffli_object.R'

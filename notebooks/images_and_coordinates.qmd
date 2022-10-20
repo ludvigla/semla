@@ -80,7 +80,7 @@ title(paste0("reflected along y axis (",
              image_info(im_yrefl)$width, "x", image_info(im_yrefl)$height, ")"))
 ```
 
-When working with mutiple SRT datasets, it could be useful to align the tissue sections to have roughly the same orientation and size. In other words, we might want to register our H&E images to a reference image. When doing so, we want to apply rotations, reflections and translations. The issue with the default `magick` rotation function is that it creates a bounding box to hold the entire image, which makes the image bigger. In the plots above you cans see that the rotated image is 586x586 pixels in size compared to the 400x425 of the other images.
+When working with multiple SRT datasets, it can be useful to align the tissue sections to have roughly the same orientation and size. In other words, we might want to register our H&E images to a reference image. When doing so, we want to apply rotations, reflections and translations. The issue with the default `magick` rotation function is that it creates a bounding box to hold the entire image, which makes the image bigger. In the plots above you cans see that the rotated image is 586x586 pixels in size compared to the 400x425 of the other images.
 
 The main issue is that if we want to map spots to our H&E images after rotation, the scale has now changed and the spots will appear smaller. Instead, it is more convenient to keep the same input dimensions.
 
@@ -114,7 +114,7 @@ title(paste0("rotated 45 degrees clockwise and moved (",
              image_info(im_transf2)$width, "x", image_info(im_transf2)$height, ")"))
 ```
 
-As you cans see, regardless of what transformation we apply, the image dimensions remain the same.
+As you can see, regardless of what transformation we apply, the image dimensions remain the same.
 
 ## Spot transformation
 
@@ -134,17 +134,17 @@ xy <- LoadSpatialCoordinates(coordinatefiles = cordinatefile, verbose = T)
 xy
 ```
 
-Here we have access to the Visium grid coordinates and the H&E image coordinates (for the full resolution image used for `spaceranger count`). We also have a column with spot barcodes and a column called `selected` which holds information about what sots are located under the tissue.
+Here we have access to the Visium grid coordinates and the H&E image coordinates for the full resolution image used for `spaceranger count`. We also have a column with spot barcodes and a column called `selected` which holds information about what sots are located under the tissue.
 
 We can illustrate what this means with a plot:
 
 ```{r fig.width=7, fig.height=5.5}
 
-ggplot(xy, aes(pxl_row_in_fullres, pxl_col_in_fullres, color = factor(selected))) + 
+ggplot(xy, aes(pxl_col_in_fullres, pxl_row_in_fullres, color = factor(selected))) + 
   geom_point()
 ```
 
-As you can see, the spots with a value of 1 correspond to spots under the tissue. But right now, the tissue is upside down in the plot relative to our H&E image. This is because the origin (0, 0) of the plot is located in the bottom left corner, but for images its in the upper right corner.
+The spots with a value of 1 correspond to spots under the tissue. But right now, the tissue is upside down in the plot relative to our H&E image. This is because the origin (0, 0) of the plot is located in the bottom left corner, but for images its in the upper right corner.
 
 We can fix this easily by inverting the y axis. However, to do this properly, we need the dimensions of the H&E image...
 
@@ -186,13 +186,13 @@ There are a couple of important things to pay attention to here. The x, y coordi
 g <- im |> 
   rasterGrob(width = unit(1, "npc"), height = unit(1, "npc"), interpolate = TRUE)
 
-ggplot(xy, aes(pxl_row_in_fullres, 
-               image_info(im)$height - pxl_col_in_fullres, 
+ggplot(xy, aes(pxl_col_in_fullres, 
+               pxl_row_in_fullres, 
                color = factor(selected))) +
   annotation_custom(g, -Inf, Inf, -Inf, Inf) +
   geom_point() +
   scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
-  scale_y_continuous(limits = c(0, image_info(im)$height), expand = c(0, 0))
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0))
 
 ```
 
@@ -217,16 +217,16 @@ xy_transformed <- CoordTransform(xy_coords, angle = 45, xy_offset = c(0, 0))
 # Plot spot coordinates
 gg <- rbind(cbind(xy_coords |> setNames(c("x", "y")), type = "original"), 
             cbind(xy_transformed |> setNames(c("x", "y")), type = "transformed"))
-ggplot(gg, aes(x, image_info(im)$height - y, color = type)) +
-  geom_point() +
+ggplot(gg, aes(x, y, color = type)) +
+  geom_point()  +
+  geom_point(aes(x = c_xy[1], y = c_xy[2]), color = "red", 
+             size = 5, shape = 4, stroke = 3) +
   facet_grid(~type) +
   scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
-  scale_y_continuous(limits = c(0, image_info(im)$height), expand = c(0, 0)) +
-  geom_point(x = c_xy[1], y = c_xy[2], 
-             color = "red", size = 5)
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0))
 ```
 
-As you can see, the spots are rotated around the center of our spots (red dot). Instead, we want to define a center to rotate the spots around, which will the the center of our H&E image.
+The spots are rotated around the center of our spots (red cross). Instead, we want to define a center to rotate the spots around, which will the the center of our H&E image.
 
 ```{r fig.width=9, fig.height=4.5}
 # Select only x, y coordinates
@@ -242,13 +242,15 @@ xy_transformed <- CoordTransform(xy_coords, angle = 45, xy_offset = c(0, 0),
 # Plot spot coordinates
 gg <- rbind(cbind(xy_coords |> setNames(c("x", "y")), type = "original"), 
             cbind(xy_transformed |> setNames(c("x", "y")), type = "transformed"))
-ggplot(gg, aes(x, image_info(im)$height - y, color = type)) +
-  geom_point() +
+
+ggplot(gg, aes(x, y, color = type)) +
+  geom_point()  +
+  geom_point(aes(x = image_info(im)$width/2, 
+                 y = image_info(im)$height/2), 
+             color = "blue", size = 5, stroke = 3, shape = 4) +
   facet_grid(~type) +
   scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
-  scale_y_continuous(limits = c(0, image_info(im)$height), expand = c(0, 0)) +
-  geom_point(x = image_info(im)$width/2, y = image_info(im)$height/2, 
-             color = "red", size = 5)
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0))
 ```
 
 Now let's have a look at how we can transform coordinates and images at the same time.
@@ -268,7 +270,35 @@ xy_coords <- xy |>
   select(pxl_col_in_fullres, pxl_row_in_fullres)
 
 # Apply transformations
-transf.res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(0, 0))
+transf_res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(0, 0))
+
+# Plot results
+g <- transf_res$im_transf |> 
+  rasterGrob(width = unit(1, "npc"), height = unit(1, "npc"), interpolate = TRUE)
+
+# Add selected to transf_res$xy_transf
+transf_res$xy_transf$selected <- xy$selected
+
+# Note that the y axis still needs to be reversed
+ggplot(transf_res$xy_transf, aes(tr_x, tr_y, 
+               color = factor(selected))) +
+  annotation_custom(g, -Inf, Inf, -Inf, Inf) +
+  geom_point() +
+  scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0))
+
+```
+
+### Rotation + translation
+
+```{r fig.width=9, fig.height=7.5}
+
+# Select only x, y coordinates
+xy_coords <- xy |>
+  select(pxl_col_in_fullres, pxl_row_in_fullres)
+
+# Apply transformations
+transf.res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(100, 100))
 
 # Plot results
 g <- transf.res$im_transf |> 
@@ -283,10 +313,7 @@ ggplot(transf.res$xy_transf, aes(tr_x, image_info(im)$height - tr_y,
   geom_point() +
   scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
   scale_y_continuous(limits = c(0, image_info(im)$height), expand = c(0, 0))
-
 ```
-
-### Rotation + translation
 
 ```{r fig.width=9, fig.height=7.5}
 
@@ -295,7 +322,7 @@ xy_coords <- xy |>
   select(pxl_col_in_fullres, pxl_row_in_fullres)
 
 # Apply transformations
-transf.res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(100, 100))
+transf.res <- CoordAndImageTransform(im, xy_coords, angle = 45, mirror_x = TRUE)
 
 # Plot results
 g <- transf.res$im_transf |> 

@@ -4,7 +4,16 @@
 \alias{CoordAndImageTransform}
 \title{Apply transformation to paired image and coordinates}
 \usage{
-CoordAndImageTransform(im, xy_coords, angle = 0, xy_offset = NULL)
+CoordAndImageTransform(
+  im,
+  xy_coords,
+  mirror_x = FALSE,
+  mirror_y = FALSE,
+  angle = 0,
+  xy_offset_image = NULL,
+  xy_offset_spots = NULL,
+  imcenter = NULL
+)
 }
 \arguments{
 \item{im}{Image of class `magick-image`, `StoredSpatialImage`, `raster` or a
@@ -12,10 +21,19 @@ path to an external image file.}
 
 \item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.}
 
+\item{mirror_x, mirror_y}{logical specifying if the image and spots should be mirrored
+along the x- and/or y-axis}
+
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
 for  counter-clockwise rotation.}
 
-\item{xy_offset}{Optional point (x, y) specifying the translation.}
+\item{xy_offset_image}{A numeric vector of length 2 specifying the translations
+along the x-a dn y-axes for the image}
+
+\item{xy_offset_spots}{A numeric vector of length 2 specifying the translations
+along the x- and y-axes for the spots. If \code{xy_offset_image} is \code{NULL},
+\code{xy_offset_spots} will be set to \code{xy_offset_image} as it is assumed that
+the spots are matched with the image.}
 }
 \value{
 A list with two elements:
@@ -31,6 +49,90 @@ be mapped to the H&E image using a set of pixel coordinates.
 This function takes an image and its corresponding set of spot coordinates as
 input and applies the same transformation to the image and spot coordinates
 simultaneously.
+}
+\details{
+Mirroring is prioritized and will be applied to the image before applying rotations
+and translations.
+}
+\examples{
+
+library(ggplot2)
+library(patchwork)
+
+# get example coordinate file
+coordinatefile <- system.file("extdata/mousebrain/spatial",
+                             "tissue_positions_list.csv",
+                             package = "STUtility2")
+
+# Load coordinates
+xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile, verbose = T)
+xy
+
+# Load image
+lowresimagefile <- system.file("extdata/mousebrain/spatial",
+                               "tissue_lowres_image.png",
+                               package = "STUtility2")
+im <- image_read(lowresimagefile)
+
+# read scalefactors
+scalefactorfile <- system.file("extdata/mousebrain/spatial",
+                               "scalefactors_json.json",
+                               package = "STUtility2")
+scalefactors <- jsonlite::read_json(scalefactorfile)
+scalefactors
+
+# Convert coordinates using appropriate scalefactor, in this
+# case the scalefactor for tissue_image_lowres
+xy <- xy |>
+  mutate(across(pxl_col_in_fullres:pxl_row_in_fullres,
+                ~ .x*scalefactors$tissue_lowres_scalef))
+
+# Note that the y axis needs to be reversed and you need to
+# specify the axis limits uisng the dimensions of the image
+ggplot(xy, aes(pxl_col_in_fullres, pxl_row_in_fullres)) +
+  geom_point(color = "red", alpha = 0.5) +
+  scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0)) +
+  labs(x = expression("x"["original"]),
+       y = expression("y"["original"]),
+       title = "Original image and coordinates") +
+  theme_void() +
+  theme(axis.text = element_text(),
+        axis.title.x = element_text(),
+        axis.title.y = element_text(angle = 90)) +
+  coord_fixed() +
+  # Insert H&E image
+  inset_element(p = as.raster(im),
+                left = 0, bottom = 0,
+                right = 1, top = 1,
+                on_top = FALSE)
+
+# Apply transformations
+transf_res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(100, 100))
+
+# Add selected to transf_res$xy_transf
+transf_res$xy_transf$selected <- xy$selected
+
+# Note that the y axis needs to be reversed and you need to
+# specify the axis limits uisng the dimensions of the image
+ggplot(transf_res$xy_transf, aes(tr_x, tr_y)) +
+  geom_point(color = "red", alpha = 0.5) +
+  scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
+  scale_y_reverse(limits = c(image_info(im)$height, 0), expand = c(0, 0)) +
+  labs(x = expression("x"["transformed"]),
+       y = expression("y"["transformed"]),
+       title = "Transformed image and coordinates") +
+  theme_void() +
+  theme(axis.text = element_text(),
+        axis.title.x = element_text(),
+        axis.title.y = element_text(angle = 90)) +
+  coord_fixed() +
+  # Insert H&E image
+  inset_element(p = as.raster(transf_res$im_transf),
+                left = 0, bottom = 0,
+                right = 1, top = 1,
+                on_top = FALSE)
+
 }
 \seealso{
 Other transforms: 
