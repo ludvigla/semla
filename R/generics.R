@@ -152,6 +152,21 @@ LoadImages <- function(object, ...) {
 }
 
 
+#' Apply rigid transformations to images
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family image transformations
+#' @rdname transform-images
+#'
+#' @export
+#'
+RigidTransformImages <- function(object, ...) {
+  UseMethod(generic = 'RigidTransformImages', object = object)
+}
+
+
 #' Find region neighbors
 #'
 #' @section Seurat:
