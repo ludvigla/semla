@@ -36,8 +36,7 @@ generate_rigid_transform <- function (
   transforms <- tibble(sampleID, mirror_x, mirror_y, angle, tr_x, tr_y)
 
   # Check transforms
-  if (.check_transforms(transforms)) abort(glue("'transforms' cannot take default values. ",
-                                          "This would result in no transformation."))
+  .check_transforms_values(transforms)
 
   return(transforms)
 }
@@ -157,13 +156,10 @@ RigidTransformImages.default <- function (
 ) {
 
   # Run checks for object
-  if (!inherits(object, what = "tbl")) abort(glue("Invalid class {class(object)} of 'object', extected a 'tbl'"))
-  if (nrow(object) != 1) abort(glue("Invalid dimensions for 'object', expected 1 row but got {nrow(object)}"))
-  if (!all(c("full_width", "full_height", "sampleID",
-         "mirror_x", "mirror_y", "angle", "tr_x", "tr_y") %in% colnames(object))) {
-    abort("Missing columns in input tibble 'object'")
-  }
-  if (verbose) inform(c("i" = glue("Transforming image and coordinates for sample {object$sampleID}")))
+  if (!all(c("full_width", "full_height") %in% colnames(object)))
+    abort("Couldn't find image dimensions in `object`, expected columns 'full_width' and 'full_height'")
+
+  .check_transforms(object)
 
   # Check image
   if (!inherits(image, what = c("StoredSpatialImage", "raster", "character", "magick-image")))
@@ -172,7 +168,7 @@ RigidTransformImages.default <- function (
 
   # Check spatial coordinates
   if (!inherits(xy_coords, what = "tbl"))
-    abort(glue("Invalid class {class(xy_coords)} of 'xy_coords', extected a 'tbl'"))
+    abort(glue("Invalid class {class(xy_coords)} of 'xy_coords', expected a 'tbl'"))
   if (!all(c("pxl_col_in_fullres", "pxl_row_in_fullres") %in% colnames(xy_coords)))
     abort("Couldn't find coordinates in 'xy_coords', expected 'pxl_col_in_fullres' and 'pxl_row_in_fullres'")
   xy_coords <- xy_coords |>
@@ -180,8 +176,7 @@ RigidTransformImages.default <- function (
   if (verbose) inform(c("i" = glue("Fetched spot coordinates")))
 
   # Check transformations
-  if (.check_transforms(object)) abort(glue("Transformations cannot take default values. ",
-                                           "This would result in no transformation."))
+  .check_transforms(object)
   if (verbose) inform(c("i" = glue("Supplied transformations are valid")))
 
   # Make sure that translations are between -1-1
@@ -206,11 +201,11 @@ RigidTransformImages.default <- function (
 
   if (verbose)
     inform(c(
-      ">" = glue("Mirror along x-axis: {object$mirror_x}"),
-      ">" = glue("Mirror along x-axis: {object$mirror_y}"),
-      ">" = glue("Rotation angle: {object$angle}"),
-      ">" = glue("Translation along x axis: {object$tr_x*100}%"),
-      ">" = glue("Translation along y axis: {object$tr_y*100}%")
+      ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_x)}"),
+      ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_y)}"),
+      ">" = glue("Rotation angle: {cli::col_br_magenta(object$angle)}"),
+      ">" = glue("Translation along x axis: {cli::col_br_magenta(object$tr_x*100)}%"),
+      ">" = glue("Translation along y axis: {cli::col_br_magenta(object$tr_y*100)}%")
     )
     )
 
@@ -227,23 +222,164 @@ RigidTransformImages.default <- function (
                         round(object$tr_y*object$full_height)),
     imcenter = c(object$full_width/2, object$full_height/2))
 
-  if (verbose) inform(c("v" = "Returning transformed images"))
+  if (verbose) inform(c("i" = "Returning transformed image", ""))
 
   # return results
   return(transf_res)
 
 }
 
+
+#' @param transforms a tibble containing information about the transformations
+#' to apply to the images (see Seurat section)
+#'
+#' @importFrom rlang inform
+#' @importFrom glue glue
+#' @importFrom cli cli_h2 cli_rule
+#'
+#' @rdname transform-images
+#'
+#' @examples
+#' library(STUtility2)
+#'
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#' se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
+#'   LoadImages()
+#'
+#' # Define rigid tranformations for section 2
+#' transforms <- generate_rigid_transform(sampleID = 2, angle = 30, mirror_x = TRUE)
+#'
+#' # Apply transformations
+#' se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+#'
+#' # Plot transformed image
+#' MapFeatures(se_merged, features = "Th", image_use = "transformed")
+#'
+#' # Define rigid tranformations for all sections
+#' transforms <- bind_rows(generate_rigid_transform(sampleID = 1, angle = 30, mirror_x = TRUE),
+#'                         generate_rigid_transform(sampleID = 2, angle = 60))
+#' # Apply transformations
+#' se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+#'
+#' # Plot transformed image
+#' MapFeatures(se_merged, features = "Th", image_use = "transformed")
+#'
+#' @export
+#'
+RigidTransformImages.Seurat <- function (
+    object,
+    transforms,
+    verbose = TRUE,
+    ...
+) {
+
+  # Check Seurat object
+  .check_seurat_object(object)
+  st_object <- GetStaffli(object)
+
+  # Check for images
+  .check_seurat_images(object)
+
+  # Check transforms
+  nSamples <- st_object@image_info$sampleID
+  nSamples_transform <- transforms$sampleID
+  if (!all(nSamples_transform %in% nSamples))
+    abort(glue("Invalid sampleID(s) in 'transforms'. Samples available: ",
+               "{paste(nSamples, collapse = ', ')}"))
+  if (verbose) cli_h2("Transforming images")
+  if (verbose) inform(c("i" = glue("Found transformations for sample(s): ",
+                                   "{paste(nSamples_transform, collapse = ', ')}"), ""))
+  nSamples <- nSamples_transform
+
+  # Check that transforms have been formatted correctly
+  .check_transforms(transforms, nrows = length(nSamples))
+  .check_transforms_values(transforms)
+
+  # Subset spots meta data and add transforms
+  transforms <- st_object@image_info |>
+    filter(sampleID == nSamples) |>
+    select(full_width, full_height) |>
+    bind_cols(transforms)
+
+  # Apply transformations
+  raw_images <- images_transformed <- st_object@rasterlists[["raw"]]
+  xy_coords <- st_object@meta_data
+
+  # Create a list with transformed coordinates
+  # All elements that aren't processed will retain
+  # the original coordinates
+  coords_transformed <- xy_coords |>
+    select(-contains("pxl_col_in_fullres_transformed"), -contains("pxl_row_in_fullres_transformed")) |>
+    mutate(pxl_col_in_fullres_transformed = pxl_col_in_fullres,
+           pxl_row_in_fullres_transformed = pxl_row_in_fullres) |>
+    relocate(sampleID, .after = last_col()) |>
+    group_by(sampleID) |>
+    group_split()
+
+  # Apply transformations to selected samples
+  for (i in nSamples) {
+    if (verbose) inform(glue("Transforming sample {i}"))
+    transf_res <- RigidTransformImages(transforms[transforms$sampleID == i, ],
+                                       image = raw_images[[i]],
+                                       xy_coords = xy_coords[xy_coords$sampleID == i, ],
+                                       verbose = verbose)
+    images_transformed[[i]] <- as.raster(transf_res$im_transf)
+    coords_transformed[[i]][, c("pxl_col_in_fullres_transformed",
+                                "pxl_row_in_fullres_transformed")] <- transf_res$xy_transf |>
+      mutate_if(is.double, round)
+  }
+
+  # Bind coordinates
+  coords_transformed <- do.call(bind_rows, coords_transformed)
+
+  # Add transformed coordinates to Staffli meta data
+  st_object@meta_data <- coords_transformed
+
+  # Add transformed images to Staffli object
+  st_object@rasterlists$transformed <- images_transformed
+
+  # Add modified Staffli object to Seurat object
+  object@tools$Staffli <- st_object
+
+  if (verbose) inform(c("i" = "Image transformation complete."))
+
+  # Return Seurat object
+  return(object)
+
+}
+
+
+#' Check values in image transformation tibble
+#'
+#' @param object a `tibble` with transformation parameters
+#'
+#' @return nothing
+#'
+.check_transforms_values <- function (
+  object
+) {
+  checks <- c(!object$mirror_x, !object$mirror_y, object$angle == 0, object$tr_x == 0, object$tr_y == 0)
+  if (all(checks))
+    abort(glue("'transforms' cannot take default values. ",
+               "This would result in no transformation."))
+}
+
+
 #' Check image transformation tibble
 #'
 #' @param object a `tibble` with transformation parameters
 #'
-#' @return a logical telling if transformations other
-#' than default have been set
+#' @return nothing
 #'
 .check_transforms <- function (
-    object
+  object,
+  nrows = 1
 ) {
-  checks <- c(!object$mirror_x, !object$mirror_y, object$angle == 0, object$tr_x == 0, object$tr_y == 0)
-  return(all(checks))
+  if (!inherits(object, what = "tbl")) abort(glue("Invalid class {class(object)} of 'object', extected a 'tbl'"))
+  if (any(duplicated(object$sampleID))) abort(glue("Found {sum(duplicated(object$sampleID))} duplicated sampleID."))
+  if (nrow(object) > nrows) abort(glue("Invalid dimensions for 'object', expected {nrows} row but got {nrow(object)}"))
+  if (!all(c("sampleID", "mirror_x", "mirror_y", "angle", "tr_x", "tr_y") %in% colnames(object))) {
+    abort("Missing columns in input 'object'")
+  }
 }
