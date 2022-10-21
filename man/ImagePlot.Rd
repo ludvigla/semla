@@ -7,31 +7,48 @@
 ImagePlot(
   object,
   label_by = NULL,
-  type = "raw",
+  image_use = c("raw", "transformed"),
+  crop_area = NULL,
   section_numbers = NULL,
   ncol = NULL,
   mar = c(1, 1, 1, 1)
 )
 }
 \arguments{
-\item{object}{a Seurat object}
+\item{object}{A Seurat object}
 
-\item{label_by}{a string specifying a meta data column to label plots by}
+\item{label_by}{A string specifying a meta data column to label plots by.
+This needs to be a `character` or `factor` and multiple labels for each section
+are not allowed.}
 
-\item{type}{image type, for example 'raw'}
+\item{image_use}{String specifying image type to use, either 'raw' or
+'transformed'}
 
-\item{section_numbers}{an integer vector with section numbers to plot}
+\item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
+the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
+right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
+specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
+will be used on all tissue sections and cannot be set for each section individually.
+using crop areas of different sizes on different sections can lead to unwanted side
+effects as the point sizes will remain constant. In this case it is better to generate
+separate plots for different tissue sections.}
 
-\item{ncol}{integer value specifying the number of columns in the plot
+\item{section_numbers}{An integer vector with section numbers to plot}
+
+\item{ncol}{An integer value specifying the number of columns in the plot
 grid}
 
-\item{mar}{margins around each plot. See \code{\link{par}} for details.}
+\item{mar}{Margins around each plot. See \code{\link{par}} for details}
 }
 \value{
 draws a plot of the H&E images
 }
 \description{
-Plot H&E images
+If images are loaded into the `Seurat` object with \code{LoadImages},
+this function can be used to quickly plot the images in a grid. If
+you have applied transformations to the images, e.g. with
+\code{RigidTransformImages}, you can specify \code{image_use = "transformed"}
+to plot the transformed images instead.
 }
 \examples{
 
@@ -60,5 +77,11 @@ ImagePlot(se_merged, section_numbers = 2:1)
 # Add a sample_id column and label plots
 se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == 1, "brain", "colon")
 ImagePlot(se_merged, label_by = "sample_id")
+
+# Reload images in higher resolution, crop image and remove margins
+se_merged <- LoadImages(se_merged, image_height = 1e3)
+se_merged <- LoadImages(se_merged, image_height = 1.5e3)
+ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), section_numbers = 1, mar = c(0, 0, 0, 0))
+ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), section_numbers = 2, mar = c(0, 0, 0, 0))
 
 }

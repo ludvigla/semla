@@ -28,16 +28,18 @@ This function takes an `magick-image` object as input and applies translations
 
 library(magick)
 library(STUtility2)
-frink <- image_read("https://jeroen.github.io/images/frink.png")
-frink
+lowresimagefile <- system.file("extdata/mousebrain/spatial",
+                               "tissue_lowres_image.png",
+                               package = "STUtility2")
+im <- image_read(lowresimagefile)
 
 # rotate image 45 degrees clockwise, move image 100 pixels to the right and 100 pixels down
-frink_transformed <- ImageTransform(frink, angle = 45, xy_offset = c(100, 100))
-frink_transformed
+im_transformed <- ImageTransform(im, angle = 45, xy_offset = c(100, 100))
+im_transformed
 
 # rotate image 45 degrees counter-clockwise, move image 100 pixels to the left and 20 pixels up
-frink_transformed <- ImageTransform(frink, angle = -45, xy_offset = c(-100, 20))
-frink_transformed
+im_transformed <- ImageTransform(im, angle = -45, xy_offset = c(-100, 20))
+im_transformed
 
 }
 \concept{tranforms}

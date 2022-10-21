@@ -61,8 +61,8 @@ library(patchwork)
 
 # get example coordinate file
 coordinatefile <- system.file("extdata/mousebrain/spatial",
-                             "tissue_positions_list.csv",
-                             package = "STUtility2")
+                              "tissue_positions_list.csv",
+                              package = "STUtility2")
 
 # Load coordinates
 xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile, verbose = T)
@@ -107,8 +107,12 @@ ggplot(xy, aes(pxl_col_in_fullres, pxl_row_in_fullres)) +
                 right = 1, top = 1,
                 on_top = FALSE)
 
+# Select coordinates for transformation
+xy_coords <- xy |>
+  select(pxl_col_in_fullres, pxl_row_in_fullres)
+
 # Apply transformations
-transf_res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset = c(100, 100))
+transf_res <- CoordAndImageTransform(im, xy_coords, angle = 45, xy_offset_image = c(100, 100))
 
 # Add selected to transf_res$xy_transf
 transf_res$xy_transf$selected <- xy$selected

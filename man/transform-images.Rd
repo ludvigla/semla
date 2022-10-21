@@ -3,11 +3,14 @@
 \name{RigidTransformImages}
 \alias{RigidTransformImages}
 \alias{RigidTransformImages.default}
+\alias{RigidTransformImages.Seurat}
 \title{Apply rigid transformations to images}
 \usage{
 RigidTransformImages(object, ...)
 
 \method{RigidTransformImages}{default}(object, image, xy_coords, verbose = TRUE, ...)
+
+\method{RigidTransformImages}{Seurat}(object, transforms, verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{An object}
@@ -20,6 +23,9 @@ or a path to an image in PNG or JPEG format}
 \item{xy_coords}{spot coordinates that can be mapped to \code{image}}
 
 \item{verbose}{print messages}
+
+\item{transforms}{a tibble containing information about the transformations
+to apply to the images (see Seurat section)}
 }
 \value{
 A list with two elements:
@@ -119,6 +125,31 @@ ggplot(transf_res$xy_transf, aes(tr_x, tr_y)) +
                 left = 0, bottom = 0,
                 right = 1, top = 1,
                 on_top = FALSE)
+
+library(STUtility2)
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
+  LoadImages()
+
+# Define rigid tranformations for section 2
+transforms <- generate_rigid_transform(sampleID = 2, angle = 30, mirror_x = TRUE)
+
+# Apply transformations
+se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+
+# Plot transformed image
+MapFeatures(se_merged, features = "Th", image_use = "transformed")
+
+# Define rigid tranformations for all sections
+transforms <- bind_rows(generate_rigid_transform(sampleID = 1, angle = 30, mirror_x = TRUE),
+                        generate_rigid_transform(sampleID = 2, angle = 60))
+# Apply transformations
+se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+
+# Plot transformed image
+MapFeatures(se_merged, features = "Th", image_use = "transformed")
 
 }
 \concept{image transformations}
