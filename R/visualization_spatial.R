@@ -227,9 +227,10 @@ MapFeatures.default <- function (
 #' (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 #' These arguments can be useful to make sure that the color map doesn't get dominated by outliers.
 #'
-#' @importFrom dplyr bind_cols
+#' @importFrom dplyr bind_cols filter all_of contains
 #' @importFrom tibble as_tibble
 #' @importFrom Seurat FetchData
+#' @importFrom rlang warn
 #'
 #' @rdname visualize-features
 #'
@@ -340,6 +341,7 @@ MapFeatures.Seurat <- function (
   # Match args
   scale <- match.arg(scale, choices = c("shared", "free"))
   arrange_features <- match.arg(arrange_features, choices = c("col", "row"))
+  coords_use <- match.arg(coords_use, choices = c("raw", "transformed"))
 
   # Check Seurat object
   .check_seurat_object(object)
@@ -367,11 +369,23 @@ MapFeatures.Seurat <- function (
 
   # Get images if image_use is provided
   if (!is.null(image_use)) {
+    image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     images <- .get_images(object, GetStaffli(object), image_use, section_number)
+    if (image_use == "transformed") {
+      coords_use <- "transformed"
+    }
   }
 
   # Set coords_columns
   coords_columns <- .get_coords_column(image_use, coords_use)
+
+  # Filter data to remove all redundant meta data columns
+  data_use <- data_use |>
+    select(all_of("barcode"),
+           all_of(coords_columns),
+           all_of("sampleID"),
+           all_of(features),
+           contains(label_by %||% character(0)))
 
   # Create crop area if override_plot_dims = TRUE
   if (override_plot_dims) {
@@ -595,7 +609,6 @@ MapLabels.default <- function (
   }
 }
 
-# TODO: section_number is broken
 #' @param column_name a string specifying a meta data column holding the categorical
 #' feature vector
 #' @param image_use string specifying image type to use
@@ -607,6 +620,13 @@ MapLabels.default <- function (
 #' area, which will create a lot of white space in the plots. The same effect can be
 #' achieved with the \code{crop_area} but the crop area is instead determined directly
 #' from the data.
+#'
+#' @importFrom rlang warn
+#' @importFrom dplyr mutate select across all_of bind_cols contains
+#' @importFrom Seurat FetchData
+#' @importFrom tibble as_tibble
+#' @importFrom glue glue
+#' @importFrom patchwork wrap_plots
 #'
 #' @rdname visualize-labels
 #'
@@ -684,6 +704,9 @@ MapLabels.Seurat <- function (
     ...
 ) {
 
+  # Match args
+  coords_use <- match.arg(coords_use, choices = c("raw", "transformed"))
+
   # Check Seurat object
   .check_seurat_object(object)
 
@@ -703,11 +726,23 @@ MapLabels.Seurat <- function (
 
   # Get images if image_use is provided
   if (!is.null(image_use)) {
+    image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     images <- .get_images(data_use, GetStaffli(object), image_use, section_number, column_name, split_labels)
+    if (image_use == "transformed") {
+      coords_use <- "transformed"
+    }
   }
 
   # Set coords_columns
   coords_columns <- .get_coords_column(image_use, coords_use)
+
+  # Filter data to remove all redundant meta data columns
+  data_use <- data_use |>
+    select(all_of("barcode"),
+           all_of(coords_columns),
+           all_of("sampleID"),
+           all_of(column_name),
+           contains(label_by %||% character(0)))
 
   # Create crop area if override_plot_dims = TRUE
   if (override_plot_dims) {
@@ -1423,7 +1458,7 @@ MapLabels.Seurat <- function (
     # validate image_use
     if (!is.character(image_use) & (length(image_use) == 1))
       abort(glue("'image_use' is invalid. Expected a character of length 1."))
-    image_use <- match.arg(image_use, choices = c("raw"))
+    image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     images <- st_object@rasterlists[[image_use]]
     if (is.null(images)) abort("Images have not yet been loaded. Did you run LoadImages()?")
     images <- setNames(images, paste0(seq_along(images)))
@@ -1652,8 +1687,8 @@ MapLabels.Seurat <- function (
   }
   if (coords_use == "raw") {
     coords_columns <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
-  } else if (coords_use == "warped") {
-    coords_columns <- c("pxl_col_in_fullres_warped", "pxl_row_in_fullres_warped")
+  } else if (coords_use == "transformed") {
+    coords_columns <- c("pxl_col_in_fullres_transformed", "pxl_row_in_fullres_transformed")
   }
   return(coords_columns)
 }
