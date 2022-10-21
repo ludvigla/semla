@@ -14,3 +14,20 @@
   if (!"Staffli" %in% names(object@tools)) abort(c("This Seurat object does not appear to have been processed with STUtility2.",
                                                  "x" = "'Staffli' object is missing from tools slot."))
 }
+
+
+#' Check if a Seurat object contains loaded images
+#'
+#' @param object A Seurat object
+#'
+#' @importFrom rlang abort
+#' @importFrom glue glue
+#'
+#' @return an error message if conditions are not met
+#'
+.check_seurat_images <- function (
+    object
+) {
+  st_object <- GetStaffli(object)
+  if (!"raw" %in% names(st_object@rasterlists)) abort("Images have not been loaded yet. Did you run 'LoadImages()'?")
+}
