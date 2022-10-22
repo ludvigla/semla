@@ -39,13 +39,14 @@ compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTa
 around predefined center
 - [x] `ImageTranslate` : apply translations to image
 - [x] `ImageTransform` : apply rotation and translation to image
-- [ ] `CoordAndImageTransform` : wrapper for `ImageTransform` and 
+- [x] `CoordAndImageTransform` : wrapper for `ImageTransform` and 
 `CoordTransform` to apply transformations to paired image and coordinates. 
-Need to fix add mirror as an option.
+Can do rotations, translations and mirroring
 
 ### Image processing
 
-- [ ] option to mask images?
+- [x] option to mask images? 
+- [ ] more examples to highlight flexibility
 
 ### Tissue viewer
 
@@ -107,7 +108,7 @@ calculate spatial autocorrelation of genes and for principal components.
 ### STUtility2 website
 
 - [x] : _getting started_
-- [ ] : _visualization_
+- [x] : _visualization_
 - [ ] : _matrix factorization_
 
 ### Advanced features
