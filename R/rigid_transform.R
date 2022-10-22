@@ -247,7 +247,7 @@ RigidTransformImages.default <- function (
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
 #'   LoadImages()
 #'
-#' # Define rigid tranformations for section 2
+#' # Define rigid transformations for section 2
 #' transforms <- generate_rigid_transform(sampleID = 2, angle = 30, mirror_x = TRUE)
 #'
 #' # Apply transformations

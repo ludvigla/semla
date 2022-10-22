@@ -166,6 +166,20 @@ RigidTransformImages <- function(object, ...) {
   UseMethod(generic = 'RigidTransformImages', object = object)
 }
 
+#' Mask images
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family image transformations
+#' @rdname mask-images
+#'
+#' @export
+#'
+MaskImages <- function(object, ...) {
+  UseMethod(generic = 'MaskImages', object = object)
+}
+
 
 #' Find region neighbors
 #'

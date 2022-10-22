@@ -52,6 +52,7 @@ Collate:
     'generics.R'
     'load_data.R'
     'load_images.R'
+    'mask.R'
     'neighborhood_analysis.R'
     'plot_images.R'
     'rigid_transform.R'

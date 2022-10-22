@@ -152,4 +152,8 @@ se_merged <- RigidTransformImages(se_merged, transforms = transforms)
 MapFeatures(se_merged, features = "Th", image_use = "transformed")
 
 }
+\seealso{
+Other image transformations: 
+\code{\link{MaskImages}()}
+}
 \concept{image transformations}
