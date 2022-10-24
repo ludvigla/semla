@@ -80,13 +80,12 @@ MapFeaturesSummary <- function(
     pt_size = 1,
     colors = NULL,
     fill_color = NULL,
-    stat_type,  # "box", "violin", "histogram", "density
+    subplot_type = "box",  # "box", "violin", "histogram", "density
     ncol = 2,
     ...
     ) {
   # TODO: How to deal with multiple features?
-  # TODO: Add grid options (inherit from MapFeatures? No needs to be done separately)
-  
+
   # Check color - pick a fill color based on mid scale color
   colors_scale <- colors %||% RColorBrewer::brewer.pal(8, "Reds")
   fill_color <- fill_color %||% colors_scale[round(length(colors_scale)/2)]
@@ -126,7 +125,7 @@ MapFeaturesSummary <- function(
           plot.margin = unit(c(0, 40, 0, 0), "pt"))
 
   # Add plot types
-  if (stat_type == "box") {
+  if (subplot_type == "box") {
     map_feat_stats <- lapply(data, function(x){
       p_stat <- p_stat_base +
         geom_boxplot(data = x, mapping = aes_string(x="1", y=features),
@@ -135,7 +134,7 @@ MapFeaturesSummary <- function(
         xlim(0.5,1.75) +
         scale_y_continuous(position = "right")
     })
-  } else if (stat_type == "violin") {
+  } else if (subplot_type == "violin") {
     map_feat_stats <- lapply(data, function(x){
       p_stat <- p_stat_base +
         geom_violin(data = x, mapping = aes_string(x="1", y=features),
@@ -144,7 +143,7 @@ MapFeaturesSummary <- function(
         xlim(0.25,1.75) +
         scale_y_continuous(position = "right")
     })
-  } else if (stat_type == "histogram") {
+  } else if (subplot_type == "histogram") {
     map_feat_stats <- lapply(data, function(x){
       p_stat <- p_stat_base +
         geom_histogram(data = x, mapping = aes_string(x = features),
@@ -154,7 +153,7 @@ MapFeaturesSummary <- function(
         scale_y_reverse() +
         scale_x_continuous(position = "top")
     })
-  } else if (stat_type == "density") {
+  } else if (subplot_type == "density") {
     map_feat_stats <- lapply(data, function(x){
       p_stat <- p_stat_base +
         geom_density(data = x, mapping = aes_string(x = features),
@@ -166,7 +165,7 @@ MapFeaturesSummary <- function(
         scale_x_continuous(position = "top")
     })
   } else {
-    abort(glue::glue("'stat_type' is invalid. Needs to be one of the options 'box', 'violin', 'histogram' or 'density'."))  #TODO: Make nicer error  msg?
+    abort(glue::glue("'subplot_type' is invalid. Needs to be one of the options 'box', 'violin', 'histogram' or 'density'."))  #TODO: Make nicer error  msg?
   }
 
   # Patchwork plots together
@@ -212,7 +211,7 @@ First plotting with basic color scheme.
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = feat_test,
-                   stat_type = "box", 
+                   subplot_type = "box", 
                    pt_size = 0.8)
 ```
 
@@ -221,7 +220,7 @@ Test with a different color scheme and with
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = feat_test,
-                   stat_type = "box", 
+                   subplot_type = "box", 
                    colors = color_scale,
                    override_plot_dims = T)
 ```
@@ -233,7 +232,7 @@ Here's with violins
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = feat_test,
-                   stat_type = "violin", 
+                   subplot_type = "violin", 
                    colors = color_scale, 
                    pt_size = 1.2,
                    override_plot_dims = T)
@@ -244,9 +243,9 @@ We can also add arguments related to the MapFeatures() function, like `pt_alpha`
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = feat_test,
-                   stat_type = "violin", 
+                   subplot_type = "violin", 
                    colors = color_scale, 
-                   pt_alpha = 0.8,
+                   pt_alpha = 0.5,
                    pt_stroke = 0.2,
                    override_plot_dims = T)
 ```
@@ -260,13 +259,13 @@ Not sure why it prints a "Description:df \[2 × 4\]" table when running the
 ```{r fig.width=8, fig.height=8}
 p1 <- MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
-                   stat_type = "histogram", 
+                   subplot_type = "histogram", 
                    colors = viridis::mako(10),
                    override_plot_dims = T)
 
 p2 <- MapFeaturesSummary(object = se, 
                    features = "nFeature_Spatial",
-                   stat_type = "histogram", 
+                   subplot_type = "histogram", 
                    colors = viridis::rocket(10),
                    override_plot_dims = T)
 
@@ -280,7 +279,7 @@ Finally, let's look at the density plot add-on.
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = "nFeature_Spatial",
-                   stat_type = "density", 
+                   subplot_type = "density", 
                    colors = scico::scico(10, palette = "acton", direction = -1),
                    override_plot_dims = T)
 ```
@@ -292,7 +291,7 @@ As with all ggplots and patchworks we can also customize the theme, but it will 
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
-                   stat_type = "density", 
+                   subplot_type = "density", 
                    colors = viridis::rocket(10),
                    pt_size = 0.8) &
   theme_bw() &
@@ -307,7 +306,7 @@ Lets just add a grid
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
-                   stat_type = "box", 
+                   subplot_type = "box", 
                    colors = viridis::rocket(10),
                    pt_size = 0.8) &
   theme(panel.grid = element_line(colour = "grey80", linetype = "dashed"))
@@ -318,7 +317,7 @@ Test a different layout
 ```{r fig.width=4, fig.height=8}
 MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
-                   stat_type = "box", 
+                   subplot_type = "box", 
                    colors = viridis::rocket(10),
                    override_plot_dims = T,
                    ncol = 1)
@@ -334,7 +333,7 @@ p_list <- lapply(genes_plot, function(g){
   message(g)
   MapFeaturesSummary(object = se, 
                    features = g,
-                   stat_type = "density", 
+                   subplot_type = "density", 
                    colors = viridis::mako(10),
                    override_plot_dims = T)
   })
