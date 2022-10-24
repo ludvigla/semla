@@ -85,7 +85,7 @@ MapFeaturesSummary <- function(
     ...
     ) {
   # TODO: How to deal with multiple features?
-  # TODO: Add grid options (inherit from MapFeatures)
+  # TODO: Add grid options (inherit from MapFeatures? No needs to be done separately)
   
   # Check color - pick a fill color based on mid scale color
   colors_scale <- colors %||% RColorBrewer::brewer.pal(8, "Reds")
@@ -105,10 +105,9 @@ MapFeaturesSummary <- function(
   p_list <- MapFeatures(...,
                         object,
                         features = features, # Currently only one feature is possible
-                        override_plot_dims = F,
+                        # override_plot_dims = F,
                         pt_size = pt_size,
                         colors = colors_scale,
-                        ncol = ncol,
                         return_plot_list = T # !Important
                         )
 
@@ -124,7 +123,7 @@ MapFeaturesSummary <- function(
           panel.grid = element_blank(),
           panel.border = element_blank(),
           axis.line.y.right = element_line(size=0.25),
-          plot.margin = margin(0, 28, 0, 0))
+          plot.margin = unit(c(0, 40, 0, 0), "pt"))
 
   # Add plot types
   if (stat_type == "box") {
@@ -133,6 +132,7 @@ MapFeaturesSummary <- function(
         geom_boxplot(data = x, mapping = aes_string(x="1", y=features),
                      outlier.size = 0.5,
                      fill = fill_color) +
+        xlim(0.5,1.75) +
         scale_y_continuous(position = "right")
     })
   } else if (stat_type == "violin") {
@@ -141,6 +141,7 @@ MapFeaturesSummary <- function(
         geom_violin(data = x, mapping = aes_string(x="1", y=features),
                     fill = fill_color,
                     draw_quantiles = 0.5) +
+        xlim(0.25,1.75) +
         scale_y_continuous(position = "right")
     })
   } else if (stat_type == "histogram") {
@@ -174,12 +175,10 @@ MapFeaturesSummary <- function(
     p_stat <- map_feat_stats[[i]]
     layout <- "
     AAAAA#
-    AAAAA#
     AAAAAB
     AAAAAB
     AAAAAB
     AAAAAB
-    AAAAA#
     AAAAA#
     "
     p + p_stat + plot_layout(design = layout)
@@ -217,17 +216,28 @@ MapFeaturesSummary(object = se,
                    pt_size = 0.8)
 ```
 
-Test with a different color scheme
+Test with a different color scheme and with
 
 ```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = feat_test,
                    stat_type = "box", 
                    colors = color_scale,
-                   pt_size = 0.8)
+                   override_plot_dims = T)
 ```
 
 ### Violin
+
+Here's with violins
+
+```{r fig.width=8, fig.height=4}
+MapFeaturesSummary(object = se, 
+                   features = feat_test,
+                   stat_type = "violin", 
+                   colors = color_scale, 
+                   pt_size = 1.2,
+                   override_plot_dims = T)
+```
 
 We can also add arguments related to the MapFeatures() function, like `pt_alpha`.
 
@@ -236,19 +246,9 @@ MapFeaturesSummary(object = se,
                    features = feat_test,
                    stat_type = "violin", 
                    colors = color_scale, 
-                   pt_alpha = 0.5,
-                   pt_size = 0.8)
-```
-
-However, some things are not working for some reason, like `max_cutoff` (returns error)... Would we like this to cut off the summary plot as well? (probably no?)
-
-```{r fig.width=8, fig.height=4}
-# MapFeaturesSummary(object = se, 
-#                    features = feat_test,
-#                    stat_type = "violin", 
-#                    colors = color_scale, 
-#                    max_cutoff = 200,
-#                    pt_size = 0.8)
+                   pt_alpha = 0.8,
+                   pt_stroke = 0.2,
+                   override_plot_dims = T)
 ```
 
 ### Histogram
@@ -261,14 +261,14 @@ Not sure why it prints a "Description:df \[2 × 4\]" table when running the
 p1 <- MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
                    stat_type = "histogram", 
-                   colors = viridis::mako(10), 
-                   pt_size = 0.8)
+                   colors = viridis::mako(10),
+                   override_plot_dims = T)
 
 p2 <- MapFeaturesSummary(object = se, 
                    features = "nFeature_Spatial",
                    stat_type = "histogram", 
-                   colors = viridis::rocket(10), 
-                   pt_size = 0.8)
+                   colors = viridis::rocket(10),
+                   override_plot_dims = T)
 
 p1 / p2
 ```
@@ -282,14 +282,14 @@ MapFeaturesSummary(object = se,
                    features = "nFeature_Spatial",
                    stat_type = "density", 
                    colors = scico::scico(10, palette = "acton", direction = -1),
-                   pt_size = 0.8)
+                   override_plot_dims = T)
 ```
 
-### Other themes
+### Other themes & stuff
 
-As with all ggplots and patchworks we can also customize the theme.
+As with all ggplots and patchworks we can also customize the theme, but it will apply to all objects and kind of reset everything else.
 
-```{r fig.width=9, fig.height=3.5}
+```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
                    stat_type = "density", 
@@ -298,18 +298,30 @@ MapFeaturesSummary(object = se,
   theme_bw() &
   theme(plot.title = element_text(size=16), 
         legend.position = "bottom", 
-        legend.text = element_text(angle=90, hjust=1))
+        legend.text = element_text(angle=90, hjust=1),
+        plot.margin = margin(6,6,6,6))
 ```
 
-Not sure why it looks like the grid is a bit off... The space between the spatial and summary plots is different for the two sections -- why??
+Lets just add a grid
 
-```{r fig.width=9, fig.height=3.5}
+```{r fig.width=8, fig.height=4}
 MapFeaturesSummary(object = se, 
                    features = "nCount_Spatial",
-                   stat_type = "violin", 
+                   stat_type = "box", 
                    colors = viridis::rocket(10),
                    pt_size = 0.8) &
-  theme(legend.position = "none")
+  theme(panel.grid = element_line(colour = "grey80", linetype = "dashed"))
+```
+
+Test a different layout
+
+```{r fig.width=4, fig.height=8}
+MapFeaturesSummary(object = se, 
+                   features = "nCount_Spatial",
+                   stat_type = "box", 
+                   colors = viridis::rocket(10),
+                   override_plot_dims = T,
+                   ncol = 1)
 ```
 
 ### Multiple genes
@@ -324,7 +336,7 @@ p_list <- lapply(genes_plot, function(g){
                    features = g,
                    stat_type = "density", 
                    colors = viridis::mako(10),
-                   pt_size = 0.8)
+                   override_plot_dims = T)
   })
 patchwork::wrap_plots(p_list, ncol = 1)
 ```
