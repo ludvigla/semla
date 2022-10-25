@@ -2,3 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
+notebooks/seeded_nmf_tests.qmd

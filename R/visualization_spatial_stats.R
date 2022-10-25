@@ -2,13 +2,31 @@
 #'
 NULL
 
-
-#' Map features spatially + summary statistic
+# TODO: make compatible with scale?
+#' Map features spatially and add a summary plot next to it
 #'
-#' @param fill_color fill color for stats geom
+#' This function is a wrapped for \code{\link{MapFeatures}} which allows you to
+#' add a boxplot, histogram, violin plot or a density histogram showing the
+#' distribution of the selected feature next to the spatial feature plot.
+#'
+#' Note that currently, only 1 feature can be selected
+#'
+#' @param fill_color Fill color for summary plot
+#' @param subplot_type Select a summary plot to place next to the spatial plot:
+#' \itemize{
+#'    \item{"box" : boxplot}
+#'    \item{"violin" : violin plot}
+#'    \item{"histogram" : histogram}
+#'    \item{"density" : density histogram}
+#' }
+#' @inheritParams MapFeatures
 #'
 #' @importFrom patchwork plot_layout wrap_plots
+#' @import rlang
 #' @import dplyr
+#' @import glue
+#'
+#' @family visualization
 #'
 #' @return a `patchwork` object
 #'
@@ -59,8 +77,7 @@ MapFeaturesSummary <- function (
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
   fill_color = NULL,
   scale = c("shared", "free"),
-  arrange_features = c("col", "row"),
-  #override_plot_dims = FALSE,
+  override_plot_dims = FALSE,
   max_cutoff = NULL,
   min_cutoff = NULL,
   ...
@@ -70,10 +87,12 @@ MapFeaturesSummary <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
-  # validate subplot_type
+  # validate subplot_type and fill_color
   stopifnot(
     is.character(subplot_type),
-    length(subplot_type) == 1
+    length(subplot_type) == 1,
+    is.character(fill_color),
+    length(fill_color) == 1
   )
   subplot_type <- match.arg(subplot_type, choices = c("box", "violin", "histogram", "density"))
 
@@ -101,8 +120,6 @@ MapFeaturesSummary <- function (
   p_list <- MapFeatures(
     object,
     features = features,
-    # Currently only one feature is possible
-    # override_plot_dims = F,
     image_use = image_use,
     coords_use = coords_use,
     crop_area = crop_area,
@@ -119,8 +136,12 @@ MapFeaturesSummary <- function (
     override_plot_dims = override_plot_dims,
     max_cutoff = max_cutoff,
     min_cutoff = min_cutoff,
-    return_plot_list = TRUE # !Important
+    return_plot_list = TRUE
   )
+
+  # Add names to list
+  list_names <- (section_number %||% 1:length(p_list)) |> paste0()
+  p_list <- setNames(p_list, nm = list_names)
 
   # Set up base plot
   p_stat_base <- .plot_base()
@@ -132,12 +153,36 @@ MapFeaturesSummary <- function (
                 "histogram" = get(".plot_histogram"),
                 "density" = get(".plot_density"))
 
+  # Crop data if crop_area is set
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    # Get coords columns
+    coords_columns <- .get_coords_column(image_use, coords_use)
+    # Get image dimensions
+    dims <- GetStaffli(object)@image_info
+    # Crop data
+    data <- setNames(lapply(names(data), function(nm) {
+      crop_limits <- c(round(crop_area[1]*dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       round(crop_area[2]*dims[dims$sampleID == nm, "full_height", drop = TRUE]),
+                       round(crop_area[3]*dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       round(crop_area[4]*dims[dims$sampleID == nm, "full_height", drop = TRUE]))
+      x <- data[[nm]] |>
+        filter(between(x = !! sym(coords_columns[1]), left = crop_limits[1], right = crop_limits[3])) |>
+        filter(between(x = !! sym(coords_columns[2]), left = crop_limits[2], right = crop_limits[4]))
+      return(x)
+    }), nm = names(data))
+  }
+
+
+  # Create stats plots
   map_feat_stats <- lapply(data, function(x){
     plot_stat_fkn(p_stat_base, x, features)
   })
 
   # Patchwork plots together
-  p_patch <- lapply(1:length(p_list), function(i){
+  p_patch <- lapply(list_names, function(i){
     p <- p_list[[i]][[features]] #& theme(panel.background = element_rect(fill="grey90"))
     p_stat <- map_feat_stats[[i]]
     design <- c(area(t = 1, l = 1, b = 6, r = 5),
@@ -158,6 +203,12 @@ MapFeaturesSummary <- function (
 }
 
 
+#' Create an empty plot to add geoms to
+#'
+#' @importFrom ggplot2 ggplot theme_linedraw theme element_text element_blank element_line unit
+#'
+#' @return a `ggplot` object
+#'
 .plot_base <- function (
 ) {
   p_stat_base <- ggplot() +
@@ -174,8 +225,17 @@ MapFeaturesSummary <- function (
   return(p_stat_base)
 }
 
-# TODO: document internal functions for RMD check
 
+#' Add a boxplot
+#'
+#' @param p_stat_base An empty `ggplot`
+#' @param x Data to use for plot
+#' @param features Selected features
+#'
+#' @importFrom ggplot2 geom_boxplot aes_string xlim scale_y_continuous
+#'
+#' @return a `ggplot` object
+#'
 .plot_box <- function (
   p_stat_base,
   x,
@@ -190,6 +250,17 @@ MapFeaturesSummary <- function (
   return(p_stat)
 }
 
+
+#' Add a violin plot
+#'
+#' @param p_stat_base An empty `ggplot`
+#' @param x Data to use for plot
+#' @param features Selected features
+#'
+#' @importFrom ggplot2 geom_violin aes_string xlim scale_y_continuous
+#'
+#' @return a `ggplot` object
+#'
 .plot_violin <- function (
     p_stat_base,
     x,
@@ -204,6 +275,17 @@ MapFeaturesSummary <- function (
   return(p_stat)
 }
 
+
+#' Add a histogram
+#'
+#' @param p_stat_base An empty `ggplot`
+#' @param x Data to use for plot
+#' @param features Selected features
+#'
+#' @importFrom ggplot2 geom_histogram aes_string coord_flip scale_x_continuous scale_y_reverse
+#'
+#' @return a `ggplot` object
+#'
 .plot_histogram <- function (
     p_stat_base,
     x,
@@ -219,6 +301,16 @@ MapFeaturesSummary <- function (
   return(p_stat)
 }
 
+#' Add a density histogram
+#'
+#' @param p_stat_base An empty `ggplot`
+#' @param x Data to use for plot
+#' @param features Selected features
+#'
+#' @importFrom ggplot2 geom_density aes_string coord_flip scale_x_continuous scale_y_reverse
+#'
+#' @return a `ggplot` object
+#'
 .plot_density <- function (
     p_stat_base,
     x,
