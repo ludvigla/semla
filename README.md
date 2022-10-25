@@ -78,6 +78,7 @@ gene expression, PCs, QC metrics etc.
 clusters, conditions etc.
 - [ ] `FactorGeneLoadingPlot` : migrate STUtility function. Name change?
 - [x] `ImagePlot` : plots H&E images stored in a Seurat object
+- [x] ``MapFeaturesSummary` : create spatial maps with `MapFeatures` and add a summary plot next to it
 
 ### Matrix factorization
 
