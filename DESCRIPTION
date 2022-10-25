@@ -64,4 +64,5 @@ Collate:
     'transformations_coordinates.R'
     'transformations_image.R'
     'visualization_spatial.R'
+    'visualization_spatial_stats.R'
     'zzz.R'
