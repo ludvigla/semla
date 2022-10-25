@@ -28,6 +28,8 @@ NULL
 #'
 #' @family visualization
 #'
+#' @author Lovisa Franzen
+#'
 #' @return a `patchwork` object
 #'
 #' @examples
@@ -90,9 +92,7 @@ MapFeaturesSummary <- function (
   # validate subplot_type and fill_color
   stopifnot(
     is.character(subplot_type),
-    length(subplot_type) == 1,
-    is.character(fill_color),
-    length(fill_color) == 1
+    length(subplot_type) == 1
   )
   subplot_type <- match.arg(subplot_type, choices = c("box", "violin", "histogram", "density"))
 
@@ -105,6 +105,8 @@ MapFeaturesSummary <- function (
   # Check color - pick a fill color based on mid scale color
   colors_scale <- colors %||% RColorBrewer::brewer.pal(8, "Reds")
   fill_color <- fill_color %||% colors_scale[round(length(colors_scale)/2)]
+  if (!is.character(fill_color)) abort(glue("Invalid class '{class(fill_color)}' for 'fill_color', expected a 'character'"))
+  if (!length(fill_color) == 1) abort(glue("Only 1 fill color can be provided"))
 
   # Get data (code copied from MapFeatures())
   data_use <- GetStaffli(object)@meta_data |>
