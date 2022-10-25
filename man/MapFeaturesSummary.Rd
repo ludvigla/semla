@@ -140,4 +140,7 @@ MapFeaturesSummary(se, features = "Nrgn", subplot_type = "histogram")
 MapFeaturesSummary(se, features = "Nrgn", subplot_type = "density")
 
 }
+\author{
+Lovisa Franzen
+}
 \concept{visualization}
