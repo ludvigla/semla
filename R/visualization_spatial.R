@@ -871,6 +871,11 @@ MapLabels.Seurat <- function (
   encoded_cols_present <- "encoded_cols" %in% colnames(gg)
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
 
+  # Get opacity values if scale_alpha = TRUE and encoded colors are present
+  if (scale_alpha & encoded_cols_present) {
+    alpha_values <- gg$alpha
+  }
+
   # Create input data.frame for ggplot
   if (!encoded_cols_present) {
     # Select coordinates and features
@@ -883,8 +888,8 @@ MapLabels.Seurat <- function (
       select(all_of(coords_columns))
   }
 
-  # Get opacity values if scale_alpha = TRUE
-  if (scale_alpha) {
+  # Get opacity values if scale_alpha = TRUE and encoded colors are not present
+  if (scale_alpha & !encoded_cols_present) {
     alpha_values <- gg |>
       select(value) |>
       mutate(alpha = scales::rescale(
@@ -906,7 +911,7 @@ MapLabels.Seurat <- function (
           ),
           fill = color_vec, # If blended colors are provided, add custom colors outside aesthetic
           size = pt_size,
-          alpha = pt_alpha,
+          alpha = switch(scale_alpha + 1, pt_alpha, alpha_values),
           shape = 21,
           stroke = pt_stroke
         )
@@ -1421,13 +1426,22 @@ MapLabels.Seurat <- function (
       select(all_of(features)) |>
       mutate(across(everything(), ~ rescale(.x, from = c(feature_limits[[nm]][1, cur_column(), drop = TRUE],
                                                                  feature_limits[[nm]][2, cur_column(), drop = TRUE]),
-                                                    to = c(0, 255))))
+                                                    to = c(0, 1))))
     mat <- matrix(0, ncol = 3, nrow = nrow(feature_values))
-    mat[, blend_order[1:length(features)]] <- feature_values |> as.matrix()
+    mat[, blend_order[1:length(features)]] <- (feature_values*255) |> as.matrix()
     encoded_cols <- mat |>
       encode_colour(from = "rgb")
     x <- bind_cols(x, encoded_cols = encoded_cols)
     x <- x |> select(-all_of(features))
+    # Set opacity
+    if (!scale_alpha) {
+      x$alpha_values <- 1
+    } else {
+      alpha_values <- feature_values |>
+        as.matrix() |>
+        apply(1, max)
+      x$alpha <- alpha_values
+    }
     return(x)
   }), nm = names(data))
 
@@ -1632,8 +1646,8 @@ MapLabels.Seurat <- function (
     ncol = NULL
 ) {
 
-  # Set global variables to NULL
-  nSamples <- NULL
+  # Set default value for nSamples
+  nSamples <- 1
 
   # When blend = FALSE, wrapped_plots will be a nested list where the
   # first layer contains samples and the second layer contains features.
