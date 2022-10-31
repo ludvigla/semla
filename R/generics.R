@@ -183,11 +183,6 @@ MaskImages <- function(object, ...) {
 
 #' Find region neighbors
 #'
-#' @section Seurat:
-#' If a \code{Seurat} object is provided, the identified neighbors will be
-#' stored as new columns in the meta data column with the names prefixed by
-#' \code{column_key}
-#'
 #' @param object An object
 #' @param ... Arguments passed to other methods
 #'
@@ -197,4 +192,33 @@ MaskImages <- function(object, ...) {
 #'
 RegionNeighbors <- function(object, ...) {
   UseMethod(generic = 'RegionNeighbors', object = object)
+}
+
+
+#' @title Calculate radial distances from a region border
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname radial-distance
+#'
+#' @export
+#'
+RadialDistance <- function(object, ...) {
+  UseMethod(generic = "RadialDistance", object = object)
+}
+
+
+
+#' @title Disconnect regions defined by the same label
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname disconnect-regions
+#'
+#' @export
+#'
+DisconnectRegions <- function(object, ...) {
+  UseMethod(generic = "DisconnectRegions", object = object)
 }
