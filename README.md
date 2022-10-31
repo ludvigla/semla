@@ -96,6 +96,16 @@ example be dimensionality reduction results instead.
 - [x] : add working example to `CorSpatialFeatures`. Here I have provided an example for how to 
 calculate spatial autocorrelation of genes and for principal components.
 
+### Spatial methods
+
+- [x] : `RadialDistance` can be used to calculate distances from the border of a selected region. 
+This can for example be useful when looking at the increase/decrease in expression as a function of 
+distance from a predefined region. Negative values points toward the center of the selected region.
+- [x] : `DisconnectComponents` can be used to disconnect spots belonging to a certain region that 
+are spatially disconnected. This can for example be useful if you want to analyze disconnected a 
+components of a particular tissue structure. 
+- [ ] : Add examples in vignettes
+
 ### Neighborhood analysis
 
 - [x] : migrate `RegionNeighbours` from STUtility
