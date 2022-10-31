@@ -21,7 +21,7 @@ path to an external image file.}
 
 \item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.}
 
-\item{mirror_x, mirror_y}{logical specifying if the image and spots should be mirrored
+\item{mirror_x, mirror_y}{Logical specifying if the image and spots should be mirrored
 along the x- and/or y-axis}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
@@ -34,6 +34,9 @@ along the x-a dn y-axes for the image}
 along the x- and y-axes for the spots. If \code{xy_offset_image} is \code{NULL},
 \code{xy_offset_spots} will be set to \code{xy_offset_image} as it is assumed that
 the spots are matched with the image.}
+
+\item{imcenter}{Integer vector of length specifying the center point of the image:
+\code{imcenter <- c(image_width, image_height)}}
 }
 \value{
 A list with two elements:
@@ -58,6 +61,8 @@ and translations.
 
 library(ggplot2)
 library(patchwork)
+library(magick)
+library(dplyr)
 
 # get example coordinate file
 coordinatefile <- system.file("extdata/mousebrain/spatial",
@@ -65,7 +70,7 @@ coordinatefile <- system.file("extdata/mousebrain/spatial",
                               package = "STUtility2")
 
 # Load coordinates
-xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile, verbose = T)
+xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
 xy
 
 # Load image

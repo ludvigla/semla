@@ -268,8 +268,10 @@ CoordTransform <- function (
 #' input and applies the same transformation to the image and spot coordinates
 #' simultaneously.
 #'
-#' @param mirror_x,mirror_y logical specifying if the image and spots should be mirrored
+#' @param mirror_x,mirror_y Logical specifying if the image and spots should be mirrored
 #' along the x- and/or y-axis
+#' @param imcenter Integer vector of length specifying the center point of the image:
+#' \code{imcenter <- c(image_width, image_height)}
 #'
 #' @details
 #' Mirroring is prioritized and will be applied to the image before applying rotations
@@ -301,6 +303,8 @@ CoordTransform <- function (
 #'
 #' library(ggplot2)
 #' library(patchwork)
+#' library(magick)
+#' library(dplyr)
 #'
 #' # get example coordinate file
 #' coordinatefile <- system.file("extdata/mousebrain/spatial",
@@ -308,7 +312,7 @@ CoordTransform <- function (
 #'                               package = "STUtility2")
 #'
 #' # Load coordinates
-#' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile, verbose = T)
+#' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
 #' xy
 #'
 #' # Load image

@@ -21,7 +21,7 @@ NULL
 #' }
 #' @inheritParams MapFeatures
 #'
-#' @importFrom patchwork plot_layout wrap_plots
+#' @importFrom patchwork plot_layout wrap_plots area plot_spacer
 #' @import rlang
 #' @import dplyr
 #' @import glue
@@ -34,6 +34,10 @@ NULL
 #'
 #' @examples
 #'
+#' library(tibble)
+#'
+#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                 "/*/filtered_feature_bc_matrix.h5"))
 #' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
 #'                                 "/*/spatial/tissue_hires_image.png"))
 #' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
@@ -86,6 +90,9 @@ MapFeaturesSummary <- function (
 ) {
   # TODO: How to deal with multiple features?
 
+  # Set global variables to NULL
+  sampleID <- NULL
+
   # Check Seurat object
   .check_seurat_object(object)
 
@@ -134,7 +141,6 @@ MapFeaturesSummary <- function (
     ncol = ncol,
     scale = scale,
     colors = colors_scale,
-    arrange_features = arrange_features,
     override_plot_dims = override_plot_dims,
     max_cutoff = max_cutoff,
     min_cutoff = min_cutoff,
@@ -180,7 +186,7 @@ MapFeaturesSummary <- function (
 
   # Create stats plots
   map_feat_stats <- lapply(data, function(x){
-    plot_stat_fkn(p_stat_base, x, features)
+    plot_stat_fkn(p_stat_base, x, features, fill_color)
   })
 
   # Patchwork plots together
@@ -233,6 +239,7 @@ MapFeaturesSummary <- function (
 #' @param p_stat_base An empty `ggplot`
 #' @param x Data to use for plot
 #' @param features Selected features
+#' @param fill_color Fill color for boxplot
 #'
 #' @importFrom ggplot2 geom_boxplot aes_string xlim scale_y_continuous
 #'
@@ -241,7 +248,8 @@ MapFeaturesSummary <- function (
 .plot_box <- function (
   p_stat_base,
   x,
-  features
+  features,
+  fill_color
 ) {
   p_stat <- p_stat_base +
     geom_boxplot(data = x, mapping = aes_string(x = "1", y = features),
@@ -258,6 +266,7 @@ MapFeaturesSummary <- function (
 #' @param p_stat_base An empty `ggplot`
 #' @param x Data to use for plot
 #' @param features Selected features
+#' @param fill_color Fill color for violin plot
 #'
 #' @importFrom ggplot2 geom_violin aes_string xlim scale_y_continuous
 #'
@@ -266,7 +275,8 @@ MapFeaturesSummary <- function (
 .plot_violin <- function (
     p_stat_base,
     x,
-    features
+    features,
+    fill_color
 ) {
   p_stat <- p_stat_base +
     geom_violin(data = x, mapping = aes_string(x = "1", y = features),
@@ -283,6 +293,7 @@ MapFeaturesSummary <- function (
 #' @param p_stat_base An empty `ggplot`
 #' @param x Data to use for plot
 #' @param features Selected features
+#' @param fill_color Fill color for histogram
 #'
 #' @importFrom ggplot2 geom_histogram aes_string coord_flip scale_x_continuous scale_y_reverse
 #'
@@ -291,7 +302,8 @@ MapFeaturesSummary <- function (
 .plot_histogram <- function (
     p_stat_base,
     x,
-    features
+    features,
+    fill_color
 ) {
   p_stat <- p_stat_base +
     geom_histogram(data = x, mapping = aes_string(x = features),
@@ -308,6 +320,7 @@ MapFeaturesSummary <- function (
 #' @param p_stat_base An empty `ggplot`
 #' @param x Data to use for plot
 #' @param features Selected features
+#' @param fill_color Fill color for density histogram
 #'
 #' @importFrom ggplot2 geom_density aes_string coord_flip scale_x_continuous scale_y_reverse
 #'
@@ -316,7 +329,8 @@ MapFeaturesSummary <- function (
 .plot_density <- function (
     p_stat_base,
     x,
-    features
+    features,
+    fill_color
 ) {
   p_stat <- p_stat_base +
     geom_density(data = x, mapping = aes_string(x = features),

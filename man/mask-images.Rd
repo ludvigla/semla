@@ -60,6 +60,7 @@ Returns a Seurat object with masked images
 
 library(STUtility2)
 library(magick)
+library(dplyr)
 
 # Load image
 lowresimagefile <- system.file("extdata/mousebrain/spatial",

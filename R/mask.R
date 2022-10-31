@@ -24,7 +24,7 @@ NULL
 #'
 #' @importFrom magick image_convert image_channel image_blur image_normalize
 #' image_quantize image_threshold image_threshold image_connect image_convert
-#' image_read image_transparent image_composite
+#' image_read image_transparent image_composite image_negate
 #' @importFrom rlang try_fetch abort inform
 #' @importFrom cli cli_h2
 #'
@@ -37,6 +37,7 @@ NULL
 #'
 #' library(STUtility2)
 #' library(magick)
+#' library(dplyr)
 #'
 #' # Load image
 #' lowresimagefile <- system.file("extdata/mousebrain/spatial",
@@ -196,6 +197,9 @@ MaskImages.Seurat <- function (
     verbose = TRUE,
     ...
 ) {
+
+  # Set global variables to NulL
+  sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
   if (verbose) cli::cli_h2("Masking image(s)")
 

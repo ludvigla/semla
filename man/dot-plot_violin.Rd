@@ -4,7 +4,7 @@
 \alias{.plot_violin}
 \title{Add a violin plot}
 \usage{
-.plot_violin(p_stat_base, x, features)
+.plot_violin(p_stat_base, x, features, fill_color)
 }
 \arguments{
 \item{p_stat_base}{An empty `ggplot`}
@@ -12,6 +12,8 @@
 \item{x}{Data to use for plot}
 
 \item{features}{Selected features}
+
+\item{fill_color}{Fill color for violin plot}
 }
 \value{
 a `ggplot` object

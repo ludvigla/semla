@@ -4,7 +4,7 @@
 \alias{.plot_density}
 \title{Add a density histogram}
 \usage{
-.plot_density(p_stat_base, x, features)
+.plot_density(p_stat_base, x, features, fill_color)
 }
 \arguments{
 \item{p_stat_base}{An empty `ggplot`}
@@ -12,6 +12,8 @@
 \item{x}{Data to use for plot}
 
 \item{features}{Selected features}
+
+\item{fill_color}{Fill color for density histogram}
 }
 \value{
 a `ggplot` object

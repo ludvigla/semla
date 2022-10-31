@@ -113,6 +113,10 @@ Note that currently, only 1 feature can be selected
 }
 \examples{
 
+library(tibble)
+
+samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+                                "/*/filtered_feature_bc_matrix.h5"))
 imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
                                 "/*/spatial/tissue_hires_image.png"))
 spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),

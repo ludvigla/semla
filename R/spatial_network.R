@@ -93,7 +93,10 @@ GetSpatialNetwork.default <- function (
   # Set number of nearest neighbors if NULL
   nNeighbors <- nNeighbors %||% 6
   # Split coordinates by sample
-  xys.list <- split(object, object$sampleID)[unique(object$sampleID)]
+  xys.list <- object |>
+    group_by(sampleID) |>
+    group_split() |>
+    setNames(paste0(unique(object$sampleID)))
 
   # Compute network
   knn_long.list <- setNames(lapply(names(xys.list), function(sampleID) {

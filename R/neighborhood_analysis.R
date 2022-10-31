@@ -12,13 +12,17 @@ NULL
 #' Then you select the label that defined the region of interest using the `id` parameter, so for example
 #' `ìd = "1"` will use cluster 1 as the region. If you set the `keep.idents` parameter to TRUE, the cluster ids
 #' of the neighboring spots will be kept in the result, otherwise they will be returned as one single goup.
-#' You can also activate the `keep.within.id` parameter to include all spots of the selected region in the output,
+#' You can also activate the `keep_within` parameter to include all spots of the selected region in the output,
 #' otherwise only the spots along the region border will be kept.
 #'
 #' @section Seurat:
 #' If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
 #' finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
-#' their  nearest neighbors.
+#' their nearest neighbors. If \code{outer_border=FALSE} the spots that are located at the border but inside the
+#' selected region(s) are returned instead. Note that \code{column_key} will define the prefix to the returned
+#' column names. If \code{outer_border=FALSE}, the prefix will be "nb_to_" specifying that the spots are neighbors
+#' to spots of the selected category and if \code{outer_border=FALSE}, the prefix will be "border_" specifying
+#' that the spots are at the border and from the selected category.
 #'
 #' @section default method:
 #' The default method takes a list of spatial networks generated with \code{\link{GetSpatialNetwork}}
@@ -26,7 +30,10 @@ NULL
 #'
 #' @param object A list of spatial networks generated with \code{\link{GetSpatialNetwork}}
 #' @param spots A character vector with spot IDs present in `spatnet`
-#' @param keep.within.id If set to TRUE, all id spots are kept, otherwise only the spots with outside neighbors are kept
+#' @param outer_border A logical specifying if the bordering spots should be returned. If set to FALSE,
+#' the spots \strong{at} the border will be returned instead.
+#' @param keep_within If set to TRUE, all id spots are kept, otherwise only the spots with outside
+#' neighbors are kept
 #' @param verbose Print messages
 #'
 #' @rdname region-neighbors
@@ -43,7 +50,8 @@ NULL
 RegionNeighbors.default <- function (
     object,
     spots,
-    keep.within.id = FALSE,
+    outer_border = TRUE,
+    keep_within = FALSE,
     verbose = FALSE,
     ...
 ) {
@@ -51,10 +59,16 @@ RegionNeighbors.default <- function (
   # Set global variables to NULL
   from <- to <- NULL
 
+  # Check object
+  stopifnot(
+    inherits(object, what = "list"),
+    length(object) > 0
+  )
+
   # Combine spatial networks into one tibble
-  spatnet_combined <- do.call(rbind, lapply(seq_along(object), function(i) {
-    spnet <- object[[i]]
-    spnet$sampleID <- i
+  spatnet_combined <- do.call(rbind, lapply(names(object), function(nm) {
+    spnet <- object[[nm]]
+    spnet$sampleID <- nm
     return(spnet)
   }))
 
@@ -72,7 +86,7 @@ RegionNeighbors.default <- function (
   if (nrow(spatnet_combined) == 0) abort("0 neighbors found")
   if (verbose) inform(c(">" = glue("Found {nrow(spatnet_combined)} neighbors for selected spots")))
 
-  if (!keep.within.id) {
+  if (!keep_within) {
     if (verbose) inform(c(">" = "Excluding neighbors from the same group"))
     spatnet_combined <- spatnet_combined |>
       filter(!to %in% spots)
@@ -81,7 +95,14 @@ RegionNeighbors.default <- function (
   }
 
   if (verbose) inform(c(">" = "Returning neighbors"))
-  return(spatnet_combined$to)
+
+  # If outer_border = TRUE, return neighboring spots
+  # otherwise, return inner border
+  if (outer_border) {
+    return(spatnet_combined$to)
+  } else {
+    return(unique(spatnet_combined$from))
+  }
 }
 
 #' @param column_name string specifying a column name in your meta data
@@ -89,9 +110,6 @@ RegionNeighbors.default <- function (
 #' @param column_labels character vector with labels to find nearest neighbors for.
 #' These labels need to be present in the meta data columns specified by \code{column_name}
 #' @param column_key prefix to columns returned in the Seurat object
-#' @param keep.within.id logical specifying whether neighboring spots of the same label
-#' should be kept
-#' @param verbose print messages
 #'
 #' @rdname region-neighbors
 #'
@@ -165,8 +183,9 @@ RegionNeighbors.Seurat <- function (
     object,
     column_name,
     column_labels = NULL,
-    column_key = "nb_to_",
-    keep.within.id = FALSE,
+    outer_border = TRUE,
+    column_key = ifelse(outer_border, "nb_to_", "border_"),
+    keep_within = FALSE,
     verbose = TRUE,
     ...
 ) {
@@ -206,7 +225,7 @@ RegionNeighbors.Seurat <- function (
   nbs <- setNames(lapply(names(spots_list), function(nm) {
     if (verbose) inform(c("i" = glue("Finding neighboring spots for '{nm}'")))
     spots <- spots_list[[nm]]
-    to_spots <- RegionNeighbors(spatnet, spots, keep.within.id, verbose)
+    to_spots <- RegionNeighbors(spatnet, spots, outer_border, keep_within, verbose)
     to_spots <- tibble(to_spots, nm) |>
       setNames(nm = c("barcode", column_name)) |>
       distinct()

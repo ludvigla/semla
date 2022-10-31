@@ -7,7 +7,9 @@
 .check_transforms(object, nrows = 1)
 }
 \arguments{
-\item{object}{a `tibble` with transformation parameters}
+\item{object}{A `tibble` with transformation parameters}
+
+\item{nrows}{Number of expected rows in `object`}
 }
 \value{
 nothing

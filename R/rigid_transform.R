@@ -5,7 +5,8 @@ NULL
 
 #' Utility function to generate a tibble with image transformations
 #'
-#' @param sampleID an integer specifying a sample ID
+#' @param sampleID An integer specifying a sample ID
+#' @param tr_x,tr_y Integer values for translations along the x- and y-axis
 #' @inheritParams CoordTransform
 #' @inheritParams CoordAndImageTransform
 #'
@@ -155,6 +156,9 @@ RigidTransformImages.default <- function (
   ...
 ) {
 
+  # Set global variables to NULL
+  tr_x <- tr_y <- NULL
+
   # Run checks for object
   if (!all(c("full_width", "full_height") %in% colnames(object)))
     abort("Couldn't find image dimensions in `object`, expected columns 'full_width' and 'full_height'")
@@ -274,6 +278,9 @@ RigidTransformImages.Seurat <- function (
     ...
 ) {
 
+  # Set global variables to NULL
+  sampleID <- full_width <- full_height <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
+
   # Check Seurat object
   .check_seurat_object(object)
   st_object <- GetStaffli(object)
@@ -368,7 +375,8 @@ RigidTransformImages.Seurat <- function (
 
 #' Check image transformation tibble
 #'
-#' @param object a `tibble` with transformation parameters
+#' @param object A `tibble` with transformation parameters
+#' @param nrows Number of expected rows in `object`
 #'
 #' @return nothing
 #'

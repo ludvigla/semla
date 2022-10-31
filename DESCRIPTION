@@ -37,24 +37,27 @@ Imports:
     zeallot (>= 0.1.0),
     pillar (>= 1.8.1),
     cli (>= 3.3.0),
-    farver (>= 2.1.1)
+    farver (>= 2.1.1),
+    dbscan (>= 1.1-10),
+    RColorBrewer
 RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0),
-    dbscan (>= 1.1-10),
     data.table (>= 1.14.2),
     BiocManager (>= 1.30.18),
     SpatialExperiment (>= 1.6.1)
 Collate: 
     'STUtility2-package.R'
     'checks.R'
-    'extdata.R'
     'generics.R'
+    'disconnect_regions.R'
+    'extdata.R'
     'load_data.R'
     'load_images.R'
     'mask.R'
     'neighborhood_analysis.R'
     'plot_images.R'
+    'radial_distance.R'
     'rigid_transform.R'
     'spatial_autocorrelation.R'
     'spatial_network.R'

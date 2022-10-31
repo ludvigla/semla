@@ -14,13 +14,15 @@ generate_rigid_transform(
 )
 }
 \arguments{
-\item{sampleID}{an integer specifying a sample ID}
+\item{sampleID}{An integer specifying a sample ID}
 
-\item{mirror_x, mirror_y}{logical specifying if the image and spots should be mirrored
+\item{mirror_x, mirror_y}{Logical specifying if the image and spots should be mirrored
 along the x- and/or y-axis}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
 for  counter-clockwise rotation.}
+
+\item{tr_x, tr_y}{Integer values for translations along the x- and y-axis}
 }
 \value{
 a tibble with image transformations

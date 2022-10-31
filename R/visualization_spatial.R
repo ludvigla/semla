@@ -136,7 +136,7 @@ MapFeatures.default <- function (
   # add blend colors if blend=TRUE
   if (blend) {
     if (!requireNamespace("farver")) install.packages("farver")
-    data <- .color_blender(data, features, blend_order, feature_limits)
+    data <- .color_blender(data, features, blend_order, feature_limits, scale_alpha)
     extreme_colors <- encode_colour(diag(ncol = 3, nrow = 3)*255, from = "rgb")
     features <- features[blend_order[1:length(features)]]
   }
@@ -1386,13 +1386,14 @@ MapLabels.Seurat <- function (
 
 #' Blend values
 #'
-#' @param data a list of tibbles containing coordinates and feature values
-#' @param features a character vector of feature names
-#' @param blend_order an integer vector specifying the order to blend values by.
+#' @param data A list of tibbles containing coordinates and feature values
+#' @param features A character vector of feature names
+#' @param blend_order An integer vector specifying the order to blend values by.
 #' This vector can only take values 1, 2 or 3 and at least two values needs to
 #' be provided.
-#' @param feature_limits a list of tibbles containing information about the
+#' @param feature_limits A list of tibbles containing information about the
 #' plot dimensions
+#' @param scale_alpha A logical specifying if transparency should be added to spot colors
 #'
 #' @importFrom rlang abort
 #' @importFrom glue glue
@@ -1410,7 +1411,8 @@ MapLabels.Seurat <- function (
     data,
     features,
     blend_order,
-    feature_limits
+    feature_limits,
+    scale_alpha = FALSE
 ) {
 
   if (!length(features) %in% 2:3) abort(glue("Feature blending only works with 2 or 3 features,",

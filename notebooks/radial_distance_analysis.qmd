@@ -174,3 +174,13 @@ gg |>
 ```{r fig.width=8, fig.height=5}
 MapFeatures(se, features = "KRT17", override_plot_dims = TRUE, pt_size = 1.5)
 ```
+
+## Radial distance
+
+```{r fig.height=6, fig.width=8}
+#se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = c("0"))
+
+se$r_dist_0_log <- ifelse(se$r_dist_0 < 0, -sqrt(-se$r_dist_0), sqrt(se$r_dist_0))
+MapFeatures(se, features = "r_dist_0_log", pt_size = 2.5, override_plot_dims = TRUE,
+            colors = scico::scico(n = 11, palette = "berlin"))
+```

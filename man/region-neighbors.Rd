@@ -8,14 +8,22 @@
 \usage{
 RegionNeighbors(object, ...)
 
-\method{RegionNeighbors}{default}(object, spots, keep.within.id = FALSE, verbose = FALSE, ...)
+\method{RegionNeighbors}{default}(
+  object,
+  spots,
+  outer_border = TRUE,
+  keep_within = FALSE,
+  verbose = FALSE,
+  ...
+)
 
 \method{RegionNeighbors}{Seurat}(
   object,
   column_name,
   column_labels = NULL,
-  column_key = "nb_to_",
-  keep.within.id = FALSE,
+  outer_border = TRUE,
+  column_key = ifelse(outer_border, "nb_to_", "border_"),
+  keep_within = FALSE,
   verbose = TRUE,
   ...
 )
@@ -27,10 +35,13 @@ RegionNeighbors(object, ...)
 
 \item{spots}{A character vector with spot IDs present in `spatnet`}
 
-\item{keep.within.id}{logical specifying whether neighboring spots of the same label
-should be kept}
+\item{outer_border}{A logical specifying if the bordering spots should be returned. If set to FALSE,
+the spots \strong{at} the border will be returned instead.}
 
-\item{verbose}{print messages}
+\item{keep_within}{If set to TRUE, all id spots are kept, otherwise only the spots with outside
+neighbors are kept}
+
+\item{verbose}{Print messages}
 
 \item{column_name}{string specifying a column name in your meta data
 with labels, e.g. clusters or manual selections}
@@ -50,19 +61,18 @@ the identity of the Seurat object is set to the meta.data column that you want t
 Then you select the label that defined the region of interest using the `id` parameter, so for example
 `ìd = "1"` will use cluster 1 as the region. If you set the `keep.idents` parameter to TRUE, the cluster ids
 of the neighboring spots will be kept in the result, otherwise they will be returned as one single goup.
-You can also activate the `keep.within.id` parameter to include all spots of the selected region in the output,
+You can also activate the `keep_within` parameter to include all spots of the selected region in the output,
 otherwise only the spots along the region border will be kept.
 }
 \section{Seurat}{
 
-If a \code{Seurat} object is provided, the identified neighbors will be
-stored as new columns in the meta data column with the names prefixed by
-\code{column_key}
-
-
 If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
 finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
-their  nearest neighbors.
+their nearest neighbors. If \code{outer_border=FALSE} the spots that are located at the border but inside the
+selected region(s) are returned instead. Note that \code{column_key} will define the prefix to the returned
+column names. If \code{outer_border=FALSE}, the prefix will be "nb_to_" specifying that the spots are neighbors
+to spots of the selected category and if \code{outer_border=FALSE}, the prefix will be "border_" specifying
+that the spots are at the border and from the selected category.
 }
 
 \section{default method}{

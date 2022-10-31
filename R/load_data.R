@@ -249,8 +249,8 @@ LoadImageData <- function (
     if (!all(check)) abort(glue::glue("Invalid image format: '{exts[!check]}'"))
     if (!requireNamespace("BiocManager"))
       install.packages("BiocManager")
-
-    BiocManager::install("SpatialExperiment")
+    if (!requireNamespace("SpatialExperiment"))
+      install.packages("SpatialExperiment")
     DF <- SpatialExperiment::readImgData(
       imageSources = unlist(images[i, ]),
       scaleFactors = jsonfiles[i],
