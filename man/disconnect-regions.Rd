@@ -3,11 +3,14 @@
 \name{DisconnectRegions}
 \alias{DisconnectRegions}
 \alias{DisconnectRegions.default}
-\title{Disconnect regions defined by the same label}
+\alias{DisconnectRegions.Seurat}
+\title{Disconnect regions}
 \usage{
 DisconnectRegions(object, ...)
 
 \method{DisconnectRegions}{default}(object, spots, verbose = TRUE, ...)
+
+\method{DisconnectRegions}{Seurat}(object, column_name, sel_groups = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{An object}
@@ -17,10 +20,38 @@ DisconnectRegions(object, ...)
 \item{spots}{A character vector with spot IDs present 'object'}
 
 \item{verbose}{Print messages}
+
+\item{column_name}{A character specifying the name of a column in your meta data that contains
+categorical data, e.g. clusters or manual selections}
+
+\item{sel_groups}{A character vector to select specific groups in \code{column_name} with.
+All groups are selected by default, but the common use case is to select a region of interest.}
 }
 \description{
-Disconnect regions defined by the same label
+This function allows you split spatially disconnected regions
+belonging to the same category. In cases where a certain tissue type create
+isolated "islands" in the tissue section, these islands can be separated. A
+common example is tertiary lymphoid structures (TLS) which are typically
+dispersed across a tissue section.
 }
+\section{default method}{
+
+Takes a set of spot IDs and returns a named character vector with new labels.
+The names of this vector corresponds to the input spot IDs.
+}
+
+\section{Seurat}{
+
+A categorical variable is selected from the \code{Seurat} object meta data
+slot using \code{column_name}. From this column, one can specify what groups
+to disconnect with \code{sel_groups}. If \code{sel_groups} isn't specified,
+all groups in \code{sel_groups} will be disconnected separately.
+The function returns a Seurat object with additional columns in the meta data
+slot, one for each group in \code{sel_groups}. The suffix to these columns is
+"_split", so a group in \code{sel_groups} called "tissue" will get a column
+called "tissue_split" with new labels for each spatially disconnected region.
+}
+
 \examples{
 
 library(STUtility2)
@@ -60,7 +91,45 @@ p1 <- ggplot(gg, aes(x, y, color = galt))
 p2 <- ggplot(gg, aes(x, y, color = galt_disconnected))
 p <- p1 + p2 &
   geom_point() &
-  theme_void()
+  theme_void() &
+  coord_fixed()
 p
+
+
+library(STUtility2)
+library(ggplot2)
+library(patchwork)
+
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+
+# Plot selected variable
+MapLabels(se_mcolon, column_name = "selection",
+          pt_size = 3, override_plot_dims = TRUE)
+
+# Disconnect regions
+se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", sel_groups = "GALT")
+
+# Plot split regions
+MapLabels(se_mcolon, column_name = "GALT_split",
+          pt_size = 3, override_plot_dims = TRUE)
+
+# Note that if multiple sections are present, each section will be given
+# it's own prefix in the disconnected groups.
+se_merged <- MergeSTData(se_mcolon, se_mcolon)
+
+# Plot selected variable
+MapLabels(se_merged, column_name = "selection",
+          pt_size = 3, override_plot_dims = TRUE) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top")
+
+# Disconnect regions
+se_merged <- DisconnectRegions(se_merged, column_name = "selection", sel_groups = "GALT")
+
+# Plot split regions
+MapLabels(se_merged, column_name = "GALT_split",
+          pt_size = 3, override_plot_dims = TRUE) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "top")
 
 }

@@ -210,7 +210,13 @@ RadialDistance <- function(object, ...) {
 
 
 
-#' @title Disconnect regions defined by the same label
+#' @title Disconnect regions
+#'
+#' @description This function allows you split spatially disconnected regions
+#' belonging to the same category. In cases where a certain tissue type create
+#' isolated "islands" in the tissue section, these islands can be separated. A
+#' common example is tertiary lymphoid structures (TLS) which are typically
+#' dispersed across a tissue section.
 #'
 #' @param object An object
 #' @param ... Arguments passed to other methods

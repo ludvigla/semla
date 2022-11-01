@@ -49,6 +49,7 @@ Suggests:
 Collate: 
     'STUtility2-package.R'
     'checks.R'
+    'spatial_utils.R'
     'generics.R'
     'disconnect_regions.R'
     'extdata.R'

@@ -1,8 +1,10 @@
 #' @include generics.R
+#' @include checks.R
+#' @include spatial_utils.R
 #'
 NULL
 
-# TODO: print correct outside spots
+# TODO: add option to convert distances
 #' @description Calculates the radial distances to surrounding spots from a selected
 #' group of spots covering a defined regions. The region could for example
 #' represent an isolated tumor in the tissue section surrounded by stroma. First,
@@ -152,6 +154,7 @@ RadialDistance.default <- function (
 
 }
 
+
 #' @param column_name A character specifying the name of a column in your meta data that contains
 #'  categorical data, e.g. clusters or manual selections
 #' @param sel_groups A character vector to select specific groups in \code{column_name} with.
@@ -195,6 +198,11 @@ RadialDistance.default <- function (
 #' # Combine plots
 #' p1/p2
 #'
+#' # It can also be useful to apply transformations to the distances
+#' se_mcolon$r_dist_GALT_sqrt <- sign(se_mcolon$r_dist_GALT)*sqrt(abs(se_mcolon$r_dist_GALT))
+#' MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 3,
+#'             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
+#'
 #' @export
 #'
 RadialDistance.Seurat <- function (
@@ -208,48 +216,23 @@ RadialDistance.Seurat <- function (
   # Set global variables to NULL
   barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
 
-  # Validate Seurat object
+  # validate input
   .check_seurat_object(object)
-
-  # Check if column_name is available in meta data
-  if (!is.character(column_name)) abort(glue("Invalid class '{class(column_name)}', expected a 'character'"))
-  if (length(column_name) != 1) abort(glue("Invalid length {length(column_name)} for 'column_name', expected a 'character' vector of length 1"))
-  if (!column_name %in% colnames(object[[]])) abort("'column_name' is not present in the Seurat object meta data")
-
-  # Check column label
-  sel_groups <- sel_groups %||% {
-    inform(glue(c("i" = "No 'sel_groups' provided. Using all groups in '{column_name}' column")))
-    sel_groups <- unique(object[[]] |> pull(all_of(column_name)))
-  }
-  if (!inherits(sel_groups, what = c("factor", "character"))) abort(glue("Invalid class '{class(sel_groups)}', expected a 'character'"))
-  if (!all(sel_groups %in% (object[[]] |> pull(all_of(column_name))))) abort(glue("Some 'sel_groups' are not present in '{column_name}'"))
+  .validate_column_name(object, column_name)
+  sel_groups <- .validate_selected_labels(object, sel_groups, column_name)
 
   # Select spots
-  spots_list <- lapply(sel_groups, function(lbl) {
-    spots <- GetStaffli(object)@meta_data |>
-      bind_cols(object[[]] |> select(all_of(column_name))) |>
-      filter(!! sym(column_name) == lbl) |>
-      group_by(sampleID) |>
-      group_split() |>
-      lapply(function(x) x |> pull(barcode)) |>
-      setNames(unique(GetStaffli(object)@image_info$sampleID))
-  }) |>
-    setNames(sel_groups)
+  spots_list <- .get_spots_list(object, sel_groups, column_name)
 
   # Get coordinates
-  coords_list <- GetStaffli(object)@meta_data |>
-    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |>
-    setNames(nm = c("barcode", "x", "y", "sampleID")) |>
-    group_by(sampleID) |>
-    group_split() |>
-    setNames(nm = paste0(1:nrow(GetStaffli(object)@image_info)))
+  coords_list <- .get_coords_list(object)
 
   # Calculate radial distances
   distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
     if (verbose) inform(glue("Running calculations for sample {nm}"))
     radial_distances <- do.call(bind_cols, lapply(names(spots_list), function(lbl) {
       if (verbose) inform(glue("Calculating radial distances for group '{lbl}'"))
-      tibble(RadialDistance(coords_list[[nm]], spots = spots_list[[lbl]][[nm]], verbose = verbose)) |> #, ...)) |>
+      tibble(RadialDistance(coords_list[[nm]], spots = spots_list[[lbl]][[nm]], verbose = verbose, ...)) |>
         setNames(nm = paste0("r_dist_", lbl))
     }))
   }))

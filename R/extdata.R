@@ -24,6 +24,7 @@ NULL
 #'    \item{\strong{mousecolon/spatial/tissue_positions_list.csv}: \cr CSV file with spot coordinates}
 #'    \item{\strong{mousecolon/spatial/scalefactors_json.json}: \cr JSON file with scalefactors}
 #'    \item{\strong{mousecolon/se_mcolon}: \cr Seurat object stored as an .Rds file with the top 100 most variable features}
+#'    \item{\strong{mousecolon/galt_spots.csv}: \cr CSV file with GALT spot barcodes}
 #' }
 #'
 #' @name mcolon_dataset

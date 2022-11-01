@@ -19,7 +19,8 @@
   scale_alpha = FALSE,
   cur_label = NULL,
   coords_columns,
-  drop_na = FALSE
+  drop_na = FALSE,
+  center_zero = FALSE
 )
 }
 \arguments{
@@ -58,6 +59,8 @@ used for blending features}
 columns in which spatial coordinates are located}
 
 \item{drop_na}{should NA values be dropped from the data?}
+
+\item{center_zero}{a logical specifying whether color scale should be centered at 0}
 }
 \value{
 a `ggplot` object with a spatial plot

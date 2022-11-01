@@ -51,6 +51,7 @@ NULL
 #' @param blend_order an integer vector of length 2-3 specifying the order to blend features by. Only
 #' active when \code{blend = TRUE}. See color blending for more information.
 #' @param drop_na a logical specifying if NA values should be dropped
+#' @param center_zero a logical specifying whether color scale should be centered at 0
 #'
 #' @importFrom patchwork wrap_plots
 #' @importFrom dplyr select group_by group_split all_of pull
@@ -85,6 +86,7 @@ MapFeatures.default <- function (
   label_by = NULL,
   ncol = NULL,
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
+  center_zero = FALSE,
   scale = c("shared", "free"),
   arrange_features = c("col", "row"),
   dims = NULL,
@@ -175,7 +177,8 @@ MapFeatures.default <- function (
           scale_alpha = scale_alpha,
           coords_columns = coords_columns,
           cur_label = cur_label,
-          drop_na = drop_na
+          drop_na = drop_na,
+          center_zero = center_zero
         )
       })
       # Add names to feature_plots
@@ -194,7 +197,8 @@ MapFeatures.default <- function (
         scale_alpha = scale_alpha,
         cur_label = cur_label,
         coords_columns = coords_columns,
-        drop_na = drop_na
+        drop_na = drop_na,
+        center_zero = center_zero
       )
     }
     return(p)
@@ -324,6 +328,7 @@ MapFeatures.Seurat <- function (
     label_by = NULL,
     ncol = NULL,
     colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
+    center_zero = FALSE,
     scale = c("shared", "free"),
     arrange_features = c("col", "row"),
     blend = FALSE,
@@ -426,6 +431,7 @@ MapFeatures.Seurat <- function (
     label_by = label_by,
     ncol = ncol,
     colors = colors,
+    center_zero = center_zero,
     scale = scale,
     arrange_features = arrange_features,
     dims = dims,
@@ -833,6 +839,7 @@ MapLabels.Seurat <- function (
 #' @param coords_columns a character vector of length 2 specifying names of
 #' columns in which spatial coordinates are located
 #' @param drop_na should NA values be dropped from the data?
+#' @param center_zero a logical specifying whether color scale should be centered at 0
 #'
 #' @importFrom ggplot2 ggplot geom_point scale_x_continuous scale_y_reverse
 #' theme_void theme scale_color_gradientn labs coord_fixed aes element_text
@@ -856,7 +863,8 @@ MapLabels.Seurat <- function (
     scale_alpha = FALSE,
     cur_label = NULL,
     coords_columns,
-    drop_na = FALSE
+    drop_na = FALSE,
+    center_zero = FALSE
 ) {
 
   # Set global variables to NULL
@@ -951,8 +959,12 @@ MapLabels.Seurat <- function (
     {
       if (!encoded_cols_present) {
         scale_fill_gradientn(colours = colors,
-                              limits = c(feature_limits[[nm]][1, ftr, drop = TRUE],
-                                         feature_limits[[nm]][2, ftr, drop = TRUE]))
+                              limits = c(ifelse(!center_zero,
+                                                feature_limits[[nm]][1, ftr, drop = TRUE],
+                                                -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
+                                         ifelse(!center_zero,
+                                                feature_limits[[nm]][2, ftr, drop = TRUE],
+                                                max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))))
       }
     } +
     # Create a title

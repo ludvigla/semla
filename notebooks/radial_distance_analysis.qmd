@@ -178,9 +178,70 @@ MapFeatures(se, features = "KRT17", override_plot_dims = TRUE, pt_size = 1.5)
 ## Radial distance
 
 ```{r fig.height=6, fig.width=8}
-#se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = c("0"))
+se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = c("0"))
 
 se$r_dist_0_log <- ifelse(se$r_dist_0 < 0, -sqrt(-se$r_dist_0), sqrt(se$r_dist_0))
 MapFeatures(se, features = "r_dist_0_log", pt_size = 2.5, override_plot_dims = TRUE,
             colors = scico::scico(n = 11, palette = "berlin"))
+```
+
+Fit model
+
+```{r fig.width=6, fig.height=12}
+
+dist_thr <- 1e3
+
+umis <- GetAssayData(se, slot = "data", assay = "Spatial")[VariableFeatures(se)[1:1000], ]
+umis <- umis[, se$r_dist_0 < dist_thr]
+
+library(parallel)
+t <- se$r_dist_0[se$r_dist_0 < dist_thr]
+gam_pval <- mclapply(rownames(umis), function(i){
+  z <- umis[i, ]
+  d <- data.frame(z = z, t = t)
+  tmp <- mgcv::gam(z ~ gam::lo(t), data=d)
+  p <- summary(tmp)$p.pv[2]
+  return(setNames(p, nm = i))
+}, mc.cores = 7)
+gam_pval <- unlist(gam_pval)
+gam_pval <- p.adjust(gam_pval, method = "BH")
+gam_pval <- sort(gam_pval, decreasing = FALSE)
+
+# Filter genes
+sel_genes <- names(head(gam_pval, n = 100))
+
+# Get scale data
+scale_data <- GetAssayData(se, slot = "scale.data", assay = "Spatial")[sel_genes, se$r_dist_0 < dist_thr]
+scale_data <- scale_data[, order(t, decreasing = FALSE)]
+
+# Bin data
+bins <- cut(1:ncol(scale_data), breaks = 100)
+binMat <- do.call(cbind, lapply(levels(bins), function(lvl) {
+  rowMeans(scale_data[, bins == lvl])
+}))
+
+pheatmap::pheatmap(binMat, cluster_cols = FALSE, border_color = FALSE,
+                   clustering_method = "median", scale = "row", 
+                   breaks = seq(-2, 2, length.out = 50), 
+                   color = scico::scico(palette = "bam", n = 51))
+
+```
+
+```{r}
+# Subset Seurat object
+se_subset <- SubsetSTData(se, expression = r_dist_0 < 2e3)
+
+sel_genes <- c("TFF1", "TFF3", "CEACAM6", "LAGE3", "C1QA", "C1QB", 
+               "HLA-DRA", "APOC1", "MZB1", "IGLC2")
+
+se_subset[[]] |>
+  bind_cols(FetchData(se_subset, vars = sel_genes)) |>
+  pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |>
+  select(r_dist_0, variable, value) |>
+  filter(r_dist_0 > -2e3) |>
+  group_by(variable) |>
+  mutate(value = value - mean(value)) |>
+  ggplot(aes(r_dist_0, value, color = variable)) +
+    geom_smooth() +
+    geom_vline(xintercept = 0, linetype = "dashed")
 ```

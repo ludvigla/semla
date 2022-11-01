@@ -1,11 +1,25 @@
 #' @include generics.R
 #' @include checks.R
+#' @include spatial_utils.R
 #'
 NULL
 
 
+#' @section default method:
+#' Takes a set of spot IDs and returns a named character vector with new labels.
+#' The names of this vector corresponds to the input spot IDs.
+#'
+#' @section Seurat:
+#' A categorical variable is selected from the \code{Seurat} object meta data
+#' slot using \code{column_name}. From this column, one can specify what groups
+#' to disconnect with \code{sel_groups}. If \code{sel_groups} isn't specified,
+#' all groups in \code{sel_groups} will be disconnected separately.
+#' The function returns a Seurat object with additional columns in the meta data
+#' slot, one for each group in \code{sel_groups}. The suffix to these columns is
+#' "_split", so a group in \code{sel_groups} called "tissue" will get a column
+#' called "tissue_split" with new labels for each spatially disconnected region.
+#'
 #' @param spots A character vector with spot IDs present 'object'
-#' @param verbose Print messages
 #'
 #' @import dplyr
 #' @importFrom rlang abort inform
@@ -52,7 +66,8 @@ NULL
 #' p2 <- ggplot(gg, aes(x, y, color = galt_disconnected))
 #' p <- p1 + p2 &
 #'   geom_point() &
-#'   theme_void()
+#'   theme_void() &
+#'   coord_fixed()
 #' p
 #'
 #' @export
@@ -120,7 +135,7 @@ DisconnectRegions.default <- function (
     }))
     return(diconnected_graphs)
   }))
-  if (verbose) inform(c("i" = glue("Found {length(unique(tidygraphs$id))} disconnected graphs in data")))
+  if (verbose) inform(c("i" = glue("Found {length(unique(tidygraphs$id))} disconnected graph(s) in data")))
   if (verbose) inform(c("i" = glue("Sorting disconnected regions by decreasing size")))
 
   # return results as a character vector
@@ -135,3 +150,112 @@ DisconnectRegions.default <- function (
 
 }
 
+
+#' @param column_name A character specifying the name of a column in your meta data that contains
+#'  categorical data, e.g. clusters or manual selections
+#' @param sel_groups A character vector to select specific groups in \code{column_name} with.
+#' All groups are selected by default, but the common use case is to select a region of interest.
+#' @param verbose Print messages
+#'
+#' @import dplyr
+#' @importFrom rlang inform abort
+#' @importFrom glue glue
+#' @importFrom cli cli_h2
+#'
+#' @rdname disconnect-regions
+#'
+#' @examples
+#'
+#' library(STUtility2)
+#' library(ggplot2)
+#' library(patchwork)
+#'
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#'
+#' # Plot selected variable
+#' MapLabels(se_mcolon, column_name = "selection",
+#'           pt_size = 3, override_plot_dims = TRUE)
+#'
+#' # Disconnect regions
+#' se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", sel_groups = "GALT")
+#'
+#' # Plot split regions
+#' MapLabels(se_mcolon, column_name = "GALT_split",
+#'           pt_size = 3, override_plot_dims = TRUE)
+#'
+#' # Note that if multiple sections are present, each section will be given
+#' # it's own prefix in the disconnected groups.
+#' se_merged <- MergeSTData(se_mcolon, se_mcolon)
+#'
+#' # Plot selected variable
+#' MapLabels(se_merged, column_name = "selection",
+#'           pt_size = 3, override_plot_dims = TRUE) +
+#'   plot_layout(guides = "collect") &
+#'   theme(legend.position = "top")
+#'
+#' # Disconnect regions
+#' se_merged <- DisconnectRegions(se_merged, column_name = "selection", sel_groups = "GALT")
+#'
+#' # Plot split regions
+#' MapLabels(se_merged, column_name = "GALT_split",
+#'           pt_size = 3, override_plot_dims = TRUE) +
+#'   plot_layout(guides = "collect") &
+#'   theme(legend.position = "top")
+#'
+#' @export
+#'
+DisconnectRegions.Seurat <- function (
+  object,
+  column_name,
+  sel_groups = NULL,
+  verbose = TRUE,
+  ...
+) {
+
+  # validate input
+  .check_seurat_object(object)
+  .validate_column_name(object, column_name)
+  sel_groups <- .validate_selected_labels(object, sel_groups, column_name)
+
+  # Select spots
+  spots_list <- .get_spots_list(object, sel_groups, column_name, split_by_sample = FALSE)
+
+  # Get coordinates
+  coords <- GetStaffli(object)@meta_data |>
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |>
+    setNames(nm = c("barcode", "x", "y", "sampleID"))
+
+  # Get disconnected groups
+  disconnected_groups <- setNames(lapply(names(spots_list), function(lbl) {
+    if (verbose) inform(glue("Extracting disconnected components for group '{lbl}'"))
+    DisconnectRegions(coords, spots = spots_list[[lbl]], verbose = verbose, ...)
+  }), nm = names(spots_list))
+
+  # Convert results
+  column_labels <- paste0(names(disconnected_groups), "_split")
+  disconnected_groups <- lapply(seq_along(disconnected_groups), function(i) {
+    x <- disconnected_groups[[i]]
+    tibble(barcode = names(x), label = x) |>
+      setNames(nm = c("barcode", column_labels[i]))
+  }) |>
+    setNames(nm = names(disconnected_groups))
+
+  # Add new labels to Seurat object
+  tmp_mData <- object@meta.data |>
+    select(-contains(column_labels), -contains("barcode")) |>
+    bind_cols(barcode = colnames(object))
+
+  # Add new labels to Seurat meta data
+  for (lbl in names(disconnected_groups)) {
+    tmp_mData <- tmp_mData |>
+      left_join(y = disconnected_groups[[lbl]], by = "barcode")
+  }
+  tmp_mData <- tmp_mData |>
+    column_to_rownames(var = "barcode")
+
+  # Place new meta data in Seurat object
+  object@meta.data <- tmp_mData
+
+  return(object)
+
+}

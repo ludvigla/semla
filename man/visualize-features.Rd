@@ -19,6 +19,7 @@ MapFeatures(object, ...)
   label_by = NULL,
   ncol = NULL,
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
+  center_zero = FALSE,
   scale = c("shared", "free"),
   arrange_features = c("col", "row"),
   dims = NULL,
@@ -44,6 +45,7 @@ MapFeatures(object, ...)
   label_by = NULL,
   ncol = NULL,
   colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
+  center_zero = FALSE,
   scale = c("shared", "free"),
   arrange_features = c("col", "row"),
   blend = FALSE,
@@ -96,6 +98,8 @@ Otherwise, the patchwork will be arranged based on the \code{arrange_features} p
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 \code{scico} R packages.}
+
+\item{center_zero}{a logical specifying whether color scale should be centered at 0}
 
 \item{scale}{a character vector of length 1 specifying one of "shared" or "free" which will
 determine how the color bars are structured. If scale is set to "shared", the color bars for

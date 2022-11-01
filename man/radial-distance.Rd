@@ -124,4 +124,9 @@ p2 <- ggplot(gg, aes(r_dist_GALT, value, color = variable)) +
 # Combine plots
 p1/p2
 
+# It can also be useful to apply transformations to the distances
+se_mcolon$r_dist_GALT_sqrt <- sign(se_mcolon$r_dist_GALT)*sqrt(abs(se_mcolon$r_dist_GALT))
+MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 3,
+            colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
+
 }
