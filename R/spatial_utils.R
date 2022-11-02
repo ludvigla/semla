@@ -8,6 +8,7 @@
 #'
 #' @return nothing
 #'
+#' @noRd
 .validate_column_name <- function (
     object,
     column_name
@@ -32,6 +33,7 @@
 #'
 #' @return A character vector with selected labels in \code{column_name}
 #'
+#' @noRd
 .validate_selected_labels <- function (
     object,
     sel_groups,
@@ -50,12 +52,16 @@
 
 #' Get spot IDs for selected groups and samples
 #'
+#' @param split_by_sample A logical specifying if the spots should be split
+#' by sample
+#'
 #' @inheritParams .validate_selected_labels
 #'
 #' @import dplyr
 #'
 #' @return A list of lists with spot IDs for selected groups split by sample
 #'
+#' @noRd
 .get_spots_list <- function (
   object,
   sel_groups,
@@ -97,6 +103,7 @@
 #'
 #' @return A list of spot coordinates for each sample
 #'
+#' @noRd
 .get_coords_list <- function (
     object
 ) {

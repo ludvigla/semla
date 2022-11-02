@@ -127,6 +127,7 @@ ggplot(transf_res$xy_transf, aes(tr_x, tr_y)) +
                 on_top = FALSE)
 
 library(STUtility2)
+library(dplyr)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))

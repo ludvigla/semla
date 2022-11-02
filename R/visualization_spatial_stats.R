@@ -217,6 +217,7 @@ MapFeaturesSummary <- function (
 #'
 #' @return a `ggplot` object
 #'
+#' @noRd
 .plot_base <- function (
 ) {
   p_stat_base <- ggplot() +
@@ -245,6 +246,7 @@ MapFeaturesSummary <- function (
 #'
 #' @return a `ggplot` object
 #'
+#' @noRd
 .plot_box <- function (
   p_stat_base,
   x,
@@ -272,6 +274,7 @@ MapFeaturesSummary <- function (
 #'
 #' @return a `ggplot` object
 #'
+#' @noRd
 .plot_violin <- function (
     p_stat_base,
     x,
@@ -299,6 +302,7 @@ MapFeaturesSummary <- function (
 #'
 #' @return a `ggplot` object
 #'
+#' @noRd
 .plot_histogram <- function (
     p_stat_base,
     x,
@@ -326,6 +330,7 @@ MapFeaturesSummary <- function (
 #'
 #' @return a `ggplot` object
 #'
+#' @noRd
 .plot_density <- function (
     p_stat_base,
     x,

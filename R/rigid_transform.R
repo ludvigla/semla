@@ -245,6 +245,7 @@ RigidTransformImages.default <- function (
 #'
 #' @examples
 #' library(STUtility2)
+#' library(dplyr)
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
@@ -363,6 +364,7 @@ RigidTransformImages.Seurat <- function (
 #'
 #' @return nothing
 #'
+#' @noRd
 .check_transforms_values <- function (
   object
 ) {
@@ -380,6 +382,7 @@ RigidTransformImages.Seurat <- function (
 #'
 #' @return nothing
 #'
+#' @noRd
 .check_transforms <- function (
   object,
   nrows = 1

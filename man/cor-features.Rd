@@ -39,6 +39,9 @@ networks should match the spots in the feature matrix.}
 \item{nCores}{Number of cores to use for the spatial autocorrelation calculation}
 
 \item{verbose}{Print messages}
+
+\item{features}{A character vector with features present in `Seurat` object. These
+features need to be accessible with \code{\link{FetchData}}}
 }
 \value{
 Either a list of tibbles or a tibble with feature names and correlation scores

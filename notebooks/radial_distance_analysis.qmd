@@ -1,12 +1,12 @@
 ---
-title: "Radial distance plots"
+title: "Spatial methods"
 format: html
 editor: visual
 ---
 
 ## Introduction
 
-In this notebook, we'll have a look at
+In this notebook, we'll have a look at how you can use spatial methods in `STUtility2`.
 
 ```{r}
 library(tibble)
@@ -30,12 +30,12 @@ json <- Sys.glob("~/BC_data/*/spatial/scalefactors_json.json")
 infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("S1", "S2"))
 
 # Create Seurat object
-se <- ReadVisiumData(infoTable = infoTable)
+se <- ReadVisiumData(infoTable = infoTable[1, ])
 ```
 
-## Analysis
+## Data
 
-Run a simple analysis workflow:
+Next, we'll use `Seurat` to run a simple data processing/analysis workflow:
 
 -   normalize data
 
@@ -49,7 +49,7 @@ Run a simple analysis workflow:
 
 -   Cluster data
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 se <- se |>
   NormalizeData() |>
   ScaleData() |>
@@ -59,14 +59,18 @@ se <- se |>
   FindClusters()
 ```
 
-Plot identified clusters
+Now that we have identified clusters in our data based on the spot expression profiles, we can plot these clusters spatially with `MapLabels`.
 
 ```{r}
-MapLabels(se, column_name = "seurat_clusters") +
+se <- LoadImages(se)
+MapLabels(se, column_name = "seurat_clusters", override_plot_dims = TRUE, 
+          image_use = "raw", pt_alpha = 0.6) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right") &
-  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2))
+  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2)
 ```
+
+### Under development
 
 ```{r}
 plots <- MapLabels(se, column_name = "seurat_clusters", return_plot_list = TRUE)

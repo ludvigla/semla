@@ -848,6 +848,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a `ggplot` object with a spatial plot
 #'
+#' @noRd
 .spatial_feature_plot <- function (
     gg,
     nm,
@@ -1021,6 +1022,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a `ggplot` object with a spatial plot
 #'
+#' @noRd
 .spatial_label_plot <- function (
     gg,
     nm,
@@ -1124,6 +1126,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return nothing
 #'
+#' @noRd
 .prep_data_for_plotting <- function (
     object,
     colors,
@@ -1200,6 +1203,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a `tibble` with trimmed feature values
 #'
+#' @noRd
 .trim_data <- function (
     data,
     features,
@@ -1248,6 +1252,7 @@ MapLabels.Seurat <- function (
 #' @return a list of tibbles holding spot coordinates, a tibble with information
 #' about plot dimensions and a character vector of colors stored together in a list
 #'
+#' @noRd
 .split_data_by_label <- function (
   data,
   dims,
@@ -1313,6 +1318,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a tibble with limits
 #'
+#' @noRd
 .get_limits <- function (
     x,
     coords_columns
@@ -1340,6 +1346,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a tibble with plot dimension information
 #'
+#' @noRd
 .get_dims <- function (
     dims
 ) {
@@ -1369,6 +1376,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a list of tibbles with feature value limits
 #'
+#' @noRd
 .get_feature_limits <- function (
   data,
   coords_columns,
@@ -1419,6 +1427,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a list of tibbles containing coordinates and a color vector
 #'
+#' @noRd
 .color_blender <- function (
     data,
     features,
@@ -1473,6 +1482,7 @@ MapLabels.Seurat <- function (
 #' Seurat object containing a factor with labels to color spots by
 #' @param split_labels logical specifying if labels should be split
 #'
+#' @noRd
 .get_images <- function (
     object,
     st_object,
@@ -1510,6 +1520,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a  list of cropped `raster` objects
 #'
+#' @noRd
 .crop_images <- function (
     crop_area,
     images
@@ -1544,6 +1555,7 @@ MapLabels.Seurat <- function (
 #' @return a tibble with modified image dimensions \code{dims} and list of `tibble` objects
 #' with cropped spot coordinates
 #'
+#' @noRd
 .crop_dims <- function (
     dims,
     crop_area,
@@ -1597,6 +1609,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return `patchwork` or a list of `ggplot` objects
 #'
+#' @noRd
 .inject_images <- function (
     image_use,
     features,
@@ -1652,6 +1665,7 @@ MapLabels.Seurat <- function (
 #'
 #' @importFrom patchwork wrap_plots
 #'
+#' @noRd
 .arrange_plots <- function (
     wrapped_plots,
     features = NULL,
@@ -1706,6 +1720,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a character vector with column names for spot coordinates
 #'
+#' @noRd
 .get_coords_column <- function (
     image_use,
     coords_use
@@ -1729,6 +1744,7 @@ MapLabels.Seurat <- function (
 #'
 #' @return a character vector with color ids
 #'
+#' @noRd
 .gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]

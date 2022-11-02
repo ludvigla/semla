@@ -171,6 +171,7 @@ RadialDistance.default <- function (
 #' library(STUtility2)
 #' library(ggplot2)
 #' library(patchwork)
+#' library(tidyr)
 #'
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
 #' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", sel_groups = "GALT")

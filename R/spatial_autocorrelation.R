@@ -193,6 +193,9 @@ CorSpatialFeatures.default <- function (
 }
 
 
+#' @param features A character vector with features present in `Seurat` object. These
+#' features need to be accessible with \code{\link{FetchData}}
+#'
 #' @importFrom Seurat FetchData
 #'
 #' @rdname cor-features

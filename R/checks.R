@@ -7,6 +7,7 @@
 #'
 #' @return an error message if conditions are not met
 #'
+#' @noRd
 .check_seurat_object <- function (
     object
 ) {
@@ -25,6 +26,7 @@
 #'
 #' @return an error message if conditions are not met
 #'
+#' @noRd
 .check_seurat_images <- function (
     object
 ) {
