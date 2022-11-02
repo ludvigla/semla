@@ -3,6 +3,7 @@
 \name{CorSpatialFeatures}
 \alias{CorSpatialFeatures}
 \alias{CorSpatialFeatures.default}
+\alias{CorSpatialFeatures.Seurat}
 \title{Find features with high spatial autocorrelation}
 \usage{
 CorSpatialFeatures(object, ...)
@@ -10,6 +11,15 @@ CorSpatialFeatures(object, ...)
 \method{CorSpatialFeatures}{default}(
   object,
   spatnet,
+  across_all = FALSE,
+  nCores = detectCores() - 1,
+  verbose = TRUE,
+  ...
+)
+
+\method{CorSpatialFeatures}{Seurat}(
+  object,
+  features,
   across_all = FALSE,
   nCores = detectCores() - 1,
   verbose = TRUE,
@@ -31,8 +41,7 @@ networks should match the spots in the feature matrix.}
 \item{verbose}{Print messages}
 }
 \value{
-Either a list of tibbles or a tibble with feature names and correlation scores for
-each feature in the input feature matrix
+Either a list of tibbles or a tibble with feature names and correlation scores
 }
 \description{
 This function can be used to find genes with high spatial autocorrelation in SRT data.
@@ -44,7 +53,7 @@ and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
 
 If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
 across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
-a list.
+a list with one \code{tibble} per sample.
 }
 \section{Spatial autocorrelation}{
 
@@ -58,7 +67,7 @@ infiltrate or a region of the brain. Inside such structures, you might find that
 expression levels of certain genes (or other features) are highly similar and hence
 these genes have a positive spatial autocorrelation.
 
-The method provided in \code{STUtility2} is relatively simple and fast. For each feature and spot,
+The method provided in \code{STUtility2} works as follows. For each feature and spot,
 the expression is averaged across all neighboring spots (typically the 6 closest neighbors)
 to produce a lag expression vector. Since this vector represents the average of the surrounding
 spots, we can use it to test if the expression in those spots is similar to the center spot.
@@ -79,7 +88,7 @@ calculate a lag vector for each feature: \cr \cr
 \eqn{X_{lagexpr} = (N_{neighbors}*X_{expr})/n_{neighbors}} \cr \cr
 where \eqn{n_{neighbors}} is the number of neighbors for each spot.
 }
-\item{The spatial autocorrelation score for a genes is the 'pearson' correlation of the
+\item{The spatial autocorrelation score for a feature is the 'pearson' correlation of the
 lag vector and the initial expression vector: \cr \cr
 \eqn{spatcor_{feature} = cor(X_{lagexpr}[feature, ], X_{expr}[feature, ])}
 }
@@ -88,7 +97,9 @@ lag vector and the initial expression vector: \cr \cr
 
 \examples{
 \dontrun{
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain",
+                                 "se_mbrain",
+                                 package = "STUtility2"))
 featureMat <- FetchData(se_mbrain, vars = VariableFeatures(se_mbrain)[1:100])
 
 coordfile <-
@@ -108,7 +119,24 @@ xys <- xys |>
 
 # Create spatial networks
 spatnet <- GetSpatialNetwork(xys)
-spatgenes <- CorSpatialFeatures(featureMat, spatnet)
+spatgenes <- CorSpatialFeatures(featureMat, spatnet, nCores = 1)
+
+# Check genes with highest spatial autocorrelation
+head(spatgenes[[1]])
+}
+
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain",
+                                 "se_mbrain",
+                                 package = "STUtility2"))
+se_mbrain <- se_mbrain |>
+  ScaleData() |>
+  RunPCA()
+
+# Compute spatial autocorrelation for variable features
+spatgenes <- CorSpatialFeatures(se_mbrain,
+                                features = VariableFeatures(se_mbrain),
+                                nCores = 1)
 
 # Check genes with highest spatial autocorrelation
 head(spatgenes[[1]])
@@ -120,15 +148,28 @@ head(VariableFeatures(se_mbrain))
 
 # The same principle can be used to estimate spatial autocorrelation for other features,
 # for example dimensionality reduction vectors
-dimMat <- se_mbrain |>
-ScaleData() |>
-  RunPCA() |>
-  FetchData(vars = paste0("PC_", 1:10))
+spatpcs <- CorSpatialFeatures(se_mbrain,
+                             features = paste0("PC_", 1:10),
+                             nCores = 1)
 
 # Calculate spatial autocorrelation scores for principal components
-spatPCs <- CorSpatialFeatures(dimMat, spatnet)
-head(spatPCs)
-}
+head(spatpcs[[1]])
+
+# Compute spatial autocorrelation scores for multiple datasets
+se_mcolon <- readRDS(system.file("extdata/mousecolon",
+                                 "se_mcolon",
+                                 package = "STUtility2"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
+  FindVariableFeatures()
+
+spatgenes <- CorSpatialFeatures(se_merged,
+                                features = VariableFeatures(se_merged),
+                                nCores = 1)
+
+# Check spatial autocorrelation scores mouse brain data
+head(spatgenes[[1]])
+# Check spatial autocorrelation scores mouse colon data
+head(spatgenes[[2]])
 
 }
 \seealso{

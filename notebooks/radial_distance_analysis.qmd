@@ -200,6 +200,7 @@ gam_pval <- mclapply(rownames(umis), function(i){
   z <- umis[i, ]
   d <- data.frame(z = z, t = t)
   tmp <- mgcv::gam(z ~ gam::lo(t), data=d)
+  tmp <- mgcv::gam(z ~ s(t), data=d)
   p <- summary(tmp)$p.pv[2]
   return(setNames(p, nm = i))
 }, mc.cores = 7)
@@ -244,4 +245,33 @@ se_subset[[]] |>
   ggplot(aes(r_dist_0, value, color = variable)) +
     geom_smooth() +
     geom_vline(xintercept = 0, linetype = "dashed")
+```
+
+## Fit gam
+
+```{r fig.width=4, fig.height=4}
+
+#se_subset <- SubsetSTData(se, expression = sample_id %in% "S1")
+
+library(mgcv)
+
+df <- bind_cols(FetchData(se_subset, vars = VariableFeatures(se)[1:20]), 
+                GetStaffli(se_subset)@meta_data) |>
+  dplyr::rename(x = pxl_col_in_fullres, y = pxl_row_in_fullres)
+colnames(df) <- gsub(pattern = "-", replacement = "", x = colnames(df))
+
+# Fit gams
+p.vals <- sapply(setdiff(colnames(df), c("barcode", "x", "y", "sampleID")), function(ftr) {
+  fml <- formula(paste(ftr, "~ s(x, y)"))
+  mod <- gam(formula = fml, data = df, method = "REML")
+  return(summary(mod)$dev.expl)
+}) |>
+  sort(decreasing = TRUE)
+#mod <- gam(formula = CRISP3 ~ gam::lo(x, y), data = df, method = "REML")
+#gratia::draw(mod)
+#summary(mod)
+#coef(mod)
+#plot(mod, scheme = 2)
+
+se_subset$resid <- mod$residuals
 ```
