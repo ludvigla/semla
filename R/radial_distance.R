@@ -4,7 +4,6 @@
 #'
 NULL
 
-# TODO: add option to convert distances
 #' @description Calculates the radial distances to surrounding spots from a selected
 #' group of spots covering a defined regions. The region could for example
 #' represent an isolated tumor in the tissue section surrounded by stroma. First,
