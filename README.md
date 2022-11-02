@@ -19,9 +19,8 @@ compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTa
 
 ### Subset and Merge
 
-- [x] : Add working examples including image data
-- [x] : `SubsetSTData` for subsetting `Seurat` objects created with `STUtility2`
-- [x] : `MergeSTData` for merging `Seurat` objects created with `STUtility2`
+- [x] `SubsetSTData` : for subsetting `Seurat` objects created with `STUtility2`
+- [x] `MergeSTData` : for merging `Seurat` objects created with `STUtility2`
 
 ### On load
 
@@ -45,8 +44,10 @@ Can do rotations, translations and mirroring
 
 ### Image processing
 
-- [x] option to mask images? 
-- [ ] more examples to highlight flexibility
+- [x] `MaskImages` uses a simple method to identify the tissue section and mask the background implemented with 
+`magick` 
+- [x] `RigidTransformImages` takes a tibble with transformations and applies these transformations to the H&E 
+images together with the spot coordinates.
 
 ### Tissue viewer
 
@@ -76,53 +77,41 @@ Can do rotations, translations and mirroring
 gene expression, PCs, QC metrics etc.
 - [x] `MapLabels` : similar to `ST.FeaturePlot` but only works with categorical features such as
 clusters, conditions etc.
-- [ ] `FactorGeneLoadingPlot` : migrate STUtility function. Name change?
+- [ ] `FactorGeneLoadingPlot` : Not sure if needed with the singlet R package available
 - [x] `ImagePlot` : plots H&E images stored in a Seurat object
 - [x] `MapFeaturesSummary` : create spatial maps with `MapFeatures` and add a summary plot next to it
 
 ### Matrix factorization
 
-- [ ] `RunNMF` : modify STUtility function to work with RcppML
+- [x] `RunNMF` : no longer needed with the singlet R package available
 - [x] `SeededNMF` : seed matrix factorization with a priori information fro single-cell data
 - [ ] `RunMixedNMF` : under development
 
 ### Spatial autocorelation
 
-- [x] : migrate `GetSpatNet` from STUtility
-- [x] : add working example to `GetSpatNet`
-- [x] : migrate `CorSpatialGenes` from STUtility and rename it to `CorSpatialFeatures`. This is a 
+- [x] migrate `GetSpatNet` from STUtility
+- [x] migrate `CorSpatialGenes` from STUtility and rename it to `CorSpatialFeatures`. This is a 
 more general function that takes any type of feature as input, not just genes. This could for 
 example be dimensionality reduction results instead.
-- [x] : add working example to `CorSpatialFeatures`. Here I have provided an example for how to 
-calculate spatial autocorrelation of genes and for principal components.
 
 ### Spatial methods
 
-- [x] : `RadialDistance` can be used to calculate distances from the border of a selected region. 
-This can for example be useful when looking at the increase/decrease in expression as a function of 
-distance from a predefined region. Negative values points toward the center of the selected region.
-- [x] : `DisconnectComponents` can be used to disconnect spots belonging to a certain region that 
-are spatially disconnected. This can for example be useful if you want to analyze disconnected a 
-components of a particular tissue structure. 
-- [ ] : Add examples in vignettes
-
-### Neighborhood analysis
-
-- [x] : migrate `RegionNeighbours` from STUtility
-- [ ] : `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
-- [ ] : `GroupClusteringTest` : (function name??) under development. Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
+- [x] migrate `RegionNeighbours` from STUtility
+- [x] `RadialDistance` : calculates the radial distances from the borders of a region of interest
+- [x] `DisconnectRegions` : separates spatially disconnected regions 
+- [ ] `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
+- [ ] `GroupClusteringTest` : (function name??) under development. Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
 
 ### Staffli
 
-- [x] : migrate and modify STUtility S4 class object `Staffli`
+- [x] migrate and modify STUtility S4 class object `Staffli`
 
 ### STUtility2 website
 
-- [x] : _getting started_
-- [x] : _visualization_
-- [ ] : _matrix factorization_
+- [x] _getting started_
+- [x] _visualization_
+- [ ] _spatial methods_
 
 ### Advanced features
 
-- [ ] : crop data based on image rectangle
 - [ ] : switch resolution. Perhaps not necessary with the Tissue Viewer?
