@@ -75,6 +75,10 @@ GetSpatialNetwork.default <- function (
     abort(glue("Invalid class '{class(object)}'."))
   if (ncol(object) != 4)
     abort(glue("Invalid number of columns '{ncol(object)}'. Expected 4."))
+  # match column names
+  col_checks <- colnames(object) %in% c("barcode", "x", "y", "sampleID")
+  if (any(!col_checks)) abort(glue("Invalid column name(s) '{paste(colnames(object)[!col_checks], collapse = ', ')}'. ",
+                                   "Expected 'barcode', 'x', 'y' and 'sampleID'"))
   if (!all(
     object |> summarize(
       check_barcode = is.character(barcode),
