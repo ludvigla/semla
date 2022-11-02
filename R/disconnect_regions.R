@@ -80,7 +80,7 @@ DisconnectRegions.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- x <- y <- sampleID <- NULL
+  barcode <- x <- y <- sampleID <- from <- to <- NULL
 
   # Check object object class
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
@@ -123,15 +123,15 @@ DisconnectRegions.default <- function (
   # Convert spatnet to tidygraph
   tidygraphs <- do.call(bind_rows, lapply(names(spatnet), function(nm) {
     x <- spatnet[[nm]]
-    diconnected_graphs <- as_tbl_graph(x) |>
-      to_components() |>
+    diconnected_graphs <- tidygraph::as_tbl_graph(x) |>
+      tidygraph::to_components() |>
       lapply(as_tibble)
     sizes <- order(sapply(diconnected_graphs, nrow), decreasing = TRUE)
     diconnected_graphs <- diconnected_graphs[sizes]
     diconnected_graphs <- do.call(bind_rows, lapply(seq_along(diconnected_graphs), function(i) {
       diconnected_graphs[[i]] |>
         select(-contains("id")) |>
-        bind_cols(id = paste0("S", nm, "-region", i))
+        bind_cols(id = paste0("S", nm, "_region", i))
     }))
     return(diconnected_graphs)
   }))
@@ -161,6 +161,7 @@ DisconnectRegions.default <- function (
 #' @importFrom rlang inform abort
 #' @importFrom glue glue
 #' @importFrom cli cli_h2
+#' @importFrom tibble column_to_rownames
 #'
 #' @rdname disconnect-regions
 #'
@@ -211,6 +212,9 @@ DisconnectRegions.Seurat <- function (
   verbose = TRUE,
   ...
 ) {
+
+  # Set global variables to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
 
   # validate input
   .check_seurat_object(object)
