@@ -73,6 +73,7 @@ The required columns are:
 
 library(STUtility2)
 library(tibble)
+library(dplyr)
 
 transforms <- generate_rigid_transform(mirror_x = TRUE, angle = 30, tr_x = 0.2, tr_y = -0.2)
 

@@ -35,10 +35,20 @@ LoadImages.default <- function (
 
   if (verbose) cli::cli_h2("Load H&E images")
 
-  # Check files
+  # Check input
   if (!is.character(object)) abort("Invalid class '{class(object)}', expected a 'character' vector.")
+
+  # Include images from example data if object is either "mousebrain" or "mousecolon"
+  for (i in seq_along(object)) {
+    if (object[i] %in% c("mousebrain", "mousecolon")) {
+      object[i] <- .load_ext_images(object[i])
+    }
+  }
+
+  # Check files
   for (f in object) {
-    if (!file_ext(f) %in% c("png", "jpg", "jpeg")) abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
+    if (!file_ext(f) %in% c("png", "jpg", "jpeg"))
+      abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
     if (!file.exists(f)) abort(glue("File {f} doesn't exist."))
   }
 
@@ -49,9 +59,15 @@ LoadImages.default <- function (
       image_read()
     info <- im |>
       image_info()
-    rst <- im |>
+    if ((!inherits(image_height, what = "numeric")) | (length(image_height) != 1))
+      abort("image_height should be a numeric of length 1")
+    if (info$height <= image_height) {
+      abort(glue("image_height has to be smaller than {info$height}px"))
+    }
+    im <- im |>
       image_scale(geometry = geometry_area(height = image_height)) |>
       as.raster()
+    rst <- im |> as.raster()
 
     if (verbose) inform(c("v" = glue("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")))
     return(rst)
@@ -99,8 +115,32 @@ LoadImages.Seurat <- function (
   st_object@rasterlists$raw <- raw_rasters
   st_object@image_height <- image_height
 
+  # Set new images if running examples
+  for (i in seq_along(st_object@imgs)) {
+    if (st_object@imgs[i] %in% c("mousebrain", "mousecolon")) {
+      st_object@imgs[i] <- .load_ext_images(st_object@imgs[i])
+    }
+  }
+
   # Place Staffli object in Seurat object
   object@tools$Staffli <- st_object
 
   return(object)
+}
+
+
+#' Utility function for setting images in package Seurat objects
+#'
+#' @param dataset One of "mousebrain" or "mousecolon"
+#'
+#' @return Path to "tissue_hires_image.png"
+#'
+#' @noRd
+.load_ext_images <- function (
+  dataset = "mousebrain"
+) {
+  hiresresimagefile <- system.file(paste0("extdata/", dataset, "/spatial"),
+                                   "tissue_hires_image.png",
+                                   package = "STUtility2")
+  return(hiresresimagefile)
 }

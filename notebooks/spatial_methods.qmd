@@ -33,7 +33,7 @@ infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("S1", "S2"))
 se <- ReadVisiumData(infoTable = infoTable[1, ])
 ```
 
-## Data 
+## Data
 
 Next, we'll use `Seurat` to run a simple data processing/analysis workflow:
 

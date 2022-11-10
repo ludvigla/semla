@@ -53,6 +53,7 @@ Collate:
     'generics.R'
     'disconnect_regions.R'
     'extdata.R'
+    'icp.R'
     'load_data.R'
     'load_images.R'
     'mask.R'

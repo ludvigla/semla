@@ -29,7 +29,7 @@ Staffli <- setClass (
     imgs = 'ANY',
     rasterlists = 'list',
     meta_data = 'tbl',
-    image_height = 'numeric',
+    image_height = 'ANY',
     image_info = 'ANY',
     scalefactors = 'ANY',
     pixels_per_um = 'numeric',
