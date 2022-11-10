@@ -1,4 +1,5 @@
 #' @include checks.R
+#' @include generics.R
 #'
 NULL
 
