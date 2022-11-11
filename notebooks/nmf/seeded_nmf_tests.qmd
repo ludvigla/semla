@@ -1,0 +1,202 @@
+---
+title: "NMF techniques"
+format: html
+editor: visual
+---
+
+```{r}
+library(STUtility2)
+library(tibble)
+library(dplyr)
+library(RcppML)
+```
+
+Load Visium data
+
+```{r}
+# Assemble spaceranger output files
+samples <- list.files(path = "/Volumes/Ludvig_backup/2022/10x_Visium_data/Standard_Visium", 
+                      pattern = "filtered_feature_bc_matrix.h5", recursive = TRUE, 
+                      full.names = TRUE)
+imgs <- list.files(path = "/Volumes/Ludvig_backup/2022/10x_Visium_data/Standard_Visium", 
+                   pattern = "tissue_hires_image.png", recursive = TRUE, 
+                   full.names = TRUE)
+spotfiles <- list.files(path = "/Volumes/Ludvig_backup/2022/10x_Visium_data/Standard_Visium", 
+                        pattern = "tissue_positions_list.csv", recursive = TRUE, 
+                        full.names = TRUE)
+json <- list.files(path = "/Volumes/Ludvig_backup/2022/10x_Visium_data/Standard_Visium", 
+                   pattern = "scalefactors_json.json", recursive = TRUE, 
+                   full.names = TRUE)
+infoTable <- tibble(samples, imgs, spotfiles, json, section_id = paste0("section_", 1:4))
+
+# Create Seurat object with 1 Sagittal Anterior section and 1 Sagittal Posterior section
+se_brain <- ReadVisiumData(infoTable[1:2, ])
+```
+
+Load single-cell data
+
+```{r}
+se_sc <- readRDS("~/Downloads/allen_cortex.rds")
+```
+
+Normalize data
+
+```{r}
+se_brain <- se_brain |>
+  NormalizeData() |>
+  FindVariableFeatures(nfeatures = 10000)
+
+se_sc <- se_sc |>
+  NormalizeData() |>
+  FindVariableFeatures(nfeatures = 10000)
+```
+
+Prep data
+
+```{r}
+source("~/STUtility/R_tmp/SeededNMF.R")
+
+# Prepare data
+data.list <- .prep_data(sc_object = se_sc, 
+                        st_object = se_brain, 
+                        sc_assay = "RNA", 
+                        st_assay = "Spatial", 
+                        features = NULL,
+                        groups = "subclass",
+                        slot = "data", 
+                        nCells_per_group = 50, 
+                        verbose = TRUE, 
+                        seed = 1337)
+x <- data.list$x
+xst <- data.list$xst
+k <- data.list$k
+barcodes <- data.list$barcodes
+new_groups <- data.list$new_groups
+```
+
+## Run NMF with seed
+
+Calculate enrichment score
+
+```{r}
+x_small <- x[, barcodes]
+
+# Calculate means
+row_means <- do.call(cbind, lapply(unique(new_groups), function(grp) {
+  x1 <- rowMeans(x_small[, new_groups == grp])
+}))
+colnames(row_means) <- unique(new_groups)
+
+# Calculate enrichment scores
+W <- do.call(bind_cols, lapply(colnames(row_means), function(grp) {
+  x1 <- row_means[, grp]
+  x2 <- row_means[, -which(colnames(row_means) == grp)]
+  x2 <- rowMeans(x2) + 1
+  y <- tibble(x1/x2) |> setNames(nm = grp)
+  return(y)
+})) |>
+  bind_cols(gene = rownames(x_small)) |>
+    relocate(gene)  
+
+```
+
+```{r}
+seeded_H <- RcppML::project(w = as.matrix(W[, 2:ncol(W)]), data = xst)
+```
+
+Create dimreduc object
+
+```{r}
+snmf_dimreduc <- CreateDimReducObject(embeddings = t(seeded_H), 
+                                     loadings = as.matrix(W[, 2:ncol(W)]), 
+                                     key = "SNMF_", 
+                                     assay = "Spatial")
+
+# Add nmf to Visium Seurat object
+se_brain[["snmf"]] <- snmf_dimreduc
+```
+
+```{r}
+MapFeatures(se_brain, features = "SNMF_5")
+```
+
+## Run mixed NMF
+
+Add additional vectors to W
+
+```{r}
+
+# Add extra dummy variables
+W_add <- do.call(bind_cols, lapply(1:10, function(i) {
+  r_unif(n = nrow(W))
+})) |>
+  as.matrix() |>
+  prop.table(margin = 2)
+colnames(W_add) <- paste0("cell_", 1:10)
+
+W_ext <- bind_cols(W, W_add)
+```
+
+```{r}
+mixed_nmf <- RcppML::nmf(data = xst, 
+                         k = 23 + 10, sort_model = FALSE, 
+                         seed = prop.table(as.matrix(W_ext[, 2:ncol(W_ext)]), margin = 2))
+```
+
+Find shared factors
+
+```{r}
+H_final <- prop.table(mixed_nmf@h, margin = 2)
+H_final[1:nrow(seeded_H), ] <- prop.table(seeded_H, margin = 2)
+H_final <- prop.table(H_final, margin = 2)
+W_final <- RcppML::project(w = t(H_final), data = t(xst))
+msnmf_dimreduc <- CreateDimReducObject(embeddings = t(prop.table(H_final, 2)), 
+                                     loadings = t(W_final),
+                                     #as.matrix(W_ext[, 2:ncol(W_ext)]), 
+                                     key = "MSNMF_", 
+                                     assay = "Spatial")
+
+# Add nmf to Visium Seurat object
+se_brain[["msnmf"]] <- msnmf_dimreduc
+```
+
+```{r fig.width=6, fig.height=5}
+N <- c(25, 33)
+MapFeatures(se_brain, features = paste0("MSNMF_", N))
+```
+
+Check loadings
+
+```{r fig.width=3, fig.height=5}
+library(dplyr)
+library(tidyr)
+sel_genes <- W_final |>
+  t() |>
+  as.data.frame() |>
+  rownames_to_column(var = "gene") |>
+  as_tibble() |>
+  pivot_longer(where(is.numeric), names_to = "variable", values_to = "value") |>
+  mutate(variable = factor(variable, levels = paste0("nmf", 1:33))) |>
+  group_by(variable) |>
+  arrange(-value) |>
+  slice_head(n = 20)
+
+gg <- apply(W_final[, unique(sel_genes$gene)], 1, scales::rescale)
+
+cols <- viridis::viridis(n = 50, direction = 1)
+pheatmap::pheatmap(gg, cluster_rows = F, cluster_cols = F, border_color = NA, 
+                   breaks = seq(0, 1, length.out = 51), color = cols)
+```
+
+```{r}
+MapFeatures(se_brain, features = "Penk")
+```
+
+```{r fig.height=3, fig.width=3}
+corMat <- cor(t(W_final))
+diag(corMat) <- NA
+pheatmap::pheatmap(corMat, border_color = NA)
+
+# Find pairs
+apply(corMat, 1, which.max)
+```
