@@ -8,16 +8,45 @@
 \usage{
 RadialDistance(object, ...)
 
-\method{RadialDistance}{default}(object, spots, verbose = TRUE, ...)
+\method{RadialDistance}{default}(
+  object,
+  spots,
+  angles = NULL,
+  angles_length_out = NULL,
+  verbose = TRUE,
+  ...
+)
 
-\method{RadialDistance}{Seurat}(object, column_name, sel_groups = NULL, verbose = TRUE, ...)
+\method{RadialDistance}{Seurat}(
+  object,
+  column_name,
+  sel_groups = NULL,
+  angles = NULL,
+  angles_length_out = NULL,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
 
-\item{spots}{A character vector with spot IDs present `object`}
+\item{spots}{A character vector with spot IDs present `object`. These spots typically
+represent one particular tissue structure identified either by data-driven clustering
+or by the tissue histology.}
+
+\item{angles}{A numeric vector of length 2 specifying a "search interval" of angles
+to compute the radial distances for. Values between 0 and 360 are accepted where
+`angles[1] < angles[2]`. The angles are defined in a clockwise manner, where right=0,
+down=90, left=180 and up=270. The angles are calculated relative to the region
+center and can therefore only be used when a single connected region is present. If
+there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
+to split the spatially disconnected regions first.}
+
+\item{angles_length_out}{An integer specifying a number of intervals to cut the "search interval"
+into. This can be useful if you want to group radial distances into different directions from
+the region center.}
 
 \item{verbose}{Print messages}
 
@@ -32,16 +61,60 @@ A numeric vector with radial distances. If the input object is of class
 `Seurat`, the radial distances will be returned in the meta data slot.
 }
 \description{
-Calculates the radial distances to surrounding spots from a selected
-group of spots covering a defined regions. The region could for example
-represent an isolated tumor in the tissue section surrounded by stroma. First,
-the border of the selected region is defined and for each spot outside
-of this border, the distance is calculated to its nearest border spot.
+Calculates the radial distances to all spots from the borders of
+a selected defined region.
+}
+\section{scenario}{
+
+The region of interest could for example be an isolated tumor in the tissue
+section surrounded by stroma. If we are interested in expressional changes
+from the tumor core and outwards, we can use radial distances to model such
+changes. Below are a few examples for how radial distances can be used to in
+address certain question in this scenario:
+
+\itemize{
+   \item{Identify genes that vary inside the tumor, e.g. tumor edge vs tumor core.}
+   \item{Identify cell types located at the tumor edge}
+   \item{Characterize the surrounding tumor microenvironment just outside the tumor edge}
+   \item{Identify cell types whose abundances change with distance to tumor}
+}
+}
+
+\section{algorithm}{
+
+First, the border spots of the selected region is identified based on the
+spatial network of nearest neighbors identified with \code{\link{GetSpatialNetwork}}.
+For each spot outside of this border, the distance is calculated to its nearest border spot.
 Spots located inside the selected region will have negative distances and
 spots located outside of the selected region will have positive distances.
-Having access to the radial distances can be useful when inspecting changes
-in gene expression as a function of distance to a region of interest.
 }
+
+\section{directions}{
+
+The microenvironment of the region of interest might be extremely heterogeneous
+depending on the direction from its center. For this reason, it can be useful to narrow
+down the search area by defining a smaller angle interval with `angles`. Alternativley,
+you can split the radial distances into an even number of slices with `angles_length_out`.
+}
+
+\section{default method}{
+
+`object` should be a tibble with four columns:
+
+\itemize{
+ \item{'barcode' : character vector with spot IDs}
+ \item{'x', 'y' : numeric vectors with pixel coordinates}
+ \item{'sampleID' : numeric vector with sample IDs}
+}
+
+If `angles` and/or `angles_length_out` are set, the function will return a
+tibble with spot IDS, sampleIDs, the angle between the region center and
+spots and the radial distances. If  `angles_length_out` is provided, a
+fifth column will be provided that groups spots into even intervals based on angles.
+Otherwise, the default is to return numeric vector with radial distances
+for all spots in `object`.
+}
+
 \examples{
 
 \dontrun{
@@ -75,9 +148,7 @@ gg <- bind_cols(coords, r_dist =  radial_distances) |>
   left_join(y = galt_spots, by = "barcode")
 
 # Convert to sqrt scale
-gg <- gg |>
-  mutate(r_dist_sqrt = case_when(r_dist < 0 ~ -sqrt(abs(r_dist)),
-                                 r_dist >= 0 ~ sqrt(r_dist)))
+gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
 
 # Make plot
 p1 <- ggplot(gg, aes(x, y, color = r_dist_sqrt)) +
@@ -92,6 +163,61 @@ p2 <- ggplot(gg, aes(x, y, color = selection)) +
 wrap_plots(p2, p1, ncol = 2) &
   coord_fixed() &
   theme_void()
+
+# \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+# Calculate radial distances for fixed angle interval
+# \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+# NB: This should only be run on a single region! In
+# this example, the disconnected regions have to be split first
+disconnected_regions <- DisconnectRegions(coords, spots)
+spots_keep <- names(disconnected_regions[disconnected_regions == "S1_region1"])
+
+# Calculate radial distances between 200-300 degrees
+radial_distances <- RadialDistance(coords, spots_keep, angles = c(200, 300))
+gg <- coords |>
+  select(-sampleID) |>
+  left_join(y = radial_distances, by = "barcode")
+gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
+
+# Plot radial distances
+ggplot(gg, aes(x, y, color = r_dist_sqrt)) +
+  geom_point() +
+  scale_y_reverse() +
+  coord_fixed() +
+  theme_void() +
+  scale_color_gradientn(colours = viridis::magma(n = 9))
+
+# \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+# Calculate radial distances for multiple angle intervals
+# \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+# NB: This should only be run on a single region! In
+# this example, the disconnected regions have to be split first
+disconnected_regions <- DisconnectRegions(coords, spots)
+spots_keep <- names(disconnected_regions[disconnected_regions == "S1_region1"])
+
+# Calculate radial distances between 0-360 degrees and split
+# these into 8 slices
+radial_distances <- RadialDistance(coords, spots_keep,
+                                   angles = c(0, 360), angles_length_out = 8)
+gg <- coords |>
+  select(-sampleID) |>
+  left_join(y = radial_distances, by = "barcode")
+gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
+
+# Color slices
+p1 <- ggplot(gg, aes(x, y, color = intervals)) +
+  geom_point() +
+  scale_y_reverse() +
+  coord_fixed() +
+  theme_void() +
+  scale_color_manual(values = RColorBrewer::brewer.pal(n = 8, name = "Spectral"))
+
+# Plot distances
+p2 <- ggplot(gg, aes(intervals, r_dist)) +
+  geom_jitter()
+
+# Now we can group our radial distances by slice
+p1 + p2
 }
 
 
@@ -127,7 +253,7 @@ p1/p2
 
 # It can also be useful to apply transformations to the distances
 se_mcolon$r_dist_GALT_sqrt <- sign(se_mcolon$r_dist_GALT)*sqrt(abs(se_mcolon$r_dist_GALT))
-MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 3,
+MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 2,
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
 
 }

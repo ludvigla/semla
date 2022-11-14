@@ -64,10 +64,10 @@ Now that we have identified clusters in our data based on the spot expression pr
 ```{r}
 se <- LoadImages(se)
 MapLabels(se, column_name = "seurat_clusters", override_plot_dims = TRUE, 
-          image_use = "raw", pt_alpha = 0.6) +
+          image_use = "raw", pt_alpha = 0.6, pt_size = 1.2) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right") &
-  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2)
+  guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2))
 ```
 
 ### Under development
@@ -78,7 +78,7 @@ plots <- MapLabels(se, column_name = "seurat_clusters", return_plot_list = TRUE)
 
 Identify center point for cluster 9 in S1
 
-```{r fig.width=6, fig.height=4.5}
+```{r fig.width=3, fig.height=2.5}
 library(dplyr)
 # Select all spot for S1 and remove redundant columns
 all_spots <- se[[]] |>
@@ -128,13 +128,13 @@ dist_angle |>
   scale_color_manual(values = colors)
 ```
 
-```{r fig.width=8, fig.height=5}
+```{r fig.width=4, fig.height=2.5}
 MapFeatures(se, features = "PC_1", override_plot_dims = TRUE, pt_size = 1.5)
 ```
 
 Visualize expression along each slice:
 
-```{r fig.width=8, fig.height=8}
+```{r fig.width=4, fig.height=4}
 feature <- "PC_1"
 gg <- FetchData(se, vars = feature) |>
   tibble() |>
@@ -147,17 +147,17 @@ gg |>
   ggplot(aes(distance, !! sym(feature), color = angle_breaks_center, 
              groups = angle_breaks)) +
   geom_point() +
-  geom_smooth(se = FALSE) +
+  geom_smooth(method = "gam", se = FALSE) +
   facet_wrap(~angle_breaks, ncol = 2) +
   scale_color_manual(values = colors) +
   theme_minimal()
 ```
 
-```{r fig.width=8, fig.height=5}
+```{r fig.width=4, fig.height=2.5}
 MapFeatures(se, features = "PC_5", override_plot_dims = TRUE, pt_size = 1.5)
 ```
 
-```{r fig.width=8, fig.height=4}
+```{r fig.width=5, fig.height=4}
 feature <- "PC_5"
 gg <- FetchData(se, vars = feature) |>
   tibble() |>
@@ -169,42 +169,43 @@ gg <- FetchData(se, vars = feature) |>
 gg |> 
   ggplot(aes(distance, !! sym(feature), color = angle_breaks_center, 
              groups = angle_breaks)) +
+  geom_point() +
   geom_smooth(size = 2, se = FALSE) +
   #facet_wrap(~angle_breaks, ncol = 2) +
   scale_color_manual(values = colors) +
   theme_minimal()
 ```
 
-```{r fig.width=8, fig.height=5}
+```{r fig.width=4, fig.height=3}
 MapFeatures(se, features = "KRT17", override_plot_dims = TRUE, pt_size = 1.5)
 ```
 
 ## Radial distance
 
-```{r fig.height=6, fig.width=8}
-se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = c("0"))
+```{r fig.height=4, fig.width=5}
+se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = c("3"))
 
-se$r_dist_0_log <- ifelse(se$r_dist_0 < 0, -sqrt(-se$r_dist_0), sqrt(se$r_dist_0))
-MapFeatures(se, features = "r_dist_0_log", pt_size = 2.5, override_plot_dims = TRUE,
+se$r_dist_3_log <- ifelse(se$r_dist_3 < 0, -sqrt(-se$r_dist_3), sqrt(se$r_dist_3))
+MapFeatures(se, features = "r_dist_3_log", pt_size = 2.5, override_plot_dims = TRUE,
             colors = scico::scico(n = 11, palette = "berlin"))
 ```
 
 Fit model
 
-```{r fig.width=6, fig.height=12}
+```{r fig.width=6, fig.height=6}
 
-dist_thr <- 1e3
+dist_thr <- 0#1e3
 
-umis <- GetAssayData(se, slot = "data", assay = "Spatial")[VariableFeatures(se)[1:1000], ]
-umis <- umis[, se$r_dist_0 < dist_thr]
+umis <- GetAssayData(se, slot = "data", assay = "Spatial")[VariableFeatures(se)[1:500], ]
+umis <- umis[, se$r_dist_3 < dist_thr]
 
 library(parallel)
-t <- se$r_dist_0[se$r_dist_0 < dist_thr]
+t <- se$r_dist_3[se$r_dist_3 < dist_thr]
 gam_pval <- mclapply(rownames(umis), function(i){
   z <- umis[i, ]
   d <- data.frame(z = z, t = t)
   tmp <- mgcv::gam(z ~ gam::lo(t), data=d)
-  tmp <- mgcv::gam(z ~ s(t), data=d)
+  #tmp <- mgcv::gam(z ~ s(t), data=d)
   p <- summary(tmp)$p.pv[2]
   return(setNames(p, nm = i))
 }, mc.cores = 7)
@@ -213,10 +214,10 @@ gam_pval <- p.adjust(gam_pval, method = "BH")
 gam_pval <- sort(gam_pval, decreasing = FALSE)
 
 # Filter genes
-sel_genes <- names(head(gam_pval, n = 100))
+sel_genes <- names(head(gam_pval, n = 40))
 
 # Get scale data
-scale_data <- GetAssayData(se, slot = "scale.data", assay = "Spatial")[sel_genes, se$r_dist_0 < dist_thr]
+scale_data <- GetAssayData(se, slot = "scale.data", assay = "Spatial")[sel_genes, se$r_dist_3 < dist_thr]
 scale_data <- scale_data[, order(t, decreasing = FALSE)]
 
 # Bin data
@@ -234,7 +235,7 @@ pheatmap::pheatmap(binMat, cluster_cols = FALSE, border_color = FALSE,
 
 ```{r}
 # Subset Seurat object
-se_subset <- SubsetSTData(se, expression = r_dist_0 < 2e3)
+se_subset <- SubsetSTData(se, expression = r_dist_3 < 2e3)
 
 sel_genes <- c("TFF1", "TFF3", "CEACAM6", "LAGE3", "C1QA", "C1QB", 
                "HLA-DRA", "APOC1", "MZB1", "IGLC2")
@@ -242,40 +243,13 @@ sel_genes <- c("TFF1", "TFF3", "CEACAM6", "LAGE3", "C1QA", "C1QB",
 se_subset[[]] |>
   bind_cols(FetchData(se_subset, vars = sel_genes)) |>
   pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |>
-  select(r_dist_0, variable, value) |>
-  filter(r_dist_0 > -2e3) |>
+  select(r_dist_3, variable, value) |>
+  filter(r_dist_3 > -2e3) |>
   group_by(variable) |>
   mutate(value = value - mean(value)) |>
-  ggplot(aes(r_dist_0, value, color = variable)) +
+  ggplot(aes(r_dist_3, value, color = variable)) +
     geom_smooth() +
     geom_vline(xintercept = 0, linetype = "dashed")
 ```
 
-## Fit gam
-
-```{r fig.width=4, fig.height=4}
-
-#se_subset <- SubsetSTData(se, expression = sample_id %in% "S1")
-
-library(mgcv)
-
-df <- bind_cols(FetchData(se_subset, vars = VariableFeatures(se)[1:20]), 
-                GetStaffli(se_subset)@meta_data) |>
-  dplyr::rename(x = pxl_col_in_fullres, y = pxl_row_in_fullres)
-colnames(df) <- gsub(pattern = "-", replacement = "", x = colnames(df))
-
-# Fit gams
-p.vals <- sapply(setdiff(colnames(df), c("barcode", "x", "y", "sampleID")), function(ftr) {
-  fml <- formula(paste(ftr, "~ s(x, y)"))
-  mod <- gam(formula = fml, data = df, method = "REML")
-  return(summary(mod)$dev.expl)
-}) |>
-  sort(decreasing = TRUE)
-#mod <- gam(formula = CRISP3 ~ gam::lo(x, y), data = df, method = "REML")
-#gratia::draw(mod)
-#summary(mod)
-#coef(mod)
-#plot(mod, scheme = 2)
-
-se_subset$resid <- mod$residuals
-```
+## 

@@ -179,3 +179,24 @@ RadialDistance <- function(object, ...) {
 DisconnectRegions <- function(object, ...) {
   UseMethod(generic = "DisconnectRegions", object = object)
 }
+
+
+#' Manually apply rigid transformations to images
+#'
+#' Opens an interactive viewer where images are interactive objects
+#' that can be rotated, moved, scaled and mirrored. It is often difficult
+#' to automate image registration for H&E images, in particular if tissue
+#' sections are damaged, distorted or folded. In such situations, manual
+#' registration can be very useful.
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family image transformations
+#' @rdname manual-transform-images
+#'
+#' @export
+#'
+RunAlignment <- function(object, ...) {
+  UseMethod(generic = 'RunAlignment', object = object)
+}

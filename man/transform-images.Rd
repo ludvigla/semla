@@ -156,6 +156,7 @@ MapFeatures(se_merged, features = "Th", image_use = "transformed")
 }
 \seealso{
 Other image transformations: 
-\code{\link{MaskImages}()}
+\code{\link{MaskImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{image transformations}

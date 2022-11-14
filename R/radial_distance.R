@@ -1,32 +1,81 @@
 #' @include generics.R
 #' @include checks.R
 #' @include spatial_utils.R
+#' @include disconnect_regions.R
 #'
 NULL
 
-#' @description Calculates the radial distances to surrounding spots from a selected
-#' group of spots covering a defined regions. The region could for example
-#' represent an isolated tumor in the tissue section surrounded by stroma. First,
-#' the border of the selected region is defined and for each spot outside
-#' of this border, the distance is calculated to its nearest border spot.
+#' @description Calculates the radial distances to all spots from the borders of
+#' a selected defined region.
+#'
+#' @section scenario:
+#' The region of interest could for example be an isolated tumor in the tissue
+#' section surrounded by stroma. If we are interested in expressional changes
+#' from the tumor core and outwards, we can use radial distances to model such
+#' changes. Below are a few examples for how radial distances can be used to in
+#' address certain question in this scenario:
+#'
+#' \itemize{
+#'    \item{Identify genes that vary inside the tumor, e.g. tumor edge vs tumor core.}
+#'    \item{Identify cell types located at the tumor edge}
+#'    \item{Characterize the surrounding tumor microenvironment just outside the tumor edge}
+#'    \item{Identify cell types whose abundances change with distance to tumor}
+#' }
+#'
+#' @section algorithm:
+#' First, the border spots of the selected region is identified based on the
+#' spatial network of nearest neighbors identified with \code{\link{GetSpatialNetwork}}.
+#' For each spot outside of this border, the distance is calculated to its nearest border spot.
 #' Spots located inside the selected region will have negative distances and
 #' spots located outside of the selected region will have positive distances.
-#' Having access to the radial distances can be useful when inspecting changes
-#' in gene expression as a function of distance to a region of interest.
 #'
-#' @param spots A character vector with spot IDs present `object`
+#' @section directions:
+#' The microenvironment of the region of interest might be extremely heterogeneous
+#' depending on the direction from its center. For this reason, it can be useful to narrow
+#' down the search area by defining a smaller angle interval with `angles`. Alternativley,
+#' you can split the radial distances into an even number of slices with `angles_length_out`.
+#'
+#' @section default method:
+#' `object` should be a tibble with four columns:
+#'
+#' \itemize{
+#'  \item{'barcode' : character vector with spot IDs}
+#'  \item{'x', 'y' : numeric vectors with pixel coordinates}
+#'  \item{'sampleID' : numeric vector with sample IDs}
+#' }
+#'
+#' If `angles` and/or `angles_length_out` are set, the function will return a
+#' tibble with spot IDS, sampleIDs, the angle between the region center and
+#' spots and the radial distances. If  `angles_length_out` is provided, a
+#' fifth column will be provided that groups spots into even intervals based on angles.
+#' Otherwise, the default is to return numeric vector with radial distances
+#' for all spots in `object`.
+#'
+#' @param spots A character vector with spot IDs present `object`. These spots typically
+#' represent one particular tissue structure identified either by data-driven clustering
+#' or by the tissue histology.
+#' @param angles A numeric vector of length 2 specifying a "search interval" of angles
+#' to compute the radial distances for. Values between 0 and 360 are accepted where
+#' `angles[1] < angles[2]`. The angles are defined in a clockwise manner, where right=0,
+#' down=90, left=180 and up=270. The angles are calculated relative to the region
+#' center and can therefore only be used when a single connected region is present. If
+#' there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
+#' to split the spatially disconnected regions first.
+#' @param angles_length_out An integer specifying a number of intervals to cut the "search interval"
+#' into. This can be useful if you want to group radial distances into different directions from
+#' the region center.
 #'
 #' @import dplyr
-#' @importFrom rlang abort inform
+#' @importFrom rlang abort inform warn
 #' @importFrom cli cli_h3
 #' @importFrom glue glue
 #' @importFrom dbscan kNN
+#' @importFrom zeallot %<-%
 #'
 #' @rdname radial-distance
 #'
 #' @return A numeric vector with radial distances. If the input object is of class
 #' `Seurat`, the radial distances will be returned in the meta data slot.
-#'
 #'
 #' @examples
 #'
@@ -61,9 +110,7 @@ NULL
 #'   left_join(y = galt_spots, by = "barcode")
 #'
 #' # Convert to sqrt scale
-#' gg <- gg |>
-#'   mutate(r_dist_sqrt = case_when(r_dist < 0 ~ -sqrt(abs(r_dist)),
-#'                                  r_dist >= 0 ~ sqrt(r_dist)))
+#' gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
 #'
 #' # Make plot
 #' p1 <- ggplot(gg, aes(x, y, color = r_dist_sqrt)) +
@@ -78,6 +125,61 @@ NULL
 #' wrap_plots(p2, p1, ncol = 2) &
 #'   coord_fixed() &
 #'   theme_void()
+#'
+#' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' # Calculate radial distances for fixed angle interval
+#' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' # NB: This should only be run on a single region! In
+#' # this example, the disconnected regions have to be split first
+#' disconnected_regions <- DisconnectRegions(coords, spots)
+#' spots_keep <- names(disconnected_regions[disconnected_regions == "S1_region1"])
+#'
+#' # Calculate radial distances between 200-300 degrees
+#' radial_distances <- RadialDistance(coords, spots_keep, angles = c(200, 300))
+#' gg <- coords |>
+#'   select(-sampleID) |>
+#'   left_join(y = radial_distances, by = "barcode")
+#' gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
+#'
+#' # Plot radial distances
+#' ggplot(gg, aes(x, y, color = r_dist_sqrt)) +
+#'   geom_point() +
+#'   scale_y_reverse() +
+#'   coord_fixed() +
+#'   theme_void() +
+#'   scale_color_gradientn(colours = viridis::magma(n = 9))
+#'
+#' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' # Calculate radial distances for multiple angle intervals
+#' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' # NB: This should only be run on a single region! In
+#' # this example, the disconnected regions have to be split first
+#' disconnected_regions <- DisconnectRegions(coords, spots)
+#' spots_keep <- names(disconnected_regions[disconnected_regions == "S1_region1"])
+#'
+#' # Calculate radial distances between 0-360 degrees and split
+#' # these into 8 slices
+#' radial_distances <- RadialDistance(coords, spots_keep,
+#'                                    angles = c(0, 360), angles_length_out = 8)
+#' gg <- coords |>
+#'   select(-sampleID) |>
+#'   left_join(y = radial_distances, by = "barcode")
+#' gg$r_dist_sqrt <- sign(gg$r_dist)*sqrt(abs(gg$r_dist))
+#'
+#' # Color slices
+#' p1 <- ggplot(gg, aes(x, y, color = intervals)) +
+#'   geom_point() +
+#'   scale_y_reverse() +
+#'   coord_fixed() +
+#'   theme_void() +
+#'   scale_color_manual(values = RColorBrewer::brewer.pal(n = 8, name = "Spectral"))
+#'
+#' # Plot distances
+#' p2 <- ggplot(gg, aes(intervals, r_dist)) +
+#'   geom_jitter()
+#'
+#' # Now we can group our radial distances by slice
+#' p1 + p2
 #' }
 #'
 #' @export
@@ -85,6 +187,8 @@ NULL
 RadialDistance.default <- function (
   object,
   spots,
+  angles = NULL,
+  angles_length_out = NULL,
   verbose = TRUE,
   ...
 ) {
@@ -92,11 +196,13 @@ RadialDistance.default <- function (
   # Set global variables to NULL
   barcode <- x <- y <- sampleID <- NULL
 
-  # Check object object class
+  # Check object class
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
     abort(glue("Invalid class '{class(object)}'."))
   if (ncol(object) != 4)
     abort(glue("Invalid number of columns '{ncol(object)}'. Expected 4."))
+  if (!all(colnames(object) == c("barcode", "x", "y", "sampleID")))
+    abort("Required columns are: 'barcode', 'x', 'y', and 'sampleID'")
   if (!all(
     object |> summarize(
       check_barcode = is.character(barcode),
@@ -116,10 +222,16 @@ RadialDistance.default <- function (
     all(spots %in% object$barcode)
   )
 
+  # Get spatial network
+  spatnet <- GetSpatialNetwork(object)
+  spatnet_region <- lapply(spatnet, function(x) {
+    x |>
+      filter(from %in% spots, to %in% spots)
+  })
+
   if (verbose) inform(c("i" = glue("Extracting border spots from a region with {length(spots)} spots")))
 
   # Find border
-  spatnet <- GetSpatialNetwork(object)
   border_spots <- RegionNeighbors(spatnet, spots = spots, outer_border = FALSE)
   inside_spots <- setdiff(spots, border_spots)
 
@@ -147,6 +259,42 @@ RadialDistance.default <- function (
   radial_dists_inside <- setNames(knn_spatial_inside$dist[, 1, drop = TRUE], nm = object$barcode[inside_spots_indices])
   radial_dists[names(radial_dists_outside)] <- radial_dists_outside
   radial_dists[names(radial_dists_inside)] <- -radial_dists_inside
+
+  # Split radial distances by angle if angles are specified
+  if (!is.null(angles_length_out)) {
+    stopifnot(is.numeric(angles_length_out),
+              length(angles_length_out) == 1)
+    angles <- angles %||% c(0, 360)
+  }
+  if (!is.null(angles)) {
+    # Check angles
+    c(angles, centroids) %<-% .check_angles(spatnet_region, object, spots, angles, angles_length_out, verbose)
+    # Calculate angles from center point
+    dist_angle <- object |>
+      group_by(sampleID) |>
+      group_split() |>
+      setNames(nm = names(spatnet))
+    dist_angle <- do.call(bind_rows, lapply(names(dist_angle), function(nm) {
+      dist_angle[[nm]] |>
+        mutate(diff_x = x - centroids[[nm]][1],
+             diff_y = y -  centroids[[nm]][2]) |>
+        mutate(angle = atan2(diff_y, diff_x)*(180/pi)) |>
+        mutate(angle = case_when(angle <= 0 ~ angle + 360, TRUE ~ angle)) |>
+        select(-diff_x, -diff_y) |>
+        filter(between(x = angle, left = angles[1], right = angles[2]))
+    }))
+    # Split data if angled_length_out is set
+    if (!is.null(angles_length_out)) {
+      dist_angle <- dist_angle |>
+        mutate(intervals = cut(angle, breaks = seq(angles[1], angles[2], length.out = angles_length_out + 1))) |>
+        arrange(intervals) |>
+        mutate(intervals = factor(intervals, levels = unique(intervals)))
+      dist_angle$r_dist <- radial_dists[dist_angle$barcode]
+    } else {
+      dist_angle$r_dist <- radial_dists[dist_angle$barcode]
+    }
+    radial_dists <- dist_angle |> select(barcode, sampleID, angle, r_dist, contains("intervals"))
+  }
 
   # Return radial distances
   return(radial_dists)
@@ -200,7 +348,7 @@ RadialDistance.default <- function (
 #'
 #' # It can also be useful to apply transformations to the distances
 #' se_mcolon$r_dist_GALT_sqrt <- sign(se_mcolon$r_dist_GALT)*sqrt(abs(se_mcolon$r_dist_GALT))
-#' MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 3,
+#' MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 2,
 #'             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
 #'
 #' @export
@@ -209,6 +357,8 @@ RadialDistance.Seurat <- function (
     object,
     column_name,
     sel_groups = NULL,
+    angles = NULL,
+    angles_length_out = NULL,
     verbose = TRUE,
     ...
 ) {
@@ -228,19 +378,118 @@ RadialDistance.Seurat <- function (
   coords_list <- .get_coords_list(object)
 
   # Calculate radial distances
-  distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
+  radial_distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
     if (verbose) inform(glue("Running calculations for sample {nm}"))
-    radial_distances <- do.call(bind_cols, lapply(names(spots_list), function(lbl) {
+    sample_radial_distances <- lapply(names(spots_list), function(lbl) {
       if (verbose) inform(glue("Calculating radial distances for group '{lbl}'"))
-      tibble(RadialDistance(coords_list[[nm]], spots = spots_list[[lbl]][[nm]], verbose = verbose, ...)) |>
-        setNames(nm = paste0("r_dist_", lbl))
-    }))
+      res <- RadialDistance(object = coords_list[[nm]],
+                            spots = spots_list[[lbl]][[nm]],
+                            verbose = verbose,
+                            angles = angles,
+                            angles_length_out = angles_length_out)#,
+                            #...)
+      if (inherits(res, what = "numeric")) {
+        res <- tibble(barcode = names(res), res) |>
+          setNames(nm = c("barcode", paste0("r_dist_", lbl)))
+      }
+      if (ncol(res) > 2) {
+        res <- res |>
+          select(barcode, angle, r_dist, contains("intervals"))
+        colnames(res) <- c("barcode", paste0(colnames(res)[2:4], "_", lbl))
+      }
+      return(res)
+    })
+    sample_radial_distances <- Reduce(\(x, y) left_join(x, y, by = "barcode"), sample_radial_distances)
+    return(sample_radial_distances)
   }))
+  #distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
+  #  if (verbose) inform(glue("Running calculations for sample {nm}"))
+  #  radial_distances <- do.call(bind_cols, lapply(names(spots_list), function(lbl) {
+  #    if (verbose) inform(glue("Calculating radial distances for group '{lbl}'"))
+  #    res <- RadialDistance(coords_list[[nm]],
+  #                          spots = spots_list[[lbl]][[nm]],
+  #                          verbose = verbose,
+  #                          angles = angles,
+  #                          angles_length_out = angles_length_out,
+  #                          ...)
+  #    if (inherits(res, what = "numeric")) {
+  #      res <- res |>
+  #        setNames(nm = paste0("r_dist_", lbl))
+  #    }
+  #    return(res)
+  #  }))
+  #}))
 
   # Return data to Seurat object
   object@meta.data <- object@meta.data |>
-    select(-contains(colnames(distances))) |>
-    bind_cols(distances)
+    select(-contains(colnames(radial_distances))) |>
+    bind_cols(radial_distances[match(colnames(object), radial_distances$barcode), ] |> select(-barcode))
 
   return(object)
+}
+
+
+#' Check that selected angles are valid
+#'
+#' @param coords A tibble with spot coordinates
+#' @param spots A character vector with spot IDs
+#' @param angles A numeric vector of length 2 defining the search area
+#' @param angles_length_out Number of intervals to split search area into
+#'
+#' @import dplyr
+#' @importFrom rlang inform warn abort %||%
+#'
+.check_angles <- function (
+  spatnet,
+  coords,
+  spots,
+  angles,
+  angles_length_out,
+  verbose
+) {
+
+  # Set global variables to NULL
+  x <- y <- NULL
+
+  # Check if spatnet is connected
+  if (.is_disconnected(spatnet)) {
+    abort("Detected diconnected components. Cannot compute radial distances for fixed angles when there are multiple diconnected components present in data.")
+  }
+
+  # Check angles
+  if (!is.null(angles)) {
+    stopifnot(is.numeric(angles),
+              length(angles) == 2,
+              between(x = angles, left = 0, right = 360),
+              angles[2] > angles[1])
+    # Check that graph is connected
+    if (.is_disconnected(spatnet))
+      abort("Dividing radial distances into angular intervals only works for regions with one center.")
+    # Find centroid for selected spots
+    centroids <- coords[match(spots, coords$barcode), ] |>
+      group_by(sampleID) |>
+      group_split() |>
+      lapply(function(x) {
+        x |>  summarize(x = median(x),
+                        y = median(y)) |>
+          as.numeric()
+      }) |>
+      setNames(names(spatnet))
+    # Check that centroids are within selected region
+    check_centroids <- sapply(names(centroids), function(nm) {
+      sample_coords <- coords |>
+        filter(sampleID == nm) |>
+        mutate(dist = sqrt(rowSums((centroids[[nm]] - cbind(x, y))^2))) |>
+        slice_min(order_by = dist)
+      return(sample_coords$barcode %in% spots)
+    })
+    if (!all(check_centroids))
+      warn(glue("Center outside selected region. Make sure that the region center is valid."))
+    if (verbose) inform(c("i" = glue("Setting search area between {angles[1]} and {angles[2]} degrees from region center")))
+    if (!is.null(angles_length_out)) {
+      if (verbose) inform(c("i" = glue("Splitting search area into {angles_length_out} interval(s)")))
+    }
+  }
+
+  return(list(angles, centroids))
 }

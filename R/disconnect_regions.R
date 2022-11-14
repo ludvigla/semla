@@ -120,6 +120,11 @@ DisconnectRegions.default <- function (
   if (!requireNamespace("tidygraph"))
     install.packages("tidygraph")
 
+  # Check if graph is disconnected
+  if (!.is_disconnected(spatnet)) {
+    abort("Found no disconnected components.")
+  }
+
   # Convert spatnet to tidygraph
   tidygraphs <- do.call(bind_rows, lapply(names(spatnet), function(nm) {
     x <- spatnet[[nm]]
@@ -262,4 +267,21 @@ DisconnectRegions.Seurat <- function (
 
   return(object)
 
+}
+
+
+#' Check if spatial network is disconnected
+#'
+#' @param spatnet A list of tibbles with spot IDs for neighboring spots
+#' generate with \code{\link{GetSpatialNetwork}}.
+#'
+.is_disconnected <- function (
+    spatnet
+) {
+  checks <- sapply(names(spatnet), function(nm) {
+    gr <- tidygraph::as_tbl_graph(x = spatnet[[nm]])
+    is_connected <- tidygraph::with_graph(graph = gr, expr = tidygraph::graph_is_connected())
+    return(!is_connected)
+  })
+  return(any(checks))
 }

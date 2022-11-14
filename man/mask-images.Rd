@@ -105,6 +105,7 @@ ImagePlot(se_merged)
 }
 \seealso{
 Other image transformations: 
-\code{\link{RigidTransformImages}()}
+\code{\link{RigidTransformImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{image transformations}

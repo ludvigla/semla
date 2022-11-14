@@ -2,6 +2,8 @@
 title: "Spatial methods"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ## Introduction
@@ -104,10 +106,18 @@ Each spatially disconnected region in cluster 9 now has its own label, order fro
 Imagine that we are interested in looking at the expression of certain genes as a function of distance to a region of interest. We can compute distances from a region of interest (ROI) using `RadialDistances`. Here we'll use cluster 3 as our ROI for the computation:
 
 ```{r}
+se$cluster_3 <- ifelse(se$seurat_clusters %in% "3", "3", NA)
+MapLabels(se, column_name = "cluster_3", override_plot_dims = TRUE, 
+          image_use = "raw", drop_na = TRUE, pt_size = 2) +
+  theme(legend.position = "right") &
+  guides(fill = guide_legend(override.aes = list(size = 5), ncol = 2))
+```
+
+```{r}
 se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3")
 ```
 
-We can illustrate the results by coloring the spots based on the radial distances from "S1_region1":
+We can illustrate the results by coloring the spots based on the radial distances from cluster "3":
 
 ```{r fig.width=7, fig.height=7}
 MapFeatures(se, features = "r_dist_3", center_zero = TRUE, pt_size = 2, 
@@ -117,11 +127,15 @@ MapFeatures(se, features = "r_dist_3", center_zero = TRUE, pt_size = 2,
 
 The distances are calculated from the border of the ROI, where positive values represent the radial distances out from the ROI and negative values represent the radial distances towards the center of the ROI.
 
+### Pixel coordinates
+
 The distances are given as pixels relative to the image pixels coordinates that were loaded when creating the `Seurat` object. If we know the conversion factor between pixels in our original H&E image and microns, we can easily convert the radial distances to microns. In this example data, the center-to-center spot distance is 273 pixels in the image and we know that the actual center-to-center spot distance is 100 microns.
 
 ```{r}
 se$r_dist_3 <- (100/273)*se$r_dist_3
 ```
+
+### Convert radial distances
 
 The scale of the distances is somewhat inconvenient for our color scale, so we can apply some transformation to make them easier to visualize, for example the square root of the distance:
 
@@ -146,7 +160,7 @@ se[[]] |>
     geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed")
 ```
 
-Here we can see that the expression of CRISP3 is high inside cluster 3 and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:
+Here we can see that the expression of CRISP3 is high inside cluster "3" and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:
 
 ```{r}
 MapFeatures(SubsetSTData(se, expression = r_dist_3 < 1e3), 
@@ -154,4 +168,109 @@ MapFeatures(SubsetSTData(se, expression = r_dist_3 < 1e3),
             image_use = "raw", pt_size = 2)
 ```
 
-So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase expression distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border.
+So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase expression distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.
+
+### Focused search
+
+It is rarely the case that the microenvironment is homogeneous in all directions from the region of interest. In our breast cancer tissue section, we can clearly see that the tissue composition is different depending on which direction you look from our region of interest. `RadialDistance` therefore provides a feature to narrow down the radial distances to a predefined interval of angles.
+
+The plot below should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, ...
+
+```{r}
+# get coordinates
+coords <- GetStaffli(se)@meta_data |> 
+  bind_cols(cluster_3 = se$cluster_3)
+centroid_cluster_3 <- coords |> 
+  na.omit() |> 
+  summarize(cx = median(pxl_col_in_fullres), 
+            cy = median(pxl_row_in_fullres))
+
+# Plot selection, center and directions
+arrows <- tibble(x = centroid_cluster_3$cx + 5e3*cos(seq(0, 2*pi, length.out = 9)),
+                 y = centroid_cluster_3$cy + 5e3*sin(seq(0, 2*pi, length.out = 9)),
+                 x_lab = centroid_cluster_3$cx + 5.7e3*cos(seq(0, 2*pi, length.out = 9)),
+                 y_lab = centroid_cluster_3$cy + 5.7e3*sin(seq(0, 2*pi, length.out = 9)),
+                 angle = seq(0, 360, length.out = 9))
+ggplot() +
+  geom_point(data = coords, 
+             aes(pxl_col_in_fullres, 
+                 pxl_row_in_fullres, 
+                 color = cluster_3)) +
+  scale_y_reverse() +
+  coord_fixed() +
+  theme_void() +
+  annotate("path", lty = "dashed", 
+   x = centroid_cluster_3$cx + 5e3*cos(seq(0, 2*pi, length.out = 100)),
+   y = centroid_cluster_3$cy + 5e3*sin(seq(0, 2*pi, length.out = 100))) +
+  geom_segment(data = arrows, aes(x = centroid_cluster_3$cx, xend = x, 
+                                  y = centroid_cluster_3$cy, yend = y), 
+               arrow = arrow(type = "closed")) +
+  geom_label(data = arrows[-9, ], aes(x_lab, y_lab, label = paste0(angle, "°"))) +
+  geom_point(data = centroid_cluster_3, aes(cx, cy, fill = "center"), 
+             size = 8, shape = 21, fill = "lightgray")
+```
+
+NB: Before you proceed, note that it is important that the ROI is spatially connected. If not, `RadialDistance` will complain that it finds disconnected components and will abort the function. This is intended to prevent users from defining a center outside of the ROI which would likely happen if multiple ROIs are present. It doesn't make much sense to compute radial distances from one center when there are multiple centers present. Instead, you can split the disconnected components with `DisconnectRegions` and focus on one ROI.
+
+Now that we have an idea about how the angles are defined, we can provide an interval of angles to group the radial distances by. As you can see, the function has now filtered the data to provide a subset of spots located in a narrower search area.
+
+```{r}
+se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3", 
+                     angles = c(200, 240))
+
+MapFeatures(se, features = "r_dist_3")
+```
+
+If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_length_out`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
+
+```{r}
+se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3", 
+                    angles = c(120, 320), angles_length_out = 6)
+MapLabels(se, column_name = "intervals_3", 
+          colors = RColorBrewer::brewer.pal(n = 6, name = "Spectral")) &
+  guides(fill = guide_legend(override.aes = list(size = 5), ncol = 3))
+```
+
+Inside our `Seurat` object meta data slot, we now have three new columns. 'angle_3', 'r_dist_3' and 'intervals_3'. The 'intervals_3' columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:
+
+```{r fig.width=7, fig.height=4}
+sel_genes <- c("CRISP3", "IGLC2")
+
+se[[]] |> 
+  bind_cols(FetchData(se, vars = sel_genes)) |> 
+  filter(r_dist_3 < 1e3) |> 
+  pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |> 
+  ggplot(aes(r_dist_3, value, color = variable)) +
+    geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
+    geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed") +
+    facet_wrap(~ intervals_3, ncol = 3) +
+    theme_minimal()
+```
+
+However, the same is of course not true for other genes. Below we can see the expression along the radial axis for three genes. Depending on the direction, these genes have very distinct expression profiles.
+
+```{r fig.width=7, fig.height=4}
+sel_genes <- c("PGM5-AS1", "CXCL14", "IGHG3")
+
+se[[]] |> 
+  bind_cols(FetchData(se, vars = sel_genes)) |> 
+  filter(r_dist_3 < 1e3) |> 
+  pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |> 
+  group_by(variable) |> 
+  mutate(value_centered = value - mean(value)) |> # Note that the values have been centered
+  ggplot(aes(r_dist_3, value_centered, color = variable)) +
+    geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
+    geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed") +
+    facet_wrap(~ intervals_3, ncol = 3) +
+    theme_minimal()
+```
+
+If we map the expression of these genes spatially, it is quite clear that these genes are expression in different niches of the microenvironment. In fact, two of these "niches" are mostly composed of tumor cells. Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in `STUtility2` are easy to adapt to many different scenarios.
+
+```{r}
+MapFeatures(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
+            features = sel_genes, scale_alpha = TRUE, ncol = 3,
+            image_use = "raw", pt_size = 2, colors = viridis::viridis(n = 9),
+            max_cutoff = 0.99) &
+  theme(legend.position = "right", legend.text = element_text(angle = 0))
+```

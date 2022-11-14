@@ -21,31 +21,36 @@ Depends:
     Seurat (>= 4.0.0),
     SeuratObject (>= 4.0.0),
     ggplot2 (>= 3.2.0),
-    rlang (>= 1.0.4)
+    rlang (>= 1.0.0)
 Imports:
     methods,
-    dplyr (>= 1.0.9),
-    forcats (>= 0.5.2),
-    glue (>= 1.6.2),
+    dplyr (>= 1.0.0),
+    forcats (>= 0.5.0),
+    glue,
     jsonlite (>= 1.8.0),
-    magick (>= 2.7.3),
-    Matrix (>= 1.4-1),
-    patchwork (>= 1.1.2),
-    scales (>= 1.2.1),
-    tibble (>= 3.1.8),
-    tidyr (>= 1.2.0),
-    zeallot (>= 0.1.0),
-    pillar (>= 1.8.1),
+    magick (>= 2.7.0),
+    Matrix (>= 1.4),
+    patchwork (>= 1.1.0),
+    scales (>= 1.2.0),
+    tibble,
+    tidyr,
+    zeallot,
+    pillar (>= 1.8.0),
     cli (>= 3.3.0),
-    farver (>= 2.1.1),
-    dbscan (>= 1.1-10),
-    RColorBrewer
+    farver (>= 2.1.0),
+    dbscan (>= 1.1.0),
+    RColorBrewer,
+    shiny,
+    shinyjs,
+    htmltools,
+    htmlwidgets,
+    reactR
 RoxygenNote: 7.2.1
 Suggests: 
-    testthat (>= 3.0.0),
-    data.table (>= 1.14.2),
+    testthat,
+    data.table,
     BiocManager (>= 1.30.18),
-    SpatialExperiment (>= 1.6.1)
+    SpatialExperiment (>= 1.6.0)
 Collate: 
     'STUtility2-package.R'
     'checks.R'
@@ -61,6 +66,7 @@ Collate:
     'plot_images.R'
     'radial_distance.R'
     'rigid_transform.R'
+    'rigid_transform_manual.R'
     'spatial_autocorrelation.R'
     'spatial_network.R'
     'staffli_object.R'
