@@ -58,14 +58,13 @@ images together with the spot coordinates.
 - [ ] make tile function `TileImage` compatible with OSD
 - [ ] send data to OSD viewer from R or read from R on selection?
 - [ ] add option to select samples in viewer (shiny or react?)
-- [ ] make R function that calls react app
 
 ### Tissue aligner
 
 - [x] make paper JS tool for image tranformations
 - [x] communicate transformations to R
 - [ ] apply transformations to images in R object with `CoordAndImageTransform`
-- [ ] add side bar for image selection
+- [x] add side bar for image selection
 
 ### Visualization tools
  
@@ -110,8 +109,4 @@ example be dimensionality reduction results instead.
 
 - [x] _getting started_
 - [x] _visualization_
-- [ ] _spatial methods_
-
-### Advanced features
-
-- [ ] : switch resolution. Perhaps not necessary with the Tissue Viewer?
+- [x] _spatial methods_

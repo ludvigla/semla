@@ -386,8 +386,8 @@ RadialDistance.Seurat <- function (
                             spots = spots_list[[lbl]][[nm]],
                             verbose = verbose,
                             angles = angles,
-                            angles_length_out = angles_length_out)#,
-                            #...)
+                            angles_length_out = angles_length_out,
+                            ...)
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
           setNames(nm = c("barcode", paste0("r_dist_", lbl)))
@@ -402,23 +402,6 @@ RadialDistance.Seurat <- function (
     sample_radial_distances <- Reduce(\(x, y) left_join(x, y, by = "barcode"), sample_radial_distances)
     return(sample_radial_distances)
   }))
-  #distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
-  #  if (verbose) inform(glue("Running calculations for sample {nm}"))
-  #  radial_distances <- do.call(bind_cols, lapply(names(spots_list), function(lbl) {
-  #    if (verbose) inform(glue("Calculating radial distances for group '{lbl}'"))
-  #    res <- RadialDistance(coords_list[[nm]],
-  #                          spots = spots_list[[lbl]][[nm]],
-  #                          verbose = verbose,
-  #                          angles = angles,
-  #                          angles_length_out = angles_length_out,
-  #                          ...)
-  #    if (inherits(res, what = "numeric")) {
-  #      res <- res |>
-  #        setNames(nm = paste0("r_dist_", lbl))
-  #    }
-  #    return(res)
-  #  }))
-  #}))
 
   # Return data to Seurat object
   object@meta.data <- object@meta.data |>
