@@ -4,6 +4,8 @@
 NULL
 
 
+#' @param width,height Width and height of paper widget given in pixels.
+#'
 #' @section default method:
 #' Takes a list of images prepared with the \code{\link{prep_image}} function
 #' and send them to the interactive application. When the application stops
@@ -12,7 +14,7 @@ NULL
 #'
 #' @importFrom shiny fluidPage actionButton tableOutput uiOutput reactiveTimer
 #' observe fluidRow column p h4 helpText strong code h5 observeEvent stopApp
-#' runApp
+#' runApp renderTable renderUI hr
 #' @importFrom shinyjs useShinyjs extendShinyjs
 #' @importFrom tibble as_tibble
 #'
@@ -80,7 +82,7 @@ RunAlignment.default <- function (
     # the app back to R
     observe({
       autoCheck()
-      js$getWindow()
+      shinyjs::js$getWindow()
     })
 
     # Send image data to widget
@@ -160,7 +162,7 @@ paper <- function (
 
   content <- reactR::component(
     "Paper",
-    list(data = data, source = source)
+    list(data = data)
   )
 
   # describe a React component to send to the browser for rendering.
@@ -230,7 +232,8 @@ renderPaper <- function (
 
 #' Function used to prepare images for paper JS react app
 #'
-#' @param path path to image in png or jpeg format
+#' @param input An object of class 'magick-image' or a path
+#' to an image in png or jpeg format
 #' @param width width of image sent to react app
 #'
 #' @import dplyr
@@ -249,6 +252,9 @@ prep_image <- function (
     input,
     width = 256
 ) {
+
+  # Set global variables to NULL
+  R <- G <- B <- A <- key <- ord <- NULL
 
   # Check width
   if (between(x = width, left = 256, right = 512))

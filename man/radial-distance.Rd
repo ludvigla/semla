@@ -12,7 +12,7 @@ RadialDistance(object, ...)
   object,
   spots,
   angles = NULL,
-  angles_length_out = NULL,
+  angles_nbreaks = NULL,
   verbose = TRUE,
   ...
 )
@@ -20,9 +20,9 @@ RadialDistance(object, ...)
 \method{RadialDistance}{Seurat}(
   object,
   column_name,
-  sel_groups = NULL,
+  select_groups = NULL,
   angles = NULL,
-  angles_length_out = NULL,
+  angles_nbreaks = NULL,
   verbose = TRUE,
   ...
 )
@@ -44,7 +44,7 @@ center and can therefore only be used when a single connected region is present.
 there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
 to split the spatially disconnected regions first.}
 
-\item{angles_length_out}{An integer specifying a number of intervals to cut the "search interval"
+\item{angles_nbreaks}{An integer specifying a number of intervals to cut the "search interval"
 into. This can be useful if you want to group radial distances into different directions from
 the region center.}
 
@@ -53,7 +53,7 @@ the region center.}
 \item{column_name}{A character specifying the name of a column in your meta data that contains
 categorical data, e.g. clusters or manual selections}
 
-\item{sel_groups}{A character vector to select specific groups in \code{column_name} with.
+\item{select_groups}{A character vector to select specific groups in \code{column_name} with.
 All groups are selected by default, but the common use case is to select a region of interest.}
 }
 \value{
@@ -94,7 +94,7 @@ spots located outside of the selected region will have positive distances.
 The microenvironment of the region of interest might be extremely heterogeneous
 depending on the direction from its center. For this reason, it can be useful to narrow
 down the search area by defining a smaller angle interval with `angles`. Alternativley,
-you can split the radial distances into an even number of slices with `angles_length_out`.
+you can split the radial distances into an even number of slices with `angles_nbreaks`.
 }
 
 \section{default method}{
@@ -107,9 +107,9 @@ you can split the radial distances into an even number of slices with `angles_le
  \item{'sampleID' : numeric vector with sample IDs}
 }
 
-If `angles` and/or `angles_length_out` are set, the function will return a
+If `angles` and/or `angles_nbreaks` are set, the function will return a
 tibble with spot IDS, sampleIDs, the angle between the region center and
-spots and the radial distances. If  `angles_length_out` is provided, a
+spots and the radial distances. If  `angles_nbreaks` is provided, a
 fifth column will be provided that groups spots into even intervals based on angles.
 Otherwise, the default is to return numeric vector with radial distances
 for all spots in `object`.
@@ -121,6 +121,7 @@ for all spots in `object`.
 library(STUtility2)
 library(ggplot2)
 library(patchwork)
+library(RColorBrewer)
 
 # Get coordinates
 galt_spots_file <- "~/STUtility2/repo/STUtility2/inst/extdata/mousecolon/galt_spots.csv"
@@ -198,7 +199,7 @@ spots_keep <- names(disconnected_regions[disconnected_regions == "S1_region1"])
 # Calculate radial distances between 0-360 degrees and split
 # these into 8 slices
 radial_distances <- RadialDistance(coords, spots_keep,
-                                   angles = c(0, 360), angles_length_out = 8)
+                                   angles = c(0, 360), angles_nbreaks = 8)
 gg <- coords |>
   select(-sampleID) |>
   left_join(y = radial_distances, by = "barcode")
@@ -225,9 +226,10 @@ library(STUtility2)
 library(ggplot2)
 library(patchwork)
 library(tidyr)
+library(RColorBrewer)
 
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
-se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", sel_groups = "GALT")
+se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", select_groups = "GALT")
 
 # Plot results
 p1 <- MapLabels(se_mcolon, column_name = "selection")

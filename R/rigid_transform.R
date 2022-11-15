@@ -94,6 +94,9 @@ generate_rigid_transform <- function (
 #' library(STUtility2)
 #' library(tibble)
 #' library(dplyr)
+#' library(magick)
+#' library(patchwork)
+#' library(ggplot2)
 #'
 #' transforms <- generate_rigid_transform(mirror_x = TRUE, angle = 30, tr_x = 0.2, tr_y = -0.2)
 #'
@@ -111,7 +114,7 @@ generate_rigid_transform <- function (
 #' # Load coordinates
 #' # These coordinates are defined on the H&E image used as input for
 #' # spaceranger count.
-#' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile, verbose = T)
+#' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
 #' xy
 #'
 #' # Load image

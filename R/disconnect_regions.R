@@ -12,11 +12,11 @@ NULL
 #' @section Seurat:
 #' A categorical variable is selected from the \code{Seurat} object meta data
 #' slot using \code{column_name}. From this column, one can specify what groups
-#' to disconnect with \code{sel_groups}. If \code{sel_groups} isn't specified,
-#' all groups in \code{sel_groups} will be disconnected separately.
+#' to disconnect with \code{select_groups}. If \code{select_groups} isn't specified,
+#' all groups in \code{select_groups} will be disconnected separately.
 #' The function returns a Seurat object with additional columns in the meta data
-#' slot, one for each group in \code{sel_groups}. The suffix to these columns is
-#' "_split", so a group in \code{sel_groups} called "tissue" will get a column
+#' slot, one for each group in \code{select_groups}. The suffix to these columns is
+#' "_split", so a group in \code{select_groups} called "tissue" will get a column
 #' called "tissue_split" with new labels for each spatially disconnected region.
 #'
 #' @param spots A character vector with spot IDs present 'object'
@@ -158,7 +158,7 @@ DisconnectRegions.default <- function (
 
 #' @param column_name A character specifying the name of a column in your meta data that contains
 #'  categorical data, e.g. clusters or manual selections
-#' @param sel_groups A character vector to select specific groups in \code{column_name} with.
+#' @param select_groups A character vector to select specific groups in \code{column_name} with.
 #' All groups are selected by default, but the common use case is to select a region of interest.
 #' @param verbose Print messages
 #'
@@ -183,7 +183,7 @@ DisconnectRegions.default <- function (
 #'           pt_size = 3, override_plot_dims = TRUE)
 #'
 #' # Disconnect regions
-#' se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", sel_groups = "GALT")
+#' se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", select_groups = "GALT")
 #'
 #' # Plot split regions
 #' MapLabels(se_mcolon, column_name = "GALT_split",
@@ -200,7 +200,7 @@ DisconnectRegions.default <- function (
 #'   theme(legend.position = "top")
 #'
 #' # Disconnect regions
-#' se_merged <- DisconnectRegions(se_merged, column_name = "selection", sel_groups = "GALT")
+#' se_merged <- DisconnectRegions(se_merged, column_name = "selection", select_groups = "GALT")
 #'
 #' # Plot split regions
 #' MapLabels(se_merged, column_name = "GALT_split",
@@ -213,7 +213,7 @@ DisconnectRegions.default <- function (
 DisconnectRegions.Seurat <- function (
   object,
   column_name,
-  sel_groups = NULL,
+  select_groups = NULL,
   verbose = TRUE,
   ...
 ) {
@@ -224,10 +224,10 @@ DisconnectRegions.Seurat <- function (
   # validate input
   .check_seurat_object(object)
   .validate_column_name(object, column_name)
-  sel_groups <- .validate_selected_labels(object, sel_groups, column_name)
+  select_groups <- .validate_selected_labels(object, select_groups, column_name)
 
   # Select spots
-  spots_list <- .get_spots_list(object, sel_groups, column_name, split_by_sample = FALSE)
+  spots_list <- .get_spots_list(object, select_groups, column_name, split_by_sample = FALSE)
 
   # Get coordinates
   coords <- GetStaffli(object)@meta_data |>

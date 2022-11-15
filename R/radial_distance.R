@@ -33,7 +33,7 @@ NULL
 #' The microenvironment of the region of interest might be extremely heterogeneous
 #' depending on the direction from its center. For this reason, it can be useful to narrow
 #' down the search area by defining a smaller angle interval with `angles`. Alternativley,
-#' you can split the radial distances into an even number of slices with `angles_length_out`.
+#' you can split the radial distances into an even number of slices with `angles_nbreaks`.
 #'
 #' @section default method:
 #' `object` should be a tibble with four columns:
@@ -44,9 +44,9 @@ NULL
 #'  \item{'sampleID' : numeric vector with sample IDs}
 #' }
 #'
-#' If `angles` and/or `angles_length_out` are set, the function will return a
+#' If `angles` and/or `angles_nbreaks` are set, the function will return a
 #' tibble with spot IDS, sampleIDs, the angle between the region center and
-#' spots and the radial distances. If  `angles_length_out` is provided, a
+#' spots and the radial distances. If  `angles_nbreaks` is provided, a
 #' fifth column will be provided that groups spots into even intervals based on angles.
 #' Otherwise, the default is to return numeric vector with radial distances
 #' for all spots in `object`.
@@ -61,7 +61,7 @@ NULL
 #' center and can therefore only be used when a single connected region is present. If
 #' there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
 #' to split the spatially disconnected regions first.
-#' @param angles_length_out An integer specifying a number of intervals to cut the "search interval"
+#' @param angles_nbreaks An integer specifying a number of intervals to cut the "search interval"
 #' into. This can be useful if you want to group radial distances into different directions from
 #' the region center.
 #'
@@ -83,6 +83,7 @@ NULL
 #' library(STUtility2)
 #' library(ggplot2)
 #' library(patchwork)
+#' library(RColorBrewer)
 #'
 #' # Get coordinates
 #' galt_spots_file <- "~/STUtility2/repo/STUtility2/inst/extdata/mousecolon/galt_spots.csv"
@@ -160,7 +161,7 @@ NULL
 #' # Calculate radial distances between 0-360 degrees and split
 #' # these into 8 slices
 #' radial_distances <- RadialDistance(coords, spots_keep,
-#'                                    angles = c(0, 360), angles_length_out = 8)
+#'                                    angles = c(0, 360), angles_nbreaks = 8)
 #' gg <- coords |>
 #'   select(-sampleID) |>
 #'   left_join(y = radial_distances, by = "barcode")
@@ -188,13 +189,13 @@ RadialDistance.default <- function (
   object,
   spots,
   angles = NULL,
-  angles_length_out = NULL,
+  angles_nbreaks = NULL,
   verbose = TRUE,
   ...
 ) {
 
   # Set global variables to NULL
-  barcode <- x <- y <- sampleID <- NULL
+  barcode <- x <- y <- sampleID <- from  <- to <- centroids <- diff_x <- diff_y <- angle <- intervals <- r_dist <- NULL
 
   # Check object class
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))
@@ -261,14 +262,14 @@ RadialDistance.default <- function (
   radial_dists[names(radial_dists_inside)] <- -radial_dists_inside
 
   # Split radial distances by angle if angles are specified
-  if (!is.null(angles_length_out)) {
-    stopifnot(is.numeric(angles_length_out),
-              length(angles_length_out) == 1)
+  if (!is.null(angles_nbreaks)) {
+    stopifnot(is.numeric(angles_nbreaks),
+              length(angles_nbreaks) == 1)
     angles <- angles %||% c(0, 360)
   }
   if (!is.null(angles)) {
     # Check angles
-    c(angles, centroids) %<-% .check_angles(spatnet_region, object, spots, angles, angles_length_out, verbose)
+    c(angles, centroids) %<-% .check_angles(spatnet_region, object, spots, angles, angles_nbreaks, verbose)
     # Calculate angles from center point
     dist_angle <- object |>
       group_by(sampleID) |>
@@ -284,9 +285,9 @@ RadialDistance.default <- function (
         filter(between(x = angle, left = angles[1], right = angles[2]))
     }))
     # Split data if angled_length_out is set
-    if (!is.null(angles_length_out)) {
+    if (!is.null(angles_nbreaks)) {
       dist_angle <- dist_angle |>
-        mutate(intervals = cut(angle, breaks = seq(angles[1], angles[2], length.out = angles_length_out + 1))) |>
+        mutate(intervals = cut(angle, breaks = seq(angles[1], angles[2], length.out = angles_nbreaks + 1))) |>
         arrange(intervals) |>
         mutate(intervals = factor(intervals, levels = unique(intervals)))
       dist_angle$r_dist <- radial_dists[dist_angle$barcode]
@@ -304,7 +305,7 @@ RadialDistance.default <- function (
 
 #' @param column_name A character specifying the name of a column in your meta data that contains
 #'  categorical data, e.g. clusters or manual selections
-#' @param sel_groups A character vector to select specific groups in \code{column_name} with.
+#' @param select_groups A character vector to select specific groups in \code{column_name} with.
 #' All groups are selected by default, but the common use case is to select a region of interest.
 #' @param verbose Print messages
 #'
@@ -320,9 +321,10 @@ RadialDistance.default <- function (
 #' library(ggplot2)
 #' library(patchwork)
 #' library(tidyr)
+#' library(RColorBrewer)
 #'
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
-#' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", sel_groups = "GALT")
+#' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", select_groups = "GALT")
 #'
 #' # Plot results
 #' p1 <- MapLabels(se_mcolon, column_name = "selection")
@@ -356,23 +358,23 @@ RadialDistance.default <- function (
 RadialDistance.Seurat <- function (
     object,
     column_name,
-    sel_groups = NULL,
+    select_groups = NULL,
     angles = NULL,
-    angles_length_out = NULL,
+    angles_nbreaks = NULL,
     verbose = TRUE,
     ...
 ) {
 
   # Set global variables to NULL
-  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- angle <- r_dist <- NULL
 
   # validate input
   .check_seurat_object(object)
   .validate_column_name(object, column_name)
-  sel_groups <- .validate_selected_labels(object, sel_groups, column_name)
+  select_groups <- .validate_selected_labels(object, select_groups, column_name)
 
   # Select spots
-  spots_list <- .get_spots_list(object, sel_groups, column_name)
+  spots_list <- .get_spots_list(object, select_groups, column_name)
 
   # Get coordinates
   coords_list <- .get_coords_list(object)
@@ -386,7 +388,7 @@ RadialDistance.Seurat <- function (
                             spots = spots_list[[lbl]][[nm]],
                             verbose = verbose,
                             angles = angles,
-                            angles_length_out = angles_length_out,
+                            angles_nbreaks = angles_nbreaks,
                             ...)
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
@@ -395,7 +397,7 @@ RadialDistance.Seurat <- function (
       if (ncol(res) > 2) {
         res <- res |>
           select(barcode, angle, r_dist, contains("intervals"))
-        colnames(res) <- c("barcode", paste0(colnames(res)[2:4], "_", lbl))
+        colnames(res) <- c("barcode", paste0(colnames(res)[2:ncol(res)], "_", lbl))
       }
       return(res)
     })
@@ -414,25 +416,29 @@ RadialDistance.Seurat <- function (
 
 #' Check that selected angles are valid
 #'
+#' @param spatnet A list of tibbles containing spatial networks generated with
+#' \code{\link{GetSpatialNetwork}}
 #' @param coords A tibble with spot coordinates
 #' @param spots A character vector with spot IDs
 #' @param angles A numeric vector of length 2 defining the search area
-#' @param angles_length_out Number of intervals to split search area into
+#' @param angles_nbreaks Number of intervals to split search area into
+#' @param verbose Print messages
 #'
 #' @import dplyr
 #' @importFrom rlang inform warn abort %||%
+#' @importFrom stats median
 #'
 .check_angles <- function (
   spatnet,
   coords,
   spots,
   angles,
-  angles_length_out,
+  angles_nbreaks,
   verbose
 ) {
 
   # Set global variables to NULL
-  x <- y <- NULL
+  x <- y <- sampleID <- dist <- NULL
 
   # Check if spatnet is connected
   if (.is_disconnected(spatnet)) {
@@ -469,8 +475,8 @@ RadialDistance.Seurat <- function (
     if (!all(check_centroids))
       warn(glue("Center outside selected region. Make sure that the region center is valid."))
     if (verbose) inform(c("i" = glue("Setting search area between {angles[1]} and {angles[2]} degrees from region center")))
-    if (!is.null(angles_length_out)) {
-      if (verbose) inform(c("i" = glue("Splitting search area into {angles_length_out} interval(s)")))
+    if (!is.null(angles_nbreaks)) {
+      if (verbose) inform(c("i" = glue("Splitting search area into {angles_nbreaks} interval(s)")))
     }
   }
 

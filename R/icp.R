@@ -136,6 +136,9 @@ icp <- function (
   iterations = 100
 ) {
 
+  # Set global variables to NULL
+  um <- qm <- pm <- NULL
+
   # Check input objects
   stopifnot(inherits(xy_ref, what = c("matrix", "data.frame")),
             inherits(xy_query, what = c("matrix", "data.frame")),

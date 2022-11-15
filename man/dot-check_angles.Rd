@@ -4,16 +4,21 @@
 \alias{.check_angles}
 \title{Check that selected angles are valid}
 \usage{
-.check_angles(spatnet, coords, spots, angles, angles_length_out, verbose)
+.check_angles(spatnet, coords, spots, angles, angles_nbreaks, verbose)
 }
 \arguments{
+\item{spatnet}{A list of tibbles containing spatial networks generated with
+\code{\link{GetSpatialNetwork}}}
+
 \item{coords}{A tibble with spot coordinates}
 
 \item{spots}{A character vector with spot IDs}
 
 \item{angles}{A numeric vector of length 2 defining the search area}
 
-\item{angles_length_out}{Number of intervals to split search area into}
+\item{angles_nbreaks}{Number of intervals to split search area into}
+
+\item{verbose}{Print messages}
 }
 \description{
 Check that selected angles are valid

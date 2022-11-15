@@ -160,7 +160,6 @@ RadialDistance <- function(object, ...) {
 }
 
 
-
 #' @title Disconnect regions
 #'
 #' @description This function allows you split spatially disconnected regions

@@ -90,7 +90,7 @@ MapLabels(se, column_name = "cluster_9", override_plot_dims = TRUE,
 Cluster 9 is concentrated to a region rich with cancer cells but there are also a few spots in other parts of the tissue. At this point we might only be interested in one of these regions in which case we can split cluster_9 into spatially disconnected compartments. For this purpose, we can use `DisconnectRegions`:
 
 ```{r}
-se <- DisconnectRegions(se, column_name = "seurat_clusters", sel_groups = "9")
+se <- DisconnectRegions(se, column_name = "seurat_clusters", select_groups = "9")
 
 MapLabels(se, column_name = "9_split", override_plot_dims = TRUE, 
           image_use = "raw", drop_na = TRUE, pt_size = 2) +
@@ -114,7 +114,7 @@ MapLabels(se, column_name = "cluster_3", override_plot_dims = TRUE,
 ```
 
 ```{r}
-se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3")
+se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3")
 ```
 
 We can illustrate the results by coloring the spots based on the radial distances from cluster "3":
@@ -174,40 +174,11 @@ So why bother using radial distances? Having access to this information makes it
 
 It is rarely the case that the microenvironment is homogeneous in all directions from the region of interest. In our breast cancer tissue section, we can clearly see that the tissue composition is different depending on which direction you look from our region of interest. `RadialDistance` therefore provides a feature to narrow down the radial distances to a predefined interval of angles.
 
-The plot below should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, ...
+The plot below (generated with `AnglePlot`) should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, ...
 
 ```{r}
-# get coordinates
-coords <- GetStaffli(se)@meta_data |> 
-  bind_cols(cluster_3 = se$cluster_3)
-centroid_cluster_3 <- coords |> 
-  na.omit() |> 
-  summarize(cx = median(pxl_col_in_fullres), 
-            cy = median(pxl_row_in_fullres))
-
-# Plot selection, center and directions
-arrows <- tibble(x = centroid_cluster_3$cx + 5e3*cos(seq(0, 2*pi, length.out = 9)),
-                 y = centroid_cluster_3$cy + 5e3*sin(seq(0, 2*pi, length.out = 9)),
-                 x_lab = centroid_cluster_3$cx + 5.7e3*cos(seq(0, 2*pi, length.out = 9)),
-                 y_lab = centroid_cluster_3$cy + 5.7e3*sin(seq(0, 2*pi, length.out = 9)),
-                 angle = seq(0, 360, length.out = 9))
-ggplot() +
-  geom_point(data = coords, 
-             aes(pxl_col_in_fullres, 
-                 pxl_row_in_fullres, 
-                 color = cluster_3)) +
-  scale_y_reverse() +
-  coord_fixed() +
-  theme_void() +
-  annotate("path", lty = "dashed", 
-   x = centroid_cluster_3$cx + 5e3*cos(seq(0, 2*pi, length.out = 100)),
-   y = centroid_cluster_3$cy + 5e3*sin(seq(0, 2*pi, length.out = 100))) +
-  geom_segment(data = arrows, aes(x = centroid_cluster_3$cx, xend = x, 
-                                  y = centroid_cluster_3$cy, yend = y), 
-               arrow = arrow(type = "closed")) +
-  geom_label(data = arrows[-9, ], aes(x_lab, y_lab, label = paste0(angle, "°"))) +
-  geom_point(data = centroid_cluster_3, aes(cx, cy, fill = "center"), 
-             size = 8, shape = 21, fill = "lightgray")
+AnglePlot(se, column_name = "cluster_3", selected_group = "3", 
+          crop_area = c(0.2, 0.3, 1, 1), image_use = "raw", radius = 0.3)
 ```
 
 NB: Before you proceed, note that it is important that the ROI is spatially connected. If not, `RadialDistance` will complain that it finds disconnected components and will abort the function. This is intended to prevent users from defining a center outside of the ROI which would likely happen if multiple ROIs are present. It doesn't make much sense to compute radial distances from one center when there are multiple centers present. Instead, you can split the disconnected components with `DisconnectRegions` and focus on one ROI.
@@ -215,7 +186,7 @@ NB: Before you proceed, note that it is important that the ROI is spatially conn
 Now that we have an idea about how the angles are defined, we can provide an interval of angles to group the radial distances by. As you can see, the function has now filtered the data to provide a subset of spots located in a narrower search area.
 
 ```{r}
-se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3", 
+se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3", 
                      angles = c(200, 240))
 
 MapFeatures(se, features = "r_dist_3")
@@ -224,8 +195,8 @@ MapFeatures(se, features = "r_dist_3")
 If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_length_out`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
 
 ```{r}
-se <- RadialDistance(se, column_name = "seurat_clusters", sel_groups = "3", 
-                    angles = c(120, 320), angles_length_out = 6)
+se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3", 
+                    angles = c(120, 320), angles_nbreaks = 6)
 MapLabels(se, column_name = "intervals_3", 
           colors = RColorBrewer::brewer.pal(n = 6, name = "Spectral")) &
   guides(fill = guide_legend(override.aes = list(size = 5), ncol = 3))

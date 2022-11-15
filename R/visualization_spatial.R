@@ -137,9 +137,11 @@ MapFeatures.default <- function (
 
   # add blend colors if blend=TRUE
   if (blend) {
-    if (!requireNamespace("farver")) install.packages("farver")
+    if (!requireNamespace("farver", quietly = TRUE)) {
+      install.packages("farver")
+    }
     data <- .color_blender(data, features, blend_order, feature_limits, scale_alpha)
-    extreme_colors <- encode_colour(diag(ncol = 3, nrow = 3)*255, from = "rgb")
+    extreme_colors <- farver::encode_colour(diag(ncol = 3, nrow = 3)*255, from = "rgb")
     features <- features[blend_order[1:length(features)]]
   }
 
@@ -244,6 +246,7 @@ MapFeatures.default <- function (
 #' if (!requireNamespace("viridis"))
 #'   install.packages("viridis")
 #' library(viridis)
+#' library(ggplot2)
 #'
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
@@ -1419,7 +1422,6 @@ MapLabels.Seurat <- function (
 #' @importFrom glue glue
 #' @importFrom scales rescale
 #' @importFrom dplyr select mutate bind_cols everything
-#' @importFrom farver encode_colour
 #'
 #' @return a list of tibbles similar to input data but in which the feature
 #' columns have been replaced by a color vector with blended colors called
@@ -1452,8 +1454,11 @@ MapLabels.Seurat <- function (
                                                     to = c(0, 1))))
     mat <- matrix(0, ncol = 3, nrow = nrow(feature_values))
     mat[, blend_order[1:length(features)]] <- (feature_values*255) |> as.matrix()
+    if (!requireNamespace("farver", quietly = TRUE)) {
+      install.packages("farver")
+    }
     encoded_cols <- mat |>
-      encode_colour(from = "rgb")
+      farver::encode_colour(from = "rgb")
     x <- bind_cols(x, encoded_cols = encoded_cols)
     x <- x |> select(-all_of(features))
     # Set opacity

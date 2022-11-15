@@ -13,6 +13,8 @@ RunAlignment(object, ...)
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
+
+\item{width, height}{Width and height of paper widget given in pixels.}
 }
 \description{
 Opens an interactive viewer where images are interactive objects

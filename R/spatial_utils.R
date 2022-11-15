@@ -23,7 +23,7 @@
 #' validate selected labels
 #'
 #' @param object A Seurat object
-#' @param sel_groups A character vector with selected labels in \code{column_name}
+#' @param select_groups A character vector with selected labels in \code{column_name}
 #' @param column_name A character vector specifying the name of a column in \code{object}
 #' meta data slot
 #'
@@ -36,17 +36,17 @@
 #' @noRd
 .validate_selected_labels <- function (
     object,
-    sel_groups,
+    select_groups,
     column_name
 ) {
-  sel_groups <- sel_groups %||% {
-    inform(glue(c("i" = "No 'sel_groups' provided. Using all groups in '{column_name}' column")))
-    sel_groups <- unique(object[[]] |> pull(all_of(column_name)))
+  select_groups <- select_groups %||% {
+    inform(glue(c("i" = "No 'select_groups' provided. Using all groups in '{column_name}' column")))
+    select_groups <- unique(object[[]] |> pull(all_of(column_name)))
   }
-  if (!inherits(sel_groups, what = c("factor", "character"))) abort(glue("Invalid class '{class(sel_groups)}', expected a 'character'"))
-  if (!all(sel_groups %in% (object[[]] |> pull(all_of(column_name))))) abort(glue("Some 'sel_groups' are not present in '{column_name}'"))
+  if (!inherits(select_groups, what = c("factor", "character"))) abort(glue("Invalid class '{class(select_groups)}', expected a 'character'"))
+  if (!all(select_groups %in% (object[[]] |> pull(all_of(column_name))))) abort(glue("Some 'select_groups' are not present in '{column_name}'"))
 
-  return(sel_groups)
+  return(select_groups)
 }
 
 
@@ -64,7 +64,7 @@
 #' @noRd
 .get_spots_list <- function (
   object,
-  sel_groups,
+  select_groups,
   column_name,
   split_by_sample = TRUE
 ) {
@@ -72,7 +72,7 @@
   # Set global variables to NULL
   sampleID <- barcode <- NULL
 
-  spots_list <- lapply(sel_groups, function(lbl) {
+  spots_list <- lapply(select_groups, function(lbl) {
     spots <- GetStaffli(object)@meta_data |>
       bind_cols(object[[]] |> select(all_of(column_name))) |>
       filter(!! sym(column_name) == lbl)
@@ -88,7 +88,7 @@
     }
     return(spots)
   }) |>
-    setNames(sel_groups)
+    setNames(select_groups)
 
   return(spots_list)
 

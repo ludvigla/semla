@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 notebooks/
 ^LICENSE\.md$
+package.json
+webpack.config.js
+yarn.lock

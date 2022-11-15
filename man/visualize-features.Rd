@@ -177,6 +177,7 @@ library(STUtility2)
 if (!requireNamespace("viridis"))
   install.packages("viridis")
 library(viridis)
+library(ggplot2)
 
 # Load example Visium data
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
