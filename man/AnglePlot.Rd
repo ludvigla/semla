@@ -27,7 +27,7 @@ AnglePlot(
 )
 }
 \arguments{
-\item{object}{An object}
+\item{object}{An object of class `Seurat`}
 
 \item{column_name}{a string specifying a meta data column holding the categorical
 feature vector}
@@ -85,8 +85,6 @@ from the data.}
 \item{drop_na}{a logical specifying if NA values should be dropped}
 
 \item{...}{Arguments passed to other methods}
-
-\item{An}{object of class `Seurat`}
 }
 \value{
 An object of class "patchwork"
