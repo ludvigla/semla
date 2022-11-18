@@ -3,6 +3,7 @@
 NULL
 
 # TODO: make compatible with scale?
+# TODO: Add functionality to plot multiple features (not prio)
 #' Map features spatially and add a summary plot next to it
 #'
 #' This function is a wrapped for \code{\link{MapFeatures}} which allows you to
@@ -88,7 +89,6 @@ MapFeaturesSummary <- function (
   min_cutoff = NULL,
   ...
 ) {
-  # TODO: How to deal with multiple features?
 
   # Set global variables to NULL
   sampleID <- NULL
@@ -96,18 +96,22 @@ MapFeaturesSummary <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
-  # validate subplot_type and fill_color
-  stopifnot(
-    is.character(subplot_type),
-    length(subplot_type) == 1
-  )
-  subplot_type <- match.arg(subplot_type, choices = c("box", "violin", "histogram", "density"))
+  # Check subplot_type
+  subplot_type_options <- c("box", "violin", "histogram", "density")
+  subplot_type_options_coll <- glue::glue_collapse(subplot_type_options, sep = ', ', last = ' or ')
+  if (missing(subplot_type)) {abort(glue("No subplot type specified. Please provide either {subplot_type_options_coll}."))}
+  if (!missing(subplot_type)) {
+    if (!is.character(subplot_type)) abort(glue("Invalid class '{class(subplot_type)}' of subplot_type."))
+    if (length(subplot_type) > 1) abort(glue("Only 1 subplot type can be provided at the time."))
+    if(!subplot_type %in% subplot_type_options) abort(glue("{subplot_type} is not a valid choice.  Please provide either {subplot_type_options_coll}"))
+  }
 
   # Check features
-  stopifnot(
-    is.character(features),
-    length(features) == 1
-  )
+  if (missing(features)) {abort(glue("No feature specified. Please provide one feature to plot"))}
+  if (!missing(features)) {
+    if (!is.character(features)) abort(glue("Invalid class '{class(features)}' of the provided feature"))
+    if (length(features) != 1) abort(glue("Only 1 feature can be provided at the time."))
+  }
 
   # Check color - pick a fill color based on mid scale color
   colors_scale <- colors %||% RColorBrewer::brewer.pal(8, "Reds")
