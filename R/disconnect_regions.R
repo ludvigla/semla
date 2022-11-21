@@ -34,7 +34,9 @@ NULL
 #' library(ggplot2)
 #' library(patchwork)
 #'
-#' galt_spots_file <- "~/STUtility2/repo/STUtility2/inst/extdata/mousecolon/galt_spots.csv"
+#' galt_spots_file <- system.file("extdata/mousecolon",
+#'                                "galt_spots.csv",
+#'                                 package = "STUtility2")
 #' galt_spots <- read.csv(galt_spots_file) |>
 #'   as_tibble()
 #'

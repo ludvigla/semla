@@ -180,6 +180,48 @@ DisconnectRegions <- function(object, ...) {
 }
 
 
+#' @title Calculate local G statistic
+#'
+#' @description This local spatial statistic measures the concentration of
+#' high or low values for a given region. This can for example be used to
+#' define spatial structures in a tissue section based on the values of
+#' selected features. Furthermore, the local G statistic can be used for
+#' high/low clustering of data.
+#'
+#' NB: This function only calculates G, not G star.
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family spatial methods
+#' @rdname local-G
+#'
+#' @references
+#' \itemize{
+#'    \item{
+#'       Ord, J. K. and Getis, A. 1995 Local spatial autocorrelation statistics:
+#'       distributional issues and an application. Geographical Analysis, 27, 286–306
+#'    }
+#'    \item{
+#'    Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators
+#'    of spatial association. TEST, 27(3), 716–748 [DOI link](10.1007/s11749-018-0599-x)
+#'    }
+#' }
+#'
+#'
+#' @seealso
+#' [Emerging Hot Spot Analysis](https://sfdep.josiahparry.com/articles/understanding-emerging-hotspots.html)
+#' [G and G star local spatial statistics](https://r-spatial.github.io/spdep/reference/localG.html)
+#' [ESRI Getis-ord General G](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/h-how-high-low-clustering-getis-ord-general-g-spat.htm)
+#'
+#' @export
+#'
+#' @md
+RunLocalG <- function(object, ...) {
+  UseMethod(generic = "RunLocalG", object = object)
+}
+
+
 #' Manually apply rigid transformations to images
 #'
 #' Opens an interactive viewer where images are interactive objects

@@ -63,6 +63,7 @@ Collate:
     'icp.R'
     'load_data.R'
     'load_images.R'
+    'local_G.R'
     'mask.R'
     'neighborhood_analysis.R'
     'plot_images.R'

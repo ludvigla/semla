@@ -21,6 +21,9 @@ centroid_angles_plot <- function (
   centroid_size = 8
 ) {
 
+  # Set global variables to NULL
+  x <- y <- x_lab <- y_lab <- angle <- NULL
+
   # Plot selection, center and directions
   arrows <- tibble(x = cos(seq(0, 2*pi, length.out = nbreaks)),
                    y = sin(seq(0, 2*pi, length.out = nbreaks)),
@@ -45,7 +48,7 @@ centroid_angles_plot <- function (
 
 }
 
-
+# TODO: remove non ASCII character degree
 #' Angle plot
 #'
 #' Draws on angle plot on top of a selected region. The plot is meant to help
@@ -56,7 +59,7 @@ centroid_angles_plot <- function (
 #' of a categorical variable selected with \code{column_name} which is stored in the
 #' meta data of the input Seurat object. The selected region has to be spatially connected.
 #'
-#' @param An object of class `Seurat`
+#' @param object An object of class `Seurat`
 #' @param selected_group A label defining a group of spots found in a column of
 #' the meta data slot specified by \code{column_name}
 #' @param radius A numeric value between 0.1 and 1 specifying the size of the
@@ -66,6 +69,7 @@ centroid_angles_plot <- function (
 #' @inheritParams centroid_angles_plot
 #'
 #' @import dplyr
+#' @importFrom Seurat AddMetaData
 #'
 #' @examples
 #' library(STUtility2)
@@ -101,6 +105,9 @@ AnglePlot <- function (
   drop_na = FALSE,
   ...
 ) {
+
+  # Set global variables to NULL
+  from <- to <- barcode <- sampleID <- cx <- cy <- NULL
 
   # validate input
   .check_seurat_object(object)
