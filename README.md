@@ -79,6 +79,7 @@ clusters, conditions etc.
 - [ ] `FactorGeneLoadingPlot` : Not sure if needed with the singlet R package available
 - [x] `ImagePlot` : plots H&E images stored in a Seurat object
 - [x] `MapFeaturesSummary` : create spatial maps with `MapFeatures` and add a summary plot next to it
+- [ ] `MapLabelsSummary` : create spatial maps with `MapLabels` and add a summary plot next to it
 - [x] `AnglePlot` : draw a set of arrows on top of a selected region of spots. Mean to be used as a helper for selecting 
 angle intervals in `RadialDistance` 
 
