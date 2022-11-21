@@ -52,6 +52,32 @@ p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols)
 p
 ```
 
+We can also use the function `MapFeaturesSummary` to add a subplot next to the spatial plot summarizing the gene expression in the section using either a box plot, a violin plot, a histogram, or a density plot.
+
+This function only takes one gene at the time, but you can patch two plots together manually if desired.
+
+```{r fig.width=6, fig.height=3}
+p <- MapFeaturesSummary(se, 
+                        features = "Clu", 
+                        # subplot_type = "violin", 
+                        colors = cols)
+p
+```
+
+```{r fig.width=6, fig.height=3}
+p1 <- MapFeaturesSummary(se,
+                         section_number = 1,
+                         features = "Clu", 
+                         subplot_type = "box", 
+                         colors = cols)
+p2 <- MapFeaturesSummary(se,
+                         section_number = 1,
+                         features = "Clu", 
+                         subplot_type = "density", 
+                         colors = cols)
+p1|p2
+```
+
 ### Overlay maps on images
 
 If we want to create a map with the H&E images we can do this by setting `image_use = raw`. But before we can do this, we need to load the images into our *Seurat* object:
