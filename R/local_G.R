@@ -99,6 +99,7 @@ RunLocalG.default <- function (
 
   if (!is.null(alternative)) {
     alternative <- match.arg(alternative, c("two.sided", "greater", "less"))
+    if (verbose) inform(c("i" = glue("Setting alternative hypothesis to '{alternative}'")))
   }
 
   # Check objects
@@ -141,11 +142,14 @@ RunLocalG.default <- function (
 
 
   Gi_stats <- lapply(names(wide_spatial_networks), function(nm) {
+
     wide_spatial_network <- wide_spatial_networks[[nm]]
-    data_subset <- object[match(rownames(wide_spatial_network), rownames(object)), ]
+    data_subset <- object[match(rownames(wide_spatial_network), rownames(object)), drop = FALSE, ]
 
     # Number of observations
     n <- nrow(data_subset)
+
+    if (verbose) inform(c(">" = glue("  Calculating local G scores for {n} spots in sample {nm}")))
 
     # Calculate lag matrix
     lagMat <- wide_spatial_network %*% data_subset
@@ -172,6 +176,9 @@ RunLocalG.default <- function (
   colnames(GiMat_tot) <- glue("Gi[{colnames(GiMat_tot)}]")
 
   if (!is.null(alternative)) {
+
+    if (verbose) inform(c("i" = glue("Calculating p-values for local G scores, MH-adjusted within each feature")))
+
     # Get function to calculate p-values
     calc_pval <- switch(alternative,
                         "two.sided" = function(x) 2*pnorm(abs(x), lower.tail = FALSE),
@@ -180,6 +187,8 @@ RunLocalG.default <- function (
     alternative_symbol <- switch(alternative, "two.sided" = "!=", "greater" = ">", "less" = "<")
     col_label <- glue("Pr(z {alternative_symbol} E(Gi[{colnames(object)}]))")
 
+    if (verbose) inform(c("i" = glue("G scores will be named Gi[Ftr] and adjusted p-values will ",
+                             "be named Pr(z {alternative_symbol} E(Gi[Ftr]))")))
 
     # Calculate p-values
     pvs <-
@@ -219,8 +228,6 @@ RunLocalG.default <- function (
 
 
 
-
-# TODO: verbosity and fix error when n = 1 features
 #' @param features A character vector of feature names fetchable with
 #' \code{\link{FetchData}}
 #' @param store_in_metadata A logical specifying if the results should be
@@ -237,7 +244,10 @@ RunLocalG.default <- function (
 #' prefixed with "Gi" and p-values are prefixed with one of "Pr(z <!=",
 #' "Pr(z " or "Pr(z <" depending on the chosen test.
 #'
+#' @import dplyr
 #' @importFrom Seurat FetchData CreateAssayObject
+#' @importFrom rlang inform abort
+#' @importFrom tibble rownames_to_column column_to_rownames
 #'
 #' @rdname local-G
 #'
@@ -279,6 +289,8 @@ RunLocalG.Seurat <- function (
   ...
 ) {
 
+  if (verbose) cli_h2("Calculating local G")
+
   # Set global variables to NULL
   barcode <- NULL
 
@@ -289,7 +301,12 @@ RunLocalG.Seurat <- function (
   spatnet <- GetSpatialNetwork(object)
 
   # Get data
+  if (!inherits(features, what = "character"))
+    abort("Invalid class '{class(features)}' for 'features', expected a 'character' vector")
+  if (length(features) == 0)
+    abort("'features' is empty")
   data <- FetchData(object, vars = features)
+  if (verbose) inform(c("i" = glue("Got {length(features)} feature(s)")))
 
   # Calculate local G
   Gi_res <- RunLocalG(data,
@@ -301,14 +318,17 @@ RunLocalG.Seurat <- function (
 
   # Return in meta data if store_in_metadata = TRUE
   if (store_in_metadata) {
+    if (verbose)
+      inform(c("i" = "Placing results in 'Seurat' object meta.data slot"))
     newMdata <- object@meta.data |>
       select(-contains(colnames(Gi_res))) |>
       rownames_to_column(var = "barcode") |>
       left_join(y = Gi_res, by = "barcode") |>
       column_to_rownames(var = "barcode")
     object@meta.data <- newMdata
-    return(object)
   } else {
+    if (verbose)
+      inform(c("i" = glue("Placing results in 'Seurat' object as an 'Assay' object named {assay_name}")))
     data <- Gi_res |>
       select(-starts_with("Pr(z")) |>
       column_to_rownames(var = "barcode") |>
@@ -330,6 +350,8 @@ RunLocalG.Seurat <- function (
     object[[assay_name]] <- gi_assay
   }
 
+  if (verbose) inform(c("v" = "Returning results"))
   return(object)
 
 }
+
