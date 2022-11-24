@@ -2,7 +2,7 @@
 #'
 NULL
 
-
+# TODO: dealing with NA values
 #' @description
 #' This function can be used to find genes with high spatial autocorrelation in SRT data.
 #' A more detailed description of the algorithm is outlined in the Details section below.
@@ -62,7 +62,7 @@ NULL
 #' @importFrom tibble tibble
 #' @importFrom Matrix rowSums
 #' @importFrom tidyr pivot_wider
-#' @importFrom dplyr mutate select
+#' @import dplyr
 #' @importFrom glue glue
 #' @importFrom rlang abort
 #' @importFrom methods as
@@ -107,7 +107,7 @@ CorSpatialFeatures.default <- function (
     object,
     spatnet,
     across_all = FALSE,
-    nCores = detectCores() - 1,
+    nCores = NULL,
     verbose = TRUE,
     ...
 ) {
@@ -115,7 +115,7 @@ CorSpatialFeatures.default <- function (
   # Set global variables to NULL
   from <- to <- NULL
 
-  if (verbose) cli_h2("Computiong spatial autocorrelation")
+  if (verbose) cli_h2("Computing spatial autocorrelation")
 
   # Check objects
   if (!inherits(object, what = c("dgRMatrix", "dgCMatrix", "matrix", "data.frame"))) abort(glue("Invalid format of feature matrix: '{class(object)}'"))
@@ -163,32 +163,57 @@ CorSpatialFeatures.default <- function (
       return(lagMat)
     }
 
-    # Calculate spatial autocorrelation for each gene
-    spatial_autocorrelation <- unlist(mclapply(1:ncol(x_subset), function(i) {
-      cor(as.numeric(x_subset[rownames(lagMat), i]), as.numeric(lagMat[, i]))
-    }, mc.cores = nCores))
+    if (is.null(nCores)) {
+      # Calculate spatial autocorrelation for each gene
+      spatial_autocorrelation <- .colCors(x_subset, lagMat)
+    } else {
+      if (nCores > (detectCores() - 1)) {
+        nCores <- detectCores() - 1
+        inform(glue("Using {nCores} threads"))
+      }
+      chunks <- ceiling((1:ncol(x_subset))/100)
+      chunks <- split(1:ncol(x_subset), chunks)
+      spatial_autocorrelation <- unlist(mclapply(seq_along(chunks), function(i) {
+        inds <- chunks[[i]]
+        .colCors(x_subset[, inds], lagMat[, inds])
+      }, mc.cores = nCores))
+    }
+
     if (verbose) inform(c("v" = "  Computed feature spatial autocorrelation scores"))
 
     # Summarize results
-    results <- tibble(gene = colnames(x_subset), cor = spatial_autocorrelation) |>
-      arrange(-spatial_autocorrelation)
+    results <- tibble(gene = names(spatial_autocorrelation), cor = spatial_autocorrelation) |>
+      arrange(-cor)
   })
 
   # If across_all is set, calculate autocorrelations across all samples instead
   if (across_all) {
     if (verbose) inform(c("", "i" = "Computing spatial autocorrelation scores across all samples"))
     lagMat <- do.call(rbind, results)
-    # Calculate spatial autocorrelation for each gene
-    spatial_autocorrelation <- unlist(mclapply(1:ncol(object), function(i) {
-      cor(as.numeric(object[rownames(lagMat), i]), as.numeric(lagMat[, i]))
-    }, mc.cores = nCores))
+
+    if (is.null(nCores)) {
+      # Calculate spatial autocorrelation for each gene
+      spatial_autocorrelation <- .colCors(x_subset, lagMat)
+    } else {
+      if (nCores > (detectCores() - 1)) {
+        nCores <- detectCores() - 1
+        inform(glue("Using {nCores} threads"))
+      }
+      chunks <- ceiling((1:ncol(object))/100)
+      chunks <- split(1:ncol(object), chunks)
+      spatial_autocorrelation <- unlist(mclapply(seq_along(chunks), function(i) {
+        inds <- chunks[[i]]
+        .colCors(object[, inds], lagMat[, inds])
+      }, mc.cores = nCores))
+    }
+
     if (verbose) inform(c("v" = "  Computed feature spatial autocorrelation scores"))
     # Summarize results
     results <- tibble(gene = colnames(object), cor = spatial_autocorrelation) |>
-      arrange(-spatial_autocorrelation)
+      arrange(-cor)
   }
 
-  if (verbose) inform(c("", "v" = "  Returning results"))
+  if (verbose) inform(c("v" = "  Returning results"))
   return(results)
 }
 
@@ -196,7 +221,8 @@ CorSpatialFeatures.default <- function (
 #' @param features A character vector with features present in `Seurat` object. These
 #' features need to be accessible with \code{\link{FetchData}}
 #'
-#' @importFrom Seurat FetchData
+#' @importFrom Seurat FetchData VariableFeatures GetAssayData
+#' @importFrom rlang %||%
 #'
 #' @rdname cor-features
 #'
@@ -251,9 +277,11 @@ CorSpatialFeatures.default <- function (
 #'
 CorSpatialFeatures.Seurat <- function (
     object,
-    features,
+    features = NULL,
+    assay_use = NULL,
+    slot_use = "data",
     across_all = FALSE,
-    nCores = detectCores() - 1,
+    nCores = NULL,
     verbose = TRUE,
     ...
 ) {
@@ -261,8 +289,21 @@ CorSpatialFeatures.Seurat <- function (
   # Validate Seurat object
   .check_seurat_object(object)
 
+  # Get variable features if features=NULL
+  features <- features %||% VariableFeatures(object)
+
   # Fetch features
-  featureMat <- FetchData(object, vars = features)
+  if (!is.null(assay_use)) {
+    if (!requireNamespace("MatrixExtra", quietly = TRUE)) {
+      install.packages("MatrixExtra")
+    }
+    stopifnot(is.character(assay_use),
+              length(assay_use) == 1)
+    featureMat <- GetAssayData(object, assay = assay_use, slot = slot_use)
+    featureMat <- MatrixExtra::t(featureMat[features, ])
+  } else {
+    featureMat <- FetchData(object, vars = features)
+  }
 
   # Obtain spatial networks
   spatnet <- GetSpatialNetwork(object)
@@ -271,4 +312,23 @@ CorSpatialFeatures.Seurat <- function (
   spatfeatures <- CorSpatialFeatures(featureMat, spatnet, across_all, nCores, verbose, ...)
 
   return(spatfeatures)
+}
+
+
+
+
+#' Calculate pairwise correlation across two matrices
+#'
+#' @param x,y Numeric matrices with identical dimensions
+#'
+#' @importFrom Matrix colMeans
+#'
+#' @return A numeric vector with correlation scores
+#'
+#' @noRd
+.colCors = function(x, y) {
+  x = sweep(x, 2, colMeans(x))
+  y = sweep(y, 2, colMeans(y))
+  cor = colSums(x*y) / sqrt(colSums(x*x)*colSums(y*y))
+  return(cor)
 }
