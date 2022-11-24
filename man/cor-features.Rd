@@ -12,16 +12,18 @@ CorSpatialFeatures(object, ...)
   object,
   spatnet,
   across_all = FALSE,
-  nCores = detectCores() - 1,
+  nCores = NULL,
   verbose = TRUE,
   ...
 )
 
 \method{CorSpatialFeatures}{Seurat}(
   object,
-  features,
+  features = NULL,
+  assay_use = NULL,
+  slot_use = "data",
   across_all = FALSE,
-  nCores = detectCores() - 1,
+  nCores = NULL,
   verbose = TRUE,
   ...
 )

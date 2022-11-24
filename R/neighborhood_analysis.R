@@ -2,6 +2,7 @@
 #'
 NULL
 
+# TODO: fix keep within, should return both neighbors and spots within.
 #' Autodetect region neighbors
 #'
 #' This function allows you to automatically identify neighbors of a selected region.
@@ -99,7 +100,7 @@ RegionNeighbors.default <- function (
   # If outer_border = TRUE, return neighboring spots
   # otherwise, return inner border
   if (outer_border) {
-    return(spatnet_combined$to)
+    return(unique(spatnet_combined$to))
   } else {
     return(unique(spatnet_combined$from))
   }
@@ -197,8 +198,8 @@ RegionNeighbors.Seurat <- function (
   .check_seurat_object(object)
 
   # Check if column_name is available in meta data
-  if (!is.character(column_name)) abort(glue("Invalid class '{class(column_name)}', expected a 'character'"))
-  if (length(column_name) != 1) abort(glue("Invalid length {length(column_name)} for 'column_name', expected a character vector of length 1"))
+  if (!inherits(column_name, what = c("character", "factor"))) abort(glue("Invalid class '{class(column_name)}', expected a 'character' vector or a 'factor'"))
+  if (length(column_name) != 1) abort(glue("Invalid length {length(column_name)} for 'column_name', expected a vector of length 1"))
   if (!column_name %in% colnames(object[[]])) abort("'column_name' is not present on the Seurat object meta data")
 
   # Check column label
@@ -213,6 +214,7 @@ RegionNeighbors.Seurat <- function (
   spots_list <- lapply(column_labels, function(lbl) {
     spots <- GetStaffli(object)@meta_data |>
       bind_cols(object[[]] |> select(all_of(column_name))) |>
+      mutate_if(is.factor, as.character) |>
       filter(!! sym(column_name) == lbl) |>
       pull(barcode)
   }) |>
@@ -234,10 +236,17 @@ RegionNeighbors.Seurat <- function (
 
   # Add data to Seurat object
   nbs_rearranged <- do.call(bind_cols, lapply(column_labels, function(lbl) {
-    left_join(x = GetStaffli(object)@meta_data |> select(barcode),
+    left_join(x = GetStaffli(object)@meta_data |>
+                select(barcode) |>
+                bind_cols(object[[]] |> select(all_of(column_name))),
               y = nbs[[lbl]],
               by = "barcode") |>
       select(-barcode) |>
+      setNames(nm = c("var1", "var2")) |>
+      mutate_if(is.factor, as.character) |>
+      mutate(var2 = case_when((!is.na(var2)) & (var1 != var2) ~ paste0(column_key, lbl),
+                              TRUE ~ var2)) |>
+      select(var2) |>
       setNames(nm = paste0(column_key, lbl))
   }))
 
