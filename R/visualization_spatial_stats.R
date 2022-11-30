@@ -215,6 +215,250 @@ MapFeaturesSummary <- function (
 }
 
 
+# TODO: Deal with split_labels=T
+#' Map features spatially and add a summary plot next to it
+#'
+#' This function is a wrapped for \code{\link{MapLabels}} which adds a
+#' stacked bar plot showing the sample's proportions of each category in
+#' selected column next to the spatial feature plot.
+#'
+#' Note that currently, only 1 label can be selected
+#'
+#' @param hide_legend logical specifying whether to hide the label legend for the spatial plot. Set to (\code{TRUE}) by default.
+#' @param bar_display a character vector of length 1 specifying one of "percent" or "count" for the bar plot to display. Default set to "percent".
+#' @param bar_width a numeric value specifying width of the bar plot. Default set to 1.2.
+#' @param bar_label_size a numeric value specifying text size of the bar plot labels. Default set to 2.5.
+#' @inheritParams MapLabels
+#'
+#' @importFrom patchwork plot_layout wrap_plots area plot_spacer
+#' @import rlang
+#' @import dplyr
+#' @import glue
+#'
+#' @family visualization
+#'
+#' @author Lovisa Franzen
+#'
+#' @return a `patchwork` object
+#'
+#' @examples
+#'
+#' library(tibble)
+#'
+#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                 "/*/filtered_feature_bc_matrix.h5"))
+#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                 "/*/spatial/tissue_hires_image.png"))
+#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                      "/*/spatial/tissue_positions_list.csv"))
+#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'                                 "/*/spatial/scalefactors_json.json"))
+#'
+#' # Create a tibble/data.frame with file paths
+#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#'
+#' # Create Seurat object
+#' se <- ReadVisiumData(infoTable = infoTable) |>
+#'   NormalizeData()  |>
+#'   ScaleData() |>
+#'   FindVariableFeatures() |>
+#'   RunPCA() |>
+#'   FindNeighbors(reduction = "pca", dims = 1:10) |>
+#'   FindClusters(resolution = 0.2)
+#'
+#' # Plot clusters
+#' MapLabelsSummary(se, column_name = "seurat_clusters")
+#'
+#'
+#' @export
+#'
+MapLabelsSummary <- function (
+    object,
+    column_name,
+    image_use = NULL,
+    coords_use = "raw",
+    crop_area = NULL,
+    pt_size = 1,
+    pt_alpha = 1,
+    pt_stroke = 0,
+    hide_legend = TRUE,
+    bar_display = "percent", # c("percent", "count"),
+    bar_width = 1.2,
+    bar_label_size = 2.5,
+    scale_alpha = FALSE,
+    section_number = NULL,
+    label_by = NULL,
+    split_labels = FALSE,
+    ncol = NULL,
+    colors = NULL,
+    scale = c("shared", "free"),
+    override_plot_dims = FALSE,
+    return_plot_list = FALSE,
+    drop_na = FALSE,
+    blend = FALSE,
+    ...
+) {
+  # Check Seurat object
+  # .check_seurat_object(object)
+
+  # Check bar_display arg
+  bar_display <- match.arg(bar_display, choices = c("percent", "count"), several.ok = F)
+
+  # fetch data from Seurat object
+  data_use <- GetStaffli(object)@meta_data |>
+    bind_cols(FetchData(object, vars = column_name) |> as_tibble())
+
+  # Convert label column to factor
+  data_use <- data_use |>
+    mutate(across(all_of(column_name), ~ factor(.x)))
+
+  # Add label_by column if present
+  if (!is.null(label_by)) {
+    data_use <- data_use |>
+      bind_cols(FetchData(object, vars = label_by))
+  }
+  label_levels <- levels(object[[column_name]][,1])
+
+  # Split data by sampleID (code copied from MapLabels())
+  data <- data_use |>
+    group_by(sampleID) |>
+    group_split() |>
+    setNames(nm = unique(data_use$sampleID))
+
+  # Check color, or create a new color palette for levels
+  color_labels <- colors %||% .gg_color_hue(n = length(label_levels))
+  if (length(color_labels) < length(label_levels)){
+    rlang::warn("Too few colors provided. Picking new default colors.")
+    color_labels <- .gg_color_hue(n = length(label_levels))
+  } else if (length(color_labels) > length(label_levels)) {
+    color_labels <- color_labels[1:length(label_levels)]
+  }
+  names(color_labels) <- label_levels
+
+  # Plot MapLabels and return list
+  p_list <- MapLabels(object = se,
+                      column_name = column_name,
+                      colors = color_labels,
+                      image_use = image_use,
+                      coords_use = coords_use,
+                      crop_area = crop_area,
+                      pt_size = pt_size,
+                      pt_alpha = pt_alpha,
+                      pt_stroke = pt_stroke,
+                      scale_alpha = scale_alpha,
+                      section_number = section_number,
+                      label_by = label_by,
+                      ncol = ncol,
+                      split_labels = FALSE,  # split_labels,
+                      override_plot_dims = override_plot_dims,
+                      return_plot_list = TRUE  # ! Important
+  )
+  # Add names to list
+  list_names <- (section_number %||% 1:length(p_list)) |> paste0()
+  p_list <- setNames(p_list, nm = list_names)
+
+  # Crop data if crop_area is set
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    # Get coords columns
+    coords_columns <- .get_coords_column(image_use, coords_use)
+    # Get image dimensions
+    dims <- GetStaffli(object)@image_info
+    # Crop data
+    data <- setNames(lapply(names(data), function(nm) {
+      crop_limits <- c(round(crop_area[1]*dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       round(crop_area[2]*dims[dims$sampleID == nm, "full_height", drop = TRUE]),
+                       round(crop_area[3]*dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       round(crop_area[4]*dims[dims$sampleID == nm, "full_height", drop = TRUE]))
+      x <- data[[nm]] |>
+        filter(between(x = !! sym(coords_columns[1]), left = crop_limits[1], right = crop_limits[3])) |>
+        filter(between(x = !! sym(coords_columns[2]), left = crop_limits[2], right = crop_limits[4]))
+      return(x)
+    }), nm = names(data))
+  }
+
+  # Group count props per cluster in each sample and make bar plots
+  if (!is.null(section_number)) {
+    data <- data[section_number]
+  }
+  map_labs_bar <- lapply(data, function(x){
+    names(x)[names(x) == column_name] <- "labels"
+    x <- x |>
+      dplyr::group_by(labels) |>
+      dplyr::summarise(n = n()) |>
+      dplyr::mutate(pct = round(100 * n/sum(n), 5),
+                    pct_round = round(100 * n/sum(n), 1),
+                    pos = 100-(cumsum(pct) - (0.5 * pct)))
+    x <- x[x$pct>0,] # Remove 0% groups from bar - Make optional?
+
+    p_bar <- ggplot(x, aes(x=1, y=pct, fill=labels)) +
+      geom_bar(
+        stat = "identity",
+        position = "stack",
+        width = bar_width
+      ) +
+      scale_fill_manual(values = color_labels) +
+      coord_cartesian(
+        ylim = c(0,100),
+        xlim = c(0, 5),
+        clip = 'off') +
+      theme_void() +
+      theme(legend.position = "none",
+            plot.margin = unit(c(0, 40, 0, -10), "pt"))
+  })
+  map_labs_bar <- setNames(map_labs_bar, nm = list_names)
+
+  p_patch <- lapply(list_names, function(i){
+    p <- p_list[[i]]
+    if(hide_legend){
+      p <- p & theme(legend.position = "none")
+    }
+
+    legend_spacer <- "    "
+    if(bar_width>=1.5) {
+      legend_spacer <- paste(legend_spacer, rep(" ", round(bar_width)-1), collapse = "")
+    }
+
+    if (bar_display == "count") {
+      p_bar <- map_labs_bar[[i]] &
+        geom_text(
+          aes(label = paste0(legend_spacer, labels, ": ", n),
+              y = pos,
+              vjust = "inward",
+              hjust = 0
+          ),
+          size = bar_label_size)
+    } else {
+      p_bar <- map_labs_bar[[i]] &
+        geom_text(
+          aes(label = paste0(legend_spacer, labels, ": ", pct_round, "%"),
+              y = pos,
+              vjust = "inward",
+              hjust = 0
+          ),
+          size = bar_label_size)
+    }
+
+    design <- c(area(t = 1, l = 1, b = 6, r = 5),
+                area(t = 1, l = 6, b = 1, r = 6),
+                area(t = 2, l = 6, b = 5, r = 6),
+                area(t = 6, l = 6, b = 6, r = 6))
+    p_out <- p +
+      plot_spacer() +
+      p_bar +
+      plot_spacer() + plot_layout(design = design)
+  })
+
+  # Return wrapped plot grid
+  ncol <- ncol %||% ceiling(sqrt(length(p_patch)))
+  p_out <- wrap_plots(p_patch, ncol = ncol)
+
+  return(p_out)
+}
+
+
 #' Create an empty plot to add geoms to
 #'
 #' @importFrom ggplot2 ggplot theme_linedraw theme element_text element_blank element_line unit
