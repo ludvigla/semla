@@ -47,7 +47,8 @@ NULL
 #'                                 "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#' infoTable <- tibble(samples, imgs, spotfiles, json,
+#'                     sample_id = c("mousebrain", "mousecolon"))
 #'
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable) |>
@@ -220,14 +221,14 @@ MapFeaturesSummary <- function (
 #'
 #' This function is a wrapped for \code{\link{MapLabels}} which adds a
 #' stacked bar plot showing the sample's proportions of each category in
-#' selected column next to the spatial feature plot.
+#' the selected column next to the spatial feature plot.
 #'
 #' Note that currently, only 1 label can be selected
 #'
 #' @param hide_legend logical specifying whether to hide the label legend for the spatial plot. Set to (\code{TRUE}) by default.
 #' @param bar_display a character vector of length 1 specifying one of "percent" or "count" for the bar plot to display. Default set to "percent".
 #' @param bar_width a numeric value specifying width of the bar plot. Default set to 1.2.
-#' @param bar_label_size a numeric value specifying text size of the bar plot labels. Default set to 2.5.
+#' @param bar_label_size a numeric value specifying text size of the bar plot labels. Default set to 3.
 #' @inheritParams MapLabels
 #'
 #' @importFrom patchwork plot_layout wrap_plots area plot_spacer
@@ -255,7 +256,8 @@ MapFeaturesSummary <- function (
 #'                                 "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#' infoTable <- tibble(samples, imgs, spotfiles, json,
+#'                     sample_id = c("mousebrain", "mousecolon"))
 #'
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable) |>
@@ -275,6 +277,9 @@ MapFeaturesSummary <- function (
 MapLabelsSummary <- function (
     object,
     column_name,
+    bar_display = "percent", # c("percent", "count"),
+    bar_width = 1.2,
+    bar_label_size = 3,
     image_use = NULL,
     coords_use = "raw",
     crop_area = NULL,
@@ -282,13 +287,10 @@ MapLabelsSummary <- function (
     pt_alpha = 1,
     pt_stroke = 0,
     hide_legend = TRUE,
-    bar_display = "percent", # c("percent", "count"),
-    bar_width = 1.2,
-    bar_label_size = 2.5,
     scale_alpha = FALSE,
     section_number = NULL,
     label_by = NULL,
-    split_labels = FALSE,
+    # split_labels = FALSE,
     ncol = NULL,
     colors = NULL,
     scale = c("shared", "free"),
@@ -299,7 +301,7 @@ MapLabelsSummary <- function (
     ...
 ) {
   # Check Seurat object
-  # .check_seurat_object(object)
+  .check_seurat_object(object)
 
   # Check bar_display arg
   bar_display <- match.arg(bar_display, choices = c("percent", "count"), several.ok = F)
@@ -349,10 +351,11 @@ MapLabelsSummary <- function (
                       section_number = section_number,
                       label_by = label_by,
                       ncol = ncol,
-                      split_labels = FALSE,  # split_labels,
+                      split_labels = FALSE,  # ! Important
                       override_plot_dims = override_plot_dims,
                       return_plot_list = TRUE  # ! Important
   )
+
   # Add names to list
   list_names <- (section_number %||% 1:length(p_list)) |> paste0()
   p_list <- setNames(p_list, nm = list_names)
@@ -379,10 +382,12 @@ MapLabelsSummary <- function (
     }), nm = names(data))
   }
 
-  # Group count props per cluster in each sample and make bar plots
+  # Subset data if section_number is set
   if (!is.null(section_number)) {
     data <- data[section_number]
   }
+
+  # Group count props per cluster in each sample and make bar plots
   map_labs_bar <- lapply(data, function(x){
     names(x)[names(x) == column_name] <- "labels"
     x <- x |>
@@ -406,7 +411,7 @@ MapLabelsSummary <- function (
         clip = 'off') +
       theme_void() +
       theme(legend.position = "none",
-            plot.margin = unit(c(0, 40, 0, -10), "pt"))
+            plot.margin = unit(c(0, 50, 0, -20), "pt"))
   })
   map_labs_bar <- setNames(map_labs_bar, nm = list_names)
 
@@ -416,9 +421,9 @@ MapLabelsSummary <- function (
       p <- p & theme(legend.position = "none")
     }
 
-    legend_spacer <- "    "
+    legend_spacer <- "     "
     if(bar_width>=1.5) {
-      legend_spacer <- paste(legend_spacer, rep(" ", round(bar_width)-1), collapse = "")
+      legend_spacer <- paste(legend_spacer, rep(" ", round(bar_width/2)), collapse = "")
     }
 
     if (bar_display == "count") {
