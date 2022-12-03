@@ -16,10 +16,7 @@ generate_rigid_transform(
 \arguments{
 \item{sampleID}{An integer specifying a sample ID}
 
-\item{mirror_x}{Logical specifying if the image and spots should be mirrored
-along the x- and/or y-axis}
-
-\item{mirror_y}{Logical specifying if the image and spots should be mirrored
+\item{mirror_x, mirror_y}{Logical specifying if the image and spots should be mirrored
 along the x- and/or y-axis}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles

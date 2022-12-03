@@ -94,11 +94,7 @@ be used to define the plot area. Setting \code{override_plot_dims} can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots.}
 
-\item{max_cutoff}{a numeric value between 0-1 specifying either a lower
-(\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
-These arguments can be useful to make sure that the color map doesn't get dominated by outliers.}
-
-\item{min_cutoff}{a numeric value between 0-1 specifying either a lower
+\item{min_cutoff, max_cutoff}{a numeric value between 0-1 specifying either a lower
 (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.}
 
@@ -117,19 +113,15 @@ Note that currently, only 1 feature can be selected
 }
 \examples{
 
-library(tibble)
-
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                     "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/spatial/scalefactors_json.json"))
-
-# Create a tibble/data.frame with file paths
-infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain",
+                                 "se_mbrain",
+                                 package = "STUtility2"))
+se_mbrain$sample_id <- "mousebrain"
+se_mcolon <- readRDS(system.file("extdata/mousecolon",
+                                 "se_mcolon",
+                                 package = "STUtility2"))
+se_mcolon$sample_id <- "mousecolon"
+se <- MergeSTData(se_mbrain, se_mcolon)
 
 # Create Seurat object
 se <- ReadVisiumData(infoTable = infoTable) |>

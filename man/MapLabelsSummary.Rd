@@ -20,7 +20,6 @@ MapLabelsSummary(
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
-  split_labels = FALSE,
   ncol = NULL,
   colors = NULL,
   scale = c("shared", "free"),
@@ -73,8 +72,6 @@ labels that can be used to provide a title for each subplot. This column should 
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.}
 
-\item{split_labels}{logical specifying if labels should be split}
-
 \item{ncol}{integer value specifying the number of columns in the output patchwork.}
 
 \item{colors}{a character vector of colors to use for the color scale. The number of
@@ -101,29 +98,28 @@ a `patchwork` object
 \description{
 This function is a wrapped for \code{\link{MapLabels}} which adds a
 stacked bar plot showing the sample's proportions of each category in
-selected column next to the spatial feature plot.
+the selected column next to the spatial feature plot.
 }
 \details{
 Note that currently, only 1 label can be selected
 }
 \examples{
 
-library(tibble)
+library(STUtility2)
 
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                     "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                "/*/spatial/scalefactors_json.json"))
-
-# Create a tibble/data.frame with file paths
-infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+# Load data
+se_mbrain <- readRDS(system.file("extdata/mousebrain",
+                                 "se_mbrain",
+                                 package = "STUtility2"))
+se_mbrain$sample_id <- "mousebrain"
+se_mcolon <- readRDS(system.file("extdata/mousecolon",
+                                 "se_mcolon",
+                                 package = "STUtility2"))
+se_mcolon$sample_id <- "mousecolon"
+se <- MergeSTData(se_mbrain, se_mcolon)
 
 # Create Seurat object
-se <- ReadVisiumData(infoTable = infoTable) |>
+se <- se |>
   NormalizeData()  |>
   ScaleData() |>
   FindVariableFeatures() |>
@@ -132,7 +128,7 @@ se <- ReadVisiumData(infoTable = infoTable) |>
   FindClusters(resolution = 0.2)
 
 # Plot clusters
-MapLabelsSummary(se, column_name = "seurat_clusters")
+MapLabelsSummary(se, column_name = "seurat_clusters", override_plot_dims = TRUE)
 
 
 }

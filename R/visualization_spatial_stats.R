@@ -35,20 +35,15 @@ NULL
 #'
 #' @examples
 #'
-#' library(tibble)
-#'
-#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                      "/*/spatial/tissue_positions_list.csv"))
-#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/spatial/scalefactors_json.json"))
-#'
-#' # Create a tibble/data.frame with file paths
-#' infoTable <- tibble(samples, imgs, spotfiles, json,
-#'                     sample_id = c("mousebrain", "mousecolon"))
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain",
+#'                                  "se_mbrain",
+#'                                  package = "STUtility2"))
+#' se_mbrain$sample_id <- "mousebrain"
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon",
+#'                                  "se_mcolon",
+#'                                  package = "STUtility2"))
+#' se_mcolon$sample_id <- "mousecolon"
+#' se <- MergeSTData(se_mbrain, se_mcolon)
 #'
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable) |>
@@ -244,23 +239,21 @@ MapFeaturesSummary <- function (
 #'
 #' @examples
 #'
-#' library(tibble)
+#' library(STUtility2)
 #'
-#' samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                      "/*/spatial/tissue_positions_list.csv"))
-#' json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                 "/*/spatial/scalefactors_json.json"))
-#'
-#' # Create a tibble/data.frame with file paths
-#' infoTable <- tibble(samples, imgs, spotfiles, json,
-#'                     sample_id = c("mousebrain", "mousecolon"))
+#' # Load data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain",
+#'                                  "se_mbrain",
+#'                                  package = "STUtility2"))
+#' se_mbrain$sample_id <- "mousebrain"
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon",
+#'                                  "se_mcolon",
+#'                                  package = "STUtility2"))
+#' se_mcolon$sample_id <- "mousecolon"
+#' se <- MergeSTData(se_mbrain, se_mcolon)
 #'
 #' # Create Seurat object
-#' se <- ReadVisiumData(infoTable = infoTable) |>
+#' se <- se |>
 #'   NormalizeData()  |>
 #'   ScaleData() |>
 #'   FindVariableFeatures() |>
@@ -269,7 +262,7 @@ MapFeaturesSummary <- function (
 #'   FindClusters(resolution = 0.2)
 #'
 #' # Plot clusters
-#' MapLabelsSummary(se, column_name = "seurat_clusters")
+#' MapLabelsSummary(se, column_name = "seurat_clusters", override_plot_dims = TRUE)
 #'
 #'
 #' @export
@@ -304,7 +297,7 @@ MapLabelsSummary <- function (
   .check_seurat_object(object)
 
   # Check bar_display arg
-  bar_display <- match.arg(bar_display, choices = c("percent", "count"), several.ok = F)
+  bar_display <- match.arg(bar_display, choices = c("percent", "count"), several.ok = FALSE)
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
