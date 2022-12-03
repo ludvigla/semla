@@ -4,3 +4,4 @@
 .Ruserdata
 notebooks/seeded_nmf_tests.qmd
 presentations/
+R/nmf_methods.R
