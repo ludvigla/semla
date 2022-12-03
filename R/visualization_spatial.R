@@ -217,7 +217,7 @@ MapFeatures.default <- function (
   return(wrapped_plots)
 }
 
-
+# TODO: Fix center_zero with NA values
 #' Map numeric features in 2D using a Seurat object
 #'
 #' @param features a character vector of features to plot. These features need to be

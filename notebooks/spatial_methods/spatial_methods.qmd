@@ -168,7 +168,7 @@ MapFeatures(SubsetSTData(se, expression = r_dist_3 < 1e3),
             image_use = "raw", pt_size = 2)
 ```
 
-So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase expression distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.
+So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase with distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.
 
 ### Focused search
 
@@ -202,7 +202,7 @@ MapLabels(se, column_name = "intervals_3",
   guides(fill = guide_legend(override.aes = list(size = 5), ncol = 3))
 ```
 
-Inside our `Seurat` object meta data slot, we now have three new columns. 'angle_3', 'r_dist_3' and 'intervals_3'. The 'intervals_3' columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:
+Inside our `Seurat` object meta data slot, we now have three new columns: 'angle_3', 'r_dist_3' and 'intervals_3'. The 'intervals_3' columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:
 
 ```{r fig.width=7, fig.height=4}
 sel_genes <- c("CRISP3", "IGLC2")
