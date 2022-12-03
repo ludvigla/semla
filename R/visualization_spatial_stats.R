@@ -46,7 +46,7 @@ NULL
 #' se <- MergeSTData(se_mbrain, se_mcolon)
 #'
 #' # Create Seurat object
-#' se <- ReadVisiumData(infoTable = infoTable) |>
+#' se <- se |>
 #'   NormalizeData()
 #'
 #' # Add boxplot
@@ -280,19 +280,20 @@ MapLabelsSummary <- function (
     pt_alpha = 1,
     pt_stroke = 0,
     hide_legend = TRUE,
-    scale_alpha = FALSE,
     section_number = NULL,
     label_by = NULL,
     # split_labels = FALSE,
     ncol = NULL,
     colors = NULL,
-    scale = c("shared", "free"),
     override_plot_dims = FALSE,
     return_plot_list = FALSE,
     drop_na = FALSE,
-    blend = FALSE,
     ...
 ) {
+
+  # Set global variables to NULL
+  sampleID <- pos <- pct <- pct_round <- NULL
+
   # Check Seurat object
   .check_seurat_object(object)
 
@@ -331,7 +332,7 @@ MapLabelsSummary <- function (
   names(color_labels) <- label_levels
 
   # Plot MapLabels and return list
-  p_list <- MapLabels(object = se,
+  p_list <- MapLabels(object = object,
                       column_name = column_name,
                       colors = color_labels,
                       image_use = image_use,
@@ -340,7 +341,6 @@ MapLabelsSummary <- function (
                       pt_size = pt_size,
                       pt_alpha = pt_alpha,
                       pt_stroke = pt_stroke,
-                      scale_alpha = scale_alpha,
                       section_number = section_number,
                       label_by = label_by,
                       ncol = ncol,

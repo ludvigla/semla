@@ -71,9 +71,9 @@ NULL
 #'   left_join(y = g_scores, by = "barcode")
 #'
 #' # Plot some results
-#' p1 <- ggplot(gg, aes(x, y, color = Th))
-#' p2 <- ggplot(gg, aes(x, y, color = `Gi[Th]`))
-#' p3 <- ggplot(gg, aes(x, y, color = -log10(`Pr(z != E(Gi[Th]))`)))
+#' p1 <- ggplot(gg, aes(x, y, color = Th)) + ggtitle("Expression")
+#' p2 <- ggplot(gg, aes(x, y, color = `Gi[Th]`)) + ggtitle("Local G")
+#' p3 <- ggplot(gg, aes(x, y, color = -log10(`Pr(z != E(Gi[Th]))`))) + ggtitle("-log10(p-value)")
 #'
 #' p <- p1 + p2 + p3 &
 #'   geom_point() &

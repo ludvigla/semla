@@ -5,6 +5,7 @@ notebooks/
 package.json
 webpack.config.js
 yarn.lock
+^srcjs$
 inst/extdata/mousebrain/filtered_feature_barcode_matrix_full.h5
 inst/extdata/mousecolon/filtered_feature_barcode_matrix_full.h5
 presentations/

@@ -2,7 +2,7 @@
 #'
 NULL
 
-# TODO: dealing with NA values
+# TODO: dealing with NA values, test running with 0 cores
 #' @description
 #' This function can be used to find genes with high spatial autocorrelation in SRT data.
 #' A more detailed description of the algorithm is outlined in the Details section below.
@@ -193,7 +193,7 @@ CorSpatialFeatures.default <- function (
 
     if (is.null(nCores)) {
       # Calculate spatial autocorrelation for each gene
-      spatial_autocorrelation <- .colCors(x_subset, lagMat)
+      spatial_autocorrelation <- .colCors(object, lagMat)
     } else {
       if (nCores > (detectCores() - 1)) {
         nCores <- detectCores() - 1
@@ -220,6 +220,9 @@ CorSpatialFeatures.default <- function (
 
 #' @param features A character vector with features present in `Seurat` object. These
 #' features need to be accessible with \code{\link{FetchData}}
+#' @param assay_use Select assay to use for computation. If not specified, the default
+#' assay will be used.
+#' @param slot_use Select slot to use from assay object.
 #'
 #' @importFrom Seurat FetchData VariableFeatures GetAssayData
 #' @importFrom rlang %||%

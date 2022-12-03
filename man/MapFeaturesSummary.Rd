@@ -124,7 +124,7 @@ se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 
 # Create Seurat object
-se <- ReadVisiumData(infoTable = infoTable) |>
+se <- se |>
   NormalizeData()
 
 # Add boxplot

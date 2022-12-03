@@ -17,16 +17,13 @@ MapLabelsSummary(
   pt_alpha = 1,
   pt_stroke = 0,
   hide_legend = TRUE,
-  scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
   ncol = NULL,
   colors = NULL,
-  scale = c("shared", "free"),
   override_plot_dims = FALSE,
   return_plot_list = FALSE,
   drop_na = FALSE,
-  blend = FALSE,
   ...
 )
 }

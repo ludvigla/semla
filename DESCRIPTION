@@ -40,8 +40,6 @@ Imports:
     RColorBrewer,
     shiny,
     shinyjs,
-    htmltools,
-    htmlwidgets,
     reactR
 RoxygenNote: 7.2.1
 Suggests: 
@@ -52,7 +50,10 @@ Suggests:
     testthat,
     data.table,
     BiocManager (>= 1.30.18),
-    SpatialExperiment (>= 1.6.0)
+    SpatialExperiment (>= 1.6.0),
+    MatrixExtra,
+    htmlwidgets,
+    htmltools
 Collate: 
     'STUtility2-package.R'
     'checks.R'

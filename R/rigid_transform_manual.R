@@ -145,8 +145,6 @@ RunAlignment.default <- function (
 #' @param height height of component
 #' @param elementId Component element ID
 #'
-#' @import htmlwidgets
-#'
 #' @export
 paper <- function (
     data,
@@ -154,6 +152,11 @@ paper <- function (
     height = NULL,
     elementId = NULL
   ) {
+
+  # Require htmlwidgets
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    install.packages("htmlwidgets")
+  }
 
   # validate data
   # if (!class(data) == "list") stop(sprintf("invalid class '%s' of data object", class(data)))
@@ -181,7 +184,18 @@ paper <- function (
 
 #' Called by HTMLWidgets to produce the widget's root element.
 #' @noRd
-widget_html.paper <- function(id, style, class, ...) {
+widget_html.paper <- function (
+  id,
+  style,
+  class,
+    ...
+) {
+
+  # Require htmltools
+  if (!requireNamespace("htmltools", quietly = TRUE)) {
+    install.packages("htmltools")
+  }
+
   htmltools::tagList(
     # Necessary for RStudio viewer version < 1.2
     reactR::html_dependency_corejs(),
@@ -214,6 +228,11 @@ paperOutput <- function (
   width = '100%',
   height = '400px'
 ){
+  # Require htmlwidgets
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    install.packages("htmlwidgets")
+  }
+
   htmlwidgets::shinyWidgetOutput(outputId, 'paper', width, height, package = 'paper')
 }
 
@@ -225,6 +244,11 @@ renderPaper <- function (
   env = parent.frame(),
   quoted = FALSE
 ) {
+  # Require htmlwidgets
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    install.packages("htmlwidgets")
+  }
+
   if (!quoted) { expr <- substitute(expr) } # force quoted
   htmlwidgets::shinyRenderWidget(expr, paperOutput, env, quoted = TRUE)
 }

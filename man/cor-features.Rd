@@ -44,6 +44,11 @@ networks should match the spots in the feature matrix.}
 
 \item{features}{A character vector with features present in `Seurat` object. These
 features need to be accessible with \code{\link{FetchData}}}
+
+\item{assay_use}{Select assay to use for computation. If not specified, the default
+assay will be used.}
+
+\item{slot_use}{Select slot to use from assay object.}
 }
 \value{
 Either a list of tibbles or a tibble with feature names and correlation scores

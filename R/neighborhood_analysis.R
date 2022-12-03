@@ -137,8 +137,8 @@ RegionNeighbors.default <- function (
 #'
 #' # Find neighbors to cluster 10
 #' se_mbrain <- RegionNeighbors(se_mbrain,
-#'                               column_name = "seurat_clusters",
-#'                               column_labels = "10")
+#'                              column_name = "seurat_clusters",
+#'                              column_labels = "10")
 #'
 #' # Plot cluster 10 and its neighbors
 #' se_mbrain$selected_clusters <- se_mbrain[[]] |>
@@ -150,21 +150,21 @@ RegionNeighbors.default <- function (
 #' MapLabels(se_mbrain, column_name = "selected_clusters") |
 #'   MapLabels(se_mbrain, column_name = "nb_to_10")
 #'
-#' # Find neighbors to clusters 10 and 13
+#' # Find neighbors to clusters 8 and 10
 #' se_mbrain$selected_clusters <- se_mbrain[[]] |>
 #'   mutate(across(where(is.factor), as.character)) |>
-#'   mutate(cl = case_when(seurat_clusters %in% c("10", "13") ~ seurat_clusters,
+#'   mutate(cl = case_when(seurat_clusters %in% c("8", "10") ~ seurat_clusters,
 #'                         TRUE ~ NA_character_)) |>
 #'   pull(cl)
 #' se_mbrain <- RegionNeighbors(se_mbrain,
-#'                               column_name = "seurat_clusters",
-#'                               column_labels = c("10", "13"))
+#'                              column_name = "seurat_clusters",
+#'                              column_labels = c("8", "10"))
 #'
 #' # Plot cluster 10, 13 and its neighbors
 #' library(patchwork)
 #' MapLabels(se_mbrain, column_name = "selected_clusters") +
+#'   MapLabels(se_mbrain, column_name = "nb_to_8") +
 #'   MapLabels(se_mbrain, column_name = "nb_to_10") +
-#'   MapLabels(se_mbrain, column_name = "nb_to_13") +
 #'   plot_layout(design = c(area(1, 1, 1, 1),
 #'                          area(1, 2, 1, 2),
 #'                          area(1, 3, 1, 3)))
@@ -172,10 +172,10 @@ RegionNeighbors.default <- function (
 #' # it is also possible to pass additional parameters to GetSpatialNetwork
 #' # to make it find more neighbors at a larger distances
 #' se_mbrain <- RegionNeighbors(se_mbrain,
-#'                               column_name = "seurat_clusters",
-#'                               column_labels = "10",
-#'                               nNeighbors = 40,
-#'                               maxDist = Inf)
+#'                              column_name = "seurat_clusters",
+#'                              column_labels = "10",
+#'                              nNeighbors = 40,
+#'                              maxDist = Inf)
 #' MapLabels(se_mbrain, column_name = "nb_to_10")
 #'
 #' @export
@@ -192,7 +192,7 @@ RegionNeighbors.Seurat <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- NULL
+  barcode <- var2 <- NULL
 
   # validate Seurat object
   .check_seurat_object(object)

@@ -524,7 +524,7 @@ MapLabels.default <- function (
   # Check data
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
 
-  # get features
+  # get label column
   label <- object |>
     select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
     colnames()
@@ -675,7 +675,7 @@ MapLabels.default <- function (
 #'   guides(fill = guide_legend(override.aes = list(size = 4)))
 #'
 #' # Use custom colors
-#' cols <- c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677","#AA4499")
+#' cols <- c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499")
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
 #'
 #' # Factor are to used to determine the color order. If you change the
@@ -687,7 +687,7 @@ MapLabels.default <- function (
 #' # Control what group label colors by naming the color vector
 #' # this way you can make sure that each group gets a desired color
 #' # regardless of the factor levels
-#' cols <- setNames(cols, nm = paste0(0:7))
+#' cols <- setNames(cols, nm = paste0(0:5))
 #' cols
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
 #'
