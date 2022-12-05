@@ -1,0 +1,119 @@
+---
+title: "Cell type prediction with NNLS"
+format: html
+editor: visual
+---
+
+```{r}
+library(STUtility2)
+library(tibble)
+library(dplyr)
+library(RcppML)
+```
+
+## Download data
+
+For this test, we will use a single-cell dataset from the Allen Brain Atlas.
+
+```{r}
+options(timeout=200)
+tmpdir <- tempdir()
+dir.create(paste0(tmpdir, "/mousebrain"))
+tmpdir <- paste0(tmpdir, "/mousebrain")
+dir.create(paste0(tmpdir, "/single-cell"))
+destfile <- paste0(tmpdir, "/single-cell/allen_brain.rds")
+download.file("https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1", destfile = destfile)
+```
+
+And 10x Visium data from 10x Genomics website
+
+```{r}
+dir.create(paste0(tmpdir, "/visium"))
+
+# Download section 1
+dir.create(paste0(tmpdir, "/visium/S1"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5", destfile = paste0(tmpdir, "/visium/S1/filtered_feature_bc_matrix.h5"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_spatial.tar.gz",
+              destfile = paste0(tmpdir, "/visium/S1/spatial.tar.gz"))
+untar(tarfile = paste0(tmpdir, "/visium/S1/spatial.tar.gz"), 
+      exdir =  paste0(tmpdir, "/visium/S1/"))
+file.remove(paste0(tmpdir, "/visium/S1/spatial.tar.gz"))
+
+# Download section 2
+dir.create(paste0(tmpdir, "/visium/S2"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5", destfile = paste0(tmpdir, "/visium/S2/filtered_feature_bc_matrix.h5"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_spatial.tar.gz",
+              destfile = paste0(tmpdir, "/visium/S2/spatial.tar.gz"))
+untar(tarfile = paste0(tmpdir, "/visium/S2/spatial.tar.gz"), 
+      exdir =  paste0(tmpdir, "/visium/S2/"))
+file.remove(paste0(tmpdir, "/visium/S2/spatial.tar.gz"))
+```
+
+Load Visium data
+
+```{r}
+# Assemble spaceranger output files
+samples <- list.files(path = paste0(tmpdir, "/visium"),
+                      pattern = "filtered_feature_bc_matrix.h5", recursive = TRUE,
+                      full.names = TRUE)
+imgs <- list.files(path = paste0(tmpdir, "/visium"),
+                   pattern = "tissue_hires_image.png", recursive = TRUE,
+                   full.names = TRUE)
+spotfiles <- list.files(path = paste0(tmpdir, "/visium"),
+                        pattern = "tissue_positions_list.csv", recursive = TRUE,
+                        full.names = TRUE)
+json <- list.files(path = paste0(tmpdir, "/visium"),
+                   pattern = "scalefactors_json.json", recursive = TRUE,
+                   full.names = TRUE)
+infoTable <- tibble(samples, imgs, spotfiles, json, section_id = paste0("section_", 1:2))
+
+# Create Seurat object with 1 Sagittal Anterior section and 1 Sagittal Posterior section
+se_spatial <- ReadVisiumData(infoTable)
+
+# samples <- "~/FFPE/10x_data/V10J14-101_A1/filtered_feature_bc_matrix.h5"
+# imgs <- "~/FFPE/10x_data/V10J14-101_A1/spatial/tissue_hires_image.png"
+# spotfiles <- "~/FFPE/10x_data/V10J14-101_A1/spatial/tissue_positions_list.csv"
+# json <- "~/FFPE/10x_data/V10J14-101_A1/spatial/scalefactors_json.json"
+# infoTable <- tibble(samples, imgs, spotfiles, json)
+# se_brain <- ReadVisiumData(infoTable)
+```
+
+Load single-cell data
+
+```{r}
+se_allen <- readRDS(destfile)
+```
+
+Normalize data
+
+```{r}
+se_spatial <- se_spatial |>
+  NormalizeData() |>
+  FindVariableFeatures(nfeatures = 10000)
+
+se_allen <- se_allen |>
+  NormalizeData() |>
+  FindVariableFeatures() |> 
+  ScaleData() |> 
+  RunPCA() |> 
+  RunUMAP(reduction = "pca", dims = 1:30)
+
+se_allen <- se_allen |> 
+  FindVariableFeatures(nfeatures = 10000)
+```
+
+```{r}
+DimPlot(se_allen, group.by = "subclass")
+```
+
+## Run NNLS
+
+```{r}
+DefaultAssay(se_spatial) <- "Spatial"
+se_spatial <- RunNNLS.Seurat(object = se_spatial, 
+                            singlecell_object = se_allen, 
+                            groups = "subclass")
+
+DefaultAssay(se_spatial) <- "celltypeprops"
+MapFeatures(se_spatial, features = "Endo")
+```

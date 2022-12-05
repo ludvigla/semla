@@ -58,78 +58,9 @@ se_sc <- se_sc |>
   FindVariableFeatures(nfeatures = 10000)
 ```
 
-Prep data
-
-```{r}
-source("~/STUtility/R_tmp/SeededNMF.R")
-
-# Prepare data
-data.list <- .prep_data(sc_object = se_sc, 
-                        st_object = se_brain, 
-                        sc_assay = "RNA", 
-                        st_assay = "Spatial", 
-                        features = NULL,
-                        groups = "subclass",
-                        slot = "data", 
-                        nCells_per_group = 50, 
-                        verbose = TRUE, 
-                        seed = 1337)
-x <- data.list$x
-xst <- data.list$xst
-k <- data.list$k
-barcodes <- data.list$barcodes
-new_groups <- data.list$new_groups
-```
-
 ## Run NMF with seed
 
-Calculate enrichment score
-
-```{r}
-x_small <- x[, barcodes]
-
-# Calculate means
-row_means <- do.call(cbind, lapply(unique(new_groups), function(grp) {
-  x1 <- rowMeans(x_small[, new_groups == grp])
-}))
-colnames(row_means) <- unique(new_groups)
-
-# Calculate enrichment scores
-W <- do.call(bind_cols, lapply(colnames(row_means), function(grp) {
-  x1 <- row_means[, grp]
-  x2 <- row_means[, -which(colnames(row_means) == grp)]
-  x2 <- rowMeans(x2) + 1
-  y <- tibble(x1/x2) |> setNames(nm = grp)
-  return(y)
-})) |>
-  bind_cols(gene = rownames(x_small)) |>
-    relocate(gene)  
-
-```
-
-```{r}
-seeded_H <- RcppML::project(w = as.matrix(W[, 2:ncol(W)]), data = xst)
-```
-
-Create dimreduc object
-
-```{r}
-snmf_dimreduc <- CreateDimReducObject(embeddings = t(seeded_H), 
-                                     loadings = as.matrix(W[, 2:ncol(W)]), 
-                                     key = "SNMF_", 
-                                     assay = "Spatial")
-
-# Add nmf to Visium Seurat object
-se_brain[["snmf"]] <- snmf_dimreduc
-```
-
-```{r}
-MapFeatures(se_brain, features = "SNMF_23")
-```
-
 ## Run mixed NMF
-
-Add additional vectors to W
 
 ```{r}
 
@@ -196,4 +127,15 @@ pheatmap::pheatmap(gg, cluster_rows = F, cluster_cols = F, border_color = NA,
 
 ```{r}
 MapFeatures(se_brain, features = "Penk")
+```
+
+## Run NNLS
+
+```{r}
+DefaultAssay(st_object) <- "Spatial"
+st_object <- RunNNLS.Seurat(object = st_object, singlecell_object = se_sc, 
+                            groups = "subclass")
+
+DefaultAssay(st_object) <- "celltypeprops"
+MapFeatures(st_object, features = "Oligo")
 ```
