@@ -67,6 +67,7 @@ Collate:
     'local_G.R'
     'mask.R'
     'neighborhood_analysis.R'
+    'nmf_methods.R'
     'plot_images.R'
     'radial_distance.R'
     'radial_distance_plot.R'

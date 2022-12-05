@@ -241,3 +241,47 @@ RunLocalG <- function(object, ...) {
 RunAlignment <- function(object, ...) {
   UseMethod(generic = 'RunAlignment', object = object)
 }
+
+
+#' @title Cell type prediction with NNLS
+#'
+#' @description
+#'
+#' This function can be used to project cell type expression
+#' profiles onto a 10x Visium gene expression matrix to obtain
+#' cell type proportion estimates. The method is suitable for
+#' paired 10x Visium and scRNA-seq data. In other words, the
+#' scRNA-seq data should represent the cell types present in
+#' the 10x Visium spatial transcriptomics data.
+#' Redundant cell types (i.e. cells that are present in the
+#' scRNA-seq data but not in the data 10x Visium) or missing
+#' cell types (i.e. cells that are present in the 10x Visium
+#' data but not in the data scRNA-seq data) might affect the
+#' results.
+#'
+#' Preferably, the scRNA-seq data should be composed of the
+#' same cell types as the tissue section(s) processed by 10x
+#' Visium and be collected from the same tissue specimen.
+#' This method is intended to be used as a fast cell type
+#' mapping which is useful for data driven exploration.
+#'
+#' We encourage users to explore alternative methods such as
+#' stereoscope, cell2location or RCTD.
+#'
+#' The method uses the NNLS implementation
+#' from the `RcppML` R package developed by Zachary DeBruine.
+#'
+#' @references
+#' [RcppML](https://doi.org/10.1101/2021.09.01.458620)
+#' [RcppML GitHub page](https://github.com/zdebruine/RcppML)
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname celltype-prediction
+#'
+#' @export
+#'
+RunNNLS <- function(object, ...) {
+  UseMethod(generic = "RunNNLS", object = object)
+}
