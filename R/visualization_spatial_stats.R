@@ -329,7 +329,9 @@ MapLabelsSummary <- function (
   } else if (length(color_labels) > length(label_levels)) {
     color_labels <- color_labels[1:length(label_levels)]
   }
-  names(color_labels) <- label_levels
+  if (is.null(colors) | is.null(names(colors))) {  # Add color names if missing
+    names(color_labels) <- label_levels
+  }
 
   # Plot MapLabels and return list
   p_list <- MapLabels(object = object,
