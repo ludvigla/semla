@@ -45,17 +45,19 @@ RunNNLS(object, ...)
 )
 }
 \arguments{
-\item{object}{A `Seurat` object with 10x Visium data}
+\item{object}{A matrix-like object with 10x Visium data}
 
 \item{...}{Arguments passed to other methods}
 
-\item{groups}{By default, the groups are taken from the sc_object identity.
-Alternatively, a string can be provided specifying a column to use from the
-se_object meta.data slot. The third option is to provide a character vector
-of \code{length(ncol(sc_object))} with group IDs.}
+\item{singlecell_matrix}{A matrix-like object with scRNA-seq data}
+
+\item{groups}{A character vector of length \code{ncol(singlecell_matrix)}
+with cell type labels. For `Seurat` objects, one can omit groups in which case
+the current identity is used instead. Alternatively, a string can be provided
+specifying a column to use from the `singlecell_object` meta.data slot.}
 
 \item{nCells_per_group}{Each cell type is down sampled to this number before
-computing cell type expression profiles . This is mainly used to speed up
+computing cell type expression profiles. This is mainly used to speed up
 computation. Note that if a cell type has fewer than \code{nCells_per_group}
 cells, the cells will be sampled with replacement to obtain \code{nCells_per_group}
 cells.}
@@ -65,6 +67,10 @@ cells.}
 \item{min_prop}{Minimum proportion allowed. Any proportion values lower than
 this threshold will be removed and the remaining proportions will be rescaled.}
 
+\item{L1}{lasso penalty}
+
+\item{L2}{ridge penalty}
+
 \item{seed}{An integer to set seed for reproducibility}
 
 \item{return_expression_profiles}{Logical specifying if the expression profile matrix
@@ -72,27 +78,32 @@ should also be returned}
 
 \item{verbose}{Print messages}
 
-\item{singlecell_object}{A `Seurat` object with scRNA-seq data}
+\item{singlecell_object}{A \code{Seurat} object with single-cell gene expression data}
 
 \item{features}{Features to use for computation. If no features are
 provided, the intersection of variable features between sc_object and st_object
 will be used. Note that the intersect can be quite small, in which case you can
 increase the number of variable features by rerunning \code{FindVariableFeatures}
-and increase the number with the `nfeatures` argument.}
+and increase the number with the \code{nfeatures} argument.}
 
-\item{slot}{Name of slot in `sc_assay` and `st_assay` to use for deconvolution}
+\item{singlecell_assay}{Assay in single cell data object to use for deconvolution}
 
-\item{sc_assay}{Assay in single cell data object to use for deconvolution}
+\item{spatial_assay}{Assay in Visium data object to use for deconvolution}
 
-\item{st_assay}{Assay in Visium data object to use for deconvolution}
+\item{slot}{Name of slot in \code{singlecell_assay} and \code{spatial_assay} to use for
+deconvolution}
 
-\item{assay.name}{Sets the name of the returned `Assay` object. Only active
+\item{assay_name}{Sets the name of the returned \code{Assay} object. Only active
 if return.as.dimred = FALSE.}
 
-\item{dimred.name}{Sets the name of  the returned `DimReduc` object. Only
+\item{dimred_name}{Sets the name of  the returned \code{DimReduc} object. Only
 active if return.as.dimred = TRUE.}
 
-\item{return.as.dimred}{Return results as a `DimReduc` object instead of an `Assay` object}
+\item{return_as_dimred}{By default, the results are returned as an \code{Assay}
+named "celltypeprops", where each feature is named after the cell type IDs.
+Alternatively, you can return the results as a \code{DimReduc} object. This will
+also provide the cell gene loadings for each cell type. However, the proportions
+will instead be named "factor_1", "factor_2", ...}
 }
 \value{
 An object with cell type proportion estimates
