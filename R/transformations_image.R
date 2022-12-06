@@ -97,13 +97,17 @@ ImageTranslate <- function (
 #'  from the `magick` R package instead.
 #'
 #' @param im An image of class `magick-image`
-#' @param angle An integer value specifying the rotation angle (0-360)
+#' @param angle An integer value specifying the rotation angle [-360, 360]
 #' @param xy_offset A numeric vector of length 2 providing the offsets along
 #' the x- and y-axis given as pixels. These values should not exceed the image dimensions.
+#' @param scalefactor A numeric value specifying a scaling factor between [0, 3]
 #'
 #' @family tranforms
 #'
-#' @importFrom magick image_info image_rotate image_blank image_extent image_composite
+#' @importFrom magick image_info image_rotate image_blank image_extent image_composite geometry_area
+#' @import dplyr
+#' @import rlang
+#' @import glue
 #'
 #' @return An object of class `magick-image`
 #'
@@ -124,25 +128,79 @@ ImageTranslate <- function (
 #' im_transformed <- ImageTransform(im, angle = -45, xy_offset = c(-100, 20))
 #' im_transformed
 #'
+#' # shrink image to helf width/height
+#' im_transformed <- ImageTransform(im, scalefactor = 0.5)
+#' im_transformed
+#'
 #' @export
 ImageTransform <- function (
     im,
-    angle,
-    xy_offset
+    angle = 0,
+    xy_offset = c(0, 0),
+    scalefactor = 1
 ) {
+  # Check input parameters
+  if (!inherits(im, what = "magick-image")) abort(glue("Invalid class '{class(im)}' for im, expected a 'magick-image'"))
+  if (!inherits(angle, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(angle)}' for angle, expected a 'numeric'"))
+  if (length(angle) != 1) abort(glue("Invalid length '{length(angle)}' for angle, expected 1 value"))
+  if (!between(x = angle, left = -360, right = 360)) abort(glue("Invalid value `{angle}`for angle. Value should be in range [-360, 360]"))
+  if (!inherits(xy_offset, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(xy_offset)}' for xy_offset, expected a 'numeric'"))
+  if (length(xy_offset) != 2) abort(glue("Invalid length '{length(xy_offset)}' for angle, expected 2 values"))
+  if (!inherits(scalefactor, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(scalefactor)}' for scalefactor, expected a 'numeric'"))
+  if (length(scalefactor) != 1) abort(glue("Invalid length '{length(scalefactor)}' for scalefactor, expected 1 value"))
+  if (!between(x = scalefactor, left = 0, right = 3)) abort(glue("Invalid value `{scalefactor}`for scalefactor. Value should be in range [0, 3]"))
+
+  if (angle == 0 & all(xy_offset == c(0, 0)) & scalefactor == 1) abort("Only default values provided which would result in no tranformation.")
+
   # Get width/height of input image
   info <- image_info(im)
-  # Rotate image and get width/height of roaated image
-  im_rot <- image_rotate(im, degrees = angle)
-  rot_info <- image_info(im_rot)
-  # Create a blank image with the same dimensions as the rotated image
-  im_blank <- image_blank(width = rot_info$width, rot_info$height, color = "#FFFFFFFF")
-  # Place rotated image on top of blank image and apply translations
-  # The first step is required to be able to crop the image later
-  im_combined <- image_composite(im_blank, composite_image = im_rot) |>
-    ImageTranslate(xy_offset)
-  # Crop rotated image at center so that it get the same dimensions as the input image
-  gmtry <- paste0(info$width, "x", info$height)
-  im_crop <- image_extent(im_combined, geometry = gmtry)
-  return(im_crop)
+  sf <- 1
+
+  # Rotate image and get width/height of rotated image
+  if (angle != 0) {
+    im_rot <- image_rotate(im, degrees = angle)
+    rot_info <- image_info(im_rot)
+    # Create a blank image with the same dimensions as the rotated image
+    im_blank <- image_blank(width = rot_info$width, rot_info$height, color = "#FFFFFFFF")
+    # Place rotated image on top of blank image and apply translations
+    # The first step is required to be able to crop the image later
+    im <- image_composite(im_blank, composite_image = im_rot)
+  }
+
+  # Rescale image
+  if (scalefactor != 1) {
+    im_cur_info <- image_info(im)
+    im_scaled <- im |> image_scale(geometry = geometry_area(width = im_cur_info$width*scalefactor,
+                                                            height = im_cur_info$height*scalefactor))
+    im_scaled_info <-  image_info(im_scaled)
+    if (scalefactor < 1) {
+      im_blank <- image_blank(width = im_cur_info$width, im_cur_info$height, color = "#FFFFFFFF")
+      offset_x <- (im_cur_info$width - im_scaled_info$width)/2
+      offset_y <- (im_cur_info$height - im_scaled_info$height)/2
+      im_scaled <- image_composite(im_blank, composite_image = im_scaled,
+                                   offset = geometry_area(x_off = offset_x, y_off = offset_y))
+    } else {
+      offset_x <- (im_scaled_info$width - im_cur_info$width)/2
+      offset_y <- (im_scaled_info$height - im_cur_info$height)/2
+      im_scaled <- im_scaled |> image_crop(geometry = geometry_area(width = im_cur_info$width,
+                                                                    height = im_cur_info$height,
+                                                                    x_off = offset_x,
+                                                                    y_off = offset_y))
+    }
+    im <- im_scaled
+    sf <- im_cur_info$height/info$height
+  }
+
+  # Apply translations
+  if (any(xy_offset != c(0, 0))) {
+    im <- im |>
+      ImageTranslate(xy_offset)
+  }
+
+  if (angle != 0) {
+    # Crop rotated image at center so that it get the same dimensions as the input image
+    im <- image_extent(im, geometry = geometry_area(width = info$width, height = info$height))
+  }
+
+  return(im)
 }

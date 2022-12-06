@@ -24,7 +24,8 @@ generate_rigid_transform <- function (
   mirror_y = FALSE,
   angle = 0,
   tr_x = 0,
-  tr_y = 0
+  tr_y = 0,
+  scalefactor = 1
 ) {
 
   # Check input parameters
@@ -32,9 +33,10 @@ generate_rigid_transform <- function (
             is.logical(mirror_y) & (length(mirror_y) == 1),
             is.numeric(angle) & (length(angle) == 1),
             is.numeric(tr_x) & (length(tr_x) == 1),
-            is.numeric(tr_y) & (length(tr_y) == 1))
+            is.numeric(tr_y) & (length(tr_y) == 1),
+            is.numeric(scalefactor) & (length(scalefactor) == 1))
 
-  transforms <- tibble(sampleID, mirror_x, mirror_y, angle, tr_x, tr_y)
+  transforms <- tibble(sampleID, mirror_x, mirror_y, angle, tr_x, tr_y, scalefactor)
 
   # Check transforms
   .check_transforms_values(transforms)
@@ -191,7 +193,7 @@ RigidTransformImages.default <- function (
   checks <- sapply(object |> select(tr_x, tr_y), function(x) {
     between(x, left = -1, right = 1)
   })
-  if (!all(checks)) abort("'tr_x' and 'tr_y' have to be between 0 and 1.")
+  if (!all(checks)) abort("'tr_x' and 'tr_y' have to be between -1 and 1.")
 
   # Convert image to a "magick-image"
   if (inherits(image, what = "StoredSpatialImage")) image <- image_read(image@path)
@@ -211,9 +213,9 @@ RigidTransformImages.default <- function (
     inform(c(
       ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_x)}"),
       ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_y)}"),
-      ">" = glue("Rotation angle: {cli::col_br_magenta(object$angle)}"),
-      ">" = glue("Translation along x axis: {cli::col_br_magenta(object$tr_x*100)}%"),
-      ">" = glue("Translation along y axis: {cli::col_br_magenta(object$tr_y*100)}%")
+      ">" = glue("Rotation angle: {cli::col_br_magenta(round(object$angle, digits = 2))}"),
+      ">" = glue("Translation along x axis: {cli::col_br_magenta(round(object$tr_x*100, digits = 2))}%"),
+      ">" = glue("Translation along y axis: {cli::col_br_magenta(round(object$tr_y*100, digits = 2))}%")
     )
     )
 
@@ -228,7 +230,8 @@ RigidTransformImages.default <- function (
                         round(object$tr_y*iminfo$height)),
     xy_offset_spots = c(round(object$tr_x*object$full_width),
                         round(object$tr_y*object$full_height)),
-    imcenter = c(object$full_width/2, object$full_height/2))
+    imcenter = c(object$full_width/2, object$full_height/2),
+    scalefactor = object$scalefactor)
 
   if (verbose) inform(c("i" = "Returning transformed image", ""))
 
@@ -372,7 +375,7 @@ RigidTransformImages.Seurat <- function (
 .check_transforms_values <- function (
   object
 ) {
-  checks <- c(!object$mirror_x, !object$mirror_y, object$angle == 0, object$tr_x == 0, object$tr_y == 0)
+  checks <- c(!object$mirror_x, !object$mirror_y, object$angle == 0, object$tr_x == 0, object$tr_y == 0, object$scalefactor == 1)
   if (all(checks))
     abort(glue("'transforms' cannot take default values. ",
                "This would result in no transformation."))

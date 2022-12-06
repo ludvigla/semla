@@ -140,11 +140,12 @@ CoordMirror <- function (
 }
 
 
-#' Rotate a set of x, y coordinates around a center point
+#' Apply transformations to a set of x, y coordinates
 #'
 #' @details The coordinate system for `xy_coords` should match the dimensions of the
 #' image. In other words, the coordinates should map spots to the tissue section on H&E image.
-#' The transformation is conducted by creating a transformation matrix:
+#' Translations and rotations are done by multiplying `xy_coords` with the following
+#' transformation matrix \eqn{T_{final}} as described below:
 #'
 #' \itemize{
 #'    \item{\eqn{T(-x, -y)}: Translate coordinates to origin, i.e. (0, 0) becomes the new center \cr
@@ -173,7 +174,7 @@ CoordMirror <- function (
 #'    }
 #' }
 #'
-#' Then, these matrcies are combined to form the final transformation matrix:
+#' Then, these matrices are combined to form the final transformation matrix:
 #'
 #' \eqn{T_{final} = T(x, y)*R*T(-x, -y)}
 #'
@@ -181,13 +182,17 @@ CoordMirror <- function (
 #'
 #' \eqn{xy_{out} = T_{final}*xy_{in}}
 #'
+#' The scaling is handled separated after the translations and rotations.
+#'
 #' @param xy_coords A `matrix`, `data.frame` or `tibble` object with numeric x, y coordinates.
 #' @param angle Numeric value specifying the degree of rotation. Use negative angles
-#' for  counter-clockwise rotation.
+#' for counter-clockwise rotation. The value needs to be in the range (-360, 360)
 #' @param center Optional point (x, y) specifying the center of rotation.
 #' @param xy_offset Optional point (x, y) specifying the translation.
+#' @param scalefactor A numeric value specifying a scaling factor between (0, 3)
 #'
-#' @importFrom rlang %||%
+#' @import rlang
+#' @import glue
 #'
 #' @family transforms
 #'
@@ -209,21 +214,30 @@ CoordTransform <- function (
   xy_coords,
   angle = 0,
   center = NULL,
-  xy_offset = NULL
+  xy_offset = c(0, 0),
+  scalefactor = 1
 ) {
+
+  # Check input parameters
+  if (!inherits(angle, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(angle)}' for angle, expected a 'numeric'"))
+  if (length(angle) != 1) abort(glue("Invalid length '{length(angle)}' for angle, expected 1 value"))
+  if (!between(x = angle, left = -360, right = 360)) abort(glue("Invalid value `{angle}`for angle. Value should be in range [-360, 360]"))
+  if (!is.null(center)) {
+    if (!inherits(center, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(center)}' for center, expected a 'numeric'"))
+    if (length(center) != 2) abort(glue("Invalid length '{length(center)}' for angle, expected 2 values"))
+  }
+  if (!inherits(xy_offset, what = c("numeric", "integer"))) abort(glue("Invalid class '{class(xy_offset)}' for xy_offset, expected a 'numeric'"))
+  if (length(xy_offset) != 2) abort(glue("Invalid length '{length(xy_offset)}' for angle, expected 2 values"))
 
   # Check xy_coords
   if (!any(c("tbl", "data.frame", "matrix") %in% class(xy_coords))) abort(glue::glue("Invalid format '{class(xy_coords)}' of xy_coords"))
   if (!ncol(xy_coords) == 2) abort(glue::glue("Expected 2 columns, got '{ncol(xy_coords)}'"))
   if (!all(sapply(xy_coords, is.numeric))) abort(glue::glue("Invalid column classes."))
 
+  if (angle == 0 & all(xy_offset == c(0, 0)) & scalefactor == 1) abort("Only default values provided which would result in no tranformation.")
+
   # Define center if NULL
   center <- center %||% colMeans(xy_coords)
-  stopifnot(is.numeric(center), length(center) == 2)
-
-  # Define translation if NULL
-  xy_offset <- xy_offset %||% c(0, 0)
-  stopifnot(is.numeric(xy_offset), length(xy_offset) == 2)
 
   # Define conversion function from degrees to radians
   deg2rad <- function(deg) {(deg * pi) / (180)}
@@ -252,8 +266,15 @@ CoordTransform <- function (
   # Apply transformations to input coordinates
   xy_coords_transformed <- (combTr%*%rbind(xy_coords |> t(), 1) |> t())[, 1:2] |>
     tibble::as_tibble(.name_repair = "minimal") |>
-    setNames(nm  = c("tr_x", "tr_y")) #|>
-    #select(tr_x, tr_y)
+    setNames(nm  = c("tr_x", "tr_y"))
+
+  # Scale coordinates
+  if (scalefactor != 1) {
+    xy_centered <- t(xy_coords_transformed) - (center + xy_offset)
+    xy_scaled <- xy_centered*scalefactor
+    xy_coords_transformed <- t(xy_scaled + (center + xy_offset)) |>
+      tibble::as_tibble(.name_repair = "minimal")
+  }
 
   return(xy_coords_transformed)
 }
@@ -268,17 +289,16 @@ CoordTransform <- function (
 #' input and applies the same transformation to the image and spot coordinates
 #' simultaneously.
 #'
-#' @param mirror_x,mirror_y Logical specifying if the image and spots should be mirrored
-#' along the x- and/or y-axis
-#' @param imcenter Integer vector of length specifying the center point of the image:
-#' \code{imcenter <- c(image_width, image_height)}
-#'
 #' @details
 #' Mirroring is prioritized and will be applied to the image before applying rotations
 #' and translations.
 #'
+#' @param mirror_x,mirror_y Logical specifying if the image and spots should be mirrored
+#' along the x- and/or y-axis
 #' @param im Image of class `magick-image`, `StoredSpatialImage`, `raster` or a
 #' path to an external image file.
+#' @param imcenter A numeric vector of length 2 specifying the image center. Not required
+#' if the spot coordinates are already aligned to the H&E image.
 #' @param xy_offset_image A numeric vector of length 2 specifying the translations
 #' along the x-a dn y-axes for the image
 #' @param xy_offset_spots A numeric vector of length 2 specifying the translations
@@ -391,9 +411,10 @@ CoordAndImageTransform <- function (
   mirror_x = FALSE,
   mirror_y = FALSE,
   angle = 0,
-  xy_offset_image = NULL,
-  xy_offset_spots = NULL,
-  imcenter = NULL
+  scalefactor = 1,
+  imcenter = NULL,
+  xy_offset_image = c(0, 0),
+  xy_offset_spots = NULL
 ) {
 
   # Set global variables to NULL
@@ -435,9 +456,10 @@ CoordAndImageTransform <- function (
     xy_coords <- xy_coords_mirror
   }
 
+
   # Apply transformations
-  im_transformed <- ImageTransform(im, angle, xy_offset_image)
-  xy_coords_transformed <- CoordTransform(xy_coords, angle, center = imcenter, xy_offset = xy_offset_spots)
+  im_transformed <- ImageTransform(im = im, angle = angle, xy_offset = xy_offset_image, scalefactor = scalefactor)
+  xy_coords_transformed <- CoordTransform(xy_coords, angle, center = imcenter, xy_offset = xy_offset_spots, scalefactor = scalefactor)
   xy_coords_transformed <- xy_coords_transformed |>
     select(tr_x, tr_y)
 

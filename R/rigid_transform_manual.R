@@ -4,7 +4,7 @@
 NULL
 
 
-#' @param width,height Width and height of paper widget given in pixels.
+#' @param container_width,container_height Width and height of paper widget given in pixels.
 #'
 #' @section default method:
 #' Takes a list of images prepared with the \code{\link{prep_image}} function
@@ -31,12 +31,12 @@ NULL
 #'                          package = "STUtility2")
 #'
 #' img1 <- prep_image(im_mbrain |>
-#'                      image_read(),
-#'                    width = 512)
+#'                    image_read(),
+#'                    height = 512)
 #' img2 <- prep_image(im_mbrain |>
-#'                      image_read() |>
-#'                      image_flip(),
-#'                    width = 512)
+#'                    image_read() |>
+#'                    image_flip(),
+#'                    height = 512)
 #'
 #' transforms <- RunAlignment(object = list(img1, img2))
 #'
@@ -46,8 +46,8 @@ NULL
 #'
 RunAlignment.default <- function (
     object,
-    width = '800px',
-    height = '650px',
+    container_width = '800px',
+    container_height = '650px',
     ...
 ) {
 
@@ -66,7 +66,7 @@ RunAlignment.default <- function (
     actionButton("help", "Help"),
     actionButton("quit", "Quit & Save"),
     tableOutput("table"),
-    paperOutput("paperWidget", height = height, width = width),
+    paperOutput("paperWidget", height = container_height, width = container_width),
     uiOutput("HelpBox")
 
   )
@@ -131,7 +131,77 @@ RunAlignment.default <- function (
 
   transformations <- runApp(list(ui = ui, server = server))
 
+  # Add image dimensions to results
+  transformations <- transformations |>
+    bind_cols(do.call(bind_rows, lapply(object, function(x) {tibble(dimx = x$dimx, dimy = x$dimy)})))
+
   return(transformations |> as_tibble())
+}
+
+
+#' @importFrom magick image_read
+#' @import rlang
+#' @import glue
+#'
+RunAlignment.Seurat <- function (
+  object,
+  image_height = 400,
+  container_width = '800px',
+  container_height = '650px',
+  verbose = TRUE,
+  ...
+) {
+
+  # Check Seurat object
+  .check_seurat_object(object)
+
+  # Check that images are present
+  .check_seurat_images(object)
+
+  # Check if images have sufficient resolution
+  rstrs <- GetStaffli(object)@rasterlists[["raw"]]
+  rstrs <- setNames(rstrs, nm = paste0(seq_along(rstrs)))
+  for (nm in names(rstrs)) {
+    rst <- rstrs[[nm]]
+    if (nrow(rst) < image_height) abort(c(glue("Pre-processing failed for sample {nm}: ",
+                                             "image_height ({image_height}) has to be smaller than ",
+                                             "the height of the loaded image ({nrow(rst)})."),
+                                          glue("Either decrease the value for image_height or rerun ",
+                                             "LoadImages() with a higher image_height.")))
+  }
+  images <- lapply(rstrs, function(rst) {
+    im <- prep_image(rst |>
+                       image_read(),
+                       height = image_height)
+  }) |>
+    setNames(nm = names(rstrs))
+
+  # Run app
+  transforms <- RunAlignment(images, container_width = container_width, container_height = container_height, ...)
+
+  # Apply transformations to images
+  transforms_tibble <- do.call(bind_rows, lapply(1:nrow(transforms), function(i) {
+    res <- try({
+      generate_rigid_transform(sampleID = i,
+                               mirror_y = transforms[i, "flip", drop = TRUE],
+                               angle = transforms[i, "angle", drop = TRUE],
+                               tr_x = transforms[i, "shift_x", drop = TRUE]/image_height,
+                               tr_y = transforms[i, "shift_y", drop = TRUE]/image_height,
+                               scalefactor = transforms[i, "scalefactor", drop = TRUE])
+    }, silent = TRUE)
+
+    if (inherits(res, what = "try-error")) {
+      if (verbose) inform(cli::col_br_magenta(glue("No transformation applied to sample {i}")))
+      return(NULL)
+    } else {
+      return(res)
+    }
+  }))
+
+  object <- RigidTransformImages(object, transforms = transforms_tibble, verbose = verbose)
+
+  # Return object
+  return(object)
 }
 
 
@@ -274,15 +344,15 @@ renderPaper <- function (
 #'
 prep_image <- function (
     input,
-    width = 256
+    height = 256
 ) {
 
   # Set global variables to NULL
   R <- G <- B <- A <- key <- ord <- NULL
 
-  # Check width
-  if (between(x = width, left = 256, right = 512))
-    if (width < 256) abort(glue("The image width ({width}) has to be between 256 and 512 pixels"))
+  # Check height
+  if (between(x = height, left = 256, right = 512))
+    if (height < 256) abort(glue("The image height ({height}) has to be between 256 and 512 pixels"))
 
   # Check input
   stopifnot(
@@ -299,10 +369,10 @@ prep_image <- function (
     im <- image_read(input)
   }
 
-  # Read image, scale it to have a specified width and
+  # Read image, scale it to have a specified height and
   # convert it to an array
   im <- im |>
-    image_scale(paste0(width)) |>
+    image_scale(paste0("x", height)) |>
     image_data() |>
     as.integer()
 
