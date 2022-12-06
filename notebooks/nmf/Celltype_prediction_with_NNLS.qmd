@@ -2,6 +2,8 @@
 title: "Cell type prediction with NNLS"
 format: html
 editor: visual
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r}
@@ -17,7 +19,7 @@ For this test, we will use a single-cell dataset from the Allen Brain Atlas.
 
 ```{r}
 options(timeout=200)
-tmpdir <- tempdir()
+tmpdir <- "./"
 dir.create(paste0(tmpdir, "/mousebrain"))
 tmpdir <- paste0(tmpdir, "/mousebrain")
 dir.create(paste0(tmpdir, "/single-cell"))
@@ -108,12 +110,24 @@ DimPlot(se_allen, group.by = "subclass")
 
 ## Run NNLS
 
-```{r}
+```{r fig.width=5, fig.height=16}
 DefaultAssay(se_spatial) <- "Spatial"
-se_spatial <- RunNNLS.Seurat(object = se_spatial, 
+se_spatial <- RunNNLS(object = se_spatial, 
                             singlecell_object = se_allen, 
                             groups = "subclass")
 
+# Check available cell types
+rownames(se_spatial)
+
+# Plot selected cell types
 DefaultAssay(se_spatial) <- "celltypeprops"
-MapFeatures(se_spatial, features = "Endo")
+MapFeatures(se_spatial, 
+            features = c("L2/3 IT", "L4", "L5 IT", 
+                         "L5 PT", "L6 CT", "L6 IT", "L6b"), 
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE)  +
+  plot_layout(guides = "collect") & 
+  theme(legend.position = "right", legend.margin = margin(b = 50),
+        legend.text = element_text(angle = 0),
+        plot.title = element_blank())
 ```

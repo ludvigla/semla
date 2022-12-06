@@ -18,7 +18,6 @@ NULL
 #' @param min_prop Minimum proportion allowed. Any proportion values lower than
 #' this threshold will be removed and the remaining proportions will be rescaled.
 #' @param L1 lasso penalty
-#' @param L2 ridge penalty
 #' @param seed An integer to set seed for reproducibility
 #' @param return_expression_profiles Logical specifying if the expression profile matrix
 #' should also be returned
@@ -42,7 +41,6 @@ RunNNLS.default <- function (
   minCells_per_celltype = 10L,
   min_prop = 0.01,
   L1 = 0.01,
-  L2 = 0,
   seed = 1337L,
   return_expression_profiles = FALSE,
   verbose = TRUE,
@@ -73,6 +71,9 @@ RunNNLS.default <- function (
   # Make sure that dev version of RcppML is installed
   if (!requireNamespace("RcppML"))
     install.packages("RcppML") # compile dev version
+  if ((packageVersion("RcppML") |> as.character()) != "0.3.7")
+    warn(c("The NNLS function might break if using a dev version of RcppML is used. ",
+           "If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML."))
 
   # Prepare data
   if (verbose) inform(c("i" = "Preparing data for NNLS"))
@@ -86,13 +87,14 @@ RunNNLS.default <- function (
 
   # Run NNLS
   if (verbose) inform(c("i" = glue("Predicting cell type proportions with NNLS for {ncol(W)} cell types")))
-  proj_expr <- RcppML::project(w = W, data = object, L1 = L1, L2 = L2, ...)
+  proj_expr <- RcppML::project(w = W, A = object, L1 = L1, ...)
 
   # Convert predicted values to proportions
   prop <- apply(proj_expr, 2, function(x) {prop.table(x)})
   prop[prop < min_prop] <- 0
   prop <- apply(prop, 2, function(x) {prop.table(x)})
   rownames(prop) <- colnames(W)
+  colnames(prop) <- colnames(object)
 
   if (return_expression_profiles) {
     return(list(prop = prop, W = W))
@@ -152,7 +154,6 @@ RunNNLS.Seurat <- function (
     dimred_name = "nnls",
     return_as_dimred = FALSE,
     L1 = 0.01,
-    L2 = 0,
     seed = 1337L,
     verbose = TRUE,
     ...
@@ -176,7 +177,7 @@ RunNNLS.Seurat <- function (
   x_spatial <- GetAssayData(object, slot = slot, assay = spatial_assay)[features, ]
   # TODO: check if RNA data slot is normalized if slot = "data"
 
-  results <- RunNNLS.default(
+  results <- RunNNLS(
     object = x_spatial,
     singlecell_matrix = x_singlecell,
     groups = groups,
@@ -184,7 +185,6 @@ RunNNLS.Seurat <- function (
     minCells_per_celltype = minCells_per_celltype,
     min_prop = min_prop,
     L1 = L1,
-    L2 = L2,
     seed = seed,
     verbose = verbose,
     return_expression_profiles = TRUE,
