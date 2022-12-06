@@ -1,3 +1,7 @@
+#' @include extdata.R
+#'
+NULL
+
 #' Load and merge multiple gene expression matrices
 #'
 #' Gene expression matrices should have features in rows and spots in columns.
@@ -32,7 +36,7 @@
 #' @return A sparse matrix of class `dgCMatrix`
 #'
 #' @examples
-#' \donttest{
+#'
 #' # Load and merge two gene expression matrices
 #' samples <-
 #'   c(
@@ -48,7 +52,6 @@
 #'     )
 #'   )
 #' mergedMatrix <- LoadAndMergeMatrices(samples)
-#' }
 #'
 #' @export
 LoadAndMergeMatrices <- function (
@@ -121,13 +124,15 @@ LoadAndMergeMatrices <- function (
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #'
-#' @importFrom rlang inject
+#' @import rlang
+#' @import dplyr
 #' @importFrom utils read.csv
 #'
 #' @return An object of class `tbl` (`tibble`)
 #'
 #' @examples
-#' \donttest{
+#'
+#' library(STUtility2)
 #' # Load and merge coordinates from two samples
 #' coordinatefiles <-
 #'   c(system.file("extdata/mousebrain/spatial",
@@ -137,7 +142,6 @@ LoadAndMergeMatrices <- function (
 #'                 "tissue_positions_list.csv",
 #'                 package = "STUtility2"))
 #' coordinates <- LoadSpatialCoordinates(coordinatefiles)
-#' }
 #'
 #' @export
 LoadSpatialCoordinates <- function (
@@ -152,12 +156,12 @@ LoadSpatialCoordinates <- function (
   # Run checks
   if (!is.character(coordinatefiles)) abort("'coordinatefiles' must be a character vector.")
   checks <- tibble::tibble(coordinatefiles) |>
-    dplyr::mutate(is = dplyr::case_when(file.exists(coordinatefiles) ~ "file"))
-  if (any(is.na(checks$is))) abort(c("Invalid path(s):", glue::glue("{checks$coordinatefiles[is.na(checks$is)]}")))
+    dplyr::mutate(type = dplyr::case_when(file.exists(coordinatefiles) ~ "file"))
+  if (any(is.na(checks$type))) abort(c("Invalid path(s):", glue::glue("{checks$coordinatefiles[is.na(checks$type)]}")))
 
   # Load coordinates
   if (verbose) inform(c("i" = "Loading coordinates:"))
-  coordDF <- inject(rbind(!!!lapply(seq_along(coordinatefiles), function(i) {
+  coordDF <- do.call(bind_rows, lapply(seq_along(coordinatefiles), function(i) {
     coords <- read.csv(file = coordinatefiles[i], header = FALSE) |>
       tibble::as_tibble() |>
       setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres"))
@@ -169,7 +173,7 @@ LoadSpatialCoordinates <- function (
     coords$barcode <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = coords$barcode)
     coords$sampleID <- i
     return(coords)
-  })))
+  }))
 
   # Return coordinates
   if (verbose) inform(c("v" = glue::glue("  Collected coordinates for {cli::col_br_magenta(nrow(coordDF))} spots.")))
@@ -190,8 +194,9 @@ LoadSpatialCoordinates <- function (
 #' scalefactors output by spaceranger.
 #' @param verbose Print messages
 #'
-#' @importFrom glue glue
-#' @importFrom rlang abort inform
+#' @import glue
+#' @import rlang
+#' @import dplyr
 #' @importFrom tools file_ext
 #'
 #' @return An object of class `DFrame`
@@ -242,7 +247,7 @@ LoadImageData <- function (
 
   # read image data
   if (verbose) inform(c("i" = glue::glue("Reading image data for {nrow(images)} samples.")))
-  imgData <- inject(rbind(!!!lapply(1:nrow(images), function(i) {
+  imgData <- do.call(bind_rows, lapply(1:nrow(images), function(i) {
     png.files <- unlist(images[i, ])
     exts <- file_ext(png.files)
     check <- exts %in% "png"
@@ -264,7 +269,7 @@ LoadImageData <- function (
         ))
       })
     return(DF)
-  })))
+  }))
 
   return(imgData)
 }

@@ -86,7 +86,7 @@ xy_all <- do.call(rbind, list(cbind(xy, type = "original", ord = 1:20),
                     cbind(xy_mxy, type = "mirror_x_and_y", ord = 1:20)))
 xy_all$type <- factor(xy_all$type, levels = c("original", "mirror_x", "mirror_x_and_y"))
 
-# Now we can sse the effects of mirroring
+# Now we can see the effects of mirroring
 # Mirror x flips the coordinates along the x axis while mirror_x and mirror_y
 # effectively inverts the coordinates, thus changing the order of the points
 ggplot(xy_all, aes(x, y)) +

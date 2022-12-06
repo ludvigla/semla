@@ -328,7 +328,7 @@ renderPaper <- function (
 #'
 #' @param input An object of class 'magick-image' or a path
 #' to an image in png or jpeg format
-#' @param width width of image sent to react app
+#' @param height Height of image sent to react app
 #'
 #' @import dplyr
 #' @importFrom tidyr pivot_longer

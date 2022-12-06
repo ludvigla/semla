@@ -72,6 +72,8 @@ coordinatefile <- system.file("extdata/mousebrain/spatial",
                               "tissue_positions_list.csv",
                               package = "STUtility2")
 
+print( system.file(package = "STUtility2"))
+
 # Load coordinates
 xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
 xy

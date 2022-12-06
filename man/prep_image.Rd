@@ -10,7 +10,7 @@ prep_image(input, height = 256)
 \item{input}{An object of class 'magick-image' or a path
 to an image in png or jpeg format}
 
-\item{width}{width of image sent to react app}
+\item{height}{Height of image sent to react app}
 }
 \value{
 a list with an array buffer, the image dimensions and

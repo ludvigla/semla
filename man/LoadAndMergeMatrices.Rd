@@ -32,7 +32,7 @@ will be duplicated after merging. To avoid this, the prefix (e.g. "-1") is repla
 a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
 }
 \examples{
-\donttest{
+
 # Load and merge two gene expression matrices
 samples <-
   c(
@@ -48,7 +48,6 @@ samples <-
     )
   )
 mergedMatrix <- LoadAndMergeMatrices(samples)
-}
 
 }
 \seealso{

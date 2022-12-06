@@ -1,3 +1,8 @@
+#' @include extdata.R
+#' @include load_data.R
+#'
+NULL
+
 #' Mirror coordinates
 #'
 #' @details The coordinate system for `xy_coords` should match the dimensions of the
@@ -52,7 +57,7 @@
 #' the x-axis, y-axis or both.
 #' @param center Optional point (x, y) specifying the center of reflection.
 #'
-#' @importFrom rlang %||%
+#' @import rlang
 #'
 #' @family transforms
 #'
@@ -76,7 +81,7 @@
 #'                     cbind(xy_mxy, type = "mirror_x_and_y", ord = 1:20)))
 #' xy_all$type <- factor(xy_all$type, levels = c("original", "mirror_x", "mirror_x_and_y"))
 #'
-#' # Now we can sse the effects of mirroring
+#' # Now we can see the effects of mirroring
 #' # Mirror x flips the coordinates along the x axis while mirror_x and mirror_y
 #' # effectively inverts the coordinates, thus changing the order of the points
 #' ggplot(xy_all, aes(x, y)) +
@@ -330,6 +335,8 @@ CoordTransform <- function (
 #' coordinatefile <- system.file("extdata/mousebrain/spatial",
 #'                               "tissue_positions_list.csv",
 #'                               package = "STUtility2")
+#'
+#' print( system.file(package = "STUtility2"))
 #'
 #' # Load coordinates
 #' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
