@@ -10,9 +10,10 @@ CoordAndImageTransform(
   mirror_x = FALSE,
   mirror_y = FALSE,
   angle = 0,
-  xy_offset_image = NULL,
-  xy_offset_spots = NULL,
-  imcenter = NULL
+  scalefactor = 1,
+  imcenter = NULL,
+  xy_offset_image = c(0, 0),
+  xy_offset_spots = NULL
 )
 }
 \arguments{
@@ -25,7 +26,12 @@ path to an external image file.}
 along the x- and/or y-axis}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
-for  counter-clockwise rotation.}
+for counter-clockwise rotation. The value needs to be in the range (-360, 360)}
+
+\item{scalefactor}{A numeric value specifying a scaling factor between (0, 3)}
+
+\item{imcenter}{A numeric vector of length 2 specifying the image center. Not required
+if the spot coordinates are already aligned to the H&E image.}
 
 \item{xy_offset_image}{A numeric vector of length 2 specifying the translations
 along the x-a dn y-axes for the image}
@@ -34,9 +40,6 @@ along the x-a dn y-axes for the image}
 along the x- and y-axes for the spots. If \code{xy_offset_image} is \code{NULL},
 \code{xy_offset_spots} will be set to \code{xy_offset_image} as it is assumed that
 the spots are matched with the image.}
-
-\item{imcenter}{Integer vector of length specifying the center point of the image:
-\code{imcenter <- c(image_width, image_height)}}
 }
 \value{
 A list with two elements:

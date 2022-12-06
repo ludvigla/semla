@@ -10,7 +10,8 @@ generate_rigid_transform(
   mirror_y = FALSE,
   angle = 0,
   tr_x = 0,
-  tr_y = 0
+  tr_y = 0,
+  scalefactor = 1
 )
 }
 \arguments{
@@ -20,9 +21,11 @@ generate_rigid_transform(
 along the x- and/or y-axis}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
-for  counter-clockwise rotation.}
+for counter-clockwise rotation. The value needs to be in the range (-360, 360)}
 
 \item{tr_x, tr_y}{Integer values for translations along the x- and y-axis}
+
+\item{scalefactor}{A numeric value specifying a scaling factor between (0, 3)}
 }
 \value{
 a tibble with image transformations

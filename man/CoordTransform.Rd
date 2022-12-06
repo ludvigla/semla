@@ -2,30 +2,39 @@
 % Please edit documentation in R/transformations_coordinates.R
 \name{CoordTransform}
 \alias{CoordTransform}
-\title{Rotate a set of x, y coordinates around a center point}
+\title{Apply transformations to a set of x, y coordinates}
 \usage{
-CoordTransform(xy_coords, angle = 0, center = NULL, xy_offset = NULL)
+CoordTransform(
+  xy_coords,
+  angle = 0,
+  center = NULL,
+  xy_offset = c(0, 0),
+  scalefactor = 1
+)
 }
 \arguments{
 \item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.}
 
 \item{angle}{Numeric value specifying the degree of rotation. Use negative angles
-for  counter-clockwise rotation.}
+for counter-clockwise rotation. The value needs to be in the range (-360, 360)}
 
 \item{center}{Optional point (x, y) specifying the center of rotation.}
 
 \item{xy_offset}{Optional point (x, y) specifying the translation.}
+
+\item{scalefactor}{A numeric value specifying a scaling factor between (0, 3)}
 }
 \value{
 A \code{tbl} object with transformed coordinates
 }
 \description{
-Rotate a set of x, y coordinates around a center point
+Apply transformations to a set of x, y coordinates
 }
 \details{
 The coordinate system for \code{xy_coords} should match the dimensions of the
 image. In other words, the coordinates should map spots to the tissue section on H&E image.
-The transformation is conducted by creating a transformation matrix:
+Translations and rotations are done by multiplying \code{xy_coords} with the following
+transformation matrix \eqn{T_{final}} as described below:
 
 \itemize{
 \item{\eqn{T(-x, -y)}: Translate coordinates to origin, i.e. (0, 0) becomes the new center \cr\tabular{llc}{
@@ -54,13 +63,15 @@ The transformation is conducted by creating a transformation matrix:
 }
 }
 
-Then, these matrcies are combined to form the final transformation matrix:
+Then, these matrices are combined to form the final transformation matrix:
 
 \eqn{T_{final} = T(x, y)*R*T(-x, -y)}
 
 Which can be used to transform our input coordinates:
 
 \eqn{xy_{out} = T_{final}*xy_{in}}
+
+The scaling is handled separated after the translations and rotations.
 }
 \examples{
 # Create a data.frame with x, y coordinates

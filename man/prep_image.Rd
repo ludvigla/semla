@@ -4,7 +4,7 @@
 \alias{prep_image}
 \title{Function used to prepare images for paper JS react app}
 \usage{
-prep_image(input, width = 256)
+prep_image(input, height = 256)
 }
 \arguments{
 \item{input}{An object of class 'magick-image' or a path

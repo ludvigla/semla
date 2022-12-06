@@ -16,7 +16,6 @@ RunNNLS(object, ...)
   minCells_per_celltype = 10L,
   min_prop = 0.01,
   L1 = 0.01,
-  L2 = 0,
   seed = 1337L,
   return_expression_profiles = FALSE,
   verbose = TRUE,
@@ -38,7 +37,6 @@ RunNNLS(object, ...)
   dimred_name = "nnls",
   return_as_dimred = FALSE,
   L1 = 0.01,
-  L2 = 0,
   seed = 1337L,
   verbose = TRUE,
   ...
@@ -68,8 +66,6 @@ cells.}
 this threshold will be removed and the remaining proportions will be rescaled.}
 
 \item{L1}{lasso penalty}
-
-\item{L2}{ridge penalty}
 
 \item{seed}{An integer to set seed for reproducibility}
 

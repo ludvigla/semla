@@ -7,14 +7,19 @@
 \usage{
 RunAlignment(object, ...)
 
-\method{RunAlignment}{default}(object, width = "800px", height = "650px", ...)
+\method{RunAlignment}{default}(
+  object,
+  container_width = "800px",
+  container_height = "650px",
+  ...
+)
 }
 \arguments{
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
 
-\item{width, height}{Width and height of paper widget given in pixels.}
+\item{container_width, container_height}{Width and height of paper widget given in pixels.}
 }
 \description{
 Opens an interactive viewer where images are interactive objects
@@ -42,12 +47,12 @@ im_mbrain <- system.file("extdata/mousebrain/spatial",
                          package = "STUtility2")
 
 img1 <- prep_image(im_mbrain |>
-                     image_read(),
-                   width = 512)
+                   image_read(),
+                   height = 512)
 img2 <- prep_image(im_mbrain |>
-                     image_read() |>
-                     image_flip(),
-                   width = 512)
+                   image_read() |>
+                   image_flip(),
+                   height = 512)
 
 transforms <- RunAlignment(object = list(img1, img2))
 

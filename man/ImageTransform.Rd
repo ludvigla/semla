@@ -4,15 +4,17 @@
 \alias{ImageTransform}
 \title{Function used to apply rotations and translations to an image object of class `magick-image`}
 \usage{
-ImageTransform(im, angle, xy_offset)
+ImageTransform(im, angle = 0, xy_offset = c(0, 0), scalefactor = 1)
 }
 \arguments{
 \item{im}{An image of class `magick-image`}
 
-\item{angle}{An integer value specifying the rotation angle (0-360)}
+\item{angle}{An integer value specifying the rotation angle [-360, 360]}
 
 \item{xy_offset}{A numeric vector of length 2 providing the offsets along
 the x- and y-axis given as pixels. These values should not exceed the image dimensions.}
+
+\item{scalefactor}{A numeric value specifying a scaling factor between [0, 3]}
 }
 \value{
 An object of class `magick-image`
@@ -39,6 +41,10 @@ im_transformed
 
 # rotate image 45 degrees counter-clockwise, move image 100 pixels to the left and 20 pixels up
 im_transformed <- ImageTransform(im, angle = -45, xy_offset = c(-100, 20))
+im_transformed
+
+# shrink image to helf width/height
+im_transformed <- ImageTransform(im, scalefactor = 0.5)
 im_transformed
 
 }
