@@ -63,7 +63,7 @@ images together with the spot coordinates.
 
 - [x] make paper JS tool for image tranformations
 - [x] communicate transformations to R
-- [ ] apply transformations to images in R object with `CoordAndImageTransform`
+- [x] apply transformations to images in R object with `CoordAndImageTransform`
 - [x] add side bar for image selection
 
 ### Visualization tools
@@ -87,7 +87,6 @@ angle intervals in `RadialDistance`
 
 - [x] `RunNMF` : no longer needed with the singlet R package available
 - [x] `SeededNMF` : seed matrix factorization with a priori information fro single-cell data
-- [ ] `RunMixedNMF` : under development
 
 ### Spatial autocorelation
 
