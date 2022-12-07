@@ -179,7 +179,7 @@ DefaultAssay(se_brain_spatial) <- "celltypeprops"
 selected_celltypes <- c("L2/3 IT", "L4", "L5 IT", 
                        "L5 PT", "L6 CT", "L6 IT", "L6b", 
                        "Oligo", "Pvalb", "Meis2", "Astro",
-                       "VLMC")
+                       "VLMC", "SMC")
 plots <- lapply(seq_along(selected_celltypes), function(i) {
   MapFeatures(se_brain_spatial, pt_size = 1.3,
             features = selected_celltypes[i], 

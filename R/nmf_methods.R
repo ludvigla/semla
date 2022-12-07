@@ -420,5 +420,9 @@ RunNNLS.Seurat <- function (
     as.matrix()
   rownames(W) <- rownames(x)
 
+  W <- apply(W, 2, function(x) {
+    x/max(x)
+  })
+
   return(W)
 }
