@@ -294,6 +294,7 @@ RunNNLS.Seurat <- function (
 #' @param verbose Print messages
 #'
 #' @import rlang
+#' @import glue
 #' @import dplyr
 #' @importFrom Seurat Idents
 #'
@@ -308,11 +309,12 @@ RunNNLS.Seurat <- function (
     if (verbose) inform(c("i" = "Using current identity as groups."))
     groups <- as.character(Idents(sc_object))
   } else if (is.character(groups) & length(groups) == 1) {
-    stopifnot("groups are not present in Seurat object meta.data slot" = groups %in% colnames(sc_object[[]]))
+    if (!groups %in% colnames(sc_object[[]])) abort(glue("'{groups}' is not a valid column in Seurat object meta.data slot"))
     groups <- sc_object[[]] |>  pull(all_of(groups))
   } else {
     abort("Invalid value for 'groups'")
   }
+  return(groups |> as.character())
 }
 
 
