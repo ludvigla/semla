@@ -28,9 +28,9 @@ For this test, we will use a single-cell dataset from the Allen Brain Atlas. You
 options(timeout=200)
 tmpdir <- "." # Set current wd or change to tmpdir()
 dir.create(paste0(tmpdir, "/mousebrain"))
-tmpdir <- paste0(tmpdir, "/mousebrain")
-dir.create(paste0(tmpdir, "/single-cell"))
-destfile <- paste0(tmpdir, "/single-cell/allen_brain.rds")
+targetdir <- paste0(tmpdir, "/mousebrain")
+dir.create(paste0(targetdir, "/single-cell"))
+destfile <- paste0(targetdir, "/single-cell/allen_brain.rds")
 download.file("https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1", destfile = destfile)
 
 ```
@@ -40,25 +40,25 @@ by following the code chunk below or download the data directly from [here](http
 
 ```{r eval=FALSE}
 #| code-fold: true
-dir.create(paste0(tmpdir, "/visium"))
+dir.create(paste0(targetdir, "/visium"))
 
 # Download section 1
-dir.create(paste0(tmpdir, "/visium/S1"))
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5", destfile = paste0(tmpdir, "/visium/S1/filtered_feature_bc_matrix.h5"))
+dir.create(paste0(targetdir, "/visium/S1"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5", destfile = paste0(targetdir, "/visium/S1/filtered_feature_bc_matrix.h5"))
 download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_spatial.tar.gz",
-              destfile = paste0(tmpdir, "/visium/S1/spatial.tar.gz"))
-untar(tarfile = paste0(tmpdir, "/visium/S1/spatial.tar.gz"), 
-      exdir =  paste0(tmpdir, "/visium/S1/"))
-file.remove(paste0(tmpdir, "/visium/S1/spatial.tar.gz"))
+              destfile = paste0(targetdir, "/visium/S1/spatial.tar.gz"))
+untar(tarfile = paste0(targetdir, "/visium/S1/spatial.tar.gz"), 
+      exdir =  paste0(targetdir, "/visium/S1/"))
+file.remove(paste0(targetdir, "/visium/S1/spatial.tar.gz"))
 
 # Download section 2
-dir.create(paste0(tmpdir, "/visium/S2"))
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5", destfile = paste0(tmpdir, "/visium/S2/filtered_feature_bc_matrix.h5"))
+dir.create(paste0(targetdir, "/visium/S2"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5", destfile = paste0(targetdir, "/visium/S2/filtered_feature_bc_matrix.h5"))
 download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_spatial.tar.gz",
-              destfile = paste0(tmpdir, "/visium/S2/spatial.tar.gz"))
-untar(tarfile = paste0(tmpdir, "/visium/S2/spatial.tar.gz"), 
-      exdir =  paste0(tmpdir, "/visium/S2/"))
-file.remove(paste0(tmpdir, "/visium/S2/spatial.tar.gz"))
+              destfile = paste0(targetdir, "/visium/S2/spatial.tar.gz"))
+untar(tarfile = paste0(targetdir, "/visium/S2/spatial.tar.gz"), 
+      exdir =  paste0(targetdir, "/visium/S2/"))
+file.remove(paste0(targetdir, "/visium/S2/spatial.tar.gz"))
 ```
 
 Load Visium data with STUtility2 into a Seurat object. The following steps assumes that the mouse brain 10x Visium
@@ -221,10 +221,24 @@ The 10x Visium mouse kidney data can be downloaded from the 10x genomics website
 
 ```{r eval=FALSE}
 #| code-fold: true
-samples <- "~/10x_data/mouse_kidney/filtered_feature_bc_matrix.h5"
-imgs <- "~/10x_data/mouse_kidney/spatial/tissue_hires_image.png"
-spotfiles <- "~/10x_data/mouse_kidney/spatial/tissue_positions_list.csv"
-json <- "~/10x_data/mouse_kidney/spatial/scalefactors_json.json"
+
+dir.create(paste0(tmpdir, "/kidney"))
+targetdir <- paste0(tmpdir, "/kidney")
+dir.create(paste0(targetdir, "/visium"))
+
+# Download section 1
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Mouse_Kidney/V1_Mouse_Kidney_filtered_feature_bc_matrix.h5", 
+              destfile = paste0(targetdir, "/visium/filtered_feature_bc_matrix.h5"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Mouse_Kidney/V1_Mouse_Kidney_spatial.tar.gz",
+              destfile = paste0(targetdir, "/visium/spatial.tar.gz"))
+untar(tarfile = paste0(targetdir, "/visium/spatial.tar.gz"), 
+      exdir =  paste0(targetdir, "/visium/"))
+file.remove(paste0(targetdir, "/visium/spatial.tar.gz"))
+
+samples <- "./kidney/visium/filtered_feature_bc_matrix.h5"
+imgs <- "./kidney/visium/spatial/tissue_hires_image.png"
+spotfiles <- "./kidney/visium/spatial/tissue_positions_list.csv"
+json <- "./kidney/visium/spatial/scalefactors_json.json"
 
 infoTable <- tibble::tibble(samples, imgs, spotfiles, json)
 
