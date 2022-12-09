@@ -78,14 +78,16 @@ TileImage <- function (
 
   # Create output path
   outpath <- outpath %||% tempdir()
-  outpath <- paste0(outpath, "/tiles")
-  dir.create(outpath)
+  outpath_data <- paste0(outpath, "/osd_data")
+  dir.create(outpath_data)
+  outpath_tiles <- paste0(outpath_data, "/tiles")
+  dir.create(outpath_tiles)
 
   # Zoom levels
   tiles <- list()
   for (n in seq_along(nLevels)) {
 
-    dir.create(paste0(outpath, "/", n))
+    dir.create(paste0(outpath_tiles, "/", n))
 
     if (nLevels[n] > 0) {
       im_scaled <- image_scale(im, geometry = paste0(info$width/(2^nLevels[n])))
@@ -131,8 +133,18 @@ TileImage <- function (
 
   # Export tiles
   results <- mclapply(names(tiles), function(tileName) {
-    image_write(tiles[[tileName]], path = paste0(outpath, "/", tileName, ".jpg"))
+    image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
   }, mc.cores = nCores)
 
-  return(list(tilepath = outpath, minZoomLevel = ifelse(length(nLevels) > 1, nLevels[length(nLevels)] + 1, 1), maxZoomLevel = nLevels[1] + 1))
+  # Export data as JSON
+  d <- list(tilepath = outpath_tiles,
+       minZoomLevel = ifelse(length(nLevels) > 1,
+                             nLevels[length(nLevels)] + 1, 1),
+       maxZoomLevel = nLevels[1] + 1,
+       image_width = info$width,
+       image_height = info$height,
+       tilesize = 256)
+  jsonlite::write_json(x = d, path = paste0(outpath_data, "/image_info.json"), auto_unbox = TRUE)
+
+  return(outpath_data)
 }
