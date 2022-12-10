@@ -3,6 +3,7 @@
 #' Hosts a file server from a specified directory. See
 #' [beakr](https://github.com/MazamaScience/beakr) for more information.
 #'
+#' @param hostDir A directory to host files from
 #' @param host A string with a valid IPv4 or IPv6 address to listen on,
 #' Defaults to localhost "127.0.0.1"
 #' @param port An integer that indicates the port to listen on.
@@ -43,7 +44,7 @@ file_server <- function (
     install.packages("beakr")
 
   # Create a new beakr instance
-  beakr <- newBeakr()
+  beakr <- beakr::newBeakr()
 
   # Start a file server with CORS allowed
   fs <- beakr |>
