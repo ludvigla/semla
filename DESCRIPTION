@@ -45,6 +45,7 @@ RoxygenNote: 7.2.1
 Suggests: 
     farver,
     tidygraph,
+    igraph,
     leaflet,
     viridis,
     testthat,
@@ -54,14 +55,18 @@ Suggests:
     MatrixExtra,
     htmlwidgets,
     htmltools,
-    RcppML
+    RcppML,
+    beakr
 Collate: 
     'STUtility2-package.R'
     'checks.R'
-    'spatial_utils.R'
     'generics.R'
+    'digital_unroll.R'
+    'digital_unroll_utils.R'
+    'spatial_utils.R'
     'disconnect_regions.R'
     'extdata.R'
+    'file_server.R'
     'icp.R'
     'load_data.R'
     'load_images.R'
@@ -70,6 +75,7 @@ Collate:
     'neighborhood_analysis.R'
     'nmf_methods.R'
     'plot_images.R'
+    'prepare_for_digital_unroll.R'
     'radial_distance.R'
     'radial_distance_plot.R'
     'rigid_transform.R'
