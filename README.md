@@ -55,7 +55,7 @@ images together with the spot coordinates.
 - [x] draw spots on top of tile source
 - [x] lasso selection tool for manual annotation with paper JS
 - [ ] annotate spots and save selection
-- [ ] make tile function `TileImage` compatible with OSD
+- [x] make tile function `TileImage` compatible with OSD
 - [ ] send data to OSD viewer from R or read from R on selection?
 - [ ] add option to select samples in viewer (shiny or react?)
 
@@ -65,6 +65,10 @@ images together with the spot coordinates.
 - [x] communicate transformations to R
 - [x] apply transformations to images in R object with `CoordAndImageTransform`
 - [x] add side bar for image selection
+
+### Digital unrolling
+
+- [x] `CutSpatialNetwork` : Open a shiny/react application that can be used for "digital unrolling"
 
 ### Visualization tools
  
