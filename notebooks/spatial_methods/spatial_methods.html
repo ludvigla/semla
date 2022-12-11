@@ -134,16 +134,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
 <p>First we need to load some 10x Visium data. here we’ll use a breast cancer dataset provided by 10x</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/BC_data/*/filtered_feature_bc_matrix.h5"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/BC_data/*/spatial/tissue_hires_image.png"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>spotfiles <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/BC_data/*/spatial/tissue_positions_list.csv"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>json <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/BC_data/*/spatial/scalefactors_json.json"</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/10x_data/*/filtered_feature_bc_matrix.h5"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/10x_data/*/spatial/tissue_hires_image.png"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>spotfiles <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/10x_data/*/spatial/tissue_positions_list.csv"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>json <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"~/10x_data/*/spatial/scalefactors_json.json"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a tibble/data.frame with file paths</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>infoTable <span class="ot">&lt;-</span> <span class="fu">tibble</span>(samples, imgs, spotfiles, json, <span class="at">sample_id =</span> <span class="fu">c</span>(<span class="st">"S1"</span>, <span class="st">"S2"</span>))</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">ReadVisiumData</span>(<span class="at">infoTable =</span> infoTable[<span class="dv">1</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>infoTable <span class="ot">&lt;-</span> <span class="fu">tibble</span>(samples, imgs, spotfiles, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    json, <span class="at">sample_id =</span> <span class="fu">c</span>(<span class="st">"S1"</span>, <span class="st">"S2"</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">ReadVisiumData</span>(<span class="at">infoTable =</span> infoTable[<span class="dv">1</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
 </div>
@@ -154,21 +155,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>ℹ Loading matrices:
-✔   Finished loading expression matrix 1
-ℹ only 1 expression matrix loaded.
-✔   There are 33538 features and 3813 spots in the matrix.
-ℹ Loading coordinates:
-✔   Finished loading coordinates for sample 1
-✔   Collected coordinates for 3813 spots.
-
-── Creating `Seurat` object 
-
-✔ Expression matrices and coordinates are compatible
-→ Created `Seurat` object
-→ Created `Staffli` object
-→ Loaded spatial data into the `Seurat` object
-✔ Returning a `Seurat` object with 33538 features and 3813 spots</code></pre>
+<pre><code>ℹ Loading matrices:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>as(&lt;dgTMatrix&gt;, "dgCMatrix") is deprecated since Matrix 1.5-0; do as(., "CsparseMatrix") instead</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Finished loading expression matrix 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ only 1 expression matrix loaded.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔   There are 33538 features and 3813 spots in the matrix.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Loading coordinates:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Finished loading coordinates for sample 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Collected coordinates for 3813 spots.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Creating `Seurat` object </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Expression matrices and coordinates are compatible</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Created `Seurat` object</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Created `Staffli` object</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Returning a `Seurat` object with 33538 features and 3813 spots</code></pre>
 </div>
 </div>
 </section>
@@ -184,13 +210,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>Cluster data</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> se <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ScaleData</span>() <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>() <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunPCA</span>() <span class="sc">|&gt;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindNeighbors</span>(<span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindClusters</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> se <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ScaleData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunPCA</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindNeighbors</span>(<span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindClusters</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
@@ -205,7 +231,7 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 <p>Now that we have identified clusters in our data based on the spot expression profiles, we can plot these clusters spatially with <code>MapLabels</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
 </div>
@@ -216,27 +242,31 @@ Elapsed time: 0 seconds</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>ℹ Loading image from /Users/ludviglarsson/BC_data/BC_block_S1/spatial/tissue_hires_image.png
-✔ Scaled image from 2000x2000 to 400x400 pixels
-ℹ Saving loaded H&amp;E images as 'rasters' in Seurat object</code></pre>
+<pre><code>ℹ Loading image from /Users/ludviglarsson/10x_data/BC_block_S1/spatial/tissue_hires_image.png</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_alpha =</span> <span class="fl">0.6</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Scaled image from 2000x2000 to 400x400 pixels</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Saving loaded H&amp;E images as 'rasters' in Seurat object</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_alpha =</span> <span class="fl">0.6</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>For the purpose of this analysis, we just need to define a region of interest in our tissue sections. We could just as well use the tissue morphology as a basis to define this region. From the plot above, we can see that some clusters are confined to distinct regions, for example cluster 9:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>cluster_9 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(se<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="st">"9"</span>, <span class="st">"9"</span>, <span class="cn">NA</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_9"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>cluster_9 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(se<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="st">"9"</span>, <span class="st">"9"</span>, <span class="cn">NA</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_9"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -246,22 +276,33 @@ Elapsed time: 0 seconds</code></pre>
 <h2 class="anchored" data-anchor-id="disconnect-regions">Disconnect regions</h2>
 <p>Cluster 9 is concentrated to a region rich with cancer cells but there are also a few spots in other parts of the tissue. At this point we might only be interested in one of these regions in which case we can split cluster_9 into spatially disconnected compartments. For this purpose, we can use <code>DisconnectRegions</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">DisconnectRegions</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"9"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">DisconnectRegions</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"9"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Extracting disconnected components for group '9'
-ℹ Detecting disconnected regions for 178 spots
-Loading required namespace: tidygraph
-
-ℹ Found 5 disconnected graph(s) in data
-ℹ Sorting disconnected regions by decreasing size
-ℹ Found 2 singletons in data
-→    These will be labeled as 'singletons'</code></pre>
+<pre><code>ℹ Extracting disconnected components for group '9'</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"9_split"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Detecting disconnected regions for 178 spots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required namespace: tidygraph</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Found 5 disconnected graph(s) in data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Sorting disconnected regions by decreasing size</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Found 2 singletons in data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   These will be labeled as 'singletons'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"9_split"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -272,32 +313,44 @@ Loading required namespace: tidygraph
 <h2 class="anchored" data-anchor-id="radial-distance">Radial distance</h2>
 <p>Imagine that we are interested in looking at the expression of certain genes as a function of distance to a region of interest. We can compute distances from a region of interest (ROI) using <code>RadialDistances</code>. Here we’ll use cluster 3 as our ROI for the computation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>cluster_3 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(se<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="st">"3"</span>, <span class="st">"3"</span>, <span class="cn">NA</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>cluster_3 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(se<span class="sc">$</span>seurat_clusters <span class="sc">%in%</span> <span class="st">"3"</span>, <span class="st">"3"</span>, <span class="cn">NA</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">&amp;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Running calculations for sample 1
-Calculating radial distances for group '3'
-ℹ Extracting border spots from a region with 416 spots
-→ Detected 84 spots on borders
-→ Detected 332 spots inside borders
-→ Detected 3397 spots outside borders
-✔ Returning radial distances</code></pre>
+<pre><code>ℹ Running calculations for sample 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Calculating radial distances for group '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 86 spots on borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 416 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3397 spots outside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Returning radial distances</code></pre>
 </div>
 </div>
 <p>We can illustrate the results by coloring the spots based on the radial distances from cluster “3”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -307,54 +360,54 @@ Calculating radial distances for group '3'
 <h3 class="anchored" data-anchor-id="pixel-coordinates">Pixel coordinates</h3>
 <p>The distances are given as pixels relative to the image pixels coordinates that were loaded when creating the <code>Seurat</code> object. If we know the conversion factor between pixels in our original H&amp;E image and microns, we can easily convert the radial distances to microns. In this example data, the center-to-center spot distance is 273 pixels in the image and we know that the actual center-to-center spot distance is 100 microns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3 <span class="ot">&lt;-</span> (<span class="dv">100</span><span class="sc">/</span><span class="dv">273</span>)<span class="sc">*</span>se<span class="sc">$</span>r_dist_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3 <span class="ot">&lt;-</span> (<span class="dv">100</span><span class="sc">/</span><span class="dv">273</span>)<span class="sc">*</span>se<span class="sc">$</span>r_dist_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="convert-radial-distances" class="level3">
 <h3 class="anchored" data-anchor-id="convert-radial-distances">Convert radial distances</h3>
 <p>The scale of the distances is somewhat inconvenient for our color scale, so we can apply some transformation to make them easier to visualize, for example the square root of the distance:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3_sqrt <span class="ot">&lt;-</span> <span class="fu">sign</span>(se<span class="sc">$</span>r_dist_3)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">abs</span>(se<span class="sc">$</span>r_dist_3))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3_sqrt"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3_sqrt <span class="ot">&lt;-</span> <span class="fu">sign</span>(se<span class="sc">$</span>r_dist_3)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">abs</span>(se<span class="sc">$</span>r_dist_3))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3_sqrt"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Here we can see that the expression of CRISP3 is high inside cluster “3” and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(<span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>), </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(<span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>), </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase expression distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.</p>
+<p>So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase with distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.</p>
 </section>
 <section id="focused-search" class="level3">
 <h3 class="anchored" data-anchor-id="focused-search">Focused search</h3>
 <p>It is rarely the case that the microenvironment is homogeneous in all directions from the region of interest. In our breast cancer tissue section, we can clearly see that the tissue composition is different depending on which direction you look from our region of interest. <code>RadialDistance</code> therefore provides a feature to narrow down the radial distances to a predefined interval of angles.</p>
 <p>The plot below (generated with <code>AnglePlot</code>) should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, …</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AnglePlot</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">selected_group =</span> <span class="st">"3"</span>, </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">radius =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AnglePlot</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">selected_group =</span> <span class="st">"3"</span>, </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">radius =</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -362,93 +415,225 @@ Calculating radial distances for group '3'
 <p>NB: Before you proceed, note that it is important that the ROI is spatially connected. If not, <code>RadialDistance</code> will complain that it finds disconnected components and will abort the function. This is intended to prevent users from defining a center outside of the ROI which would likely happen if multiple ROIs are present. It doesn’t make much sense to compute radial distances from one center when there are multiple centers present. Instead, you can split the disconnected components with <code>DisconnectRegions</code> and focus on one ROI.</p>
 <p>Now that we have an idea about how the angles are defined, we can provide an interval of angles to group the radial distances by. As you can see, the function has now filtered the data to provide a subset of spots located in a narrower search area.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">240</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">240</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Running calculations for sample 1
-Calculating radial distances for group '3'
-ℹ Extracting border spots from a region with 416 spots
-→ Detected 84 spots on borders
-→ Detected 332 spots inside borders
-→ Detected 3397 spots outside borders
-✔ Returning radial distances
-ℹ Setting search area between 200 and 240 degrees from region center</code></pre>
+<pre><code>ℹ Running calculations for sample 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Calculating radial distances for group '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 86 spots on borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 416 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3397 spots outside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Returning radial distances</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Setting search area between 200 and 240 degrees from region center</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>If we want to go for a more exploratory approach, we can split the radial distances into slices by setting <code>angles_length_out</code>. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">320</span>), <span class="at">angles_nbreaks =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">320</span>), <span class="at">angles_nbreaks =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Running calculations for sample 1
-Calculating radial distances for group '3'
-ℹ Extracting border spots from a region with 416 spots
-→ Detected 84 spots on borders
-→ Detected 332 spots inside borders
-→ Detected 3397 spots outside borders
-✔ Returning radial distances
-ℹ Setting search area between 120 and 320 degrees from region center
-ℹ Splitting search area into 6 interval(s)</code></pre>
+<pre><code>ℹ Running calculations for sample 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"intervals_3"</span>, </span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">6</span>, <span class="at">name =</span> <span class="st">"Spectral"</span>)) <span class="sc">&amp;</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Calculating radial distances for group '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 86 spots on borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 416 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3397 spots outside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Returning radial distances</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Setting search area between 120 and 320 degrees from region center</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Splitting search area into 6 interval(s)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"intervals_3"</span>, </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">6</span>, <span class="at">name =</span> <span class="st">"Spectral"</span>)) <span class="sc">&amp;</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Inside our <code>Seurat</code> object meta data slot, we now have three new columns. ‘angle_3’, ‘r_dist_3’ and ‘intervals_3’. The ‘intervals_3’ columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:</p>
+<p>Inside our <code>Seurat</code> object meta data slot, we now have three new columns: ‘angle_3’, ‘r_dist_3’ and ‘intervals_3’. The ‘intervals_3’ columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>However, the same is of course not true for other genes. Below we can see the expression along the radial axis for three genes. Depending on the direction, these genes have very distinct expression profiles.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PGM5-AS1"</span>, <span class="st">"CXCL14"</span>, <span class="st">"IGHG3"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">|&gt;</span> </span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value_centered =</span> value <span class="sc">-</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span> <span class="co"># Note that the values have been centered</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value_centered, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PGM5-AS1"</span>, <span class="st">"CXCL14"</span>, <span class="st">"IGHG3"</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">|&gt;</span> </span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value_centered =</span> value <span class="sc">-</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span> <span class="co"># Note that the values have been centered</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value_centered, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>If we map the expression of these genes spatially, it is quite clear that these genes are expression in different niches of the microenvironment. In fact, two of these “niches” are mostly composed of tumor cells. Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in <code>STUtility2</code> are easy to adapt to many different scenarios.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">3</span>,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">9</span>),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">9</span>),</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="spatial_methods_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
+</section>
+<section id="region-neighbors" class="level2">
+<h2 class="anchored" data-anchor-id="region-neighbors">Region neighbors</h2>
+<p>If you are only interested in finding spots that are located at the border of a region of interest, you can use the <code>RegionNeighbors</code> function. Let’s demonstrate how it works with an example. If we want to find the spots that are neighbors to cluster 3, we set <code>column_name = "seurat_clusters"</code> and <code>column_labels = "3"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RegionNeighbors</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">column_labels =</span> <span class="st">"3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Finding neighboring spots for '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Excluding neighbors from the same group</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   169 neighbors left</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Returning neighbors</code></pre>
+</div>
+</div>
+<p>In our meta.data slot, we now have a new column called “nb_to_3”, short for “neighbors to cluster 3”. In the plot below, you can see that this column provides information about which spots are outside the border of cluster 3.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">column_name =</span> <span class="st">"nb_to_3"</span>,</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="spatial_methods_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can tweak thee function to identify the inner border instead, i.e.&nbsp;the spots that are located at the “tumor edge”. When we run <code>RegionNeighbors</code> with <code>mode="inner"</code>, we get a column called <code>inner_border_3</code> which tells us what spots are on the “tumor edge”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RegionNeighbors</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, </span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">column_labels =</span> <span class="st">"3"</span>, <span class="at">mode =</span> <span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Finding neighboring spots for '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Returning neighbors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">column_name =</span> <span class="st">"inner_border_3"</span>,</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="spatial_methods_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>If we want to get both the inner and outer borders, we set <code>mode="inner_outer</code>.</p>
+<p>NB: If we run a mode that returns “outer” border spots, the prefix of the returned column will be “nb_to_” by default. This behavior can be overridden by setting the <code>column_key=...</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RegionNeighbors</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, </span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">column_labels =</span> <span class="st">"3"</span>, <span class="at">mode =</span> <span class="st">"inner_outer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Finding neighboring spots for '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Returning neighbors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">column_name =</span> <span class="st">"nb_to_3"</span>,</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="spatial_methods_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The last mode (<code>mode="all_inner_outer"</code>) allows us to select the outer border spots while keeping all spots belonging to our cluster of interest.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RegionNeighbors</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">column_key =</span> <span class="st">"(all)nb_to_"</span>,</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">column_labels =</span> <span class="st">"3"</span>, <span class="at">mode =</span> <span class="st">"all_inner_outer"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Finding neighboring spots for '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Returning neighbors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">column_name =</span> <span class="st">"(all)nb_to_3"</span>,</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="spatial_methods_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>One example of how this information can be used is to run a DE test between the outer and inner borders to find genes that are differentially expressed in spots just outside the “tumor edge”:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>border_markers <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(se, <span class="at">ident.1 =</span> <span class="st">"nb_to_3"</span>, </span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">ident.2 =</span> <span class="st">"3"</span>, <span class="at">group.by =</span> <span class="st">"nb_to_3"</span>)</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter results</span></span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>border_markers_up <span class="ot">&lt;-</span> border_markers <span class="sc">|&gt;</span> </span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_val_adj <span class="sc">&lt;</span> <span class="fl">0.01</span>, avg_log2FC <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>avg_log2FC) <span class="sc">|&gt;</span> </span>
+<span id="cb97-8"><a href="#cb97-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb97-9"><a href="#cb97-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-10"><a href="#cb97-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset Seurat object to include border spots</span></span>
+<span id="cb97-11"><a href="#cb97-11" aria-hidden="true" tabindex="-1"></a>se_border_spots <span class="ot">&lt;-</span> <span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> nb_to_3 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"3"</span>, <span class="st">"nb_to_3"</span>))</span>
+<span id="cb97-12"><a href="#cb97-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb97-13"><a href="#cb97-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Violin plot</span></span>
+<span id="cb97-14"><a href="#cb97-14" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(se_border_spots, <span class="at">features =</span> <span class="fu">rownames</span>(border_markers_up), <span class="at">group.by =</span> <span class="st">"nb_to_3"</span>) <span class="sc">&amp;</span></span>
+<span id="cb97-15"><a href="#cb97-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="spatial_methods_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 
 </main>
