@@ -66,7 +66,7 @@ NULL
 #' @importFrom glue glue
 #' @importFrom rlang abort
 #' @importFrom methods as
-#' @importFrom cli cli_h2
+#' @import cli
 #'
 #' @return Either a list of tibbles or a tibble with feature names and correlation scores
 #'
@@ -137,7 +137,7 @@ CorSpatialFeatures.default <- function (
 
   results <- lapply(seq_along(spatnet), function (i) {
 
-    if (verbose) inform(c("i" = glue("Sample {i}:")))
+    if (verbose) cli_alert_info("Sample {i}:")
 
     # pivot spatial network in long format to a wide format
     wide_spatial_network <- pivot_wider(spatnet[[i]] |> select(from, to) |> mutate(value = 1),
@@ -152,11 +152,11 @@ CorSpatialFeatures.default <- function (
 
     # Subset feature data to only include spots with neighbors
     x_subset <- object[colnames(CN), ]
-    if (verbose) inform(c("v" = "  Cleaned out spots without neighbors"))
+    if (verbose) cli_alert("  Cleaned out spots without neighbors")
 
     # Calculate lag matrix
     lagMat <- (CN %*% x_subset) / rowSums(CN)
-    if (verbose) inform(c("v" = "  Computed feature lag expression"))
+    if (verbose) cli_alert("  Computed feature lag expression")
 
     # return lagMat if the autocorrelation should be calculated across all samples
     if (across_all) {
@@ -169,7 +169,7 @@ CorSpatialFeatures.default <- function (
     } else {
       if (nCores > (detectCores() - 1)) {
         nCores <- detectCores() - 1
-        inform(glue("Using {nCores} threads"))
+        cli_alert_info("Using {nCores} threads")
       }
       chunks <- ceiling((1:ncol(x_subset))/100)
       chunks <- split(1:ncol(x_subset), chunks)
@@ -179,7 +179,7 @@ CorSpatialFeatures.default <- function (
       }, mc.cores = nCores))
     }
 
-    if (verbose) inform(c("v" = "  Computed feature spatial autocorrelation scores"))
+    if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
 
     # Summarize results
     results <- tibble(gene = names(spatial_autocorrelation), cor = spatial_autocorrelation) |>
@@ -188,7 +188,7 @@ CorSpatialFeatures.default <- function (
 
   # If across_all is set, calculate autocorrelations across all samples instead
   if (across_all) {
-    if (verbose) inform(c("", "i" = "Computing spatial autocorrelation scores across all samples"))
+    if (verbose) cli_alert_info("Computing spatial autocorrelation scores across all samples")
     lagMat <- do.call(rbind, results)
 
     if (is.null(nCores)) {
@@ -197,7 +197,7 @@ CorSpatialFeatures.default <- function (
     } else {
       if (nCores > (detectCores() - 1)) {
         nCores <- detectCores() - 1
-        inform(glue("Using {nCores} threads"))
+        cli_alert_info("Using {nCores} threads")
       }
       chunks <- ceiling((1:ncol(object))/100)
       chunks <- split(1:ncol(object), chunks)
@@ -207,13 +207,13 @@ CorSpatialFeatures.default <- function (
       }, mc.cores = nCores))
     }
 
-    if (verbose) inform(c("v" = "  Computed feature spatial autocorrelation scores"))
+    if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
     # Summarize results
     results <- tibble(gene = colnames(object), cor = spatial_autocorrelation) |>
       arrange(-cor)
   }
 
-  if (verbose) inform(c("v" = "  Returning results"))
+  if (verbose) cli_alert_success("  Returning results")
   return(results)
 }
 

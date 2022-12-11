@@ -39,7 +39,8 @@ NULL
 #'
 #' @rdname region-neighbors
 #'
-#' @importFrom rlang inform warn
+#' @importFrom rlang warn
+#' @import cli
 #' @importFrom dplyr filter mutate
 #'
 #' @export
@@ -85,17 +86,17 @@ RegionNeighbors.default <- function (
   spatnet_combined <- spatnet_combined |>
     filter(from %in% spots)
   if (nrow(spatnet_combined) == 0) abort("0 neighbors found")
-  if (verbose) inform(c(">" = glue("Found {nrow(spatnet_combined)} neighbors for selected spots")))
+  if (verbose) cli_alert("  Found {nrow(spatnet_combined)} neighbors for selected spots")
 
   if (!keep_within) {
-    if (verbose) inform(c(">" = "Excluding neighbors from the same group"))
+    if (verbose) cli_alert("  Excluding neighbors from the same group")
     spatnet_combined <- spatnet_combined |>
       filter(!to %in% spots)
     if (nrow(spatnet_combined) == 0) abort("0 neighbors found after filtering")
-    if (verbose) inform(c(">" = glue("{nrow(spatnet_combined)} neighbors left")))
+    if (verbose) cli_alert("  {nrow(spatnet_combined)} neighbors left")
   }
 
-  if (verbose) inform(c(">" = "Returning neighbors"))
+  if (verbose) cli_alert("  Returning neighbors")
 
   # If outer_border = TRUE, return neighboring spots
   # otherwise, return inner border
@@ -114,8 +115,9 @@ RegionNeighbors.default <- function (
 #'
 #' @rdname region-neighbors
 #'
+#' @import cli
 #' @importFrom glue glue
-#' @importFrom rlang inform abort %||%
+#' @importFrom rlang abort %||%
 #' @importFrom dplyr bind_cols select left_join filter bind_cols pull distinct sym all_of
 #' @importFrom tibble tibble
 #'
@@ -198,17 +200,22 @@ RegionNeighbors.Seurat <- function (
   .check_seurat_object(object)
 
   # Check if column_name is available in meta data
-  if (!inherits(column_name, what = c("character", "factor"))) abort(glue("Invalid class '{class(column_name)}', expected a 'character' vector or a 'factor'"))
-  if (length(column_name) != 1) abort(glue("Invalid length {length(column_name)} for 'column_name', expected a vector of length 1"))
-  if (!column_name %in% colnames(object[[]])) abort("'column_name' is not present on the Seurat object meta data")
+  if (!inherits(column_name, what = c("character", "factor")))
+    abort(glue("Invalid class '{class(column_name)}', expected a 'character' vector or a 'factor'"))
+  if (length(column_name) != 1)
+    abort(glue("Invalid length {length(column_name)} for 'column_name', expected a vector of length 1"))
+  if (!column_name %in% colnames(object[[]]))
+    abort("'column_name' is not present on the Seurat object meta data")
 
   # Check column label
   column_labels <- column_labels %||% {
-    inform(glue("No 'column_labels' provided. Using all groups in '{column_name}' column"))
+    cli_alert_info("No 'column_labels' provided. Using all groups in '{column_name}' column")
     column_labels <- unique(object[[]] |> pull(all_of(column_name)))
   }
-  if (!is.character(column_labels)) abort(glue("Invalid class '{class(column_labels)}', expected a 'character'"))
-  if (!all(column_labels %in% (object[[]] |> pull(all_of(column_name))))) abort(glue("Some 'column_labels' are not present in '{column_name}'"))
+  if (!is.character(column_labels))
+    abort(glue("Invalid class '{class(column_labels)}', expected a 'character'"))
+  if (!all(column_labels %in% (object[[]] |> pull(all_of(column_name)))))
+    abort(glue("Some 'column_labels' are not present in '{column_name}'"))
 
   # Select spots
   spots_list <- lapply(column_labels, function(lbl) {
@@ -225,7 +232,7 @@ RegionNeighbors.Seurat <- function (
 
   # Find neighbors
   nbs <- setNames(lapply(names(spots_list), function(nm) {
-    if (verbose) inform(c("i" = glue("Finding neighboring spots for '{nm}'")))
+    if (verbose) cli_alert_info("Finding neighboring spots for '{nm}'")
     spots <- spots_list[[nm]]
     to_spots <- RegionNeighbors(spatnet, spots, outer_border, keep_within, verbose)
     to_spots <- tibble(to_spots, nm) |>

@@ -22,7 +22,8 @@ NULL
 #' @param spots A character vector with spot IDs present 'object'
 #'
 #' @import dplyr
-#' @importFrom rlang abort inform
+#' @import cli
+#' @importFrom rlang abort
 #' @importFrom glue glue
 #'
 #' @rdname disconnect-regions
@@ -107,7 +108,7 @@ DisconnectRegions.default <- function (
     length(spots) > 0,
     all(spots %in% object$barcode)
   )
-  if (verbose) inform(c("i" = glue("Detecting disconnected regions for {length(spots)} spots")))
+  if (verbose) cli_alert_info("Detecting disconnected regions for {length(spots)} spots")
 
   # Find border
   spatnet <- GetSpatialNetwork(object, ...)
@@ -142,14 +143,16 @@ DisconnectRegions.default <- function (
     }))
     return(diconnected_graphs)
   }))
-  if (verbose) inform(c("i" = glue("Found {length(unique(tidygraphs$id))} disconnected graph(s) in data")))
-  if (verbose) inform(c("i" = glue("Sorting disconnected regions by decreasing size")))
+  if (verbose) cli_alert_info("Found {length(unique(tidygraphs$id))} disconnected graph(s) in data")
+  if (verbose) cli_alert_info("Sorting disconnected regions by decreasing size")
 
   # return results as a character vector
   labeler <- setNames(tidygraphs$id, nm = tidygraphs$name)
   singleton_spots <- setdiff(spots, names(labeler))
-  if (verbose) inform(c("i" = glue("Found {length(spots) - length(labeler)} singletons in data")))
-  if (verbose & (length(singleton_spots) > 0)) inform(c(">" = "   These will be labeled as 'singletons'"))
+  if (verbose)
+    cli_alert_info("Found {length(spots) - length(labeler)} singletons in data")
+  if (verbose & (length(singleton_spots) > 0))
+    cli_alert("  These will be labeled as 'singletons'")
   labeler <- c(labeler, setNames(rep("singleton", length(singleton_spots)), nm = singleton_spots))
   labels <- labeler[spots]
 
@@ -165,9 +168,9 @@ DisconnectRegions.default <- function (
 #' @param verbose Print messages
 #'
 #' @import dplyr
-#' @importFrom rlang inform abort
+#' @importFrom rlang abort
 #' @importFrom glue glue
-#' @importFrom cli cli_h2
+#' @import cli
 #' @importFrom tibble column_to_rownames
 #'
 #' @rdname disconnect-regions
@@ -238,7 +241,7 @@ DisconnectRegions.Seurat <- function (
 
   # Get disconnected groups
   disconnected_groups <- setNames(lapply(names(spots_list), function(lbl) {
-    if (verbose) inform(glue("Extracting disconnected components for group '{lbl}'"))
+    if (verbose) cli_alert_info("Extracting disconnected components for group '{lbl}'")
     DisconnectRegions(coords, spots = spots_list[[lbl]], verbose = verbose, ...)
   }), nm = names(spots_list))
 

@@ -141,6 +141,7 @@ RunAlignment.default <- function (
 
 #' @importFrom magick image_read
 #' @import rlang
+#' @import cli
 #' @import glue
 #'
 RunAlignment.Seurat <- function (
@@ -191,7 +192,7 @@ RunAlignment.Seurat <- function (
     }, silent = TRUE)
 
     if (inherits(res, what = "try-error")) {
-      if (verbose) inform(cli::col_br_magenta(glue("No transformation applied to sample {i}")))
+      if (verbose) cli_alert_info(col_br_magenta("No transformation applied to sample {i}"))
       return(NULL)
     } else {
       return(res)

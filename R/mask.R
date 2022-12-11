@@ -25,8 +25,8 @@ NULL
 #' @importFrom magick image_convert image_channel image_blur image_normalize
 #' image_quantize image_threshold image_threshold image_connect image_convert
 #' image_read image_transparent image_composite image_negate
-#' @importFrom rlang try_fetch abort inform
-#' @importFrom cli cli_h2
+#' @importFrom rlang try_fetch abort
+#' @import cli
 #'
 #' @rdname mask-images
 #'
@@ -88,7 +88,7 @@ MaskImages.default <- function (
     abort(glue("'minPixels' should be a 'numeric' of length 1"))
 
   # Apply image conversions
-  if (verbose) inform(c("i" = "Segmenting image using blob extraction"))
+  if (verbose) cli_alert_info("Segmenting image using blob extraction")
 
   im_blobs <- object |>
     image_convert(colorspace = "cmyk") |>
@@ -119,13 +119,13 @@ MaskImages.default <- function (
   blob_sizes <- blob_sizes[setdiff(names(blob_sizes), "0")]
 
   # Remove small blobs
-  if (verbose) inform(c("i" = glue("Filtering out blobs with fewer than {minPixels} pixels")))
+  if (verbose) cli_alert_info("Filtering out blobs with fewer than {minPixels} pixels")
   im_blobs_bm[!im_blobs_bm %in% as.numeric(names(blob_sizes))] <- 0
 
   # Find blobs that are overlapping with spatial coordinates
   # if coordinates are provided
   if (!is.null(xy_coords)) {
-    if (verbose) inform(c("i" = glue("Filtering out blobs that do not overlap with provided coordinates")))
+    if (verbose) cli_alert_info("Filtering out blobs that do not overlap with provided coordinates")
     if (!inherits(xy_coords, what = "tbl"))
       abort(glue("'xy_coords' should be a tibble, got '{class(xy_coords)}'"))
     if (nrow(xy_coords) == 0)
@@ -157,7 +157,7 @@ MaskImages.default <- function (
 
   # Combine original image with filtered mask
   im_final <- image_composite(image = object, composite_image = im_filtered)
-  if (verbose) inform(c("v" = glue("Composed masked image from selected blobs")))
+  if (verbose) cli_alert_success("Composed masked image from selected blobs")
 
   return(im_final)
 
@@ -166,7 +166,8 @@ MaskImages.default <- function (
 
 #' @param section_numbers An integer vector specifying samples to mask
 #'
-#' @importFrom rlang %||% inform abort
+#' @importFrom rlang %||% abort
+#' @import cli
 #' @importFrom dplyr filter mutate group_by group_split across
 #' @importFrom magick image_read
 #'
@@ -201,7 +202,7 @@ MaskImages.Seurat <- function (
   # Set global variables to NulL
   sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
-  if (verbose) cli::cli_h2("Masking image(s)")
+  if (verbose) cli_h2("Masking image(s)")
 
   # Check Seurat object
   .check_seurat_object(object)
@@ -209,7 +210,7 @@ MaskImages.Seurat <- function (
 
   # Get Staffli object
   st_object <- GetStaffli(object)
-  if (verbose) inform(c("i" = glue("Found {nrow(st_object@image_info)} samples")))
+  if (verbose) cli_alert_info("Found {nrow(st_object@image_info)} samples")
 
   # Check section numbers
   section_numbers <- section_numbers %||% st_object@image_info$sampleID |> as.integer()
@@ -219,7 +220,7 @@ MaskImages.Seurat <- function (
 
   # Get raw images
   raw_images <- masked_images <- st_object@rasterlists[["raw"]][section_numbers]
-  if (verbose) inform(c("i" = glue("Fetched images")))
+  if (verbose) cli_alert_info("Fetched images")
 
   # Get coordinates and scalefactors
   sfs <- st_object@image_height/st_object@image_info$full_height
@@ -233,11 +234,11 @@ MaskImages.Seurat <- function (
       mutate(across(pxl_col_in_fullres:pxl_row_in_fullres, ~ round(.x*sfs[i])))
     return(xy_coords)
   })
-  if (verbose) inform(c("i" = glue("Fetched spot coordinates")))
+  if (verbose) cli_alert_info("Fetched spot coordinates")
 
   # Mask images
   selected_masked_images <- lapply(seq_along(raw_images), function(i) {
-    if (verbose) inform(c("", "i" = glue("Processing sample {i}")))
+    if (verbose) cli_alert_info("Processing sample {i}")
     im_masked <- MaskImages(raw_images[[i]] |> image_read(),
                             xy_coords = xy_coords_list[[i]],
                             minPixels = minPixels,
@@ -254,7 +255,7 @@ MaskImages.Seurat <- function (
 
   # Place modified Staffli object in Seurat object
   object@tools$Staffli <- st_object
-  if (verbose) inform(c("", "v" = "Returning Seurat object with masked images"))
+  if (verbose) cli_alert_success("Returning Seurat object with masked images")
 
   # Return Seurat object
   return(object)

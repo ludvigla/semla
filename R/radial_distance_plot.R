@@ -48,7 +48,6 @@ centroid_angles_plot <- function (
 
 }
 
-# TODO: remove non ASCII character degree
 #' Angle plot
 #'
 #' Draws on angle plot on top of a selected region. The plot is meant to help

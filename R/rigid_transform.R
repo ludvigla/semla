@@ -49,6 +49,7 @@ generate_rigid_transform <- function (
 #' @param xy_coords spot coordinates that can be mapped to \code{image}
 #' @param verbose print messages
 #'
+#' @import cli
 #' @importFrom rlang abort
 #' @importFrom glue glue
 #' @importFrom dplyr select between
@@ -183,11 +184,11 @@ RigidTransformImages.default <- function (
     abort("Couldn't find coordinates in 'xy_coords', expected 'pxl_col_in_fullres' and 'pxl_row_in_fullres'")
   xy_coords <- xy_coords |>
     select(all_of(c("pxl_col_in_fullres", "pxl_row_in_fullres")))
-  if (verbose) inform(c("i" = glue("Fetched spot coordinates")))
+  if (verbose) cli_alert_info("Fetched spot coordinates")
 
   # Check transformations
   .check_transforms(object)
-  if (verbose) inform(c("i" = glue("Supplied transformations are valid")))
+  if (verbose) cli_alert_info("Supplied transformations are valid")
 
   # Make sure that translations are between -1-1
   checks <- sapply(object |> select(tr_x, tr_y), function(x) {
@@ -209,15 +210,13 @@ RigidTransformImages.default <- function (
   # get image info
   iminfo <- image_info(image)
 
-  if (verbose)
-    inform(c(
-      ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_x)}"),
-      ">" = glue("Mirror along x-axis: {cli::col_br_magenta(object$mirror_y)}"),
-      ">" = glue("Rotation angle: {cli::col_br_magenta(round(object$angle, digits = 2))}"),
-      ">" = glue("Translation along x axis: {cli::col_br_magenta(round(object$tr_x*100, digits = 2))}%"),
-      ">" = glue("Translation along y axis: {cli::col_br_magenta(round(object$tr_y*100, digits = 2))}%")
-    )
-    )
+  if (verbose) {
+    cli_alert("  Mirror along x-axis: {cli::col_br_magenta(object$mirror_x)}")
+    cli_alert("  Mirror along x-axis: {cli::col_br_magenta(object$mirror_y)}")
+    cli_alert("  Rotation angle: {cli::col_br_magenta(round(object$angle, digits = 2))}")
+    cli_alert("  Translation along x axis: {cli::col_br_magenta(round(object$tr_x*100, digits = 2))}%")
+    cli_alert("  Translation along y axis: {cli::col_br_magenta(round(object$tr_y*100, digits = 2))}%")
+  }
 
   # Run transformation
   transf_res <- CoordAndImageTransform(
@@ -233,7 +232,7 @@ RigidTransformImages.default <- function (
     imcenter = c(object$full_width/2, object$full_height/2),
     scalefactor = object$scalefactor)
 
-  if (verbose) inform(c("i" = "Returning transformed image", ""))
+  if (verbose) cli_alert_success("Returning transformed image")
 
   # return results
   return(transf_res)
@@ -244,9 +243,8 @@ RigidTransformImages.default <- function (
 #' @param transforms a tibble containing information about the transformations
 #' to apply to the images (see Seurat section)
 #'
-#' @importFrom rlang inform
+#' @import cli
 #' @importFrom glue glue
-#' @importFrom cli cli_h2 cli_rule
 #'
 #' @rdname transform-images
 #'
@@ -303,8 +301,8 @@ RigidTransformImages.Seurat <- function (
     abort(glue("Invalid sampleID(s) in 'transforms'. Samples available: ",
                "{paste(nSamples, collapse = ', ')}"))
   if (verbose) cli_h2("Transforming images")
-  if (verbose) inform(c("i" = glue("Found transformations for sample(s): ",
-                                   "{paste(nSamples_transform, collapse = ', ')}"), ""))
+  if (verbose) cli_alert_info(glue("Found transformations for sample(s): ",
+                                   "{paste(nSamples_transform, collapse = ', ')}"))
   nSamples <- nSamples_transform
 
   # Check that transforms have been formatted correctly
@@ -334,7 +332,7 @@ RigidTransformImages.Seurat <- function (
 
   # Apply transformations to selected samples
   for (i in nSamples) {
-    if (verbose) inform(glue("Transforming sample {i}"))
+    if (verbose) cli_alert_info("Transforming sample {i}")
     transf_res <- RigidTransformImages(transforms[transforms$sampleID == i, ],
                                        image = raw_images[[i]],
                                        xy_coords = xy_coords[xy_coords$sampleID == i, ],
@@ -357,7 +355,7 @@ RigidTransformImages.Seurat <- function (
   # Add modified Staffli object to Seurat object
   object@tools$Staffli <- st_object
 
-  if (verbose) inform(c("i" = "Image transformation complete."))
+  if (verbose) cli_alert_info("Image transformation complete.")
 
   # Return Seurat object
   return(object)

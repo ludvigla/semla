@@ -16,6 +16,7 @@ NULL
 #'
 #' @import rlang
 #' @import glue
+#' @import cli
 #' @importFrom shiny h2
 #'
 #' @rdname digital-unroll
@@ -53,7 +54,7 @@ CutSpatialNetwork <- function (
   )
 
   # Start file server
-  if (verbose) inform(c("i" = "Starting static file server"))
+  if (verbose) cli_alert_info("Starting static file server")
   beakr::stopAllServers()
   fs <- try({file_server(hostDir = tiledir, host = host, port = port)})
   print(fs)
@@ -123,8 +124,10 @@ CutSpatialNetwork <- function (
 
   # Run application and return network on quit
   vals <- runApp(list(ui = ui, server = server))
-  if (verbose) inform(c("i" = "Retrieved data from application",
-                        "i" = "Converting data to a tidygraph object"))
+  if (verbose) {
+    cli_alert_info("Retrieved data from application")
+    cli_alert_info("Converting data to a tidygraph object")
+  }
 
   # Format network
   nodes <- do.call(rbind, lapply(vals$nodes, function(x) as_tibble(x)))
@@ -137,7 +140,7 @@ CutSpatialNetwork <- function (
 
   # Overwrite json
   if (overwrite_network_json) {
-    if (verbose) inform(c("i" = "Overwriting spatial network file with new results"))
+    if (verbose) cli_alert_info("Overwriting spatial network file with new results")
     # Put nodes and edges into a list
     data <- list(nodes = nodes, links = links)
     data_json <- data |>
@@ -146,10 +149,10 @@ CutSpatialNetwork <- function (
   }
 
   # Stop static file server
-  if (verbose) inform(c("i" = "Stopping file server"))
+  if (verbose) cli_alert_info("Stopping file server")
   beakr::stopServer(fs)
 
-  if (verbose) inform(c("v" = "Finished!"))
+  if (verbose) cli_alert_success("Finished!")
   return(tidygr)
 }
 

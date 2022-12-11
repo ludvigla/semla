@@ -3,11 +3,11 @@
 #'
 NULL
 
-# TODO: stop LoadImages from loading images in a higher resolution that input
 #' @param image_height an integer value specifying the height of the down-scaled images
 #' @param verbose print messages
 #'
-#' @importFrom rlang abort inform
+#' @importFrom rlang abort
+#' @import cli
 #' @importFrom glue glue
 #' @importFrom magick image_read image_scale geometry_area image_info
 #' @importFrom tools file_ext
@@ -34,7 +34,7 @@ LoadImages.default <- function (
   ...
 ) {
 
-  if (verbose) cli::cli_h2("Load H&E images")
+  if (verbose) cli_h2("Load H&E images")
 
   # Check input
   if (!is.character(object)) abort("Invalid class '{class(object)}', expected a 'character' vector.")
@@ -55,7 +55,7 @@ LoadImages.default <- function (
 
   # Load images
   raw_rasters <- lapply(object, function(f) {
-    if (verbose) inform(c("i" = glue("Loading image from {f}")))
+    if (verbose) cli_alert_info("Loading image from {f}")
     im <- f |>
       image_read()
     info <- im |>
@@ -70,11 +70,11 @@ LoadImages.default <- function (
       as.raster()
     rst <- im |> as.raster()
 
-    if (verbose) inform(c("v" = glue("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")))
+    if (verbose) cli_alert_info("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")
     return(rst)
   })
 
-  if (verbose) inform(c("i" = glue("Saving loaded H&E images as 'rasters' in Seurat object")))
+  if (verbose) cli_alert_info("Saving loaded H&E images as 'rasters' in Seurat object")
   return(raw_rasters)
 }
 

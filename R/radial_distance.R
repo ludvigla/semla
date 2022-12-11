@@ -66,8 +66,8 @@ NULL
 #' the region center.
 #'
 #' @import dplyr
-#' @importFrom rlang abort inform warn
-#' @importFrom cli cli_h3
+#' @importFrom rlang abort warn
+#' @import cli
 #' @importFrom glue glue
 #' @importFrom dbscan kNN
 #' @importFrom zeallot %<-%
@@ -230,7 +230,7 @@ RadialDistance.default <- function (
       filter(from %in% spots, to %in% spots)
   })
 
-  if (verbose) inform(c("i" = glue("Extracting border spots from a region with {length(spots)} spots")))
+  if (verbose) cli_alert_info("Extracting border spots from a region with {length(spots)} spots")
 
   # Find border
   border_spots <- RegionNeighbors(spatnet, spots = spots, outer_border = FALSE)
@@ -240,9 +240,11 @@ RadialDistance.default <- function (
   border_spots_indices <- match(border_spots, object$barcode)
   outside_spots_indices <- -match(spots, object$barcode)
   inside_spots_indices <- match(inside_spots, object$barcode)
-  if (verbose) inform(c(">" = glue("Detected {length(border_spots_indices)} spots on borders"),
-                        ">" = glue("Detected {length(inside_spots_indices)} spots inside borders"),
-                        ">" = glue("Detected {nrow(object) - length(spots)} spots outside borders")))
+  if (verbose) {
+    cli_alert("  Detected {length(border_spots_indices)} spots on borders")
+    cli_alert("  Detected {length(inside_spots_indices)} spots inside borders")
+    cli_alert("  Detected {nrow(object) - length(spots)} spots outside borders")
+  }
 
   # Find nearest neighbor at selected spots border for
   # spot outside and inside the border
@@ -252,7 +254,7 @@ RadialDistance.default <- function (
   knn_spatial_inside <- kNN(x = object[border_spots_indices, c("x", "y")] |> as.matrix(),
                             query = object[inside_spots_indices, c("x", "y")] |> as.matrix(),
                             k = 1)
-  if (verbose) inform(c("v" = glue("Returning radial distances")))
+  if (verbose) cli_alert_success("Returning radial distances")
 
   # Get radial distances
   radial_dists <- setNames(numeric(length = nrow(object)), nm = object$barcode)
@@ -310,7 +312,8 @@ RadialDistance.default <- function (
 #' @param verbose Print messages
 #'
 #' @import dplyr
-#' @importFrom rlang inform abort
+#' @import cli
+#' @importFrom rlang abort
 #' @importFrom glue glue
 #'
 #' @rdname radial-distance
@@ -381,9 +384,9 @@ RadialDistance.Seurat <- function (
 
   # Calculate radial distances
   radial_distances <- do.call(bind_rows, lapply(names(coords_list), function(nm) {
-    if (verbose) inform(glue("Running calculations for sample {nm}"))
+    if (verbose) cli_alert_info("Running calculations for sample {nm}")
     sample_radial_distances <- lapply(names(spots_list), function(lbl) {
-      if (verbose) inform(glue("Calculating radial distances for group '{lbl}'"))
+      if (verbose) cli_alert_info("Calculating radial distances for group '{lbl}'")
       res <- RadialDistance(object = coords_list[[nm]],
                             spots = spots_list[[lbl]][[nm]],
                             verbose = verbose,
@@ -425,7 +428,8 @@ RadialDistance.Seurat <- function (
 #' @param verbose Print messages
 #'
 #' @import dplyr
-#' @importFrom rlang inform warn abort %||%
+#' @import cli
+#' @importFrom rlang warn abort %||%
 #' @importFrom stats median
 #'
 .check_angles <- function (
@@ -474,9 +478,9 @@ RadialDistance.Seurat <- function (
     })
     if (!all(check_centroids))
       warn(glue("Center outside selected region. Make sure that the region center is valid."))
-    if (verbose) inform(c("i" = glue("Setting search area between {angles[1]} and {angles[2]} degrees from region center")))
+    if (verbose) cli_alert_info("Setting search area between {angles[1]} and {angles[2]} degrees from region center")
     if (!is.null(angles_nbreaks)) {
-      if (verbose) inform(c("i" = glue("Splitting search area into {angles_nbreaks} interval(s)")))
+      if (verbose) cli_alert_info("Splitting search area into {angles_nbreaks} interval(s)")
     }
   }
 

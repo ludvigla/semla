@@ -28,6 +28,7 @@
 #' meta data slot
 #'
 #' @import dplyr
+#' @import cli
 #' @importFrom glue glue
 #' @importFrom rlang abort
 #'
@@ -40,11 +41,13 @@
     column_name
 ) {
   select_groups <- select_groups %||% {
-    inform(glue(c("i" = "No 'select_groups' provided. Using all groups in '{column_name}' column")))
+    cli_alert_info("No 'select_groups' provided. Using all groups in '{column_name}' column")
     select_groups <- unique(object[[]] |> pull(all_of(column_name)))
   }
-  if (!inherits(select_groups, what = c("factor", "character"))) abort(glue("Invalid class '{class(select_groups)}', expected a 'character'"))
-  if (!all(select_groups %in% (object[[]] |> pull(all_of(column_name))))) abort(glue("Some 'select_groups' are not present in '{column_name}'"))
+  if (!inherits(select_groups, what = c("factor", "character")))
+    abort(glue("Invalid class '{class(select_groups)}', expected a 'character'"))
+  if (!all(select_groups %in% (object[[]] |> pull(all_of(column_name)))))
+    abort(glue("Some 'select_groups' are not present in '{column_name}'"))
 
   return(select_groups)
 }

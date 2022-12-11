@@ -217,11 +217,12 @@ MapFeatures.default <- function (
   return(wrapped_plots)
 }
 
-# TODO: Fix center_zero with NA values
+
 #' Map numeric features in 2D using a Seurat object
 #'
 #' @param features a character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
+#' @param slot slot to pull features values from
 #' @param image_use string specifying image type to use
 #' @param coords_use string specifying coordinate type to use
 #' @param section_number an integer select a tissue section number to subset data by
@@ -320,6 +321,7 @@ MapFeatures.default <- function (
 MapFeatures.Seurat <- function (
     object,
     features,
+    slot = "data",
     image_use = NULL,
     coords_use = "raw",
     crop_area = NULL,
@@ -356,7 +358,7 @@ MapFeatures.Seurat <- function (
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, slot = slot) |> as_tibble())
 
   # Add label_by column if present
   if (!is.null(label_by)) {
@@ -845,7 +847,7 @@ MapLabels.Seurat <- function (
 #' @param center_zero a logical specifying whether color scale should be centered at 0
 #'
 #' @importFrom ggplot2 ggplot geom_point scale_x_continuous scale_y_reverse
-#' theme_void theme scale_color_gradientn labs coord_fixed aes element_text
+#' theme_void theme labs coord_fixed aes element_text
 #' margin scale_fill_gradientn guides guide_legend scale_color_manual
 #' @importFrom dplyr if_all
 #'
@@ -1017,7 +1019,7 @@ MapLabels.Seurat <- function (
 #' @param drop_na logical specifying whether NA values should be dropped
 #'
 #' @importFrom ggplot2 ggplot geom_point scale_x_continuous scale_y_reverse
-#' theme_void theme scale_color_gradientn labs coord_fixed aes margin
+#' theme_void theme labs coord_fixed aes margin
 #' element_text scale_fill_manual
 #' @importFrom stats na.omit
 #' @importFrom dplyr select all_of sym
@@ -1393,12 +1395,12 @@ MapLabels.Seurat <- function (
     feature_limits <- lapply(data, function(x) {
       x |>
         select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |>
-        summarize_all(range)
+        summarize(across(everything(), ~ range(.x, na.rm = TRUE)))
     })
   } else if (scale == "shared") {
     feature_limits <- do.call(bind_rows, data) |>
       select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |>
-      summarize_all(range)
+      summarize(across(everything(), ~ range(.x, na.rm = TRUE)))
     feature_limits <- setNames(lapply(names(data), function(nm) {
       feature_limits
     }), nm = names(data))

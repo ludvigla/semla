@@ -28,7 +28,8 @@ NULL
 #' @importFrom Seurat Read10X Read10X_h5
 #' @importFrom SeuratObject RowMergeSparseMatrices
 #' @importFrom glue glue
-#' @importFrom rlang abort inform
+#' @import cli
+#' @import rlang
 #' @importFrom dplyr case_when mutate
 #' @importFrom tibble tibble
 #' @importFrom tools file_ext
@@ -66,7 +67,7 @@ LoadAndMergeMatrices <- function (
   if (any(is.na(checks$is))) abort(c("Invalid path(s):", glue::glue("{checks$samplefiles[is.na(checks$is)]}")))
 
   # Load expression matrices
-  if (verbose) inform(c("i" = "Loading matrices:"))
+  if (verbose) cli_alert_info("Loading matrices:")
   exprMats <- lapply(seq_along(samplefiles), function(i) {
     if (checks$is[i] == "dir") {
       # Assumes that the directory contains matrix, barcodes and genes
@@ -81,7 +82,7 @@ LoadAndMergeMatrices <- function (
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
       }
     }
-    if (verbose) inform(c("v" = glue("  Finished loading expression matrix {i}")))
+    if (verbose) cli_alert("  Finished loading expression matrix {i}")
     colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
     return(exprMat)
   })
@@ -90,20 +91,22 @@ LoadAndMergeMatrices <- function (
   all.genes <- lapply(exprMats, function(exprMat) {rownames(exprMat)})
   intersecting.genes <- Reduce(intersect, all.genes)
   if (length(intersecting.genes) == 0) abort("No shared genes shared across datasets.")
-  if (length(intersecting.genes) < 1000) inform(c("x" = glue("There are only {length(intersecting.genes)} gene shared across all matrices:"),
-                                                  "x" = "  Are you sure that the matrices share the same gene IDs?",
-                                                  "x" = "  Are the datasets from the same species?"))
+  if (length(intersecting.genes) < 1000) {
+    cli_alert_warning(col_br_red("There are only {length(intersecting.genes)} gene shared across all matrices:"))
+    cli_alert(col_br_red("  Are you sure that the matrices share the same gene IDs?"))
+    cli_alert(col_br_red("  Are the datasets from the same species?"))
+  }
   # Merge matrices
   if (length(exprMats) > 1) {
-    if (verbose) inform(c("i" = "Merging matrices:"))
+    if (verbose) cli_text(""); cli_alert_info("Merging matrices:")
     mergedMat <- RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
-    if (verbose) inform(c("v" = glue("  There are {cli::col_br_blue(nrow(mergedMat))}",
-                                     " features and {cli::col_br_magenta(ncol(mergedMat))} spots in the merged matrix.")))
+    if (verbose) cli_alert_success(glue("There are {cli::col_br_blue(nrow(mergedMat))} features and {cli::col_br_magenta(ncol(mergedMat))} ",
+                                        "spots in the merged matrix."))
     return(mergedMat)
   } else {
-    inform(c("i" = "only 1 expression matrix loaded."))
-    if (verbose) inform(c("v" = glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
-                                     " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix.")))
+    cli_alert_info("only 1 expression matrix loaded.")
+    if (verbose) cli_alert_success(glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
+                                     " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix."))
     return(exprMats[[1]])
   }
 
@@ -160,7 +163,7 @@ LoadSpatialCoordinates <- function (
   if (any(is.na(checks$type))) abort(c("Invalid path(s):", glue::glue("{checks$coordinatefiles[is.na(checks$type)]}")))
 
   # Load coordinates
-  if (verbose) inform(c("i" = "Loading coordinates:"))
+  if (verbose) cli_alert_info("Loading coordinates:")
   coordDF <- do.call(bind_rows, lapply(seq_along(coordinatefiles), function(i) {
     coords <- read.csv(file = coordinatefiles[i], header = FALSE) |>
       tibble::as_tibble() |>
@@ -169,14 +172,14 @@ LoadSpatialCoordinates <- function (
       coords <- coords |>
         filter(selected == 1)
     }
-    if (verbose) inform(c("v" = glue::glue("  Finished loading coordinates for sample {i}")))
+    if (verbose) cli_alert("  Finished loading coordinates for sample {i}")
     coords$barcode <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = coords$barcode)
     coords$sampleID <- i
     return(coords)
   }))
 
   # Return coordinates
-  if (verbose) inform(c("v" = glue::glue("  Collected coordinates for {cli::col_br_magenta(nrow(coordDF))} spots.")))
+  if (verbose) cli_alert_info("Collected coordinates for {cli::col_br_magenta(nrow(coordDF))} spots.")
   return(coordDF)
 }
 
@@ -195,6 +198,7 @@ LoadSpatialCoordinates <- function (
 #' @param verbose Print messages
 #'
 #' @import glue
+#' @import cli
 #' @import rlang
 #' @import dplyr
 #' @importFrom tools file_ext
@@ -246,7 +250,7 @@ LoadImageData <- function (
   if (any(!check)) abort(message = c("Invalid path(s):", glue::glue("File path '{unlist(images[!check])}' does not exist")))
 
   # read image data
-  if (verbose) inform(c("i" = glue::glue("Reading image data for {nrow(images)} samples.")))
+  if (verbose) cli_alert_info(glue::glue("Reading image data for {nrow(images)} samples."))
   imgData <- do.call(bind_rows, lapply(1:nrow(images), function(i) {
     png.files <- unlist(images[i, ])
     exts <- file_ext(png.files)
@@ -264,9 +268,7 @@ LoadImageData <- function (
     )
     if (verbose)
       sapply(basename(unlist(images[i, ])), function(impath) {
-        inform(c(
-          "v" = glue("  Finished reading '{impath}' image data for sample {i}")
-        ))
+        cli_alert_info("Finished reading '{impath}' image data for sample {i}")
       })
     return(DF)
   }))
@@ -314,7 +316,8 @@ LoadImageData <- function (
 #' @param verbose Print messages
 #' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
 #'
-#' @importFrom rlang abort inform
+#' @import cli
+#' @import rlang
 #' @importFrom glue glue
 #' @importFrom Seurat CreateSeuratObject
 #' @importFrom magick image_read image_info
@@ -322,7 +325,6 @@ LoadImageData <- function (
 #' @importFrom dplyr select bind_cols mutate case_when left_join
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr uncount
-#' @importFrom cli cli_h2 cli_h3
 #'
 #' @return A \code{\link{Seurat}} object with additional spatial information
 #'
@@ -421,8 +423,8 @@ ReadVisiumData <- function (
   if (!all(coordinates$barcode %in% colnames(mergedMat))) {
     abort(glue("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data."))
   }
-  if (verbose) inform(""); cli_h3(text = "Creating `Seurat` object")
-  if (verbose) inform(c("v" = "Expression matrices and coordinates are compatible"))
+  if (verbose) cli_h3(text = "Creating `Seurat` object")
+  if (verbose) cli_alert_success("Expression matrices and coordinates are compatible")
 
   # Read image info
   image_info <- do.call(rbind, lapply(seq_along(infoTable$imgs), function(i) {
@@ -458,7 +460,7 @@ ReadVisiumData <- function (
                                assay = assay,
                                meta.data = metaData,
                                ...)
-  if (verbose) inform(c(">" = "Created `Seurat` object"))
+  if (verbose) cli_alert_info("Created `Seurat` object")
 
   # Create a Stafli object
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
@@ -466,13 +468,12 @@ ReadVisiumData <- function (
                                           select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID),
                                         image_info = image_info,
                                         scalefactors = scalefactors)
-  if (verbose) inform(c(">" = "Created `Staffli` object"))
+  if (verbose) cli_alert_info("Created `Staffli` object")
 
   # Place Staffli object inside the tools slot of the Seurat object
   object@tools$Staffli <- staffli_object
-  if (verbose) inform(c(">" = "Loaded spatial data into the `Seurat` object"))
 
-  if (verbose) inform(c("v" = glue("Returning a `Seurat` object with {cli::col_br_blue(nrow(object))}",
-                                   " features and {cli::col_br_magenta(ncol(object))} spots")))
+  if (verbose) cli_alert_success(glue("Returning a `Seurat` object with {cli::col_br_blue(nrow(object))}",
+                                   " features and {cli::col_br_magenta(ncol(object))} spots"))
   return(object)
 }

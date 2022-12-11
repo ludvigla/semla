@@ -16,6 +16,7 @@ NULL
 #' @param verbose Print messages
 #'
 #' @import rlang
+#' @import cli
 #' @import glue
 #' @import dplyr
 #' @importFrom tidyr pivot_wider
@@ -52,11 +53,11 @@ export_graph <- function (
     install.packages("tidygraph")
 
   # Create spatial network
-  if (verbose) inform(c("i" = glue("Creating spatial network for sample {sampleID}")))
+  if (verbose) cli_alert_info("Creating spatial network for sample {sampleID}")
   spatnet <- GetSpatialNetwork(object)[[sampleID]]
 
   # Create an adjacency matrix
-  if (verbose) inform(c("i" = glue("Creating adjacency matrix from spatial network")))
+  if (verbose) cli_alert_info("Creating adjacency matrix from spatial network")
   wide_spatial_network <- pivot_wider(
     spatnet |>
       select(from, to) |>
@@ -72,19 +73,20 @@ export_graph <- function (
     as.matrix()
 
   # Sort columns of matrix
-  if (verbose) inform(c("i" = glue("Rearranging {nrow(wide_spatial_network)}x{ncol(wide_spatial_network)}",
-                                   " adjacency matrix")))
+  if (verbose) cli_alert_info("Rearranging {nrow(wide_spatial_network)}x{ncol(wide_spatial_network)} adjacency matrix")
   wide_spatial_network <- wide_spatial_network[, rownames(wide_spatial_network)]
   if (!all(rownames(wide_spatial_network) == colnames(wide_spatial_network)))
     abort("Something went wrong...")
 
   # remove duplicated edges
-  if (verbose) inform(c("i" = "Removing duplicated edges"))
+  if (verbose) cli_alert_info("Removing duplicated edges")
   wide_spatial_network <- wide_spatial_network*upper.tri(wide_spatial_network)
 
   # Add attributes to nodes
-  if (verbose) inform(c("i" = "Creating tidy graph object",
-                        "i" = "Adding node attributes"))
+  if (verbose) {
+    cli_alert_info("Creating tidy graph object")
+    cli_alert_info("Adding node attributes")
+  }
   network <- suppressWarnings({tidygraph::as_tbl_graph(wide_spatial_network, directed = FALSE)})
 
   st_object <- GetStaffli(object)
@@ -102,7 +104,7 @@ export_graph <- function (
            `_row` = name)
 
   # Add attributes to edges
-  if (verbose) inform(c("i" = "Adding edge attributes"))
+  if (verbose) cli_alert_info("Adding edge attributes")
   network <- network |>
     tidygraph::activate(edges) |>
     select(-weight) |>
@@ -137,11 +139,11 @@ export_graph <- function (
   data <- list(nodes = nodes, links = links)
 
   # Export
-  if (verbose) inform(c("i" = glue("Exporting spatial network to {file.path(outdir, 'data_Visium.json')}")))
+  if (verbose) cli_alert_info("Exporting spatial network to {file.path(outdir, 'data_Visium.json')}")
   data_json <- data |>
     write_json(auto_unbox = TRUE,
                path = file.path(outdir, "data_Visium.json"))
-  if (verbose) inform(c("v" = "Finished!"))
+  if (verbose) cli_alert_success("Finished!")
 }
 
 #' @noRd

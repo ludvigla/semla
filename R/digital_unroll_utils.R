@@ -21,14 +21,14 @@
 #' properly with \code{\link{CutSpatialNetwork}}, otherwise the results will be
 #' inaccurate. See the package website for examples.
 #'
-#' @param full_graph A `tbl_graph` object geneated with \code{\link{CutSpatialNetwork}}
+#' @param full_graph A `tbl_graph` object generated with \code{\link{CutSpatialNetwork}}
 #' @param verbose Print messages
 #'
 #' @import rlang
 #' @import glue
 #' @import dplyr
 #' @importFrom tibble tibble as_tibble
-#' @importFrom cli col_br_magenta
+#' @import cli
 #'
 #' @return A `tibble` with "unrolled" tissue coordinates
 #'
@@ -55,7 +55,7 @@ AdjustTissueCoordinates <- function (
   edges_to_be_removed <- sum(!(full_graph |> tidygraph::activate(edges) |> pull(keep)))
   if (edges_to_be_removed > 0) {
 
-    if (verbose) inform(c("i" = glue("Removing {edges_to_be_removed} edges")))
+    if (verbose) cli_alert_info("Removing {edges_to_be_removed} edges")
 
     # Filter graph
     small_graph <- full_graph |>
@@ -66,19 +66,19 @@ AdjustTissueCoordinates <- function (
   }
 
   # Check if multiple subgraphs are present
-  if (verbose) inform(c("i" = "Checking for disconnected graphs"))
+  if (verbose) cli_alert_info("Checking for disconnected graphs")
   small_graph_split <- tidygraph::to_components(small_graph)
   if (length(small_graph_split) > 1) {
-    if (verbose) inform(c("i" = col_br_magenta("More than 1 subgraph identified. Keeping the largest subgraph")))
+    if (verbose) cli_alert_info(col_br_magenta("More than 1 subgraph identified. Keeping the largest subgraph"))
     small_graph <- small_graph_split[[1]]
   }
 
   # calculate pairwise geodesics between nodes
-  if (verbose) inform(c("i" = "Calculating pairwise geodesics between nodes in graph"))
+  if (verbose) cli_alert_info("Calculating pairwise geodesics between nodes in graph")
   distMat <- igraph::distances(small_graph)
 
   # identify end nodes
-  if (verbose) inform(c("i" = "Identifying end points"))
+  if (verbose) cli_alert_info("Identifying end points")
   inds <- which(distMat == max(distMat), arr.ind = TRUE)
   if (nrow(inds) > 2) {
     inds <- inds[1:2, ]
@@ -107,7 +107,7 @@ AdjustTissueCoordinates <- function (
     left_join(y = dists_from_end, by = "name")
 
   # Find shortest path between end points
-  if (verbose) inform(c("i" = "Finding shortest path beetween end points"))
+  if (verbose) cli_alert_info("Finding shortest path beetween end points")
   spath <- igraph::shortest_paths(
     graph = small_graph,
     from = inds[outer_end, 1],
@@ -141,7 +141,7 @@ AdjustTissueCoordinates <- function (
     as.matrix()
 
   # Calculate sign for angles
-  if (verbose) inform(c("i" = "Checking location of nodes relative to shortest path nodes"))
+  if (verbose) cli_alert_info("Checking location of nodes relative to shortest path nodes")
   nodes_sign <- .get_nodes_sign(distMat = dist_subset,
                                 coords_nodes = coords_nodes,
                                 coords_spath_nodes = coords_spath_nodes,
@@ -161,7 +161,7 @@ AdjustTissueCoordinates <- function (
     select(name, x, y, x_dist, y_dist)
 
   # rescale y distances
-  if (verbose) inform(c("i" = "Rescaling y distances to ensure non-negative values"))
+  if (verbose) cli_alert_info("Rescaling y distances to ensure non-negative values")
   nodes <- nodes |>
     mutate(y_dist = case_when(is.na(y_dist) ~ 0,
                               TRUE ~ y_dist)) |>
@@ -170,7 +170,7 @@ AdjustTissueCoordinates <- function (
     mutate(y_dist = y_dist - min(y_dist))
 
   # Return results
-  if (verbose) inform(c("v" = "Finished!"))
+  if (verbose) cli_alert_success("Finished!")
   return(nodes)
 }
 
