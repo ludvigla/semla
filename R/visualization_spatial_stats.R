@@ -27,7 +27,7 @@ NULL
 #' @import dplyr
 #' @import glue
 #'
-#' @family visualization
+#' @family spatial-visualization
 #'
 #' @author Lovisa Franzen
 #'
@@ -231,7 +231,7 @@ MapFeaturesSummary <- function (
 #' @import dplyr
 #' @import glue
 #'
-#' @family visualization
+#' @family spatial-visualization
 #'
 #' @author Lovisa Franzen
 #'

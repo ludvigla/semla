@@ -141,10 +141,13 @@ MapFeaturesSummary(se, features = "Nrgn", subplot_type = "density")
 
 }
 \seealso{
-Other visualization: 
+Other spatial-visualization: 
+\code{\link{AnglePlot}()},
+\code{\link{ImagePlot}()},
+\code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()}
 }
 \author{
 Lovisa Franzen
 }
-\concept{visualization}
+\concept{spatial-visualization}

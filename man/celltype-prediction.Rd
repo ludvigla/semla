@@ -107,7 +107,10 @@ An object with cell type proportion estimates
 \description{
 This function can be used to project cell type expression
 profiles onto a 10x Visium gene expression matrix to obtain
-cell type proportion estimates. The method is suitable for
+cell type proportion estimates.
+}
+\details{
+This method is suitable for
 paired 10x Visium and scRNA-seq data. In other words, the
 scRNA-seq data should represent the cell types present in
 the 10x Visium spatial transcriptomics data.
@@ -127,7 +130,7 @@ We encourage users to explore alternative methods such as
 stereoscope, cell2location or RCTD.
 
 The method uses the NNLS implementation
-from the `RcppML` R package developed by Zachary DeBruine.
+from the \code{RcppML} R package developed by Zachary DeBruine.
 }
 \section{default method}{
 
@@ -135,7 +138,7 @@ Input `object` is a matrix-like object with 10x Visium data. The function return
 a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 where nCellTypes is the number of cell types and nSpots is the number of spots.
 If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-and the cell type expression profle matrix.
+proportions `prop` and the cell type expression profile matrix `W`.
 }
 
 \section{Seurat method}{
@@ -146,6 +149,6 @@ estimated cell type proportions.
 }
 
 \references{
-[RcppML](https://doi.org/10.1101/2021.09.01.458620)
-[RcppML GitHub page](https://github.com/zdebruine/RcppML)
+\href{https://doi.org/10.1101/2021.09.01.458620}{RcppML}
+\href{https://github.com/zdebruine/RcppML}{RcppML GitHub page}
 }

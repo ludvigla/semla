@@ -13,8 +13,7 @@ CutSpatialNetwork(
   container_width = "800px",
   container_height = "800px",
   overwrite_network_json = TRUE,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 )
 
 export_graph(object, sampleID = 1L, outdir, verbose = TRUE)
@@ -48,3 +47,13 @@ Utility function to prepare data for \code{\link{CutSpatialNetwork}}.
 The exported JSON file should be exported to the same directory as
 the H&E image tiles generated with \code{\link{TileImage}}
 }
+\seealso{
+Other spatial-methods: 
+\code{\link{CorSpatialFeatures}()},
+\code{\link{DisconnectRegions}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RadialDistance}()},
+\code{\link{RegionNeighbors}()},
+\code{\link{RunLocalG}()}
+}
+\concept{spatial-methods}

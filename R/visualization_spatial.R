@@ -70,6 +70,7 @@ NULL
 #' first feature is "red", the second is "green" and the last feature is "blue".
 #'
 #' @rdname visualize-features
+#' @family spatial-visualization
 #'
 #' @return A patchwork object
 #'
@@ -240,6 +241,7 @@ MapFeatures.default <- function (
 #' @importFrom rlang warn
 #'
 #' @rdname visualize-features
+#' @family spatial-visualization
 #'
 #' @examples
 #'

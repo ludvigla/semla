@@ -247,6 +247,7 @@ RigidTransformImages.default <- function (
 #' @importFrom glue glue
 #'
 #' @rdname transform-images
+#' @family transforms
 #'
 #' @examples
 #' library(STUtility2)

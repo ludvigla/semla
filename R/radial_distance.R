@@ -317,6 +317,7 @@ RadialDistance.default <- function (
 #' @importFrom glue glue
 #'
 #' @rdname radial-distance
+#' @family spatial-methods
 #'
 #' @examples
 #'

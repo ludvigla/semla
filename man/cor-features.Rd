@@ -185,5 +185,14 @@ head(spatgenes[[2]])
 \seealso{
 Other network-methods: 
 \code{\link{GetSpatialNetwork}()}
+
+Other spatial-methods: 
+\code{\link{CutSpatialNetwork}()},
+\code{\link{DisconnectRegions}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RadialDistance}()},
+\code{\link{RegionNeighbors}()},
+\code{\link{RunLocalG}()}
 }
 \concept{network-methods}
+\concept{spatial-methods}

@@ -34,6 +34,8 @@ NULL
 #' @importFrom dplyr select bind_cols
 #' @importFrom graphics par title
 #'
+#' @family spatial-visualization
+#'
 #' @return draws a plot of the H&E images
 #'
 #' @examples

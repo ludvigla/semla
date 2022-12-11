@@ -179,5 +179,14 @@ of spatial association. TEST, 27(3), 716–748 \href{10.1007/s11749-018-0599-x}{
 \href{https://sfdep.josiahparry.com/articles/understanding-emerging-hotspots.html}{Emerging Hot Spot Analysis}
 \href{https://r-spatial.github.io/spdep/reference/localG.html}{G and G star local spatial statistics}
 \href{https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/h-how-high-low-clustering-getis-ord-general-g-spat.htm}{ESRI Getis-ord General G}
+
+Other spatial-methods: 
+\code{\link{CorSpatialFeatures}()},
+\code{\link{CutSpatialNetwork}()},
+\code{\link{DisconnectRegions}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RadialDistance}()},
+\code{\link{RegionNeighbors}()}
 }
 \concept{spatial methods}
+\concept{spatial-methods}

@@ -101,6 +101,8 @@ ggplot(xy_all, aes(x, y)) +
 Other transforms: 
 \code{\link{CoordAndImageTransform}()},
 \code{\link{CoordTransform}()},
-\code{\link{ImageTranslate}()}
+\code{\link{ImageTranslate}()},
+\code{\link{RigidTransformImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{transforms}

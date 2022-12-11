@@ -85,3 +85,11 @@ ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), section_numbers = 1, mar
 ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), section_numbers = 2, mar = c(0, 0, 0, 0))
 
 }
+\seealso{
+Other spatial-visualization: 
+\code{\link{AnglePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapFeatures}()},
+\code{\link{MapLabelsSummary}()}
+}
+\concept{spatial-visualization}

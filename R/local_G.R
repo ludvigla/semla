@@ -252,6 +252,7 @@ RunLocalG.default <- function (
 #' @importFrom tibble rownames_to_column column_to_rownames
 #'
 #' @rdname local-G
+#' @family spatial-methods
 #'
 #' @examples
 #'

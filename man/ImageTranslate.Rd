@@ -43,6 +43,8 @@ im_transformed
 Other transforms: 
 \code{\link{CoordAndImageTransform}()},
 \code{\link{CoordMirror}()},
-\code{\link{CoordTransform}()}
+\code{\link{CoordTransform}()},
+\code{\link{RigidTransformImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{transforms}

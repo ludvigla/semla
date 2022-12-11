@@ -139,3 +139,13 @@ se_mbrain <- RegionNeighbors(se_mbrain,
 MapLabels(se_mbrain, column_name = "nb_to_10")
 
 }
+\seealso{
+Other spatial-methods: 
+\code{\link{CorSpatialFeatures}()},
+\code{\link{CutSpatialNetwork}()},
+\code{\link{DisconnectRegions}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RadialDistance}()},
+\code{\link{RunLocalG}()}
+}
+\concept{spatial-methods}

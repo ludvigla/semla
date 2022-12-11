@@ -19,6 +19,7 @@ NULL
 #' @importFrom tibble as_tibble
 #'
 #' @rdname manual-transform-images
+#' @family transforms
 #'
 #' @examples
 #' \dontrun{

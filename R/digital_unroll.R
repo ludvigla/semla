@@ -20,6 +20,7 @@ NULL
 #' @importFrom shiny h2
 #'
 #' @rdname digital-unroll
+#' @family spatial-methods
 #'
 #' @export
 #'
@@ -30,8 +31,7 @@ CutSpatialNetwork <- function (
   container_width = '800px',
   container_height = '800px',
   overwrite_network_json = TRUE,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
 
   # Set global variables to NULL

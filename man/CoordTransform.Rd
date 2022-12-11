@@ -87,6 +87,8 @@ points(xy_rotated, col = "red")
 Other transforms: 
 \code{\link{CoordAndImageTransform}()},
 \code{\link{CoordMirror}()},
-\code{\link{ImageTranslate}()}
+\code{\link{ImageTranslate}()},
+\code{\link{RigidTransformImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{transforms}

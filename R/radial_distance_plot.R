@@ -67,6 +67,8 @@ centroid_angles_plot <- function (
 #' @inheritParams MapLabels
 #' @inheritParams centroid_angles_plot
 #'
+#' @family spatial-visualization
+#'
 #' @import dplyr
 #' @importFrom Seurat AddMetaData
 #'

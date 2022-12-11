@@ -17,6 +17,7 @@ NULL
 #' Useful if you want to remove spots with few or no neighbors.
 #'
 #' @rdname get-network
+#' @family spatial-methods
 #'
 #' @examples
 #' \dontrun{

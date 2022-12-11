@@ -141,3 +141,13 @@ MapLabels(se_merged, column_name = "GALT_split",
   theme(legend.position = "top")
 
 }
+\seealso{
+Other spatial-methods: 
+\code{\link{CorSpatialFeatures}()},
+\code{\link{CutSpatialNetwork}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RadialDistance}()},
+\code{\link{RegionNeighbors}()},
+\code{\link{RunLocalG}()}
+}
+\concept{spatial-methods}

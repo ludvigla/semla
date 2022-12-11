@@ -108,3 +108,11 @@ AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", 
         image_use = "raw", crop_area = c(0.4, 0.5, 0.7, 0.8), radius = 0.4, nbreaks = 12)
 
 }
+\seealso{
+Other spatial-visualization: 
+\code{\link{ImagePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapFeatures}()},
+\code{\link{MapLabelsSummary}()}
+}
+\concept{spatial-visualization}

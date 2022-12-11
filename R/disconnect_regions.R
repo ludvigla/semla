@@ -27,6 +27,7 @@ NULL
 #' @importFrom glue glue
 #'
 #' @rdname disconnect-regions
+#' @family spatial-methods
 #'
 #' @examples
 #'

@@ -259,3 +259,13 @@ MapFeatures(se_mcolon, features = "r_dist_GALT_sqrt", pt_size = 2,
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
 
 }
+\seealso{
+Other spatial-methods: 
+\code{\link{CorSpatialFeatures}()},
+\code{\link{CutSpatialNetwork}()},
+\code{\link{DisconnectRegions}()},
+\code{\link{GetSpatialNetwork}()},
+\code{\link{RegionNeighbors}()},
+\code{\link{RunLocalG}()}
+}
+\concept{spatial-methods}

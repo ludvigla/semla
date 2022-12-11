@@ -63,5 +63,13 @@ transforms <- RunAlignment(object = list(img1, img2))
 Other image transformations: 
 \code{\link{MaskImages}()},
 \code{\link{RigidTransformImages}()}
+
+Other transforms: 
+\code{\link{CoordAndImageTransform}()},
+\code{\link{CoordMirror}()},
+\code{\link{CoordTransform}()},
+\code{\link{ImageTranslate}()},
+\code{\link{RigidTransformImages}()}
 }
 \concept{image transformations}
+\concept{transforms}

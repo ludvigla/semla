@@ -39,6 +39,7 @@ NULL
 #' @param verbose Print messages
 #'
 #' @rdname region-neighbors
+#' @family spatial-methods
 #'
 #' @importFrom rlang warn
 #' @import cli

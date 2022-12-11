@@ -253,5 +253,18 @@ MapFeatures(se_mbrain, features = selected_feature, pt_size = 2) &
 \seealso{
 Other visualization methods: 
 \code{\link{MapLabels}()}
+
+Other spatial-visualization: 
+\code{\link{AnglePlot}()},
+\code{\link{ImagePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabelsSummary}()}
+
+Other spatial-visualization: 
+\code{\link{AnglePlot}()},
+\code{\link{ImagePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabelsSummary}()}
 }
+\concept{spatial-visualization}
 \concept{visualization methods}

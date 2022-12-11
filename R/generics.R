@@ -249,7 +249,9 @@ RunAlignment <- function(object, ...) {
 #'
 #' This function can be used to project cell type expression
 #' profiles onto a 10x Visium gene expression matrix to obtain
-#' cell type proportion estimates. The method is suitable for
+#' cell type proportion estimates.
+#'
+#' @details This method is suitable for
 #' paired 10x Visium and scRNA-seq data. In other words, the
 #' scRNA-seq data should represent the cell types present in
 #' the 10x Visium spatial transcriptomics data.
@@ -282,6 +284,7 @@ RunAlignment <- function(object, ...) {
 #'
 #' @export
 #'
+#' @md
 RunNNLS <- function(object, ...) {
   UseMethod(generic = "RunNNLS", object = object)
 }

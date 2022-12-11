@@ -228,6 +228,7 @@ CorSpatialFeatures.default <- function (
 #' @importFrom rlang %||%
 #'
 #' @rdname cor-features
+#' @family spatial-methods
 #'
 #' @examples
 #'

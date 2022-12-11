@@ -152,6 +152,8 @@ ggplot(transf_res$xy_transf, aes(tr_x, tr_y)) +
 Other transforms: 
 \code{\link{CoordMirror}()},
 \code{\link{CoordTransform}()},
-\code{\link{ImageTranslate}()}
+\code{\link{ImageTranslate}()},
+\code{\link{RigidTransformImages}()},
+\code{\link{RunAlignment}()}
 }
 \concept{transforms}

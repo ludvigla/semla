@@ -34,7 +34,7 @@ NULL
 #' a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 #' where nCellTypes is the number of cell types and nSpots is the number of spots.
 #' If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-#' and the cell type expression profle matrix.
+#' proportions `prop` and the cell type expression profile matrix `W`.
 #'
 #' @export
 RunNNLS.default <- function (

@@ -161,5 +161,13 @@ MapFeatures(se_merged, features = "Th", image_use = "transformed")
 Other image transformations: 
 \code{\link{MaskImages}()},
 \code{\link{RunAlignment}()}
+
+Other transforms: 
+\code{\link{CoordAndImageTransform}()},
+\code{\link{CoordMirror}()},
+\code{\link{CoordTransform}()},
+\code{\link{ImageTranslate}()},
+\code{\link{RunAlignment}()}
 }
 \concept{image transformations}
+\concept{transforms}
