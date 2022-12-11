@@ -2,39 +2,40 @@
 #'
 NULL
 
-# TODO: fix keep within, should return both neighbors and spots within.
+
 #' Autodetect region neighbors
 #'
 #' This function allows you to automatically identify neighbors of a selected region.
 #'
-#' One way of using method this is to find spots surrounding a certain cluster. First, you need to make sure
-#' the identity of the Seurat object is set to the meta.data column that you want to use, so for example
-#' `se <- SetIdent(se, value = "seurat_clusters")` if you want to use the default seurat clusters.
-#' Then you select the label that defined the region of interest using the `id` parameter, so for example
-#' `ìd = "1"` will use cluster 1 as the region. If you set the `keep.idents` parameter to TRUE, the cluster ids
-#' of the neighboring spots will be kept in the result, otherwise they will be returned as one single goup.
-#' You can also activate the `keep_within` parameter to include all spots of the selected region in the output,
-#' otherwise only the spots along the region border will be kept.
-#'
 #' @section Seurat:
-#' If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
-#' finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
-#' their nearest neighbors. If \code{outer_border=FALSE} the spots that are located at the border but inside the
-#' selected region(s) are returned instead. Note that \code{column_key} will define the prefix to the returned
-#' column names. If \code{outer_border=FALSE}, the prefix will be "nb_to_" specifying that the spots are neighbors
-#' to spots of the selected category and if \code{outer_border=FALSE}, the prefix will be "border_" specifying
-#' that the spots are at the border and from the selected category.
+#' If a Seurat object is provided, the \code{RegionNeighbors} takes a meta
+#' data column (chosen with \code{column_name}) with categorical labels,
+#' finds the nearest neighbors of spots for a selected group in this columns
+#' (chosen with \code{column_labels}) and returns new meta data column with
+#' labels for the nearest neighbors of the selected group. If no \code{column_labels}
+#' are specified, the method will return a column for each separate category in
+#' the \code{column_name} vector.
+#'
+#' Note that the prefix to the returned column names will be selected based on the \code{mode}.
+#' You can overwrite this behavior by manually setting \code{column_key}.
+#'
+#' Below is some additional information about the behavior of different \code{mode}s:
+#'
+#' \itemize{
+#'    \item{return outer border (default): \code{mode="outer"}}
+#'    \item{return inner border: \code{mode="inner"}}
+#'    \item{return inner and outer borders: \code{mode="inner_outer"}}
+#'    \item{return all selected spots and outer border: \code{mode="all_inner_outer"}}
+#' }
 #'
 #' @section default method:
-#' The default method takes a list of spatial networks generated with \code{\link{GetSpatialNetwork}}
-#' together with a vector of spot IDs and returns the spot IDs for the nearest neighbors.
+#' The default method takes a list of spatial networks generated with
+#' \code{\link{GetSpatialNetwork}} together with a vector of spot IDs
+#' and returns the spot IDs for border spots. The behavior for border
+#' spot selection is determined by the \code{mode}.
 #'
-#' @param object A list of spatial networks generated with \code{\link{GetSpatialNetwork}}
 #' @param spots A character vector with spot IDs present in `spatnet`
-#' @param outer_border A logical specifying if the bordering spots should be returned. If set to FALSE,
-#' the spots \strong{at} the border will be returned instead.
-#' @param keep_within If set to TRUE, all id spots are kept, otherwise only the spots with outside
-#' neighbors are kept
+#' @param mode Select mode (see details)
 #' @param verbose Print messages
 #'
 #' @rdname region-neighbors
@@ -45,15 +46,10 @@ NULL
 #'
 #' @export
 #'
-#' @examples
-#' \dontrun{
-#' }
-#'
 RegionNeighbors.default <- function (
     object,
     spots,
-    outer_border = TRUE,
-    keep_within = FALSE,
+    mode = c("outer", "inner", "inner_outer", "all_inner_outer"),
     verbose = FALSE,
     ...
 ) {
@@ -61,10 +57,17 @@ RegionNeighbors.default <- function (
   # Set global variables to NULL
   from <- to <- NULL
 
+  # Get mode
+  mode <- match.arg(mode, choices = c("outer", "inner", "inner_outer", "all_inner_outer"))
+
   # Check object
   stopifnot(
     inherits(object, what = "list"),
-    length(object) > 0
+    length(object) > 0,
+    inherits(spots, what = "character"),
+    length(spots) > 0,
+    inherits(mode, what = "character"),
+    length(mode) == 1
   )
 
   # Combine spatial networks into one tibble
@@ -82,29 +85,37 @@ RegionNeighbors.default <- function (
     spots <- intersect(spots, spatnet_combined$from)
   }
 
-  # Obtain group labels
+  # Filter spatial newtork to contain from spots in selected group
   spatnet_combined <- spatnet_combined |>
     filter(from %in% spots)
-  if (nrow(spatnet_combined) == 0) abort("0 neighbors found")
-  if (verbose) cli_alert("  Found {nrow(spatnet_combined)} neighbors for selected spots")
 
-  if (!keep_within) {
+  # If outer_border = TRUE, return neighboring spots
+  # otherwise, return inner border
+  if (mode == "outer") {
     if (verbose) cli_alert("  Excluding neighbors from the same group")
     spatnet_combined <- spatnet_combined |>
       filter(!to %in% spots)
     if (nrow(spatnet_combined) == 0) abort("0 neighbors found after filtering")
     if (verbose) cli_alert("  {nrow(spatnet_combined)} neighbors left")
+    spots_keep <- unique(spatnet_combined$to)
+  }
+  if (mode == "inner") {
+    spatnet_combined <- spatnet_combined |>
+      filter(!((from %in% spots) & (to %in% spots)))
+    spots_keep <- unique(spatnet_combined$from)
+  }
+  if (mode == "inner_outer") {
+    spatnet_combined <- spatnet_combined |>
+      filter(!((from %in% spots) & (to %in% spots)))
+    spots_keep <- unique(c(spatnet_combined$from, spatnet_combined$to))
+  }
+  if (mode == "all_inner_outer") {
+    spots_keep <- unique(c(spatnet_combined$from, spatnet_combined$to))
   }
 
   if (verbose) cli_alert("  Returning neighbors")
 
-  # If outer_border = TRUE, return neighboring spots
-  # otherwise, return inner border
-  if (outer_border) {
-    return(unique(spatnet_combined$to))
-  } else {
-    return(unique(spatnet_combined$from))
-  }
+  return(spots_keep)
 }
 
 #' @param column_name string specifying a column name in your meta data
@@ -162,7 +173,7 @@ RegionNeighbors.default <- function (
 #'                              column_name = "seurat_clusters",
 #'                              column_labels = c("8", "10"))
 #'
-#' # Plot cluster 10, 13 and its neighbors
+#' # Plot cluster 8, 10 and its neighbors
 #' library(patchwork)
 #' MapLabels(se_mbrain, column_name = "selected_clusters") +
 #'   MapLabels(se_mbrain, column_name = "nb_to_8") +
@@ -186,9 +197,8 @@ RegionNeighbors.Seurat <- function (
     object,
     column_name,
     column_labels = NULL,
-    outer_border = TRUE,
-    column_key = ifelse(outer_border, "nb_to_", "border_"),
-    keep_within = FALSE,
+    mode = c("outer", "inner", "inner_outer", "all_inner_outer"),
+    column_key = NULL,
     verbose = TRUE,
     ...
 ) {
@@ -196,12 +206,27 @@ RegionNeighbors.Seurat <- function (
   # Set global variables to NULL
   barcode <- var2 <- NULL
 
+  # Check mode
+  mode <- match.arg(mode, choices = c("outer", "inner", "inner_outer", "all_inner_outer"))
+
+  # Define column key
+  if (is.null(column_key)) {
+    if (mode %in% c("outer", "inner_outer", "all_inner_outer")) {
+      column_key <- "nb_to_"
+    } else {
+      column_key <- "inner_border_"
+    }
+  } else {
+    if ((!inherits(column_key, what = "character")) | (length(column_key) != 1))
+      abort(glue("Invalid column_key, expected a 'character' of length 1"))
+  }
+
   # validate Seurat object
   .check_seurat_object(object)
 
   # Check if column_name is available in meta data
-  if (!inherits(column_name, what = c("character", "factor")))
-    abort(glue("Invalid class '{class(column_name)}', expected a 'character' vector or a 'factor'"))
+  if (!inherits(column_name, what = "character"))
+    abort(glue("Invalid class '{class(column_name)}' for 'column_name', expected a 'character' of length 1"))
   if (length(column_name) != 1)
     abort(glue("Invalid length {length(column_name)} for 'column_name', expected a vector of length 1"))
   if (!column_name %in% colnames(object[[]]))
@@ -210,7 +235,7 @@ RegionNeighbors.Seurat <- function (
   # Check column label
   column_labels <- column_labels %||% {
     cli_alert_info("No 'column_labels' provided. Using all groups in '{column_name}' column")
-    column_labels <- unique(object[[]] |> pull(all_of(column_name)))
+    column_labels <- unique(object[[]] |> pull(all_of(column_name))) |> as.character()
   }
   if (!is.character(column_labels))
     abort(glue("Invalid class '{class(column_labels)}', expected a 'character'"))
@@ -234,7 +259,7 @@ RegionNeighbors.Seurat <- function (
   nbs <- setNames(lapply(names(spots_list), function(nm) {
     if (verbose) cli_alert_info("Finding neighboring spots for '{nm}'")
     spots <- spots_list[[nm]]
-    to_spots <- RegionNeighbors(spatnet, spots, outer_border, keep_within, verbose)
+    to_spots <- RegionNeighbors(spatnet, spots, mode, verbose)
     to_spots <- tibble(to_spots, nm) |>
       setNames(nm = c("barcode", column_name)) |>
       distinct()

@@ -11,8 +11,7 @@ RegionNeighbors(object, ...)
 \method{RegionNeighbors}{default}(
   object,
   spots,
-  outer_border = TRUE,
-  keep_within = FALSE,
+  mode = c("outer", "inner", "inner_outer", "all_inner_outer"),
   verbose = FALSE,
   ...
 )
@@ -21,25 +20,20 @@ RegionNeighbors(object, ...)
   object,
   column_name,
   column_labels = NULL,
-  outer_border = TRUE,
-  column_key = ifelse(outer_border, "nb_to_", "border_"),
-  keep_within = FALSE,
+  mode = c("outer", "inner", "inner_outer", "all_inner_outer"),
+  column_key = NULL,
   verbose = TRUE,
   ...
 )
 }
 \arguments{
-\item{object}{A list of spatial networks generated with \code{\link{GetSpatialNetwork}}}
+\item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
 
 \item{spots}{A character vector with spot IDs present in `spatnet`}
 
-\item{outer_border}{A logical specifying if the bordering spots should be returned. If set to FALSE,
-the spots \strong{at} the border will be returned instead.}
-
-\item{keep_within}{If set to TRUE, all id spots are kept, otherwise only the spots with outside
-neighbors are kept}
+\item{mode}{Select mode (see details)}
 
 \item{verbose}{Print messages}
 
@@ -54,37 +48,38 @@ These labels need to be present in the meta data columns specified by \code{colu
 \description{
 This function allows you to automatically identify neighbors of a selected region.
 }
-\details{
-One way of using method this is to find spots surrounding a certain cluster. First, you need to make sure
-the identity of the Seurat object is set to the meta.data column that you want to use, so for example
-`se <- SetIdent(se, value = "seurat_clusters")` if you want to use the default seurat clusters.
-Then you select the label that defined the region of interest using the `id` parameter, so for example
-`ìd = "1"` will use cluster 1 as the region. If you set the `keep.idents` parameter to TRUE, the cluster ids
-of the neighboring spots will be kept in the result, otherwise they will be returned as one single goup.
-You can also activate the `keep_within` parameter to include all spots of the selected region in the output,
-otherwise only the spots along the region border will be kept.
-}
 \section{Seurat}{
 
-If a Seurat object is provided, the \code{RegionNeighbors} takes a meta data column with categorical labels,
-finds the nearest neighbors of spots in each category and returns a new meta data column with new labels for
-their nearest neighbors. If \code{outer_border=FALSE} the spots that are located at the border but inside the
-selected region(s) are returned instead. Note that \code{column_key} will define the prefix to the returned
-column names. If \code{outer_border=FALSE}, the prefix will be "nb_to_" specifying that the spots are neighbors
-to spots of the selected category and if \code{outer_border=FALSE}, the prefix will be "border_" specifying
-that the spots are at the border and from the selected category.
+If a Seurat object is provided, the \code{RegionNeighbors} takes a meta
+data column (chosen with \code{column_name}) with categorical labels,
+finds the nearest neighbors of spots for a selected group in this columns
+(chosen with \code{column_labels}) and returns new meta data column with
+labels for the nearest neighbors of the selected group. If no \code{column_labels}
+are specified, the method will return a column for each separate category in
+the \code{column_name} vector.
+
+Note that the prefix to the returned column names will be selected based on the \code{mode}.
+You can overwrite this behavior by manually setting \code{column_key}.
+
+Below is some additional information about the behavior of different \code{mode}s:
+
+\itemize{
+   \item{return outer border (default): \code{mode="outer"}}
+   \item{return inner border: \code{mode="inner"}}
+   \item{return inner and outer borders: \code{mode="inner_outer"}}
+   \item{return all selected spots and outer border: \code{mode="all_inner_outer"}}
+}
 }
 
 \section{default method}{
 
-The default method takes a list of spatial networks generated with \code{\link{GetSpatialNetwork}}
-together with a vector of spot IDs and returns the spot IDs for the nearest neighbors.
+The default method takes a list of spatial networks generated with
+\code{\link{GetSpatialNetwork}} together with a vector of spot IDs
+and returns the spot IDs for border spots. The behavior for border
+spot selection is determined by the \code{mode}.
 }
 
 \examples{
-\dontrun{
-}
-
 
 library(STUtility2)
 library(dplyr)
@@ -125,7 +120,7 @@ se_mbrain <- RegionNeighbors(se_mbrain,
                              column_name = "seurat_clusters",
                              column_labels = c("8", "10"))
 
-# Plot cluster 10, 13 and its neighbors
+# Plot cluster 8, 10 and its neighbors
 library(patchwork)
 MapLabels(se_mbrain, column_name = "selected_clusters") +
   MapLabels(se_mbrain, column_name = "nb_to_8") +
