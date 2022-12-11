@@ -34,6 +34,7 @@ MapFeatures(object, ...)
 \method{MapFeatures}{Seurat}(
   object,
   features,
+  slot = "data",
   image_use = NULL,
   coords_use = "raw",
   crop_area = NULL,
@@ -129,6 +130,8 @@ active when \code{blend = TRUE}. See color blending for more information.}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
+
+\item{slot}{slot to pull features values from}
 
 \item{image_use}{string specifying image type to use}
 

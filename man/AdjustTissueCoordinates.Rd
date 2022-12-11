@@ -7,7 +7,7 @@
 AdjustTissueCoordinates(full_graph, verbose = TRUE)
 }
 \arguments{
-\item{full_graph}{A `tbl_graph` object geneated with \code{\link{CutSpatialNetwork}}}
+\item{full_graph}{A `tbl_graph` object generated with \code{\link{CutSpatialNetwork}}}
 
 \item{verbose}{Print messages}
 }

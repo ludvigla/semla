@@ -6,7 +6,7 @@ editor: visual
 
 ## Introduction
 
-STUtility2 is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data. This package is an updated version of STUtility, with major speed and usability updates.
+STUtility2 is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data.
 
 ## Installation
 
@@ -25,7 +25,7 @@ library(tibble)
 
 ## Load data
 
-Currently, STUtility2 only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files produced by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object that can be used for `readVisiumData`.
+Currently, STUtility2 only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files output by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object with one sample per row that can be used by `readVisiumData`.
 
 -   `samples` : file paths to expression matrices
 
@@ -35,7 +35,7 @@ Currently, STUtility2 only supports 10x Visium data. The easiest way to load dat
 
 -   `json` : file paths to scale factor json files
 
-We can also any number of columns to our `infoTable` which will be passed as meta data columns in our `Seurat` object. This can for example be useful when you want to add clinical metadata, experimental information etc. Here we add a `sample_id` column describing what tissue type we have.
+We can also add any number of columns to our `infoTable` which will be passed as meta data columns in our `Seurat` object. This can for example be useful when you want to add clinical metadata, experimental information etc. The example data below is from two Visium data sets, one mouse brain and one mouse colon data set. Here we add a `sample_id` column describing what tissue type we have.
 
 ```{r}
 samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
@@ -47,8 +47,8 @@ spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility
 json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
                                 "/*/spatial/scalefactors_json.json"))
 
-infoTable <- tibble(samples, imgs, spotfiles, json, 
-                    sample_id = c("mousebrain", "mousecolon"))
+infoTable <- tibble(samples, imgs, spotfiles, json, # Add required columns
+                    sample_id = c("mousebrain", "mousecolon")) # Add additional column
 infoTable
 ```
 
@@ -59,19 +59,28 @@ se <- ReadVisiumData(infoTable)
 se
 ```
 
-We can now use the `Mapfeatures` and `MapLabels` to plot features in 2D space. `Mapfeatures` can be used to plot numeric features while `MapLabels` should be used to plot categorical features.
+Now you can use any Seurat method that doesn't require spatial information. It's important to know that the \`Seurat\` R package stores spatial information (such as H&E images and coordinates) differently that \`STUtility2\`, meaning that \`Seurat\`functions such as \`SpatialFeaturePlot\` and \`FindSpatiallyVariableFeatures\` will not work. \`STUtility2\` comes with it's own suite of tools and methods that you can learn more about in other tutorials.
 
-```{r fig.width=2.5, fig.height=2}
-MapFeatures(se, 
-            features = "nFeature_Spatial", 
-            ncol = 2, 
-            colors = viridis::magma(n = 11, direction = -1),
-            override_plot_dims = TRUE)
-```
-
-```{r fig.width=3.5, fig.height=2}
-MapLabels(se, 
-          column_name = "orig.ident", 
-          ncol = 2, 
-          override_plot_dims = TRUE)
+```{r}
+fkn <- function(){
+  cli_h1("Heading 1")
+  cli_h2("Heading 2")
+  cli_h3("Heading 3")
+  cli_par()
+  cli_alert_danger("Danger alert")
+  cli_alert_warning("Warning alert")
+  cli_alert_info("Info alert")
+  cli_alert_success("Success alert")
+  cli_alert("Alert for starting a process or computation",
+  class = "alert-start")
+  cli_end()
+  cli_text("Packages and versions: {.pkg cli} {.version 1.0.0}.")
+  cli_text("Time intervals: {.timestamp 3.4s}")
+  cli_text("{.emph Emphasis} and {.strong strong emphasis}")
+  cli_text("This is a piece of code: {.code sum(x) / length(x)}")
+  cli_text("Function names: {.fn cli::simple_theme}")
+  cli_text("Files: {.file /usr/bin/env}")
+  cli_text("URLs: {.url https://r-project.org}")
+}
+fkn()
 ```
