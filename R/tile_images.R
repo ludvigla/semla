@@ -61,11 +61,20 @@
 #' @export
 TileImage <- function (
     im,
+    sampleID = 1,
     outpath = NULL,
     maxZoomLevel = 4,
     maxImgWidth = 1e4,
     nCores = detectCores() - 1
 ) {
+
+  # Validate input
+  stopifnot(
+    inherits(im, what = "magick-image") & length(im) == 1,
+    inherits(sampleID, what = c("numeric", "integer")) & length(sampleID) == 1,
+    inherits(maxZoomLevel, what = c("numeric", "integer")) & length(maxZoomLevel) == 1,
+    inherits(maxImgWidth, what = c("numeric", "integer")) & length(maxImgWidth) == 1
+  )
 
   # Define max Zoom level
   info <- image_info(im)
@@ -80,7 +89,7 @@ TileImage <- function (
   outpath <- outpath %||% tempdir()
   outpath_data <- paste0(outpath, "/osd_data")
   dir.create(outpath_data)
-  outpath_tiles <- paste0(outpath_data, "/tiles")
+  outpath_tiles <- paste0(outpath_data, paste0("/tiles", sampleID))
   dir.create(outpath_tiles)
 
   # Zoom levels
@@ -144,7 +153,8 @@ TileImage <- function (
        image_width = info$width,
        image_height = info$height,
        tilesize = 256)
-  jsonlite::write_json(x = d, path = paste0(outpath_data, "/image_info.json"), auto_unbox = TRUE)
+  image_info_outpath <- paste0(outpath_data, paste0("/image_info_", sampleID, ".json"))
+  jsonlite::write_json(x = d, path = image_info_outpath, auto_unbox = TRUE)
 
-  return(outpath_data)
+  return(list(datapath = outpath_data, tilepath = outpath_tiles, infopath = image_info_outpath))
 }
