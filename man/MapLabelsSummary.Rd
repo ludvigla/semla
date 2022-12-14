@@ -132,6 +132,7 @@ MapLabelsSummary(se, column_name = "seurat_clusters", override_plot_dims = TRUE)
 \seealso{
 Other spatial-visualization: 
 \code{\link{AnglePlot}()},
+\code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()}

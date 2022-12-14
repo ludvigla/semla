@@ -31,6 +31,7 @@ export_coordinates <- function (
 ) {
 
   # Set global variables to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- NULL
 
   # Check Seurat object
   .check_seurat_object(object)

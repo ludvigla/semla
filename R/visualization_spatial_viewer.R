@@ -10,6 +10,8 @@ NULL
 #'
 #' @param object A Seurat object
 #' @param datadir A directory spatial data and image tiles
+#' @param selected_features A character vector of features to select for viewer
+#' @param sampleIDs A vector of section IDs to use for the viewer
 #' @param container_width,container_height Set height and width of container
 #' @param overwrite_network_json Logical specifying if the JSON file
 #' containing the spatial network should be overwritten after completion
@@ -19,9 +21,8 @@ NULL
 #' @import rlang
 #' @import glue
 #' @import cli
-#' @importFrom shiny h2
+#' @import shiny
 #'
-#' @rdname visualize-features
 #' @family spatial-visualization
 #'
 #' @export
@@ -37,6 +38,9 @@ FeatureViewer <- function (
     container_height = 800,
     verbose = TRUE
 ) {
+
+  # Set global variables to NULL
+  sampleID <- sampleID <- NULL
 
   # Check Seurat object
   .check_seurat_object(object)
@@ -91,7 +95,7 @@ FeatureViewer <- function (
 
   # Define a list of colors for each category
   .colors_saved <- sapply(.categorical_data, function(x) {
-    if (class(x) == "factor") {
+    if (inherits(x, what =  "factor")) {
       setNames(.set_colors(length(levels(x))), nm = levels(x))
     } else {
       setNames(.set_colors(length(unique(x))), nm = unique(x))
@@ -159,7 +163,7 @@ FeatureViewer <- function (
     extendShinyjs(text = jsCode_getselection, functions = c("getSelection")),
 
     # Add custom jscode to make it possible to save text on ENTER
-    tags$head(tags$script(HTML(jscode))),
+    shiny::tags$head(shiny::tags$script(HTML(jscode))),
 
     # UI for main panel including the feature viewer widget
     ftrviewerOutput("ftrviewerWidget", height = container_height, width = container_width),
@@ -225,7 +229,7 @@ FeatureViewer <- function (
         }
         rv$values = .categorical_data[, input$category]
         rv$opacities = rep(1, length(rv$values))
-        if (class(rv$values) == "character") {
+        if (inherits(rv$values, what =  "character")) {
           rv$levels <- unique(rv$values)
         } else {
           rv$levels <- levels(rv$values)
@@ -276,7 +280,7 @@ FeatureViewer <- function (
 
     observeEvent(input$selbarcodes, {
       if (length(input$selbarcodes) > 1) {
-        if (class(.categorical_data[, input$category]) == "factor") {
+        if (inherits(.categorical_data[, input$category], what = "factor")) {
           tmp <- .categorical_data |>
             select(contains(input$category)) |>
             mutate_if(is.factor, as.character)
@@ -383,6 +387,9 @@ FeatureViewer <- function (
 
 #' Select or show color palettes
 #'
+#' @importFrom grDevices colorRampPalette
+#'
+#'
 #' @noRd
 .color_scales <- function (
   colorscale = "viridis",
@@ -421,6 +428,8 @@ FeatureViewer <- function (
 #'
 #' Modified version of sliderInput
 #'
+#' @importFrom shiny sliderInput
+#'
 #' @noRd
 fastSliderInput <- function(...) {
   sld <- sliderInput(...)
@@ -436,7 +445,22 @@ fastSliderInput <- function(...) {
 #' be used to interactively visualize categorical or numeric features
 #' as spatial maps.
 #'
-#' @import htmlwidgets
+#' @param host The host address. Defaults to localhost "127.0.0.1"
+#' @param port A number for a valid port
+#' @param sampleID A section number
+#' @param values A vector of numeric or categorical values
+#' @param opacities A numeric vector of opacity values
+#' @param opacity An integer of length 1 specifying a fixed opacity value
+#' @param range A numeric vector of length 2 specifying a range of values (color domain)
+#' @param scaleByOpacity A logical specifying if the opacity should be set by
+#' `opacities` or `opacity`
+#' @param isNumeric A logical specifying if the input is numeric or not
+#' @param useLasso A logical specifying if the lasso selection tool should be activated
+#' @param levels category levels for coloring of values
+#' @param categories not yet implemented
+#' @param colors A vector of colors
+#' @param container_width,container_height Container width/height in pixels
+#' @param elementId The id of the viewer element
 #'
 #' @export
 ftrviewer <- function (
@@ -457,6 +481,11 @@ ftrviewer <- function (
     container_height = 800,
     elementId = NULL
 ) {
+
+  # Require htmlwidgets
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    install.packages("htmlwidgets")
+  }
 
   stopifnot(
     inherits(host, what = "character") & length(host) == 1,
@@ -512,6 +541,12 @@ ftrviewer <- function (
 #' Called by HTMLWidgets to produce the widget's root element.
 #' @noRd
 widget_html.ftrviewer <- function(id, style, class, ...) {
+
+  # Require htmlwidgets
+  if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
+    install.packages("htmlwidgets")
+  }
+
   htmltools::tagList(
     # Necessary for RStudio viewer version < 1.2
     reactR::html_dependency_corejs(),

@@ -5,6 +5,7 @@
 #' are determined rom the
 #'
 #' @param im An image of class `magick-image`
+#' @param sampleID The section number to use. This number will be appended to the output files names
 #' @param outpath A string specifying an output directory to save the tiled image in.
 #' If this is not provided, a temporary directory will be created
 #' @param maxZoomLevel Max zoom level

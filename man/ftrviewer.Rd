@@ -23,6 +23,38 @@ ftrviewer(
   elementId = NULL
 )
 }
+\arguments{
+\item{host}{The host address. Defaults to localhost "127.0.0.1"}
+
+\item{port}{A number for a valid port}
+
+\item{sampleID}{A section number}
+
+\item{values}{A vector of numeric or categorical values}
+
+\item{opacities}{A numeric vector of opacity values}
+
+\item{opacity}{An integer of length 1 specifying a fixed opacity value}
+
+\item{range}{A numeric vector of length 2 specifying a range of values (color domain)}
+
+\item{scaleByOpacity}{A logical specifying if the opacity should be set by
+`opacities` or `opacity`}
+
+\item{isNumeric}{A logical specifying if the input is numeric or not}
+
+\item{useLasso}{A logical specifying if the lasso selection tool should be activated}
+
+\item{levels}{category levels for coloring of values}
+
+\item{categories}{not yet implemented}
+
+\item{colors}{A vector of colors}
+
+\item{container_width, container_height}{Container width/height in pixels}
+
+\item{elementId}{The id of the viewer element}
+}
 \description{
 This function will open a react application that listens can
 be used to interactively visualize categorical or numeric features

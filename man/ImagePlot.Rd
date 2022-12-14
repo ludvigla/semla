@@ -88,6 +88,7 @@ ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), section_numbers = 2, 
 \seealso{
 Other spatial-visualization: 
 \code{\link{AnglePlot}()},
+\code{\link{FeatureViewer}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()}

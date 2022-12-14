@@ -16,6 +16,8 @@ TileImage(
 \arguments{
 \item{im}{An image of class `magick-image`}
 
+\item{sampleID}{The section number to use. This number will be appended to the output files names}
+
 \item{outpath}{A string specifying an output directory to save the tiled image in.
 If this is not provided, a temporary directory will be created}
 

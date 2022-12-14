@@ -110,6 +110,7 @@ AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", 
 }
 \seealso{
 Other spatial-visualization: 
+\code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},

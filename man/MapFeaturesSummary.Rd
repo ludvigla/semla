@@ -28,7 +28,7 @@ MapFeaturesSummary(
 )
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{An object}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
@@ -143,6 +143,7 @@ MapFeaturesSummary(se, features = "Nrgn", subplot_type = "density")
 \seealso{
 Other spatial-visualization: 
 \code{\link{AnglePlot}()},
+\code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()}
