@@ -56,7 +56,8 @@ Suggests:
     htmlwidgets,
     htmltools,
     RcppML,
-    beakr
+    beakr,
+    colourpicker
 Collate: 
     'STUtility2-package.R'
     'checks.R'
