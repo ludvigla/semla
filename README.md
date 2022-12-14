@@ -54,10 +54,9 @@ images together with the spot coordinates.
 - [x] make OSD viewer from tile sourse
 - [x] draw spots on top of tile source
 - [x] lasso selection tool for manual annotation with paper JS
-- [ ] annotate spots and save selection
+- [x] annotate spots and save selection
 - [x] make tile function `TileImage` compatible with OSD
-- [ ] send data to OSD viewer from R or read from R on selection?
-- [ ] add option to select samples in viewer (shiny or react?)
+- [x] send data to OSD viewer from R or read from R on selection?
 
 ### Tissue aligner
 
