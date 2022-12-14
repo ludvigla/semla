@@ -28,7 +28,7 @@ MapFeaturesSummary(
 )
 }
 \arguments{
-\item{object}{An object}
+\item{object}{A Seurat object}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}

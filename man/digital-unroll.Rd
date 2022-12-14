@@ -4,10 +4,10 @@
 \name{CutSpatialNetwork}
 \alias{CutSpatialNetwork}
 \alias{export_graph}
-\title{Manually unroll tissues}
+\title{Cut spatial networks in folded tissues}
 \usage{
 CutSpatialNetwork(
-  tiledir,
+  datadir,
   host = "127.0.0.1",
   port = 8080L,
   container_width = "800px",
@@ -19,7 +19,7 @@ CutSpatialNetwork(
 export_graph(object, sampleID = 1L, outdir, verbose = TRUE)
 }
 \arguments{
-\item{tiledir}{A directory containing network data}
+\item{datadir}{A directory containing network data and image tiles}
 
 \item{host}{A string with a valid IPv4 or IPv6 address to listen on,
 Defaults to localhost "127.0.0.1"}
@@ -41,11 +41,23 @@ spatial network for}
 \item{outdir}{Name of a directory to export JSON file to}
 }
 \description{
-Opens an interactive viewer where
+Opens an interactive viewer where a spatial network is visualized on top
+of an H&E image.
 
 Utility function to prepare data for \code{\link{CutSpatialNetwork}}.
 The exported JSON file should be exported to the same directory as
 the H&E image tiles generated with \code{\link{TileImage}}
+}
+\details{
+Each spot is connected to adjacent neighbors by edges and
+the edges can be cut by holding the SHIFT key while moving the cursor
+across them. Cut edges can be mended by holding the CTRL key while moving
+the cursor across them. The aim is to cut edges between spots located in separate
+layers. The output is a `tbl_graph` object representing the spatial network
+which can be processed further with \code{\link{AdjustTissueCoordinates}}
+to perform "digital unrolling".
+
+A more detailed tutorial can be found on the `STUtility2` website.
 }
 \seealso{
 Other spatial-methods: 

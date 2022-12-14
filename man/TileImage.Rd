@@ -6,6 +6,7 @@
 \usage{
 TileImage(
   im,
+  sampleID = 1,
   outpath = NULL,
   maxZoomLevel = 4,
   maxImgWidth = 10000,
