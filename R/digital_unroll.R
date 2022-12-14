@@ -3,11 +3,22 @@
 #'
 NULL
 
-#' Manually unroll tissues
+#' Cut spatial networks in folded tissues
 #'
-#' Opens an interactive viewer where
+#' Opens an interactive viewer where a spatial network is visualized on top
+#' of an H&E image.
 #'
-#' @param tiledir A directory containing network data
+#' @details Each spot is connected to adjacent neighbors by edges and
+#' the edges can be cut by holding the SHIFT key while moving the cursor
+#' across them. Cut edges can be mended by holding the CTRL key while moving
+#' the cursor across them. The aim is to cut edges between spots located in separate
+#' layers. The output is a `tbl_graph` object representing the spatial network
+#' which can be processed further with \code{\link{AdjustTissueCoordinates}}
+#' to perform "digital unrolling".
+#'
+#' A more detailed tutorial can be found on the `STUtility2` website.
+#'
+#' @param datadir A directory containing network data and image tiles
 #' @param container_width,container_height Set height and width of container
 #' @param overwrite_network_json Logical specifying if the JSON file
 #' containing the spatial network should be overwritten after completion
@@ -25,7 +36,7 @@ NULL
 #' @export
 #'
 CutSpatialNetwork <- function (
-  tiledir,
+  datadir,
   host = "127.0.0.1",
   port = 8080L,
   container_width = '800px',
@@ -45,8 +56,8 @@ CutSpatialNetwork <- function (
 
   # Check input
   stopifnot(
-    inherits(tiledir, what = "character"),
-    dir.exists(tiledir),
+    inherits(datadir, what = "character"),
+    dir.exists(datadir),
     inherits(host, what = "character"),
     length(host) == 1,
     inherits(port, what = c("numeric", "integer")),
@@ -56,7 +67,7 @@ CutSpatialNetwork <- function (
   # Start file server
   if (verbose) cli_alert_info("Starting static file server")
   beakr::stopAllServers()
-  fs <- try({file_server(hostDir = tiledir, host = host, port = port)})
+  fs <- try({file_server(hostDir = datadir, host = host, port = port)})
   print(fs)
   if (inherits(fs, what = "try-error"))
     abort(c(
@@ -145,7 +156,7 @@ CutSpatialNetwork <- function (
     data <- list(nodes = nodes, links = links)
     data_json <- data |>
       write_json(auto_unbox = TRUE,
-                 path = file.path(tiledir, "data_Visium.json"))
+                 path = file.path(datadir, "data_Visium.json"))
   }
 
   # Stop static file server
