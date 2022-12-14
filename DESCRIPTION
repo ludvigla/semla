@@ -76,6 +76,7 @@ Collate:
     'neighborhood_analysis.R'
     'plot_images.R'
     'prepare_for_digital_unroll.R'
+    'prepare_for_feature_viewer.R'
     'radial_distance.R'
     'radial_distance_plot.R'
     'rigid_transform.R'
@@ -89,4 +90,5 @@ Collate:
     'transformations_image.R'
     'visualization_spatial.R'
     'visualization_spatial_stats.R'
+    'visualization_spatial_viewer.R'
     'zzz.R'
