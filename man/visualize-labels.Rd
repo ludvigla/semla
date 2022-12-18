@@ -4,7 +4,7 @@
 \alias{MapLabels}
 \alias{MapLabels.default}
 \alias{MapLabels.Seurat}
-\title{Map labels in 2D}
+\title{Map categoircal features}
 \usage{
 MapLabels(object, ...)
 
@@ -113,13 +113,13 @@ from the data.}
 A `patchwork` object or a list of `ggplot` objects
 }
 \description{
-\code{MapLabels} colors spot coordinates in 2D space based on the values of
-a categorical feature. Only 1 feature can be provided.
+\code{MapLabels} colors spots based on the values of a categorical feature.
 }
 \details{
-Note that you can only plot categorical features with \code{MapLabels},
+You can only plot categorical features with \code{MapLabels},
 for example: spot annotations or clusters.
 If you want to plot numerical features, use \code{\link{MapFeatures}} instead.
+Only 1 categorical feature can be provided.
 }
 \examples{
 
@@ -175,10 +175,16 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 
 }
 \seealso{
-Other visualization methods: 
-\code{\link{MapFeatures}()}
+Other spatial-visualization-methods: 
+\code{\link{AnglePlot}()},
+\code{\link{FeatureViewer}()},
+\code{\link{ImagePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapFeatures}()},
+\code{\link{MapLabelsSummary}()}
 }
 \author{
 Ludvig Larsson
 }
-\concept{visualization methods}
+\concept{spatial-visualization-methods}
+\concept{visualization-visualization-methods}

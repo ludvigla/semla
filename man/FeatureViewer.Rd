@@ -51,14 +51,15 @@ A more detailed tutorial can be found on the `STUtility2` website.
 \seealso{
 TileImage
 
-Other spatial-visualization: 
+Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()}
+\code{\link{MapLabelsSummary}()},
+\code{\link{MapLabels}()}
 }
 \author{
 Ludvig Larsson
 }
-\concept{spatial-visualization}
+\concept{spatial-visualization-methods}

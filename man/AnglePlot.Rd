@@ -87,7 +87,7 @@ from the data.}
 \item{...}{Arguments passed to other methods}
 }
 \value{
-An object of class "patchwork"
+An object of class `patchwork`
 }
 \description{
 Draws on angle plot on top of a selected region. The plot is meant to help
@@ -109,14 +109,15 @@ AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", 
 
 }
 \seealso{
-Other spatial-visualization: 
+Other spatial-visualization-methods: 
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()}
+\code{\link{MapLabelsSummary}()},
+\code{\link{MapLabels}()}
 }
 \author{
 Ludvig Larsson
 }
-\concept{spatial-visualization}
+\concept{spatial-visualization-methods}

@@ -67,7 +67,7 @@ centroid_angles_plot <- function (
 #' @inheritParams MapLabels
 #' @inheritParams centroid_angles_plot
 #'
-#' @family spatial-visualization
+#' @family spatial-visualization-methods
 #'
 #' @author Ludvig Larsson
 #'
@@ -83,7 +83,7 @@ centroid_angles_plot <- function (
 #' AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", pt_size = 2,
 #'         image_use = "raw", crop_area = c(0.4, 0.5, 0.7, 0.8), radius = 0.4, nbreaks = 12)
 #'
-#' @return An object of class "patchwork"
+#' @return An object of class `patchwork`
 #'
 #' @export
 #'

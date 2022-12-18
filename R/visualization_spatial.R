@@ -70,7 +70,6 @@ NULL
 #' first feature is "red", the second is "green" and the last feature is "blue".
 #'
 #' @rdname visualize-features
-#' @family spatial-visualization
 #'
 #' @return A patchwork object
 #'
@@ -241,7 +240,7 @@ MapFeatures.default <- function (
 #' @importFrom rlang warn
 #'
 #' @rdname visualize-features
-#' @family spatial-visualization
+#' @family spatial-visualization-methods
 #'
 #' @author Ludvig Larsson
 #'
@@ -501,6 +500,7 @@ MapFeatures.Seurat <- function (
 #' @importFrom rlang %||% warn
 #'
 #' @rdname visualize-labels
+#' @family spatial-visualization-methods
 #'
 #' @return A `patchwork` object or a list of `ggplot` objects
 #'

@@ -34,7 +34,7 @@ NULL
 #' @importFrom dplyr select bind_cols
 #' @importFrom graphics par title
 #'
-#' @family spatial-visualization
+#' @family spatial-visualization-methods
 #'
 #' @author Ludvig Larsson
 #'

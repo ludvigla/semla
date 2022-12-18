@@ -4,7 +4,7 @@
 \alias{MapFeatures}
 \alias{MapFeatures.default}
 \alias{MapFeatures.Seurat}
-\title{Map numeric features or categorical labels in 2D space}
+\title{Map numeric features or categorical labels}
 \usage{
 MapFeatures(object, ...)
 
@@ -150,8 +150,8 @@ These arguments can be useful to make sure that the color map doesn't get domina
 A patchwork object
 }
 \description{
-\code{MapFeatures} can be used to map numeric features as colors on spot
-coordinates in 2D space. If multiple features and samples are provided, these
+\code{MapFeatures} can be used to map numeric features to spots where the
+values are encoded as colors. If multiple features and samples are provided, these
 will be plotted individually and arranged into a grid of subplots.
 }
 \details{
@@ -251,25 +251,23 @@ MapFeatures(se_mbrain, features = selected_feature, pt_size = 2) &
 
 }
 \seealso{
-Other visualization methods: 
+Other spatial-visualization-methods: 
+\code{\link{AnglePlot}()},
+\code{\link{FeatureViewer}()},
+\code{\link{ImagePlot}()},
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()}
 
-Other spatial-visualization: 
+Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()}
-
-Other spatial-visualization: 
-\code{\link{AnglePlot}()},
-\code{\link{FeatureViewer}()},
-\code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()}
+\code{\link{MapLabelsSummary}()},
+\code{\link{MapLabels}()}
 }
 \author{
 Ludvig Larsson
 }
-\concept{spatial-visualization}
-\concept{visualization methods}
+\concept{spatial-visualization-methods}

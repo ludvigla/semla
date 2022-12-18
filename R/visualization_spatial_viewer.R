@@ -35,7 +35,7 @@ NULL
 #' @import cli
 #' @import shiny
 #'
-#' @family spatial-visualization
+#' @family spatial-visualization-methods
 #'
 #' @export
 #'

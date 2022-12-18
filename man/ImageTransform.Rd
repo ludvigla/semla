@@ -2,7 +2,7 @@
 % Please edit documentation in R/transformations_image.R
 \name{ImageTransform}
 \alias{ImageTransform}
-\title{Function used to apply rotations and translations to an image object of class `magick-image`}
+\title{Apply rotations and translations to an image}
 \usage{
 ImageTransform(im, angle = 0, xy_offset = c(0, 0), scalefactor = 1)
 }
@@ -21,10 +21,10 @@ An object of class `magick-image`
 }
 \description{
 This function takes an `magick-image` object as input and applies translations
- defined by the \code{angle} and \code{xy_offset} arguments. The output image dimensions
- will remain the same as the input image dimensions, meaning that the transformation might
- result in cropping the image. If you don't want this behavior, you should use `image_rotate`
- from the `magick` R package instead.
+defined by the \code{angle} and \code{xy_offset} arguments. The output image dimensions
+will remain the same as the input image dimensions, meaning that the transformation might
+result in cropping the image. If you don't want this behavior, you should use `image_rotate`
+from the `magick` R package instead.
 }
 \examples{
 

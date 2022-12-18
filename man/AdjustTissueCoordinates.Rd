@@ -20,17 +20,23 @@ with \code{\link{CutSpatialNetwork}} and attempts to calculate
 the unrolled tissue coordinates.
 }
 \details{
-First, the end point of the graph
-are identified. The outermost end point is assumed to be the starting
-point and the point at the center of the roll is assumed to be the
-end point. Then, the algorithm tries to find the geodesic between the
+The algorithm is described briefly below:
+
+First, the end point of the graph are identified. The outermost
+end point is assumed to be the starting point and the point at the
+center of the roll is assumed to be the end point.
+
+Then, the algorithm tries to find the geodesic between the
 two end points, forming a band of nodes which represents the shortest
-path between the starting point and the end point. The order of these
-shortest represents the distances along the x axis in the new coordinate
-system and the geodesics to all other nodes are used as distances on the
-y axis of the in the new coordinate system. By using information about the
-location of nodes relative to the position of the shortest path nodes, the
-algorithm also tries to adjust the y axis to ensure non-negative values.
+path between the starting point and the end point.
+
+The order of these shortest represents the distances along the x axis
+in the new coordinate system and the geodesics to all other nodes are used
+as distances on the y axis of the in the new coordinate system.
+
+By using information about the location of nodes relative to the position
+of the shortest path nodes, the algorithm also tries to adjust the y axis
+to ensure non-negative values.
 
 NB: The graph has to be fully connected. If multiple sub graphs are found,
 only the largest graph will be kept. It is crucial that edges has been cut

@@ -44,10 +44,10 @@ CorSpatialFeatures <- function(object, ...) {
 }
 
 
-#' Map numeric features or categorical labels in 2D space
+#' Map numeric features or categorical labels
 #'
-#' \code{MapFeatures} can be used to map numeric features as colors on spot
-#' coordinates in 2D space. If multiple features and samples are provided, these
+#' \code{MapFeatures} can be used to map numeric features to spots where the
+#' values are encoded as colors. If multiple features and samples are provided, these
 #' will be plotted individually and arranged into a grid of subplots.
 #'
 #' @details Note that you can only plot numeric features with \code{MapFeatures},
@@ -57,7 +57,7 @@ CorSpatialFeatures <- function(object, ...) {
 #' @param object An object
 #' @param ... Arguments passed to other methods
 #'
-#' @family visualization methods
+#' @family spatial-visualization-methods
 #' @rdname visualize-features
 #'
 #' @export
@@ -67,19 +67,19 @@ MapFeatures <- function(object, ...) {
 }
 
 
-#' Map labels in 2D
+#' Map categoircal features
 #'
-#' \code{MapLabels} colors spot coordinates in 2D space based on the values of
-#' a categorical feature. Only 1 feature can be provided.
+#' \code{MapLabels} colors spots based on the values of a categorical feature.
 #'
-#' @details Note that you can only plot categorical features with \code{MapLabels},
+#' @details You can only plot categorical features with \code{MapLabels},
 #' for example: spot annotations or clusters.
 #' If you want to plot numerical features, use \code{\link{MapFeatures}} instead.
+#' Only 1 categorical feature can be provided.
 #'
 #' @param object An object
 #' @param ... Arguments passed to other methods
 #'
-#' @family visualization methods
+#' @family visualization-visualization-methods
 #' @rdname visualize-labels
 #'
 #' @export
