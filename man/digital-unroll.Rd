@@ -70,4 +70,7 @@ Other spatial-methods:
 \code{\link{RegionNeighbors}()},
 \code{\link{RunLocalG}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{spatial-methods}

@@ -148,4 +148,7 @@ Other spatial-methods:
 \code{\link{RadialDistance}()},
 \code{\link{RunLocalG}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{spatial-methods}

@@ -17,7 +17,7 @@ FeatureViewer(
 )
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{A `Seurat` object}
 
 \item{datadir}{A directory spatial data and image tiles}
 
@@ -57,5 +57,8 @@ Other spatial-visualization:
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()}
+}
+\author{
+Ludvig Larsson
 }
 \concept{spatial-visualization}

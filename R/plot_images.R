@@ -36,6 +36,8 @@ NULL
 #'
 #' @family spatial-visualization
 #'
+#' @author Ludvig Larsson
+#'
 #' @return draws a plot of the H&E images
 #'
 #' @examples

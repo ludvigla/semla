@@ -71,5 +71,8 @@ Other transforms:
 \code{\link{ImageTranslate}()},
 \code{\link{RigidTransformImages}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{image transformations}
 \concept{transforms}

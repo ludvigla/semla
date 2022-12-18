@@ -79,3 +79,6 @@ shinyApp(ui, server)
 }
 
 }
+\author{
+Ludvig Larsson
+}

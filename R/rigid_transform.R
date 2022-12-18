@@ -249,6 +249,8 @@ RigidTransformImages.default <- function (
 #' @rdname transform-images
 #' @family transforms
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #' library(STUtility2)
 #' library(dplyr)

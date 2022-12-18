@@ -93,4 +93,7 @@ Other spatial-visualization:
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{spatial-visualization}

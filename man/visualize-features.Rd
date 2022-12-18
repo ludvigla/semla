@@ -268,5 +268,8 @@ Other spatial-visualization:
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabelsSummary}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{spatial-visualization}
 \concept{visualization methods}

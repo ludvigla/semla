@@ -32,3 +32,6 @@ corresponds to 1 micrometer}
 \item{\code{version}}{Package version.}
 }}
 
+\author{
+Ludvig Larsson
+}

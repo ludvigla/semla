@@ -21,6 +21,8 @@ NULL
 #' @rdname manual-transform-images
 #' @family transforms
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #' \dontrun{
 #'

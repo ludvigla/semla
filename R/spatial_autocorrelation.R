@@ -230,6 +230,8 @@ CorSpatialFeatures.default <- function (
 #' @rdname cor-features
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",

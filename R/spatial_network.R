@@ -19,6 +19,8 @@ NULL
 #' @rdname get-network
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #' \dontrun{
 #' library(ggplot2)

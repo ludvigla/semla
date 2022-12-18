@@ -55,4 +55,7 @@ se_filtered
 Other subset-and-merge: 
 \code{\link{MergeSTData}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{subset-and-merge}

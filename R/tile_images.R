@@ -19,6 +19,8 @@
 #' @importFrom rlang %||%
 #' @import cli
 #'
+#' @author Ludvig Larsson
+#'
 #' @return Path to tiles
 #'
 #' @examples

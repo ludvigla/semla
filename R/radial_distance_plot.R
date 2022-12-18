@@ -69,6 +69,8 @@ centroid_angles_plot <- function (
 #'
 #' @family spatial-visualization
 #'
+#' @author Ludvig Larsson
+#'
 #' @import dplyr
 #' @importFrom Seurat AddMetaData
 #'

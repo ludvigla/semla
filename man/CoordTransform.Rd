@@ -91,4 +91,7 @@ Other transforms:
 \code{\link{RigidTransformImages}()},
 \code{\link{RunAlignment}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{transforms}

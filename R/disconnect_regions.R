@@ -176,6 +176,8 @@ DisconnectRegions.default <- function (
 #'
 #' @rdname disconnect-regions
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #'
 #' library(STUtility2)

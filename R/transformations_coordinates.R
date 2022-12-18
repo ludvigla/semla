@@ -59,6 +59,8 @@ NULL
 #'
 #' @family transforms
 #'
+#' @author Ludvig Larsson
+#'
 #' @return A `tbl` object with transformed coordinates
 #'
 #' @examples
@@ -199,6 +201,8 @@ CoordMirror <- function (
 #'
 #' @family transforms
 #'
+#' @author Ludvig Larsson
+#'
 #' @return A `tbl` object with transformed coordinates
 #'
 #' @examples
@@ -315,6 +319,8 @@ CoordTransform <- function (
 #' @importFrom rlang %||%
 #'
 #' @family transforms
+#'
+#' @author Ludvig Larsson
 #'
 #' @return A list with two elements:
 #' \itemize{

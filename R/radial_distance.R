@@ -319,6 +319,8 @@ RadialDistance.default <- function (
 #' @rdname radial-distance
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #'
 #' library(STUtility2)

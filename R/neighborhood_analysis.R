@@ -41,6 +41,8 @@ NULL
 #' @rdname region-neighbors
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @importFrom rlang warn
 #' @import cli
 #' @importFrom dplyr filter mutate

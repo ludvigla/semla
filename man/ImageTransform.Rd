@@ -48,4 +48,7 @@ im_transformed <- ImageTransform(im, scalefactor = 0.5)
 im_transformed
 
 }
+\author{
+Ludvig Larsson
+}
 \concept{tranforms}

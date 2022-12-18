@@ -254,6 +254,8 @@ RunLocalG.default <- function (
 #' @rdname local-G
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #'
 #' library(STUtility2)

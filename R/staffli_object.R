@@ -21,6 +21,9 @@ NULL
 #'
 #' @name Staffli-class
 #' @rdname Staffli-class
+#'
+#' @author Ludvig Larsson
+#'
 #' @exportClass Staffli
 #'
 Staffli <- setClass (

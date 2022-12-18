@@ -243,6 +243,8 @@ MapFeatures.default <- function (
 #' @rdname visualize-features
 #' @family spatial-visualization
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #'
 #' library(STUtility2)
@@ -642,6 +644,8 @@ MapLabels.default <- function (
 #' @importFrom patchwork wrap_plots
 #'
 #' @rdname visualize-labels
+#'
+#' @author Ludvig Larsson
 #'
 #' @examples
 #'

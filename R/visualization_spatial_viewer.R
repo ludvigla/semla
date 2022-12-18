@@ -15,7 +15,7 @@ NULL
 #'
 #' A more detailed tutorial can be found on the `STUtility2` website.
 #'
-#' @param object A Seurat object
+#' @param object A `Seurat` object
 #' @param datadir A directory spatial data and image tiles
 #' @param selected_features A character vector of features to select for viewer
 #' @param sampleIDs A vector of section IDs to use for the viewer
@@ -23,6 +23,8 @@ NULL
 #' @param verbose Print messages
 #'
 #' @return A `Seurat` object
+#'
+#' @author Ludvig Larsson
 #'
 #' @inheritParams file_server
 #'

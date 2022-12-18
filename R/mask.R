@@ -173,6 +173,8 @@ MaskImages.default <- function (
 #'
 #' @rdname mask-images
 #'
+#' @author Ludvig Larsson
+#'
 #' @section Seurat:
 #' Returns a Seurat object with masked images
 #'

@@ -178,4 +178,7 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 Other visualization methods: 
 \code{\link{MapFeatures}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{visualization methods}

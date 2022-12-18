@@ -62,4 +62,7 @@ ImagePlot(se_merged |> LoadImages(verbose = FALSE))
 Other subset-and-merge: 
 \code{\link{SubsetSTData}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{subset-and-merge}

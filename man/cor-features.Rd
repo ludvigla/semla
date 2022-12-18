@@ -194,5 +194,8 @@ Other spatial-methods:
 \code{\link{RegionNeighbors}()},
 \code{\link{RunLocalG}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{network-methods}
 \concept{spatial-methods}

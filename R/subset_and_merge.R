@@ -32,6 +32,8 @@ NULL
 #' @family subset-and-merge
 #' @rdname merge
 #'
+#' @author Ludvig Larsson
+#'
 #' @examples
 #' se_mbrain <- readRDS(system.file("extdata",
 #'                                  "mousebrain/se_mbrain",
@@ -220,6 +222,8 @@ MergeSTData <- function (
 #'
 #' @family subset-and-merge
 #' @rdname subset
+#'
+#' @author Ludvig Larsson
 #'
 #' @examples
 #'

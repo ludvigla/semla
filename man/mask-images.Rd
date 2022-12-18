@@ -108,4 +108,7 @@ Other image transformations:
 \code{\link{RigidTransformImages}()},
 \code{\link{RunAlignment}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{image transformations}

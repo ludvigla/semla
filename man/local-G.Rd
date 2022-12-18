@@ -188,5 +188,8 @@ Other spatial-methods:
 \code{\link{RadialDistance}()},
 \code{\link{RegionNeighbors}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{spatial methods}
 \concept{spatial-methods}

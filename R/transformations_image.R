@@ -11,6 +11,8 @@
 #'
 #' @family transforms
 #'
+#' @author Ludvig Larsson
+#'
 #' @return An object of class `magick-image`
 #'
 #' @importFrom magick image_info image_blank image_crop image_append
@@ -103,6 +105,8 @@ ImageTranslate <- function (
 #' @param scalefactor A numeric value specifying a scaling factor between [0, 3]
 #'
 #' @family tranforms
+#'
+#' @author Ludvig Larsson
 #'
 #' @importFrom magick image_info image_rotate image_blank image_extent image_composite geometry_area
 #' @import dplyr

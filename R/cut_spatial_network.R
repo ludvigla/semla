@@ -35,6 +35,8 @@ NULL
 #' @rdname digital-unroll
 #' @family spatial-methods
 #'
+#' @author Ludvig Larsson
+#'
 #' @export
 #'
 CutSpatialNetwork <- function (

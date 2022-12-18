@@ -169,5 +169,8 @@ Other transforms:
 \code{\link{ImageTranslate}()},
 \code{\link{RunAlignment}()}
 }
+\author{
+Ludvig Larsson
+}
 \concept{image transformations}
 \concept{transforms}
