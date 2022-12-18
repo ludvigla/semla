@@ -1,6 +1,6 @@
 # Welcome to `STUtility2`
 
-## Instalaltion
+## Installation
 ***
 
 ````
