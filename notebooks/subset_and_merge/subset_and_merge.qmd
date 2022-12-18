@@ -1,0 +1,55 @@
+---
+title: "Subset and merge"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    theme:
+      light: flatly
+      dark: darkly
+editor: visual
+---
+
+Subsetting and merging data is done using the two functions \`SubsetSTData\` and \`MergeSTData\`.
+
+If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object.
+
+Let's load an example mouse brain 10x Visium data:
+
+```{r}
+se_mcolon <- readRDS(system.file("extdata/mousecolon", 
+                                 "se_mcolon", 
+                                 package = "STUtility2"))
+```
+
+### Subset by selecting spots
+
+```{r}
+spots_to_keep <- c("AAACAAGTATCTCCCA-1", "AAACACCAATAACTGC-1", "AAACATTTCCCGGATT-1",
+                   "AAACCCGAACGAAATC-1", "AAACCGGGTAGGTACC-1", "AAACCGTTCGTCCAGG-1")
+
+# Subset using selected spots
+se_mcolon_small <- SubsetSTData(se_mcolon, spots = spots_to_keep)
+se_mcolon_small
+```
+
+### Subset by selecting features
+
+```{r}
+genes_to_keep <- c("Hbb-bs", "Hba-a1", "Hba-a2", "Hbb-bt", "Slc6a3", "Th")
+
+# Subset using selected genes
+se_mcolon_fewgenes <- SubsetSTData(se_mcolon, features = genes_to_keep)
+se_mcolon_fewgenes
+```
+
+### Subset with an expression
+
+If we want to subset data using information from the meta.data slot, it might be easier to use an expression instead.
+
+```{r}
+# Filte by number of unique genes
+se_mcolon_filtered <- SubsetSTData(se_mcolon, expression = nFeature_spatial > 20)
+se_mcolon_filtered
+```
