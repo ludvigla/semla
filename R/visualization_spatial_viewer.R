@@ -488,6 +488,10 @@ FeatureViewer <- function (
   sampleIDs,
   verbose
 ) {
+
+  # Set global variables to NULL
+  sampleID <- NULL
+
   if (!is.null(datadir)) {
     if (verbose) cli_alert_info("Got data directory {datadir}")
     if (verbose) cli_alert_info("Checking for required files ...")
@@ -547,6 +551,10 @@ FeatureViewer <- function (
   isNumeric = TRUE,
   title = "category"
 ) {
+
+  # Set global variables to NULL
+  y <- NULL
+
   if (!isNumeric) {
     colors <- colors[levels]
     levels <- sapply(levels, function(x) substr(x, start = 1, stop = 20))
