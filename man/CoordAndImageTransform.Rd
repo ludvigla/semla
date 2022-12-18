@@ -45,7 +45,7 @@ the spots are matched with the image.}
 A list with two elements:
 \itemize{
   \item{"im_transf": An object of class `magick-image` representing the transformed image}
-  \item{"xy_transf": An object of class `tble` representing the transformed coordinates}
+  \item{"xy_transf": An object of class `tbl` representing the transformed coordinates}
 }
 }
 \description{
@@ -62,17 +62,16 @@ and translations.
 }
 \examples{
 
+library(STUtility2)
 library(ggplot2)
 library(patchwork)
 library(magick)
 library(dplyr)
 
 # get example coordinate file
-coordinatefile <- system.file("extdata/mousebrain/spatial",
-                              "tissue_positions_list.csv",
+coordinatefile <- system.file("extdata",
+                              "mousebrain/spatial/tissue_positions_list.csv",
                               package = "STUtility2")
-
-print( system.file(package = "STUtility2"))
 
 # Load coordinates
 xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)

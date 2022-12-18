@@ -57,9 +57,9 @@ export_coordinates <- function (
     mutate(x = pxl_col_in_fullres, y = pxl_row_in_fullres) |>
     select(-pxl_col_in_fullres, -pxl_row_in_fullres) |>
     mutate(across(x, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, max(image_info$full_width, image_info$full_height))))) |>
+                                       from = c(0, image_info$full_width)))) |>
     mutate(across(y, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, max(image_info$full_width, image_info$full_height))))) |>
+                                       from = c(0, image_info$full_width)))) |>
     mutate(index = 1:n())
 
   # Put nodes and edges into a list

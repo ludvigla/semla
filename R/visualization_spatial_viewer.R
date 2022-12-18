@@ -6,6 +6,13 @@ NULL
 # TODO: update docs
 #' Interactive spatial feature viewer
 #'
+#' `FeatureViewer` opens up an interactive shiny application where
+#' one can zoom and pan the H&E image while overlaying and color selected features.
+#' It is also possible to add new categorical features or modify existing
+#' categorical features using a lasso tool.
+#'
+#' The viewer requires a tiled H&E image along with some additional image data to work.
+#'
 #' A more detailed tutorial can be found on the `STUtility2` website.
 #'
 #' @param object A Seurat object
@@ -13,10 +20,13 @@ NULL
 #' @param selected_features A character vector of features to select for viewer
 #' @param sampleIDs A vector of section IDs to use for the viewer
 #' @param container_width,container_height Set height and width of container
-#' @param overwrite_network_json Logical specifying if the JSON file
-#' containing the spatial network should be overwritten after completion
 #' @param verbose Print messages
+#'
+#' @return A `Seurat` object
+#'
 #' @inheritParams file_server
+#'
+#' @seealso TileImage
 #'
 #' @import rlang
 #' @import glue
@@ -40,53 +50,29 @@ FeatureViewer <- function (
 ) {
 
   # Set global variables to NULL
-  sampleID <- sampleID <- NULL
+  sampleID <- NULL
 
   # Check Seurat object
   .check_seurat_object(object)
 
-  # Check tile paths
-  if (!is.null(datadir)) {
-    if (verbose) cli_alert_info("Got data directory {datadir}")
-    if (verbose) cli_alert_info("Checking for required files ...")
-    for (i in sampleIDs) {
-      tilepath <- paste0(datadir, paste0("/tiles", sampleID))
-      if (!file.exists(tilepath)) {
-        abort(glue("Path {tilepath} is missing for sample {sampleID}"))
-      }
-      infopath <- paste0(datadir, paste0("/image_info", sampleID, ".json"))
-      if (!file.exists(infopath)) {
-        abort(glue("Path {infopath} is missing for sample {sampleID}"))
-      }
-      coordpath <- paste0(datadir,  paste0("/coords_Visium_", sampleID, ".json"))
-      if (!file.exists(coordpath)) {
-        abort(glue("Path {coordpath} is missing for sample {sampleID}"))
-      }
-    }
-    datapath <- datadir
-    clean_after_close <- FALSE
-  } else {
-    cli_alert_info("Attempting to tile H&E image(s)")
-    imgs <- GetStaffli(object)@imgs[sampleIDs]
-    for (i in seq_along(imgs)) {
-      if (!file.exists(imgs[i])) {
-        abort(glue("{imgs[i]} is not a valid path. Update path to @imgs in 'Staffli' slot"))
-      }
-      cli_alert("  Tiling sample {i} H&E image to temporary directory")
-      dirs <- TileImage(im = image_read(imgs[i]), sampleID = sampleIDs[i])
-      datapath <- dirs$datapath
-      cli_alert("  Exporting Visium coordinates for sample {i}")
-      export_coordinates(object = object, sampleID = sampleIDs[i], outdir = datapath, verbose = verbose)
-    }
-    clean_after_close <- TRUE
-  }
-
-  # Fetch data
-  #se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
-  #expr_data <- GetAssayData(object, slot = "data")
-  all_features <- c(rownames(GetAssayData(object, slot = "data")), sapply(object@reductions, function(x) {
+  # Fetch all features
+  all_features <- c(sapply(object@assays, function(x) {
+    rownames(x)
+  }), sapply(object@reductions, function(x) {
     colnames(x@cell.embeddings)
-  }))
+  })) |> unlist() |> unique()
+
+  # Validate input
+  all_features <- .check_features(selected_features = selected_features, all_features = all_features)
+  available_sampleIDs <- GetStaffli(object)@image_info$sampleID |> as.integer()
+  if (any(!sampleIDs %in% available_sampleIDs))
+    abort(glue("Invalid sampleIDs: {paste(sampleIDs[!sampleIDs %in% available_sampleIDs], collapse = ', ')}"))
+
+
+  # Check tile paths
+  params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, verbose = verbose)
+  datapath <- params$datapath
+  clean_after_close <- params$clean_after_close
 
   # Fetch categorical data
   .categorical_data <- object[[]] |>
@@ -94,7 +80,7 @@ FeatureViewer <- function (
   categorical_features <- colnames(.categorical_data)
 
   # Define a list of colors for each category
-  .colors_saved <- sapply(.categorical_data, function(x) {
+  .colors_saved <- lapply(.categorical_data, function(x) {
     if (inherits(x, what =  "factor")) {
       setNames(.set_colors(length(levels(x))), nm = levels(x))
     } else {
@@ -155,6 +141,27 @@ FeatureViewer <- function (
     });
     '
 
+  jscode2 <- '
+    $(function() {
+      var $els = $("[data-proxy-click]");
+      $.each(
+        $els,
+        function(idx, el) {
+          var $el = $(el);
+          var $proxy = $("#" + $el.data("proxyClick"));
+          $el.keydown(function (e) {
+            if (e.keyCode == 13) {
+              $proxy.click();
+            }
+          });
+          $el.onClick(function (e) {
+            $proxy.click()
+          })
+        }
+      );
+    });
+    '
+
   # Create UI for app
   ui <- fluidPage(
 
@@ -164,9 +171,24 @@ FeatureViewer <- function (
 
     # Add custom jscode to make it possible to save text on ENTER
     shiny::tags$head(shiny::tags$script(HTML(jscode))),
+    shiny::tags$head(shiny::tags$script(HTML(jscode2))),
 
     # UI for main panel including the feature viewer widget
     ftrviewerOutput("ftrviewerWidget", height = container_height, width = container_width),
+    conditionalPanel(
+      condition = "output.panelStatus",
+      absolutePanel(
+        plotOutput("legend", height = "200px"),
+        width = "60px",
+        top = "50px",
+        left = paste0(container_width - 50, "px"),
+        draggable = TRUE
+      )
+    ),
+    conditionalPanel(
+      condition = "!output.panelStatus",
+      uiOutput("catlegend")
+    ),
     uiOutput("HelpBox"),
 
     # UI for floating sidebar
@@ -175,31 +197,36 @@ FeatureViewer <- function (
       actionButton("help", "Help"), # Opens up a help menu
       fastSliderInput("opacity", "Opacity", min = 0, max = 1, value = 1, step = 0.05), # Slider for opacity values
       checkboxInput("lasso", "Lasso", value = FALSE), # Activates a lasso selection tool
-      selectizeInput("feature", label = "Feature", choices = NULL), # numeric features
+      selectizeInput("feature", label = "Feature", selected = selected_features[1], choices = NULL), # numeric features
 
       # This panel only opens up if a numeric feature is selected
       conditionalPanel(
-        condition = "!output.panelStatus",
+        condition = "output.panelStatus",
         checkboxInput("scalealpha", "Scale alpha"),
         fastSliderInput("trim", "Trim", min = 0, max = 1, value = c(0, 1), step = 0.01),
         selectizeInput("colorscale", "Colorscale", choices = .color_scales(info = TRUE), options = list(create = TRUE))
       ),
 
-      selectizeInput("category", "Select input", choices = categorical_features, options = list(create = TRUE)),
+      # selectizeInput("category", "Select input", choices = categorical_features, options = list(create = TRUE)),
+      tagAppendAttributes(
+        selectizeInput("category", "Select input", choices = categorical_features, options = list(create = TRUE)),
+        `data-proxy-click` = "category_save",
+      ),
+      actionButton("category_save", "", style = "visibility: hidden;"),
 
       # This panel only opens up if a categorical feature is selected
       conditionalPanel(
-        condition = "output.panelStatus",
+        condition = "!output.panelStatus",
         tagAppendAttributes(
           textInput("label", "Label"),
           `data-proxy-click` = "label_save"
         ),
-        colourpicker::colourInput("color", label = "Select color", value = "#FFA500")
+        colourpicker::colourInput("color", label = "Select color", value = "#FFA500"),
+        actionButton("label_save", "", style = "visibility: hidden;") # Used for the actionButton ENTER press trick
       ),
-      actionButton("label_save", "", style = "visibility: hidden;"), # Used for the actionButton ENTER press trick
 
-      top = "100px",
-      right = "20px",
+      top = "60px",
+      left = paste0(container_width + 20, "px"),
       width = "150px",
       draggable = TRUE
     )
@@ -211,14 +238,15 @@ FeatureViewer <- function (
 
     # Select type of feature
     # Create reactive value (responds on input)
+    rv <- reactiveValues(lastBtn = "feature", curFeature = selected_features[1], category = 1)
     output$panelStatus <- reactive({
-      rv$lastBtn == "category"
+      rv$lastBtn == "feature"
     })
     outputOptions(output, "panelStatus", suspendWhenHidden = FALSE)
-    rv <- reactiveValues(lastBtn = "feature", curFeature = "gene1")
+
     # # Set last button to "category" when a categorical feature is selected
-    observeEvent(input$category, {
-      if (input$category > 0 ) {
+    observeEvent(toListenCategory(), {
+      if (input$category > 0) {
         rv$lastBtn = "category"
         rv$curFeature = input$category
         if (!input$category %in% colnames(.categorical_data)) {
@@ -234,22 +262,28 @@ FeatureViewer <- function (
         } else {
           rv$levels <- levels(rv$values)
         }
-        rv$colors <- .colors_saved[[rv$curFeature]]
+        rv$colors <- .colors_saved[[rv$curFeature]][rv$levels]
         rv$isNumeric = FALSE
       }
     })
+
     # Set last button to "feature" when a numeric feature is selected
     observeEvent(input$feature, {
-      if (input$feature > 0 ) {
-        rv$lastBtn = "feature"
-        rv$curFeature = input$feature
-        rv$values = FetchData(object, vars = input$feature) |> pull(all_of(input$feature))
-        rv$range = range(rv$values) |> round(digits = 2)
-        rv$opacities = scales::rescale(rv$values, to = c(0, 1), from = rv$range)
-        rv$colors = .color_scales(input$colorscale)
-        rv$isNumeric = TRUE
+      if (!is.null(input$feature)) {
+        if (input$feature %in% all_features) {
+          rv$lastBtn = "feature"
+          rv$curFeature = input$feature
+          rv$values = FetchData(object, vars = input$feature) |> pull(all_of(input$feature))
+          rv$range = range(rv$values) |> round(digits = 2)
+          rv$opacities = scales::rescale(rv$values, to = c(0, 1), from = rv$range)
+          rv$colors = .color_scales(input$colorscale)
+          rv$isNumeric = TRUE
+          rv$allClear <- TRUE
+        }
       }
     })
+
+    # listen to changes in colorscale and update
     observeEvent(input$colorscale, {
       if (rv$lastBtn == "feature") {
         rv$colors = .color_scales(input$colorscale)
@@ -270,16 +304,26 @@ FeatureViewer <- function (
       shinyjs::js$getSelection()
     })
 
-
     # Observe label save
     observeEvent(input$label_save, {
       if (input$label != "") {
         updateCheckboxInput(session, "lasso", value = FALSE)
+        rv$label <- input$label
       }
     })
 
+    # Trigger category change on ENTER
+    observeEvent(input$category_save, {
+      rv$category <- rv$category + 1
+    })
+    toListenCategory <- reactive({
+      list(input$category, rv$category)
+    })
+
+    # Listen for changes in selbarcodes and add selection if
+    # a label is submitted
     observeEvent(input$selbarcodes, {
-      if (length(input$selbarcodes) > 1) {
+      if ((length(input$selbarcodes) > 1)) {
         if (inherits(.categorical_data[, input$category], what = "factor")) {
           tmp <- .categorical_data |>
             select(contains(input$category)) |>
@@ -291,16 +335,16 @@ FeatureViewer <- function (
         } else {
           .categorical_data[input$selbarcodes, input$category] <<- input$label
         }
-        if (!input$label %in% rv$levels) {
-          tmp_cols <- c(.colors_saved[[rv$curFeature]][rv$levels], setNames(input$color, nm = input$label))
-          rv$levels <- c(rv$levels, input$label)
+        if (!rv$label %in% rv$levels) {
+          tmp_cols <- c(.colors_saved[[input$category]][rv$levels], setNames(input$color, nm = rv$label))
+          rv$levels <- c(rv$levels, rv$label)
           rv$colors <- tmp_cols
-          .colors_saved[[rv$curFeature]] <<- tmp_cols
+          .colors_saved[[input$category]] <<- tmp_cols
         } else {
-          tmp_cols <- .colors_saved[[rv$curFeature]]
-          tmp_cols <- c(tmp_cols[-match(input$label, names(tmp_cols))], setNames(input$color, nm = input$label))
-          .colors_saved[[rv$curFeature]] <<- tmp_cols
-          rv$colors <- tmp_cols
+          tmp_cols <- .colors_saved[[input$category]]
+          tmp_cols <- c(tmp_cols[setdiff(names(tmp_cols), rv$label)], setNames(input$color, nm = rv$label))
+          .colors_saved[[input$category]] <<- tmp_cols
+          rv$colors <- tmp_cols[rv$levels]
         }
         rv$values <- .categorical_data[, input$category]
         updateTextInput(session, "label", value = "")
@@ -309,19 +353,59 @@ FeatureViewer <- function (
 
     # Send image data to widget
     output$ftrviewerWidget <- renderFtrviewer({
-      ftrviewer(values = rv$values,
-                range = .trim_range(x = rv$range, minCutoff = input$trim[1], maxCutoff = input$trim[2]),
-                levels = rv$levels,
-                opacities = rv$opacities,
-                scaleByOpacity = input$scalealpha,
-                colors = rv$colors |> unname(),
-                isNumeric = rv$isNumeric,
-                useLasso = input$lasso,
-                opacity = input$opacity)
+      if (length(rv$isNumeric) > 0) {
+        ftrviewer(values = rv$values,
+                  range = .trim_range(x = rv$range, minCutoff = input$trim[1], maxCutoff = input$trim[2]),
+                  levels = rv$levels,
+                  opacities = rv$opacities,
+                  scaleByOpacity = input$scalealpha,
+                  colors = rv$colors |> unname(),
+                  isNumeric = rv$isNumeric,
+                  useLasso = input$lasso,
+                  opacity = input$opacity)
+      }
     })
 
+    # Render categorical feature legend on client side
+    output$catlegend <- renderUI({
+      panel_width = sapply(rv$levels, nchar) |> max()
+      absolutePanel(
+        plotOutput("legend_cat", height = paste0(length(rv$levels)*20 + 30, "px")),
+        width = paste0(min(panel_width, 15)*10 + 10, "px"),
+        top = "50px",
+        left = paste0(container_width - (min(panel_width, 15)*10 + 10), "px"),
+        draggable = TRUE
+      )
+    })
+
+    # Render color legend for numerical features
+    output$legend <- renderPlot({
+      if (!is.null(rv$allClear) & rv$isNumeric) {
+        p <- .create_legend(minVal = rv$range[1],
+                            maxVal = rv$range[2],
+                            levels = rv$levels,
+                            colors = rv$colors,
+                            isNumeric = rv$isNumeric,
+                            title = input$feature)
+        return(p)
+      }
+    }, bg = "transparent")
+
+    # Render color legend for categorical features
+    output$legend_cat <- renderPlot({
+      if (!is.null(rv$allClear) & !rv$isNumeric) {
+        p <- .create_legend(minVal = rv$range[1],
+                            maxVal = rv$range[2],
+                            levels = rv$levels,
+                            colors = rv$colors,
+                            isNumeric = rv$isNumeric,
+                            title = input$category)
+        return(p)
+      }
+    }, bg = "transparent")
+
     # Help text
-    output$HelpBox = renderUI({
+    output$HelpBox <- renderUI({
       if (input$help %% 2){
         fluidRow(column(12, helpText(h4("How to use the tool"), hr())),
                  column(12, column(3, helpText(p(strong("Cut edges")))),
@@ -333,7 +417,7 @@ FeatureViewer <- function (
       }
     })
 
-    # Stop app when pressing quite button
+    # Stop app when pressing quit button
     observeEvent(input$quit, {
       stopApp()
     })
@@ -368,7 +452,169 @@ FeatureViewer <- function (
 }
 
 
+#' Check input features
+#'
+#' @noRd
+.check_features <- function (
+    selected_features,
+    all_features
+) {
+  if (!is.null(selected_features)) {
+    if (!all(selected_features %in% all_features)) {
+      # Get intersect
+      features_left <- intersect(selected_features, all_features)
+      if (length(features_left) == 0) abort("selected_features is invalid, foun 0 features in Seurat object")
+      cli_alert_info(col_br_red("{length(selected_features) - length(features_left)} features found in Seruat object"))
+      all_features <- features_left
+    } else {
+      all_features <- selected_features
+    }
+  }
+  return(all_features)
+}
+
+
+#' Check tile paths
+#'
+#' @param object A `Seurat` object
+#' @param datadir A path to a directory with requried input files
+#' @param sampleIDs A vector with sampleIDs
+#' @param verbose Print messages
+#'
+#' @noRd
+.check_tile_paths <- function (
+  object,
+  datadir,
+  sampleIDs,
+  verbose
+) {
+  if (!is.null(datadir)) {
+    if (verbose) cli_alert_info("Got data directory {datadir}")
+    if (verbose) cli_alert_info("Checking for required files ...")
+    for (i in sampleIDs) {
+      tilepath <- paste0(datadir, paste0("/tiles", sampleID))
+      if (!file.exists(tilepath)) {
+        abort(glue("Path {tilepath} is missing for sample {sampleID}"))
+      }
+      infopath <- paste0(datadir, paste0("/image_info", sampleID, ".json"))
+      if (!file.exists(infopath)) {
+        abort(glue("Path {infopath} is missing for sample {sampleID}"))
+      }
+      coordpath <- paste0(datadir,  paste0("/coords_Visium_", sampleID, ".json"))
+      if (!file.exists(coordpath)) {
+        abort(glue("Path {coordpath} is missing for sample {sampleID}"))
+      }
+    }
+    datapath <- datadir
+    clean_after_close <- FALSE
+  } else {
+    if (verbose) cli_alert_info("Attempting to tile H&E image(s)")
+    imgs <- GetStaffli(object)@imgs[sampleIDs]
+    for (i in seq_along(imgs)) {
+      if (!file.exists(imgs[i])) {
+        abort(glue("{imgs[i]} is not a valid path. Update path to @imgs in 'Staffli' slot"))
+      }
+      if (verbose) cli_alert("  Tiling sample {i} H&E image to temporary directory")
+      dirs <- TileImage(im = image_read(imgs[i]), sampleID = sampleIDs[i], verbose = verbose)
+      datapath <- dirs$datapath
+      if (verbose) cli_alert("  Exporting Visium coordinates for sample {sampleIDs[i]}")
+      export_coordinates(object = object, sampleID = sampleIDs[i], outdir = datapath, verbose = verbose)
+    }
+    clean_after_close <- TRUE
+  }
+  return(list(datapath = datapath, clean_after_close = clean_after_close))
+}
+
+
+#' Create a custom legend
+#'
+#' @param minVal,maxVal Range for numeric values
+#' @param levels Levels for categorical values
+#' @param ntiles Number of tiles for color bar
+#' @param colors A chaacter vector of colors for color bar
+#' @param isNumeric Logical speicifying if numeric data is passed
+#' @param title Legend title
+#'
+#' @import ggplot2
+#'
+#' @noRd
+.create_legend <- function (
+  minVal = 0,
+  maxVal = 1,
+  levels = NULL,
+  ntiles = 100,
+  colors = RColorBrewer::brewer.pal(n = 9, name = "Reds"),
+  isNumeric = TRUE,
+  title = "category"
+) {
+  if (!isNumeric) {
+    colors <- colors[levels]
+    levels <- sapply(levels, function(x) substr(x, start = 1, stop = 20))
+    colors <- setNames(colors, nm = levels)
+
+    df <- data.frame(yc = seq(0, length(levels) - 1) + 0.5, row.names = levels)
+    p <- ggplot() +
+      theme_void() +
+      scale_y_continuous(breaks = df$yc, labels = rownames(df), position = "right") +
+      theme(axis.ticks.y = element_line(), plot.background = element_rect(fill = "#FFFFFFAA", colour = NA),
+            axis.text.y = element_text(size = 14, hjust = 0.1, colour = "black"),
+            plot.title = element_text(size = 16, colour = "black", margin = margin(b = 5)),
+            plot.margin = margin(t = 3, r = 3, b = 3, l = 3)) +
+      coord_fixed() +
+      ggtitle(title)
+    for (lvl in rownames(df)) {
+      p <- p +
+        gg_circle(r = 0.4, xc = 0.5, yc = df[lvl, "yc", drop = TRUE], fill = colors[lvl])
+    }
+  } else {
+  df <- data.frame(y = seq(minVal, maxVal, length.out = ntiles))
+  p <- ggplot(df, aes("", y, fill = y)) +
+    geom_raster() +
+    theme(legend.position = "none") +
+    scale_y_continuous(position = "right") +
+    theme(axis.text.y = element_text(size = 14, colour = "black"), axis.title = element_blank(),
+          plot.background = element_rect(fill = "#FFFFFFAA", colour = NA),
+          panel.background = element_blank(), axis.ticks.x = element_blank(),
+          plot.title = element_text(size = 16, colour = "black"),
+          plot.margin = margin(3, 3, 3, 3),
+          panel.grid = element_blank()) +
+    scale_fill_gradientn(colours = colors) +
+    ggtitle(title)
+  }
+  return(p)
+}
+
+#' Create a circle in ggplot2
+#'
+#' @param r Circle radius
+#' @param xc,yc Circle center
+#' @param color Circle stroke color
+#' @param fille Circle fill color
+#' @param ... parameters passed to `annotate`
+#'
+#' @import ggplot2
+#'
+#' @noRd
+gg_circle <- function (
+  r,
+  xc,
+  yc,
+  color = "black",
+  fill = NA,
+  ...
+) {
+  x <- xc + r*cos(seq(0, pi, length.out = 100))
+  ymax <- yc + r*sin(seq(0, pi, length.out = 100))
+  ymin <- yc + r*sin(seq(0, -pi, length.out = 100))
+  annotate("ribbon", x = x, ymin = ymin, ymax = ymax, color = color, fill = fill, ...)
+}
+
+
 #' Trim values to quantiles
+#'
+#' @param x Value range
+#' @param minCutoff,maxCutoff Minimum and maximum cutoff given as
+#' values beetween 0-1
 #'
 #' @noRd
 .trim_range <- function (
@@ -387,14 +633,18 @@ FeatureViewer <- function (
 
 #' Select or show color palettes
 #'
-#' @importFrom grDevices colorRampPalette
+#' @param colorscale Name of color scale
+#' @param info Should names of color palettes be returned?
 #'
+#' @importFrom grDevices colorRampPalette
 #'
 #' @noRd
 .color_scales <- function (
   colorscale = "viridis",
   info = FALSE
 ) {
+  if (!requireNamespace("viridis"))
+    install.packages("viridis")
   colscales <- list(
     viridis = viridis::viridis(n = 50),
     magma = viridis::magma(n = 50, direction = -1),
@@ -411,6 +661,8 @@ FeatureViewer <- function (
 }
 
 #' Set categorical colors
+#'
+#' @param n Number of colors
 #'
 #' @noRd
 .set_colors <- function (

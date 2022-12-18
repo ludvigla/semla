@@ -136,6 +136,7 @@ LoadAndMergeMatrices <- function (
 #' @examples
 #'
 #' library(STUtility2)
+#'
 #' # Load and merge coordinates from two samples
 #' coordinatefiles <-
 #'   c(system.file("extdata/mousebrain/spatial",
@@ -183,6 +184,7 @@ LoadSpatialCoordinates <- function (
   return(coordDF)
 }
 
+# TODO: not yet implemented, only to be used for SpatialExperiment class
 #' Read image data
 #'
 #' Load image related data from \strong{'tissue_hires_image.png'} files.
@@ -205,40 +207,7 @@ LoadSpatialCoordinates <- function (
 #'
 #' @return An object of class `DFrame`
 #'
-#' @examples
-#' \donttest{
-#' # Collect spaeranger output files
-#' lowres.imagefiles <-
-#'   c(system.file("extdata/mousebrain/spatial",
-#'                 "tissue_lowres_image.png",
-#'                 package = "STUtility2"),
-#'     system.file("extdata/mousecolon/spatial",
-#'                 "tissue_lowres_image.png",
-#'                 package = "STUtility2"))
-#' hires.imagefiles <-
-#'   c(system.file("extdata/mousebrain/spatial",
-#'                 "tissue_hires_image.png",
-#'                 package = "STUtility2"),
-#'     system.file("extdata/mousecolon/spatial",
-#'                 "tissue_hires_image.png",
-#'                 package = "STUtility2"))
-#' jsonfiles <-
-#'   c(system.file("extdata/mousebrain/spatial",
-#'                 "scalefactors_json.json",
-#'                 package = "STUtility2"),
-#'     system.file("extdata/mousecolon/spatial",
-#'                 "scalefactors_json.json",
-#'                 package = "STUtility2"))
-#'
-#' # Load lowres/hires image data for two samples
-#' imgFiles <- tibble::tibble(lowres.imagefiles, hires.imagefiles)
-#' imgData <- LoadImageData(imgFiles, jsonfiles)
-#'
-#' # Load lower image data only
-#' imgFiles <- tibble::tibble(lowres.imagefiles)
-#' imgData <- LoadImageData(imgFiles, jsonfiles)
-#' }
-#' @export
+#' @noRd
 LoadImageData <- function (
     images,
     jsonfiles,
@@ -251,7 +220,7 @@ LoadImageData <- function (
 
   # read image data
   if (verbose) cli_alert_info(glue::glue("Reading image data for {nrow(images)} samples."))
-  imgData <- do.call(bind_rows, lapply(1:nrow(images), function(i) {
+  imgData <- do.call(rbind, lapply(1:nrow(images), function(i) {
     png.files <- unlist(images[i, ])
     exts <- file_ext(png.files)
     check <- exts %in% "png"

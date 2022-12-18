@@ -10,7 +10,8 @@ TileImage(
   outpath = NULL,
   maxZoomLevel = 4,
   maxImgWidth = 10000,
-  nCores = detectCores() - 1
+  nCores = detectCores() - 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ If this is not provided, a temporary directory will be created}
 \item{maxImgWidth}{Safety threshold to make sure that the zoom level doesn't get too deep.}
 
 \item{nCores}{Number of cores to use for threading}
+
+\item{verbose}{Print messages}
 }
 \value{
 Path to tiles
@@ -33,10 +36,10 @@ Path to tiles
 \description{
 This function takes an image of class `magick-image` and create a tile
 map. The size of each tile is 256x256 pixels and the number of zoom levels
-are determined rom the
+are determined from the automatically.
 }
 \examples{
-\donttest{
+\dontrun{
 if (!requireNamespace("shiny"))
   install.packages("shiny")
 if (!requireNamespace("leaflet"))

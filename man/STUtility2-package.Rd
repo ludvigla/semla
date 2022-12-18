@@ -8,6 +8,13 @@
 \description{
 STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://ludvigla.github.io/STUtility2/}
+}
+
+}
 \author{
 \strong{Maintainer}: Ludvig Larsson \email{ludvig.larsson@scilifelab.se}
 

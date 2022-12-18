@@ -95,7 +95,7 @@ export_graph <- function (
     left_join(y = st_object@meta_data |>
                 filter(sampleID == sampleID) |>
                 select(barcode, pxl_col_in_fullres, pxl_row_in_fullres) |>
-                rename(name = barcode), by = "name") |>
+                dplyr::rename(name = barcode), by = "name") |>
     mutate(x = scales::rescale(x = pxl_col_in_fullres, to = c(0, 1),
                                from = c(0, st_object@image_info$full_width[sampleID])),
            y = scales::rescale(x = pxl_row_in_fullres, to = c(0, 1),
@@ -120,7 +120,7 @@ export_graph <- function (
                 as_tibble() |>
                 mutate(to = 1:n()) |>
                 select(to, x, y) |>
-                rename(x_end = x, y_end = y),
+                dplyr::rename(x_end = x, y_end = y),
               by = "to") |>
     mutate(index = 1:n())
 
@@ -139,16 +139,18 @@ export_graph <- function (
   data <- list(nodes = nodes, links = links)
 
   # Export
-  if (verbose) cli_alert_info("Exporting spatial network to {file.path(outdir, 'data_Visium.json')}")
+  networkpath <- file.path(outdir, paste0("network_Visium_", sampleID, ".json"))
+  if (verbose) cli_alert_info("Exporting spatial network to {networkpath}")
   data_json <- data |>
     write_json(auto_unbox = TRUE,
-               path = file.path(outdir, "data_Visium.json"))
+               path = networkpath)
   if (verbose) cli_alert_success("Finished!")
 }
 
 #' @noRd
 export_tidygraph <- function (
   network,
+  sampleID = 1,
   outdir
 ) {
 
@@ -180,5 +182,5 @@ export_tidygraph <- function (
   # Export
   data_json <- data |>
     write_json(auto_unbox = TRUE,
-               path = file.path(outdir, "data_Visium.json"))
+               path = file.path(outdir, "network_Visium_", sampleID, ".json"))
 }

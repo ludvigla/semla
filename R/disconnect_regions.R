@@ -281,6 +281,7 @@ DisconnectRegions.Seurat <- function (
 #' @param spatnet A list of tibbles with spot IDs for neighboring spots
 #' generate with \code{\link{GetSpatialNetwork}}.
 #'
+#' @noRd
 .is_disconnected <- function (
     spatnet
 ) {

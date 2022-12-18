@@ -1,31 +1,38 @@
 ---
-title: "Getting started with STUtility2"
-format: html
+title: "Getting started"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    theme:
+      light: flatly
+      dark: darkly
 editor: visual
 ---
 
 ## Introduction
 
-STUtility2 is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data.
+`STUtility2` is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data.
 
 ## Installation
 
-To install STUtility2, run the following command from R:
+To install `STUtility2`, run the following command from R:
 
-```{r}
+```{r eval=FALSE}
 remotes::install_github("ludvigla/STUtility2")
 ```
 
 Load libraries
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(STUtility2)
 library(tibble)
 ```
 
 ## Load data
 
-Currently, STUtility2 only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files output by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object with one sample per row that can be used by `readVisiumData`.
+Currently, `STUtility2` only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files output by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object with one sample per row that can be used by `readVisiumData`.
 
 -   `samples` : file paths to expression matrices
 
@@ -49,7 +56,6 @@ json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
 
 infoTable <- tibble(samples, imgs, spotfiles, json, # Add required columns
                     sample_id = c("mousebrain", "mousecolon")) # Add additional column
-infoTable
 ```
 
 Now we are ready to load the 10x Visium data into a `Seurat` object:
@@ -59,28 +65,21 @@ se <- ReadVisiumData(infoTable)
 se
 ```
 
-Now you can use any Seurat method that doesn't require spatial information. It's important to know that the \`Seurat\` R package stores spatial information (such as H&E images and coordinates) differently that \`STUtility2\`, meaning that \`Seurat\`functions such as \`SpatialFeaturePlot\` and \`FindSpatiallyVariableFeatures\` will not work. \`STUtility2\` comes with it's own suite of tools and methods that you can learn more about in other tutorials.
+You can use most Seurat methods as long as they do not require spatial information. It's important to know that the `Seurat` R package stores spatial information (such as H&E images and coordinates) differently that `STUtility2`, meaning that `Seurat` unctions such as `SpatialFeaturePlot` and `FindSpatiallyVariableFeatures` will not work. `STUtility2` comes with it's own suite of tools and methods that you can learn more about in other tutorials.
+
+If you need to access the spatial data, such as images and coordinates, you can use the `GetStaffli` function on your `Seurat` object.
 
 ```{r}
-fkn <- function(){
-  cli_h1("Heading 1")
-  cli_h2("Heading 2")
-  cli_h3("Heading 3")
-  cli_par()
-  cli_alert_danger("Danger alert")
-  cli_alert_warning("Warning alert")
-  cli_alert_info("Info alert")
-  cli_alert_success("Success alert")
-  cli_alert("Alert for starting a process or computation",
-  class = "alert-start")
-  cli_end()
-  cli_text("Packages and versions: {.pkg cli} {.version 1.0.0}.")
-  cli_text("Time intervals: {.timestamp 3.4s}")
-  cli_text("{.emph Emphasis} and {.strong strong emphasis}")
-  cli_text("This is a piece of code: {.code sum(x) / length(x)}")
-  cli_text("Function names: {.fn cli::simple_theme}")
-  cli_text("Files: {.file /usr/bin/env}")
-  cli_text("URLs: {.url https://r-project.org}")
-}
-fkn()
+spatial_data <- GetStaffli(se)
 ```
+
+The H&E images are only loaded when `LoadImages` is called on the `Seurat` object.
+
+```{r}
+se <- LoadImages(se)
+ImagePlot(se)
+```
+
+This should be enough to get you started with the rest of the tutorials.
+
+NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `STUtility2`. Instead, use the `SubsetSTData` and `MergeSTData` functions.

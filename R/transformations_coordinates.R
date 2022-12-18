@@ -1,8 +1,6 @@
 #' @include extdata.R
-#' @include load_data.R
 #'
 NULL
-
 #' Mirror coordinates
 #'
 #' @details The coordinate system for `xy_coords` should match the dimensions of the
@@ -311,32 +309,31 @@ CoordTransform <- function (
 #' \code{xy_offset_spots} will be set to \code{xy_offset_image} as it is assumed that
 #' the spots are matched with the image.
 #'
+#' @inheritParams CoordTransform
+#'
 #' @importFrom magick image_flop image_flip
 #' @importFrom rlang %||%
-#'
-#' @inheritParams CoordTransform
 #'
 #' @family transforms
 #'
 #' @return A list with two elements:
 #' \itemize{
 #'   \item{"im_transf": An object of class `magick-image` representing the transformed image}
-#'   \item{"xy_transf": An object of class `tble` representing the transformed coordinates}
+#'   \item{"xy_transf": An object of class `tbl` representing the transformed coordinates}
 #' }
 #'
 #' @examples
 #'
+#' library(STUtility2)
 #' library(ggplot2)
 #' library(patchwork)
 #' library(magick)
 #' library(dplyr)
 #'
 #' # get example coordinate file
-#' coordinatefile <- system.file("extdata/mousebrain/spatial",
-#'                               "tissue_positions_list.csv",
+#' coordinatefile <- system.file("extdata",
+#'                               "mousebrain/spatial/tissue_positions_list.csv",
 #'                               package = "STUtility2")
-#'
-#' print( system.file(package = "STUtility2"))
 #'
 #' # Load coordinates
 #' xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)

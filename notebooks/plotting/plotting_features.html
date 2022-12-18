@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.649">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Mapping features spatially with STUtility2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="plotting_features_files/libs/clipboard/clipboard.min.js"></script>
+<script src="plotting_features_files/libs/quarto-html/quarto.js"></script>
+<script src="plotting_features_files/libs/quarto-html/popper.min.js"></script>
+<script src="plotting_features_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="plotting_features_files/libs/quarto-html/anchor.min.js"></script>
+<link href="plotting_features_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="plotting_features_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="plotting_features_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="plotting_features_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="plotting_features_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="plotting_features_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme">
+<link href="plotting_features_files/libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load data</a></li>
+  <li><a href="#a-note-about-features" id="toc-a-note-about-features" class="nav-link" data-scroll-target="#a-note-about-features">A note about features</a></li>
+  <li><a href="#map-numeric-features" id="toc-map-numeric-features" class="nav-link" data-scroll-target="#map-numeric-features">Map numeric features</a>
+  <ul class="collapse">
+  <li><a href="#overlay-maps-on-images" id="toc-overlay-maps-on-images" class="nav-link" data-scroll-target="#overlay-maps-on-images">Overlay maps on images</a></li>
+  <li><a href="#transpose-patchwork-layout" id="toc-transpose-patchwork-layout" class="nav-link" data-scroll-target="#transpose-patchwork-layout">Transpose patchwork layout</a></li>
+  <li><a href="#independent-color-bars" id="toc-independent-color-bars" class="nav-link" data-scroll-target="#independent-color-bars">Independent color bars</a></li>
+  <li><a href="#fit-plot-area-to-spots" id="toc-fit-plot-area-to-spots" class="nav-link" data-scroll-target="#fit-plot-area-to-spots">Fit plot area to spots</a></li>
+  <li><a href="#controlling-themes" id="toc-controlling-themes" class="nav-link" data-scroll-target="#controlling-themes">Controlling themes</a></li>
+  <li><a href="#collect-color-bars" id="toc-collect-color-bars" class="nav-link" data-scroll-target="#collect-color-bars">Collect color bars</a></li>
+  <li><a href="#remove-plot-margins" id="toc-remove-plot-margins" class="nav-link" data-scroll-target="#remove-plot-margins">Remove plot margins</a></li>
+  <li><a href="#crop" id="toc-crop" class="nav-link" data-scroll-target="#crop">Crop</a></li>
+  <li><a href="#increase-resolution" id="toc-increase-resolution" class="nav-link" data-scroll-target="#increase-resolution">Increase resolution</a></li>
+  </ul></li>
+  <li><a href="#map-categorical-features" id="toc-map-categorical-features" class="nav-link" data-scroll-target="#map-categorical-features">Map categorical features</a>
+  <ul class="collapse">
+  <li><a href="#order-of-categories" id="toc-order-of-categories" class="nav-link" data-scroll-target="#order-of-categories">Order of categories</a></li>
+  <li><a href="#colors" id="toc-colors" class="nav-link" data-scroll-target="#colors">Colors</a></li>
+  <li><a href="#map-clusters" id="toc-map-clusters" class="nav-link" data-scroll-target="#map-clusters">Map clusters</a></li>
+  <li><a href="#format-legend" id="toc-format-legend" class="nav-link" data-scroll-target="#format-legend">Format legend</a></li>
+  <li><a href="#overlay-maps-on-images-1" id="toc-overlay-maps-on-images-1" class="nav-link" data-scroll-target="#overlay-maps-on-images-1">Overlay maps on images</a></li>
+  <li><a href="#split-labels" id="toc-split-labels" class="nav-link" data-scroll-target="#split-labels">Split labels</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mapping features spatially with STUtility2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this notebook, we’ll have a look at different ways of creating spatial plots with <code>STUtility2</code>. Functions such as <code>MapFeatures</code> and <code>MapLabels</code> produce patchworks (see R package <a href="https://patchwork.data-imaginist.com/">patchwork</a>) which are easy to manipulate after they have been created. The <code>patchwork</code> R package is extremely versatile and makes it easy to customize your figures! Here we’ll have a look at some options that comes with <code>MapFeatures</code> and <code>MapLabels</code> a couple of tips and tricks for how to use the <code>patchwork</code> R package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(STUtility2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scico)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load data</h2>
+<p>First we need to load some 10x Visium data. here we’ll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with <code>STUtility2</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>se_mbrain <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"mousebrain/se_mbrain"</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">package =</span> <span class="st">"STUtility2"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>se_mbrain<span class="sc">$</span>sample_id <span class="ot">&lt;-</span> <span class="st">"mousebrain"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>se_mcolon <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"mousecolon/se_mcolon"</span>, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">package =</span> <span class="st">"STUtility2"</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>se_mcolon<span class="sc">$</span>sample_id <span class="ot">&lt;-</span> <span class="st">"mousecolon"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">MergeSTData</span>(se_mbrain, se_mcolon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="a-note-about-features" class="level2">
+<h2 class="anchored" data-anchor-id="a-note-about-features">A note about features</h2>
+<p>We can use the functions <code>MapFeatures</code> and <code>MapLabels</code> to make spatial plots showing the distribution of numeric or categorical features. For those who are familiar with <code>Seurat</code>, these functions are similar to <code>SpatialFeaturePlot</code> and <code>SpatialDimPlot</code> in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.</p>
+</section>
+<section id="map-numeric-features" class="level2">
+<h2 class="anchored" data-anchor-id="map-numeric-features">Map numeric features</h2>
+<p>Let’s get started with <code>MapFeatures</code>. The most basic usage is to map gene expression spatially:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"Spectral"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">colors =</span> cols)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can also use the function <code>MapFeaturesSummary</code> to add a subplot next to the spatial plot summarizing the gene expression in the section using either a box plot, a violin plot, a histogram, or a density plot.</p>
+<p>This function only takes one gene at the time, but you can patch two plots together manually if desired.</p>
+<div class="cell" data-fig.asp="0.6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeaturesSummary</span>(se, </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">features =</span> <span class="st">"Clu"</span>, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">subplot_type =</span> <span class="st">"violin"</span>, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colors =</span> cols)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in regularize.values(x, y, ties, missing(ties), na.rm = na.rm):
+collapsing to unique 'x' values</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-fig.asp="0.6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeaturesSummary</span>(se,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">section_number =</span> <span class="dv">1</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">features =</span> <span class="st">"Clu"</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">subplot_type =</span> <span class="st">"box"</span>, </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">colors =</span> cols)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeaturesSummary</span>(se,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">section_number =</span> <span class="dv">1</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">features =</span> <span class="st">"Clu"</span>, </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">subplot_type =</span> <span class="st">"density"</span>, </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">colors =</span> cols)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>p1<span class="sc">|</span>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="overlay-maps-on-images" class="level3">
+<h3 class="anchored" data-anchor-id="overlay-maps-on-images">Overlay maps on images</h3>
+<p>If we want to create a map with the H&amp;E images we can do this by setting <code>image_use = raw</code>. But before we can do this, we need to load the images into our <em>Seurat</em> object:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(se, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">colors =</span> cols)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Right now it’s quite difficult to see the tissue underneath the spots. We can add some opacity to the colors which is scaled by the feature values to make spots with low expression transparent:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">colors =</span> cols, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="transpose-patchwork-layout" class="level3">
+<h3 class="anchored" data-anchor-id="transpose-patchwork-layout">Transpose patchwork layout</h3>
+<p>By default, <code>MapFeatures</code> arranges features in columns and samples in rows. We can transpose the plot by setting <code>arrange_features</code> to “row”:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"row"</span>, <span class="at">color =</span> cols)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="independent-color-bars" class="level3">
+<h3 class="anchored" data-anchor-id="independent-color-bars">Independent color bars</h3>
+<p>The color bars are now identical for each feature. <code>MapFeatures</code> calculates the range for each feature and uses this range to determine the limits of the color bars. If you want to change this behavior to scale the values independently, you can set <code>scale = "free"</code>:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">scale =</span> <span class="st">"free"</span>, <span class="at">colors =</span> cols)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="fit-plot-area-to-spots" class="level3">
+<h3 class="anchored" data-anchor-id="fit-plot-area-to-spots">Fit plot area to spots</h3>
+<p><code>MapFeatures</code> used the image dimensions to define the plot area dimensions. Sometimes, if you have a very small piece of tissue, you will end up with a lot of white space. You can override this behavior by setting <code>override_plot_dims = TRUE</code> which will make <code>MapFeatures</code> compute the dimensions based on your coordinates. Notice how the tissues are expanded:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> cols)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="controlling-themes" class="level3">
+<h3 class="anchored" data-anchor-id="controlling-themes">Controlling themes</h3>
+<p>Themes can be modified by adding a new ggplot theme using the <code>&amp;</code> operator. This operator will make sure that the theme is added to each subplot in our patchwork. As an example, let’s say that we want to place the legends on the right side of our plots instead:</p>
+<div class="cell" data-fig.asp="0.9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">color =</span> cols) <span class="sc">&amp;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can also remove the color legends entirely:</p>
+<div class="cell" data-fig.asp="1.1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">colors =</span> cols) <span class="sc">&amp;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Or remove everything except the spatial feature map:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">colors =</span> cols) <span class="sc">&amp;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="collect-color-bars" class="level3">
+<h3 class="anchored" data-anchor-id="collect-color-bars">Collect color bars</h3>
+<p>If we don’t want to have the same color bar next to each tissue section, we can collect identical color bars and place them on the side. We can use <code>plot_layout(guides = "collect")</code> to modify this. Note that if we want to place the color bar on the right side of the plots, we need to set <code>arrange_features = "row"</code>` and adjust the legend position:</p>
+<div class="cell" data-fig.asp="0.9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"row"</span>, <span class="at">colors =</span> cols) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This already looks quite good, but the color bars are a bit misplaced. We can adjust their placement by modifying the legend margins:</p>
+<div class="cell" data-fig.asp="0.9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"row"</span>, <span class="at">color =</span> cols) <span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">50</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">100</span>, <span class="at">l =</span> <span class="dv">0</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="do-not-do-this" class="level4">
+<h4 class="anchored" data-anchor-id="do-not-do-this">Do not do this</h4>
+<p>If we set <code>scale = "free"</code>, the color bars are no longer unique and it doesn’t make sense to collect the color bars anymore:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"row"</span>, </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">scale =</span> <span class="st">"free"</span>, <span class="at">colors =</span> cols) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">50</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">100</span>, <span class="at">l =</span> <span class="dv">0</span>))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="do-not-do-this-either" class="level4">
+<h4 class="anchored" data-anchor-id="do-not-do-this-either">Do not do this either</h4>
+<p>If we set <code>arrange_features = "col"</code>, the placement of the color bar will not make sense in this case either. The color bars are now located on the right side, but the features are arranged by row:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"col"</span>, <span class="at">colors =</span> cols) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">50</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">100</span>, <span class="at">l =</span> <span class="dv">0</span>))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Instead, if we want to arrange features by columns, it would make more sense to place the color bars on top of each column and adjust the legend margins accordingly:</p>
+<div class="cell" data-fig.asp="1.1">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">arrange_features =</span> <span class="st">"col"</span>, <span class="at">color =</span> cols) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">0</span>, <span class="at">r =</span> <span class="dv">100</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">10</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="remove-plot-margins" class="level3">
+<h3 class="anchored" data-anchor-id="remove-plot-margins">Remove plot margins</h3>
+<p>If you still think that there’s too much empty space around the tissues in the patchwork, you try setting <code>override_plot_dims = TRUE</code> which will crop the plot area to only fit the spots:</p>
+<div class="cell" data-fig.asp="1.1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> cols)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="crop" class="level3">
+<h3 class="anchored" data-anchor-id="crop">Crop</h3>
+<p>H&amp;E images will also be cropped to fit the new plot dimensions if <code>override_plot_dims = TRUE</code>. This can be particularly useful when working with small tissue sections that only cover a small portion of the 10x Visium capture area.</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> cols)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note that the plots dimensions are calculated for the entire dataset when <code>override_plot_dims = TRUE</code>.</p>
+<p>If the tissue sections are placed in very different part of the capture area, the resulting “crop” window might not be what you are looking for. If you want to avoid this behavior, it is better to make two separate plots. Notice the difference in the plot below compared to the previous plot. The previous plot had some empty space outside of the tissue.</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> cols, <span class="at">section_number =</span> <span class="dv">1</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> cols, <span class="at">section_number =</span> <span class="dv">2</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">/</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can also crop the images manually by defining a <code>crop_area</code>. The <code>crop_area</code> should be a vector of length four defining the corners of a rectangle, where the x- and y-axes are defined from 0-1.</p>
+<p>In order to decide how this rectangle should be defined, you can get some help by adding a grid to the plot:</p>
+<div class="cell" data-fig.asp="1.2">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Th"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> cols, <span class="at">pt_alpha =</span> <span class="fl">0.5</span>) <span class="sc">&amp;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">linetype =</span> <span class="st">"dashed"</span>), <span class="at">axis.text =</span> <span class="fu">element_text</span>())</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now if we want to crop out the GALT tissue in the mouse colon sample we can cut the image at left=0.45, bottom=0.55, right=0.65, top=0.7:</p>
+<div class="cell" data-fig.asp="0.5">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Cd79a"</span>, <span class="st">"Clu"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">pt_size =</span> <span class="dv">3</span>, <span class="at">section_number =</span> <span class="dv">2</span>, </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> cols, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.7</span>))</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>And we can patch together a nice figure showing the expression both at a global level and inside the GALT:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>p_global <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Cd79a"</span>, <span class="st">"Clu"</span>), </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pt_size =</span> <span class="dv">1</span>, <span class="at">section_number =</span> <span class="dv">2</span>, <span class="at">color =</span> cols, </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>p_GALT <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Cd79a"</span>, <span class="st">"Clu"</span>), </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">pt_size =</span> <span class="dv">3</span>, <span class="at">section_number =</span> <span class="dv">2</span>, </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> cols, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.7</span>)) <span class="sc">&amp;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>(p_global <span class="sc">/</span> p_GALT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="increase-resolution" class="level3">
+<h3 class="anchored" data-anchor-id="increase-resolution">Increase resolution</h3>
+<p>Right now, you can see that the resolution of zoomed in image is quite low. The reason for this is that the images were loaded to have a height of 400 pixels which is the default setting for <code>LoadImages</code>. If you want to, you can reload the images in higher resolution given that you provided higher resolution images as input. For example, if you used the “tissue_hires_image.png” files as input for <code>ReadVisiumData</code>, these images are roughly 2000x2000 pixels in size, so you can reload the images in higher resolution. If we run <code>LoadImages</code> again and set <code>image_height = 1000</code> we should be able to view the H%&amp;E images in slightly higher resolution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>se_high_res <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(se, <span class="at">image_height =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Load H&amp;E images ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/STUtility2/extdata/mousebrain/spatial/tissue_hires_image.png</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Scaled image from 2000x1882 to 1000x941 pixels</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/STUtility2/extdata/mousecolon/spatial/tissue_hires_image.png</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Scaled image from 1804x2000 to 1000x1109 pixels</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Saving loaded H&amp;E images as 'rasters' in Seurat object</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check object sizes</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">object.size</span>(se), <span class="at">units =</span> <span class="st">"MB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>15.7 Mb</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">object.size</span>(se_high_res), <span class="at">units =</span> <span class="st">"MB"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>37.7 Mb</code></pre>
+</div>
+</div>
+<p>Note that these higher resolution images will take up more space and might slow down the plotting considerably.</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p_global <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se_high_res, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Cd79a"</span>, <span class="st">"Clu"</span>), </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">pt_size =</span> <span class="dv">1</span>, <span class="at">section_number =</span> <span class="dv">2</span>, <span class="at">color =</span> cols, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>p_GALT <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(se_high_res, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"Cd79a"</span>, <span class="st">"Clu"</span>), </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">pt_size =</span> <span class="dv">3</span>, <span class="at">section_number =</span> <span class="dv">2</span>, </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">color =</span> cols, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.7</span>)) <span class="sc">&amp;</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>(p_global <span class="sc">/</span> p_GALT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="map-categorical-features" class="level2">
+<h2 class="anchored" data-anchor-id="map-categorical-features">Map categorical features</h2>
+<p>For categorical data, we use <code>MapLabels</code> instead of <code>MapFeatures</code>. This function allows us to color our spots based on some column of our Seurat object containing categorical data.</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"sample_id"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">&amp;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="order-of-categories" class="level3">
+<h3 class="anchored" data-anchor-id="order-of-categories">Order of categories</h3>
+<p>Categorical data can be represented as character vectors or factors, but with factors it’s easier to control the order of the labels as well as their colors. If we want to customize the order, we can convert our column into a factor and set the levels as we please:</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>sample_id_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(se<span class="sc">$</span>sample_id, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"mousecolon"</span>, <span class="st">"mousebrain"</span>))</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"sample_id_factor"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">&amp;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="colors" class="level3">
+<h3 class="anchored" data-anchor-id="colors">Colors</h3>
+<p>If we pass a named vector of colors we can control the coloring of our labels:</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"sample_id_factor"</span>, <span class="at">ncol =</span> <span class="dv">1</span>,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"mousecolon"</span> <span class="ot">=</span> <span class="st">"#4477AA"</span>, <span class="st">"mousebrain"</span> <span class="ot">=</span> <span class="st">"#CC6677"</span>)) <span class="sc">&amp;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Let’s run unsupervised clustering on our data to get slightly more interesting results to work with.</p>
+<p>NB: It doesn’t make much sense to run data-driven clustering on two completely different tissue types, but here we are only interested in demonstrating how you can use <code>MapLabels</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> se <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ScaleData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunPCA</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindNeighbors</span>(<span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindClusters</span>(<span class="at">resolution =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 5164
+Number of edges: 170850
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.9210
+Number of communities: 5
+Elapsed time: 0 seconds</code></pre>
+</div>
+</div>
+</section>
+<section id="map-clusters" class="level3">
+<h3 class="anchored" data-anchor-id="map-clusters">Map clusters</h3>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">&amp;</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="format-legend" class="level3">
+<h3 class="anchored" data-anchor-id="format-legend">Format legend</h3>
+<section id="point-size" class="level4">
+<h4 class="anchored" data-anchor-id="point-size">Point size</h4>
+<p>If you want to increase the size of the spots in the color legend, you can override the <code>fill</code> aesthetic that controls the appearance of the points without changing the size of the points in the plot. We can do this by using <code>guides(fill = guide_legend(override.aes = list(size = ...)))</code>:</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">&amp;</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>))) <span class="sc">&amp;</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="legend-arrangement" class="level4">
+<h4 class="anchored" data-anchor-id="legend-arrangement">Legend arrangement</h4>
+<p>Another useful option is to adjust the arrangement of the color legend. For example, if you have a lot of different categories, it might be easier to read the labels if they are arranged in multiple columns:</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">&amp;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">&amp;</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="collect-legends" class="level4">
+<h4 class="anchored" data-anchor-id="collect-legends">Collect legends</h4>
+<p>Since all sub plots share the same color legends, we can collect them and place them on the side of the plot:</p>
+<div class="cell" data-fig.asp="1.33">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">&amp;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="overlay-maps-on-images-1" class="level3">
+<h3 class="anchored" data-anchor-id="overlay-maps-on-images-1">Overlay maps on images</h3>
+<p>And just as with <code>MapFeatures</code>, we can add our H&amp;E images to the plots:</p>
+<div class="cell" data-fig.asp="0.4">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">3</span>), <span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">&amp;</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="split-labels" class="level3">
+<h3 class="anchored" data-anchor-id="split-labels">Split labels</h3>
+<p>Sometimes it can get cluttered in the plot and difficult to see where each cluster is located in the tissue, especially when there are many clusters and some of them have very similar colors. In this case, <code>MapLabels</code> can split the data into separate panels, one for each label:</p>
+<div class="cell" data-fig.asp="0.9">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">split_labels =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: No section_number selected. Selecting section 1.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When you split data, you can only do it for one section which is why a warning is thrown and the first available section is selected. If you want to use a different section, you can specify which one to use with <code>section_number</code>:</p>
+<div class="cell" data-fig.asp="1.3">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">split_labels =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">section_number =</span> <span class="dv">2</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="remove-background" class="level4">
+<h4 class="anchored" data-anchor-id="remove-background">Remove background</h4>
+<p>When mapping categorical features in split view it might be more useful to see the underlying image. If you set <code>drop_na = TRUE</code>, the background spots will be removed:</p>
+<div class="cell" data-fig.asp="1">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">split_labels =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>) <span class="sc">&amp;</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: No section_number selected. Selecting section 1.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="plotting_features_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+    } else {
+      disableStylesheet(alternateStylesheets);
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } 
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -433,6 +433,7 @@ RadialDistance.Seurat <- function (
 #' @importFrom rlang warn abort %||%
 #' @importFrom stats median
 #'
+#' @noRd
 .check_angles <- function (
   spatnet,
   coords,

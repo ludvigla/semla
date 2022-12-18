@@ -2,7 +2,7 @@
 #'
 #' This function takes an image of class `magick-image` and create a tile
 #' map. The size of each tile is 256x256 pixels and the number of zoom levels
-#' are determined rom the
+#' are determined from the automatically.
 #'
 #' @param im An image of class `magick-image`
 #' @param sampleID The section number to use. This number will be appended to the output files names
@@ -11,16 +11,18 @@
 #' @param maxZoomLevel Max zoom level
 #' @param maxImgWidth Safety threshold to make sure that the zoom level doesn't get too deep.
 #' @param nCores Number of cores to use for threading
+#' @param verbose Print messages
 #'
 #' @importFrom parallel detectCores mclapply
 #' @importFrom magick image_read image_info image_crop image_scale image_blank image_composite image_transparent image_write
 #' @importFrom tibble tibble
 #' @importFrom rlang %||%
+#' @import cli
 #'
 #' @return Path to tiles
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' if (!requireNamespace("shiny"))
 #'   install.packages("shiny")
 #' if (!requireNamespace("leaflet"))
@@ -66,7 +68,8 @@ TileImage <- function (
     outpath = NULL,
     maxZoomLevel = 4,
     maxImgWidth = 1e4,
-    nCores = detectCores() - 1
+    nCores = detectCores() - 1,
+    verbose = TRUE
 ) {
 
   # Validate input
@@ -79,25 +82,28 @@ TileImage <- function (
 
   # Define max Zoom level
   info <- image_info(im)
+  if (verbose) cli_alert_info("Got an image of dimensions {info$height}x{info$width} for sample {sampleID}")
   nLevels <- floor(max(log2(ceiling(info$width/256)), log2(ceiling(info$height/256)))):0
   scaled_dims <- tibble(scaled_widths = info$width/(2^nLevels),
                         scaled_heigths = info$width/(2^nLevels))
   lower_limit <- apply(scaled_dims, 1, max) > 256
   upper_limit <- apply(scaled_dims, 1, max) < maxImgWidth
   nLevels <- nLevels[lower_limit & upper_limit]
+  if (verbose) cli_alert("  Tiling image into {length(nLevels)} zoom levels")
 
   # Create output path
   outpath <- outpath %||% tempdir()
   outpath_data <- paste0(outpath, "/osd_data")
-  dir.create(outpath_data)
+  dir.create(outpath_data, showWarnings = FALSE)
   outpath_tiles <- paste0(outpath_data, paste0("/tiles", sampleID))
-  dir.create(outpath_tiles)
+  dir.create(outpath_tiles, showWarnings = FALSE)
 
   # Zoom levels
   tiles <- list()
+  if (verbose) cli_alert("  Creating tiles")
   for (n in seq_along(nLevels)) {
 
-    dir.create(paste0(outpath_tiles, "/", n))
+    dir.create(paste0(outpath_tiles, "/", n), showWarnings = FALSE)
 
     if (nLevels[n] > 0) {
       im_scaled <- image_scale(im, geometry = paste0(info$width/(2^nLevels[n])))
@@ -142,11 +148,13 @@ TileImage <- function (
   }
 
   # Export tiles
+  if (verbose) cli_alert("  Exporting tiles")
   results <- mclapply(names(tiles), function(tileName) {
     image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
   }, mc.cores = nCores)
 
   # Export data as JSON
+  if (verbose) cli_alert("  Exporting meta data")
   d <- list(tilepath = outpath_tiles,
        minZoomLevel = ifelse(length(nLevels) > 1,
                              nLevels[length(nLevels)] + 1, 1),

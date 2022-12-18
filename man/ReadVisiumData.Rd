@@ -87,7 +87,6 @@ se
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
-\code{\link{LoadImageData}()},
 \code{\link{LoadSpatialCoordinates}()}
 }
 \concept{pre-process}

@@ -2,23 +2,24 @@
 #'
 NULL
 
-#' Merge and subset 10x Visium data
+#' Merge 10x Visium data
 #'
 #' Merges two or more Seurat objects containing SRT data while making sure that the
-#' images and spot coordinates are correctly structured.
-#' If you use the default \code{\link{merge}} function you will not be able
-#' to use any of the STUtility2 visualization methods on the output object as
+#' spatial data (images and spot coordinates) are handled correctly.
+#'
+#' NB: If you use the generic \code{\link{merge}} function you will not be able
+#' to use any of the `STUtility2` visualization methods on the output object as
 #' the `Staffli` object will be broken.
 #'
-#' @param x A Seurat object
-#' @param y A Seurat object or a list of Seurat objects
-#' @param merge.data Merge the data slots instead of just merging the counts
+#' @param x A `Seurat` object
+#' @param y A `Seurat` object or a list of `Seurat` objects
+#' @param merge_data Merge the data slots instead of just merging the counts
 #' (which requires re-normalization); this is recommended if the same normalization
 #' approach was applied to all objects. See \code{\link{merge}} for details.
-#' @param merge.dr Merge specified DimReducs that are present in all objects; will
+#' @param merge_dr Merge specified DimReducs that are present in all objects; will
 #' only merge the embeddings slots for the first N dimensions that are shared across
 #' all objects. See \code{\link{merge}} for details.
-#' @param project \code{\link{Project}} name for the Seurat object
+#' @param project \code{\link{Project}} name for the `Seurat` object
 #'
 #' @importFrom dplyr select mutate group_split ungroup cur_group_id group_by bind_rows
 #' @importFrom tibble as_tibble
@@ -26,50 +27,36 @@ NULL
 #' @importFrom Seurat RenameCells
 #' @importFrom rlang warn
 #'
-#' @return A merged Seurat object
+#' @return A merged `Seurat` object
 #'
-#' @rdname subset-and-merge
+#' @family subset-and-merge
+#' @rdname merge
 #'
 #' @examples
-#' \dontrun{
-#' samples <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/tissue_positions_list.csv"))
-#' json <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/scalefactors_json.json"))
+#' se_mbrain <- readRDS(system.file("extdata",
+#'                                  "mousebrain/se_mbrain",
+#'                                  package = "STUtility2"))
+#' se_mcolon <- readRDS(system.file("extdata",
+#'                                  "mousecolon/se_mcolon",
+#'                                  package = "STUtility2"))
 #'
-#' # Create a tibble/data.frame with file paths
-#' library(tibble)
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
-#'
-#' # Create Seurat object and load H&E images
-#' se.list <- lapply(1:nrow(infoTable), function(i) {
-#'   ReadVisiumData(infoTable = infoTable[i, ]) |> LoadImages()
-#' })
-#' se.list
+#' se_mbrain
+#' se_mcolon
 #'
 #' # Merge a mousebrain dataset with two mousecolon datasets
-#' se.merged <- MergeSTData(x = se.list[[1]], y = c(se.list[2], se.list[2]))
-#' se.merged
+#' se_merged <- MergeSTData(x = se_mbrain, y = se_mcolon)
+#' se_merged
 #'
 #' # Plot H&E images
-#' ImagePlot(se.merged)
-#' }
+#' ImagePlot(se_merged |> LoadImages(verbose = FALSE))
 #'
 #' @export
 #'
 MergeSTData <- function (
     x,
     y,
-    merge.data = TRUE,
-    merge.dr = NULL,
+    merge_data = TRUE,
+    merge_dr = NULL,
     project = "SeuratProject"
 ) {
 
@@ -130,8 +117,8 @@ MergeSTData <- function (
     merge(
       x = se_objects[[1]],
       y = se_objects[2:length(se_objects)],
-      merge.data = merge.data,
-      merge.dr = merge.dr,
+      merge.data = merge_data,
+      merge.dr = merge_dr,
       project = project
     )
 
@@ -208,12 +195,15 @@ MergeSTData <- function (
 }
 
 
-#' Subset a Seurat object containing SRT data while making sure that the
-#' images and spot coordinates are correctly structured.
-#' If you use the default \code{\link{subset}} function you will not be able
-#' to use any of the STUtility2 visualization methods on the output object as
-#' the `Staffli` object will be broken. This is however not the case if the
-#' filtering is only done at the feature level.
+#' Subset 10x Visium data
+#'
+#' Subset a `Seurat` object while making sure that the spatial data
+#' (images and spot coordinates) are handled correctly.
+#'
+#' If you use the default \code{\link{subset}} function you will most likely not be able
+#' to use any of the `STUtility2` visualization methods on the output object as
+#' the `Staffli` object will be broken. The exception is when filtering is only
+#' done at the feature level.
 #'
 #' @param object A Seurat object
 #' @param expression Logical expression indicating features/variables to keep
@@ -228,43 +218,28 @@ MergeSTData <- function (
 #'
 #' @return A filtered Seurat object
 #'
-#' @rdname subset-and-merge
+#' @family subset-and-merge
+#' @rdname subset
 #'
 #' @examples
-#' \dontrun{
-#' samples <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/filtered_feature_bc_matrix.h5"))
-#' imgs <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/tissue_hires_image.png"))
-#' spotfiles <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/tissue_positions_list.csv"))
-#' json <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/scalefactors_json.json"))
 #'
-#' # Create a tibble/data.frame with file paths
-#' library(tibble)
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#' se_mbrain <- readRDS(system.file("extdata", "mousebrain/se_mbrain", package = "STUtility2"))
 #'
 #' # Create Seurat object
-#' se <- ReadVisiumData(infoTable = infoTable) |> LoadImages()
-#' se
+#' se_mbrain <- se_mbrain |> LoadImages()
+#' se_mbrain
 #'
 #' # Subset by spot IDs (first 100)
-#' se.fewspots <- SubsetSTData(se, spots = colnames(se)[1:100])
-#' se.fewspots
+#' se_fewspots <- SubsetSTData(se_mbrain, spots = colnames(se_mbrain)[1:1000])
+#' se_fewspots
 #'
-#' # Subset by feature IDs (first 1000)
-#' se.fewgenes <- SubsetSTData(se, features = rownames(se)[1:1000])
-#' se.fewgenes
+#' # Subset by feature IDs (first 50)
+#' se_fewgenes <- SubsetSTData(se_mbrain, features = rownames(se_mbrain)[1:50])
+#' se_fewgenes
 #'
-#' # Subset by expression
-#' se.filtered <- SubsetSTData(se, expression = nFeature_Spatial > 1e3)
-#' se.filtered
-#' }
+#' # Subset using an expression
+#' se_filtered <- SubsetSTData(se_mbrain, expression = nFeature_Spatial > 20)
+#' se_filtered
 #'
 #' @export
 #'

@@ -31,6 +31,7 @@ be assigned with 0 expression.
 \examples{
 
 library(STUtility2)
+
 # Load and merge coordinates from two samples
 coordinatefiles <-
   c(system.file("extdata/mousebrain/spatial",
@@ -45,7 +46,6 @@ coordinates <- LoadSpatialCoordinates(coordinatefiles)
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
-\code{\link{LoadImageData}()},
 \code{\link{ReadVisiumData}()}
 }
 \concept{pre-process}

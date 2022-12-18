@@ -33,14 +33,24 @@ Defaults to localhost "127.0.0.1"}
 \item{container_width, container_height}{Set height and width of container}
 
 \item{verbose}{Print messages}
-
-\item{overwrite_network_json}{Logical specifying if the JSON file
-containing the spatial network should be overwritten after completion}
+}
+\value{
+A `Seurat` object
 }
 \description{
+`FeatureViewer` opens up an interactive shiny application where
+one can zoom and pan the H&E image while overlaying and color selected features.
+It is also possible to add new categorical features or modify existing
+categorical features using a lasso tool.
+}
+\details{
+The viewer requires a tiled H&E image along with some additional image data to work.
+
 A more detailed tutorial can be found on the `STUtility2` website.
 }
 \seealso{
+TileImage
+
 Other spatial-visualization: 
 \code{\link{AnglePlot}()},
 \code{\link{ImagePlot}()},
