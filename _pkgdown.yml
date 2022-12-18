@@ -1,0 +1,14 @@
+url: https://ludvigla.github.io/STUtility2/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+  components:
+    tutorials:
+      text: Tutorials
+      menu:
+        - text: Getting started
+          href: ../notebooks/getting_started/getting_started.html
