@@ -57,14 +57,15 @@ Suggests:
     htmltools,
     RcppML,
     beakr,
-    colourpicker
+    colourpicker,
+    fs
 Collate: 
     'STUtility2-package.R'
     'checks.R'
     'generics.R'
     'cell_type_prediction.R'
-    'digital_unroll.R'
-    'digital_unroll_utils.R'
+    'cut_spatial_network.R'
+    'cut_spatial_network_utils.R'
     'spatial_utils.R'
     'disconnect_regions.R'
     'extdata.R'
@@ -93,3 +94,4 @@ Collate:
     'visualization_spatial_stats.R'
     'visualization_spatial_viewer.R'
     'zzz.R'
+URL: https://ludvigla.github.io/STUtility2/
