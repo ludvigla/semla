@@ -1,8 +1,14 @@
 ---
 title: "Get started"
-author: "Ludvig Larsson"
-date: "2022-12-20"
-output: html_document
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    embed-resources: true
+    theme:
+      light: flatly
+      dark: darkly
+editor: visual
 ---
 
 ```{r setup, include=FALSE}

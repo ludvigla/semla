@@ -29,7 +29,7 @@ navbar:
       - text: Images and spot coordinates
         href: articles/images_and_coordinates.html
       - text: Spatial visualization
-        href: articles/ploting_features.html
+        href: articles/plotting_features.html
       - text: -------
       - text: Analysis
       - text: Spatial methods
