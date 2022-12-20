@@ -67,7 +67,7 @@ MapFeatures <- function(object, ...) {
 }
 
 
-#' Map categoircal features
+#' Map categorical features
 #'
 #' \code{MapLabels} colors spots based on the values of a categorical feature.
 #'

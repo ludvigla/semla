@@ -32,8 +32,8 @@ NULL
 #' @import cli
 #' @importFrom shiny h2
 #'
-#' @rdname digital-unroll
 #' @family spatial-methods
+#' @seealso export_graph
 #'
 #' @author Ludvig Larsson
 #'
@@ -242,7 +242,7 @@ CutSpatialNetwork <- function (
 #' @param elementId The element id of the widget
 #' @param quit A logical specifying is the app should quit
 #'
-#' @noRd
+#' @export
 osddu <- function (
     sampleID = 1,
     host = "127.0.0.1",

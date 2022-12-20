@@ -219,7 +219,7 @@ RunAlignment.Seurat <- function (
 #' @param height height of component
 #' @param elementId Component element ID
 #'
-#' @noRd
+#' @export
 paper <- function (
     data,
     width = NULL,

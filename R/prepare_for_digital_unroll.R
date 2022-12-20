@@ -22,7 +22,7 @@ NULL
 #' @importFrom tidyr pivot_wider
 #' @importFrom jsonlite write_json
 #'
-#' @rdname digital-unroll
+#' @seealso CutSpatialNetwork
 #'
 #' @export
 #'

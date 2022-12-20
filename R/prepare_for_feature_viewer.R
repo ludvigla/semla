@@ -25,51 +25,51 @@ NULL
 #'
 export_coordinates <- function (
     object,
-    sampleID = 1L,
+    sampleNumber = 1L,
     outdir,
     verbose = TRUE
 ) {
 
   # Set global variables to NULL
-  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- sampleID <- NULL
 
   # Check Seurat object
   .check_seurat_object(object)
 
   # Check input parameters
   stopifnot(
-    inherits(sampleID, what = c("numeric", "integer")),
-    length(sampleID) == 1,
+    inherits(sampleNumber, what = c("numeric", "integer")),
+    length(sampleNumber) == 1,
     inherits(outdir, what = "character"),
     dir.exists(outdir)
   )
 
   # Create spatial network
-  if (verbose) cli_alert_info("Fetching coordinates for sample {sampleID}")
+  if (verbose) cli_alert_info("Fetching coordinates for sample {sampleNumber}")
   spatial_coords <- GetStaffli(object)@meta_data |>
-    filter(sampleID == sampleID) |>
+    filter(sampleID == sampleNumber) |>
     select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
 
   # Rescale coordinates
   image_info <- GetStaffli(object)@image_info |>
-    filter(sampleID == sampleID)
+    filter(sampleID == sampleNumber)
+  max_imwidth <- image_info[image_info$sampleID == sampleNumber, ]$full_width
   spatial_coords <- spatial_coords |>
     mutate(x = pxl_col_in_fullres, y = pxl_row_in_fullres) |>
     select(-pxl_col_in_fullres, -pxl_row_in_fullres) |>
     mutate(across(x, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, image_info$full_width)))) |>
+                                       from = c(0, max_imwidth)))) |>
     mutate(across(y, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, image_info$full_width)))) |>
+                                       from = c(0, max_imwidth)))) |>
     mutate(index = 1:n())
 
   # Put nodes and edges into a list
   data <- list(nodes = spatial_coords)
 
   # Export
-  outpath <- file.path(outdir, paste0('coords_Visium_', sampleID, '.json'))
-  if (verbose) cli_alert_info("Exporting Visium coordinates to <DATADIR>/{paste0('coords_Visium_', sampleID, '.json')}")
+  outpath <- file.path(outdir, paste0('coords_Visium_', sampleNumber, '.json'))
+  if (verbose) cli_alert_info("Exporting Visium coordinates to <DATADIR>/{paste0('coords_Visium_', sampleNumber, '.json')}")
   data_json <- data |>
     write_json(auto_unbox = TRUE,
                path = outpath)
-  if (verbose) cli_alert_success("Finished!")
 }
