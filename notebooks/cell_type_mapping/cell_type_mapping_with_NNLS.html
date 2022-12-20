@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.649">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Cell type mapping with NNLS</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="cell_type_mapping_with_NNLS_files/libs/clipboard/clipboard.min.js"></script>
+<script src="cell_type_mapping_with_NNLS_files/libs/quarto-html/quarto.js"></script>
+<script src="cell_type_mapping_with_NNLS_files/libs/quarto-html/popper.min.js"></script>
+<script src="cell_type_mapping_with_NNLS_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="cell_type_mapping_with_NNLS_files/libs/quarto-html/anchor.min.js"></script>
+<link href="cell_type_mapping_with_NNLS_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="cell_type_mapping_with_NNLS_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="cell_type_mapping_with_NNLS_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="cell_type_mapping_with_NNLS_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="cell_type_mapping_with_NNLS_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Cell type mapping with NNLS</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(STUtility2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TabulaMurisSenisData)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="mouse-brain" class="level1">
+<h1>Mouse brain</h1>
+<section id="download-mouse-brain-data" class="level2">
+<h2 class="anchored" data-anchor-id="download-mouse-brain-data">Download mouse brain data</h2>
+<p>For this tutorial, we will use a single-cell dataset from the Allen Brain Atlas. You can check the code chunk below or follow <a href="https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1">this</a> link to download it manually.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">timeout=</span><span class="dv">200</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tmpdir <span class="ot">&lt;-</span> <span class="st">"."</span> <span class="co"># Set current wd or change to tmpdir()</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(tmpdir, <span class="st">"/mousebrain"</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>targetdir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(tmpdir, <span class="st">"/mousebrain"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/single-cell"</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>destfile <span class="ot">&lt;-</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/single-cell/allen_brain.rds"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1"</span>, <span class="at">destfile =</span> destfile)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We will also need to download the 10x Visium data from 10x Genomics website. You can download the files directly with R by following the code chunk below or download the data directly from <a href="https://www.10xgenomics.com/resources/datasets">here</a>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium"</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download section 1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5"</span>, <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1/filtered_feature_bc_matrix.h5"</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_spatial.tar.gz"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1/spatial.tar.gz"</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="at">tarfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1/spatial.tar.gz"</span>), </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">exdir =</span>  <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1/"</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S1/spatial.tar.gz"</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Download section 2</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2"</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5"</span>, <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2/filtered_feature_bc_matrix.h5"</span>))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_spatial.tar.gz"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2/spatial.tar.gz"</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="at">tarfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2/spatial.tar.gz"</span>), </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">exdir =</span>  <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2/"</span>))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium/S2/spatial.tar.gz"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Load Visium data with STUtility2 into a Seurat object. The following steps assumes that the mouse brain 10x Visium data is located in <code>./mousebrain/visium/</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assemble spaceranger output files</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"./mousebrain/visium/*/filtered_feature_bc_matrix.h5"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"./mousebrain/visium/*/spatial/tissue_hires_image.png"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>spotfiles <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"./mousebrain/visium/*/spatial/tissue_positions_list.csv"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>json <span class="ot">&lt;-</span> <span class="fu">Sys.glob</span>(<span class="st">"./mousebrain/visium/*/spatial/scalefactors_json.json"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>infoTable <span class="ot">&lt;-</span> <span class="fu">tibble</span>(samples, imgs, spotfiles, json, <span class="at">section_id =</span> <span class="fu">paste0</span>(<span class="st">"section_"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object with 1 Sagittal Anterior section and 1 Sagittal Posterior section</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>se_brain_spatial <span class="ot">&lt;-</span> <span class="fu">ReadVisiumData</span>(infoTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Load single-cell data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>se_allen <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"./mousebrain/single-cell/allen_cortex.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="normalize-data" class="level3">
+<h3 class="anchored" data-anchor-id="normalize-data">Normalize data</h3>
+<p>Here we will apply the same log-normalization procedure to both the 10x Visium data (<code>se_brain_spatial</code>) and to the single-cell data (<code>se_brain_singlecell</code>). We set the number of variable features quite high because later on we will use the intersect between the variable features in the single-cell data and the variable features in the 10x Visium data for NNLS. The NNLS method is quite fast so there is actually no need to select only a subset of features. Instead, we can just use all genes that are shared across the single-cell and 10x Visium data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize data and find variable features for Visium data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>se_brain_spatial <span class="ot">&lt;-</span> se_brain_spatial <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>(<span class="at">nfeatures =</span> <span class="dv">10000</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize data and run vanilla analysis to create UMAP embedding</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>se_allen <span class="ot">&lt;-</span> se_allen <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ScaleData</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunPCA</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunUMAP</span>(<span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Rerun FindVariableFeatures to increase the number before cell type deconvolution</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>se_allen <span class="ot">&lt;-</span> se_allen <span class="sc">|&gt;</span> </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>(<span class="at">nfeatures =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can visualize the available cell types in our UMAP embedding of the cells. We have access to 23 annotated cell types, including L2-L6 layer neurons which have a distinct spatial distribution in the tissue.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(se_allen, <span class="at">group.by =</span> <span class="st">"subclass"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="run-nnls" class="level2">
+<h2 class="anchored" data-anchor-id="run-nnls">Run NNLS</h2>
+<p>The <code>RunNNLS</code> method requires a normalized <code>Seurat</code> object with 10x Visium data and a a normalized <code>Seurat</code> object with single-cell data. The <code>groups</code> argument defines where the cell type labels should be taken from in the single-cell <code>Seurat</code> object. In our single-cell <code>Seurat</code> object, the labels are stored in the “subclass” column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(se_brain_spatial) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ti <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>se_brain_spatial <span class="ot">&lt;-</span> <span class="fu">RunNNLS</span>(<span class="at">object =</span> se_brain_spatial, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">singlecell_object =</span> se_allen, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                            <span class="at">groups =</span> <span class="st">"subclass"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Predicting cell type proportions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Fetching data from Seurat objects</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Filtering out features that are only present in one data set</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Kept 3378 features for deconvolution</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required namespace: RcppML</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Preparing data for NNLS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Downsampling scRNA-seq data to include a maximum of 50 cells per cell type</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Cell type(s) CR have too few cells (&lt;10) and will be excluded</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Kept 22 cell types after filtering</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Calculating cell type expression profiles</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Predicting cell type proportions with NNLS for 22 cell types</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Returning results in a new 'Assay' named 'celltypeprops'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Setting default assay to 'celltypeprops'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Finished</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"RunNNLS completed in %s seconds"</span>, <span class="fu">round</span>(<span class="fu">Sys.time</span>() <span class="sc">-</span> ti, <span class="at">digits =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "RunNNLS completed in 3.23 seconds"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check available cell types</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(se_brain_spatial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Astro"      "Endo"       "L2/3 IT"    "L4"         "L5 IT"     
+ [6] "L5 PT"      "L6 CT"      "L6 IT"      "L6b"        "Lamp5"     
+[11] "Macrophage" "Meis2"      "NP"         "Oligo"      "Peri"      
+[16] "Pvalb"      "Serpinf1"   "SMC"        "Sncg"       "Sst"       
+[21] "Vip"        "VLMC"      </code></pre>
+</div>
+</div>
+<p>NB: the CR cell type was discarded because the number of cell was lower than 10. 10 is the lower limit for the allowed number of cells per cell type but this can be overridden with <code>minCells_per_celltype</code>.</p>
+<section id="mouse-brain-cell-types" class="level3">
+<h3 class="anchored" data-anchor-id="mouse-brain-cell-types">Mouse brain cell types</h3>
+<p>The plots below show the spatial distributions of proportions for a selected set of cell types.</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">L2/3 IT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">L4</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">L5 IT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">L5 PT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">L6 CT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">L6 IT</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false" href="">L6b</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-8" role="tab" aria-controls="tabset-1-8" aria-selected="false" href="">Oligo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-9" role="tab" aria-controls="tabset-1-9" aria-selected="false" href="">Pvalb</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-10" role="tab" aria-controls="tabset-1-10" aria-selected="false" href="">Meis2</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-11-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-11" role="tab" aria-controls="tabset-1-11" aria-selected="false" href="">Astro</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-12-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-12" role="tab" aria-controls="tabset-1-12" aria-selected="false" href="">VLMC</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-13-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-13" role="tab" aria-controls="tabset-1-13" aria-selected="false" href="">SMC</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-8-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-8.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-9-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-9.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-10-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-10.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-11" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-11-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-11.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-12" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-12-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-12.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-1-13" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-13-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-11-13.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="mouse-kidney" class="level1">
+<h1>Mouse kidney</h1>
+<p>In the second example, we’ll look at data from mouse kidney. We can obtain the single-cell data with the <code>TabulaMurisSenisData</code> R package from bioconductor. Let’s load the data and create a <code>Seurat</code> object from it.</p>
+<section id="load-mouse-kidney-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-mouse-kidney-data">Load mouse kidney data</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">TabulaMurisSenisDroplet</span>(<span class="at">tissues =</span> <span class="st">"Kidney"</span>)<span class="sc">$</span>Kidney</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>umis <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="fu">counts</span>(sce), <span class="st">"dgCMatrix"</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>se_kidney_singlecell <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> umis, <span class="at">meta.data =</span> <span class="fu">colData</span>(sce) <span class="sc">|&gt;</span> <span class="fu">as.data.frame</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The 10x Visium mouse kidney data can be downloaded from the 10x genomics website.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(tmpdir, <span class="st">"/kidney"</span>))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>targetdir <span class="ot">&lt;-</span> <span class="fu">paste0</span>(tmpdir, <span class="st">"/kidney"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium"</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download section 1</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Mouse_Kidney/V1_Mouse_Kidney_filtered_feature_bc_matrix.h5"</span>, </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/filtered_feature_bc_matrix.h5"</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="st">"https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Mouse_Kidney/V1_Mouse_Kidney_spatial.tar.gz"</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/spatial.tar.gz"</span>))</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="at">tarfile =</span> <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/spatial.tar.gz"</span>), </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">exdir =</span>  <span class="fu">paste0</span>(targetdir, <span class="st">"/visium/"</span>))</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">paste0</span>(targetdir, <span class="st">"/visium/spatial.tar.gz"</span>))</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="st">"./kidney/visium/filtered_feature_bc_matrix.h5"</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>imgs <span class="ot">&lt;-</span> <span class="st">"./kidney/visium/spatial/tissue_hires_image.png"</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>spotfiles <span class="ot">&lt;-</span> <span class="st">"./kidney/visium/spatial/tissue_positions_list.csv"</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>json <span class="ot">&lt;-</span> <span class="st">"./kidney/visium/spatial/scalefactors_json.json"</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>infoTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(samples, imgs, spotfiles, json)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>se_kidney_spatial <span class="ot">&lt;-</span> <span class="fu">ReadVisiumData</span>(infoTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="normalize-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="normalize-data-1">Normalize data</h3>
+<p>We apply the same normalization procedure to <code>se_kidney_spatial</code> and <code>se_kidney_singlecell</code> and run <code>FindVariableFeatures</code> to detect the top most variable genes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>se_kidney_spatial <span class="ot">&lt;-</span> se_kidney_spatial <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>(<span class="at">nfeatures =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For the single-cell kidney data, we’ll also filter the data prior to normalization to include cells collected at age 18m and remove cells with labels “nan” and “CD45”. This leaves us with 17 cell types.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>keep_cells <span class="ot">&lt;-</span> <span class="fu">colnames</span>(se_kidney_singlecell)[se_kidney<span class="sc">$</span>age <span class="sc">==</span> <span class="st">"18m"</span> <span class="sc">&amp;</span> (<span class="sc">!</span>se_kidney_singlecell<span class="sc">$</span>free_annotation <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"nan"</span>, <span class="st">"CD45"</span>))]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>se_kidney_singlecell <span class="ot">&lt;-</span> <span class="fu">subset</span>(se_kidney_singlecell, <span class="at">cells =</span> keep_cells)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>se_kidney_singlecell <span class="ot">&lt;-</span> se_kidney_singlecell <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NormalizeData</span>() <span class="sc">|&gt;</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ScaleData</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunPCA</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RunUMAP</span>(<span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>se_kidney_singlecell <span class="ot">&lt;-</span> se_kidney_singlecell <span class="sc">|&gt;</span> </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">FindVariableFeatures</span>(<span class="at">nfeatures =</span> <span class="dv">10000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="run-nnls-1" class="level2">
+<h2 class="anchored" data-anchor-id="run-nnls-1">Run NNLS</h2>
+<p>Again, the <code>RunNNLS</code> method requires a single-cell <code>Seurat</code> object and a 10x Visium <code>Seurat</code> object. The cell type annotations are stored in the “free_annotation” column.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ti <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(se_kidney_spatial) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>se_kidney_spatial <span class="ot">&lt;-</span> <span class="fu">RunNNLS</span>(<span class="at">object =</span> se_kidney_spatial, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">singlecell_object =</span> se_kidney_singlecell, </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">groups =</span> <span class="st">"free_annotation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Predicting cell type proportions ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Fetching data from Seurat objects</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Filtering out features that are only present in one data set</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Kept 4993 features for deconvolution</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Preparing data for NNLS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Downsampling scRNA-seq data to include a maximum of 50 cells per cell type</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Cell type(s) CD45    NK cell,CD45    plasma cell have too few cells (&lt;10) and will be excluded</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Kept 15 cell types after filtering</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Calculating cell type expression profiles</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Predicting cell type proportions with NNLS for 15 cell types</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Returning results in a new 'Assay' named 'celltypeprops'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Setting default assay to 'celltypeprops'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Finished</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"RunNNLS finished in %s seconds"</span>, <span class="fu">round</span>(<span class="fu">Sys.time</span>() <span class="sc">-</span> ti, <span class="at">digits =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "RunNNLS finished in 0.48 seconds"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check available cell types</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(se_kidney_spatial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "CD45    B cell"                                            
+ [2] "CD45    macrophage"                                        
+ [3] "CD45    T cell"                                            
+ [4] "Epcam     kidney distal convoluted tubule epithelial cell" 
+ [5] "Epcam    brush cell"                                       
+ [6] "Epcam    kidney collecting duct principal cell"            
+ [7] "Epcam    kidney proximal convoluted tubule epithelial cell"
+ [8] "Epcam    podocyte"                                         
+ [9] "Epcam    proximal tube epithelial cell"                    
+[10] "Epcam    thick ascending tube S epithelial cell"           
+[11] "Pecam    fenestrated capillary endothelial"                
+[12] "Pecam    kidney capillary endothelial cell"                
+[13] "Pecam    Kidney cortex artery cell"                        
+[14] "Stroma    fibroblast"                                      
+[15] "Stroma    kidney mesangial cell"                           </code></pre>
+</div>
+</div>
+<p>NB: two cell types were discarded as they didn’t pass the minimum allowed cells per cell type threshold. The cell types discarded were NK cells and plasma cells.</p>
+<section id="kidney-cell-types" class="level3">
+<h3 class="anchored" data-anchor-id="kidney-cell-types">Kidney cell types</h3>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Epcam kidney distal convoluted tubule epithelial cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Epcam brush cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Epcam kidney collecting duct principal cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Epcam kidney proximal convoluted tubule epithelial cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Epcam podocyte</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false" href="">Epcam proximal tube epithelial cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false" href="">Epcam thick ascending tube S epithelial cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-8" role="tab" aria-controls="tabset-2-8" aria-selected="false" href="">Pecam fenestrated capillary endothelial</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-9-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-9" role="tab" aria-controls="tabset-2-9" aria-selected="false" href="">Pecam kidney capillary endothelial cell</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-10-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-10" role="tab" aria-controls="tabset-2-10" aria-selected="false" href="">Stroma kidney mesangial cell</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-8-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-8.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-9" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-9-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-9.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div id="tabset-2-10" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-10-tab">
+<div class="cell-output-display">
+<p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-19-10.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

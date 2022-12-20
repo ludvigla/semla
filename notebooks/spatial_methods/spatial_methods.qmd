@@ -264,6 +264,7 @@ MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
           column_name = "nb_to_3",
           image_use = "raw", pt_size = 2)
 ```
+
 We can tweak thee function to identify the inner border instead, i.e. the spots that are located at the "tumor edge". When we run `RegionNeighbors` with `mode="inner"`, we get a column called `inner_border_3` which tells us what spots are on the "tumor edge".
 
 ```{r}
@@ -276,9 +277,9 @@ MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
           image_use = "raw", pt_size = 2)
 ```
 
-If we want to get both the inner and outer borders, we set `mode="inner_outer`. 
+If we want to get both the inner and outer borders, we set `mode="inner_outer`.
 
-NB: If we run a mode that returns "outer" border spots, the prefix of the returned column will be "nb_to_" by default. This behavior can be overridden by setting the `column_key=...`
+NB: If we run a mode that returns "outer" border spots, the prefix of the returned column will be "nb_to\_" by default. This behavior can be overridden by setting the `column_key=...`
 
 ```{r}
 
@@ -290,7 +291,7 @@ MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
           image_use = "raw", pt_size = 2)
 ```
 
-The last mode (`mode="all_inner_outer"`) allows us to select the outer border spots while keeping all spots belonging to our cluster of interest. 
+The last mode (`mode="all_inner_outer"`) allows us to select the outer border spots while keeping all spots belonging to our cluster of interest.
 
 ```{r}
 
@@ -322,5 +323,3 @@ VlnPlot(se_border_spots, features = rownames(border_markers_up), group.by = "nb_
   theme(axis.title = element_blank())
   
 ```
-
-

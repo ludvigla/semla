@@ -17,7 +17,8 @@ If you use the generic functions `subset` and `merge`, these will work fine on `
 
 Let's load an example mouse brain 10x Visium data:
 
-```{r}
+```{r warning=FALSE, message=FALSE}
+library(STUtility2)
 se_mcolon <- readRDS(system.file("extdata/mousecolon", 
                                  "se_mcolon", 
                                  package = "STUtility2"))
@@ -26,8 +27,9 @@ se_mcolon <- readRDS(system.file("extdata/mousecolon",
 ### Subset by selecting spots
 
 ```{r}
-spots_to_keep <- c("AAACAAGTATCTCCCA-1", "AAACACCAATAACTGC-1", "AAACATTTCCCGGATT-1",
-                   "AAACCCGAACGAAATC-1", "AAACCGGGTAGGTACC-1", "AAACCGTTCGTCCAGG-1")
+spots_to_keep <- c("AAACAAGTATCTCCCA-1", "AAACACCAATAACTGC-1", 
+                   "AAACATTTCCCGGATT-1", "AAACCCGAACGAAATC-1", 
+                   "AAACCGGGTAGGTACC-1", "AAACCGTTCGTCCAGG-1")
 
 # Subset using selected spots
 se_mcolon_small <- SubsetSTData(se_mcolon, spots = spots_to_keep)
@@ -50,6 +52,6 @@ If we want to subset data using information from the meta.data slot, it might be
 
 ```{r}
 # Filte by number of unique genes
-se_mcolon_filtered <- SubsetSTData(se_mcolon, expression = nFeature_spatial > 20)
+se_mcolon_filtered <- SubsetSTData(se_mcolon, expression = nFeature_Spatial > 20)
 se_mcolon_filtered
 ```
