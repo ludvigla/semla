@@ -1,14 +1,110 @@
 url: https://ludvigla.github.io/STUtility2/
+home:
+  title: analysis of SRT data
+authors:
+  Ludvig Larsson:
+    href: https://github.com/ludvigla
+  Lovisa Franzen:
+    href: https://github.com/lfranzen
+  Spatial research:
+    href: https://www.spatialresearch.org/
 template:
   bootstrap: 5
   bootswatch: flatly
-navbar:
-  structure:
-    left:  [intro, reference, articles, tutorials, news]
-    right: [search, github]
-  components:
-    tutorials:
-      text: Tutorials
-      menu:
-        - text: Getting started
-          href: ../notebooks/getting_started/getting_started.html
+development:
+  mode: auto
+articles:
+- title: Tutorials
+  navbar: ~
+  contents:
+  - getting_started
+  - subset_and_merge
+  - images_and_coordinates
+  - plotting_features
+  - spatial_methods
+  - cell_type_mapping_with_NNLS
+  - digital_unrolling
+reference:
+- title: Function reference
+- subtitle: Load & process
+- contents:
+  - LoadAndMergeMatrices
+  - LoadSpatialCoordinates
+  - ReadVisiumData
+  - LoadImages
+  - MergeSTData
+  - SubsetSTData
+  - TileImage
+  - export_coordinates
+  - export_graph
+- subtitle: Visualization
+- contents:
+  - MapFeatures
+  - MapLabels
+  - MapFeaturesSummary
+  - MapLabelsSummary
+  - ImagePlot
+  - AnglePlot
+  - centroid_angles_plot
+- subtitle: Interactive viewer
+- contents:
+  - FeatureViewer
+  - ftrviewer
+  - ftrviewerOutput
+  - renderFtrviewer
+- subtitle: Image processing
+- contents:
+  - LoadImages
+  - MaskImages
+  - ImageTransform
+  - ImageTranslate
+  - CoordAndImageTransform
+  - TileImage
+  - RigidTransformImages
+  - RunAlignment
+  - generate_rigid_transform
+  - prep_image
+- subtitle: Coordinate transformation
+- contents:
+  - CoordMirror
+  - CoordTransform
+- subtitle: Spatial methods
+- contents:
+  - GetSpatialNetwork
+  - DisconnectRegions
+  - RegionNeighbors
+  - CorSpatialFeatures
+  - RadialDistance
+  - RunLocalG
+- subtitle: Cell type mapping
+- contents: RunNNLS
+- subtitle: Digital unroll
+- contents:
+  - CutSpatialNetwork
+  - AdjustTissueCoordinates
+- subtitle: Staffli
+- contents:
+  - CreateStaffliObject
+  - Staffli-class
+  - GetImages
+  - GetStaffli
+  - ImageInfo
+  - '[[,Staffli,ANY,ANY-method'
+  - '[[<-,Staffli,ANY,ANY,ANY-method'
+  - show,Staffli-method
+- subtitle: Data
+- contents:
+  - mbrain_dataset
+  - mcolon_dataset
+- subtitle: Misc
+- contents:
+  - file_server
+  - icp
+  - kabsch
+  - osddu
+  - osdduOutput
+  - renderOsddu
+  - paper
+  - paperOutput
+  - renderPaper
+
