@@ -6,6 +6,7 @@
 \usage{
 FeatureViewer(
   object,
+  slot = "data",
   datadir = NULL,
   selected_features = NULL,
   sampleIDs = 1,
@@ -18,6 +19,8 @@ FeatureViewer(
 }
 \arguments{
 \item{object}{A `Seurat` object}
+
+\item{slot}{A slot to use for Assay data}
 
 \item{datadir}{A directory spatial data and image tiles}
 
@@ -46,7 +49,8 @@ categorical features using a lasso tool.
 \details{
 The viewer requires a tiled H&E image along with some additional image data to work.
 
-A more detailed tutorial can be found on the `STUtility2` website.
+A more detailed tutorial can be found on the `STUtility2` website. You can also
+get more detailed instructions by pressing the help icon in the app.
 }
 \seealso{
 TileImage

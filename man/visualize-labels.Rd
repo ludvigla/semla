@@ -4,7 +4,7 @@
 \alias{MapLabels}
 \alias{MapLabels.default}
 \alias{MapLabels.Seurat}
-\title{Map categoircal features}
+\title{Map categorical features}
 \usage{
 MapLabels(object, ...)
 

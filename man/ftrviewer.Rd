@@ -16,7 +16,7 @@ ftrviewer(
   isNumeric = TRUE,
   useLasso = FALSE,
   levels,
-  categories = c("cat1", "cat2", "cat3"),
+  categories = character(),
   colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral"),
   container_width = 800,
   container_height = 800,
