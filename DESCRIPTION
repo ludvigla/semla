@@ -58,7 +58,8 @@ Suggests:
     RcppML,
     beakr,
     colourpicker,
-    fs
+    fs,
+    shinyBS
 Collate: 
     'STUtility2-package.R'
     'checks.R'
