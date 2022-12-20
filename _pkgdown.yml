@@ -13,17 +13,31 @@ template:
   bootswatch: flatly
 development:
   mode: auto
-articles:
-- title: Tutorials
-  navbar: ~
-  contents:
-  - getting_started
-  - subset_and_merge
-  - images_and_coordinates
-  - plotting_features
-  - spatial_methods
-  - cell_type_mapping_with_NNLS
-  - digital_unrolling
+navbar:
+  structure:
+    left:  [intro, reference, articles,  news]
+    right: [search, github]
+  components:
+    articles:
+      text: Tutorials
+      menu:
+      - text: Intro
+      - text: Get started
+        href: articles/getting_started.html
+      - text: Subset/merge
+        href: articles/subset_and_merge.html
+      - text: Images and spot coordinates
+        href: articles/images_and_coordinates.html
+      - text: Spatial visualization
+        href: articles/ploting_features.html
+      - text: -------
+      - text: Analysis
+      - text: Spatial methods
+        href: articles/spatial_methods.html
+      - text: Cell type mapping
+        href: articles/cell_type_mapping_with_NNLS.html
+      - text: Digital unrolling
+        href: articles/digital_unrolling.html
 reference:
 - title: Function reference
 - subtitle: Load & process
@@ -107,4 +121,3 @@ reference:
   - paper
   - paperOutput
   - renderPaper
-
