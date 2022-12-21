@@ -9,8 +9,10 @@ authors:
   Spatial research:
     href: https://www.spatialresearch.org/
 template:
+  package: preferably
   bootstrap: 5
-  bootswatch: flatly
+  params:
+    toggle: manual
 development:
   mode: auto
 navbar:

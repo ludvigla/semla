@@ -451,11 +451,12 @@ MapMultipleFeatures.Seurat <- function (
     # Add color gradient for first feature
     scale_fill_gradientn(colours = c("white", colors[1]), limits = c(0, 1),
                          guide = guide_colourbar(title.position = "right",
+                                                 order = 1,
                                                  frame.colour = "black",
                                                  frame.linewidth = 1,
                                                  draw.ulim = FALSE,
                                                  draw.llim = FALSE,
-                                                 label = use_text)) +
+                                                 label = FALSE)) +
     theme(legend.position = "right",
           legend.direction = "horizontal",
           legend.title.align = 0,
@@ -484,11 +485,12 @@ MapMultipleFeatures.Seurat <- function (
       guides(alpha = "none") +
       scale_fill_gradientn(colours = c("white", colors[i]), limits = c(0, 1),
                            guide = guide_colourbar(title.position = "right",
+                                                   order = i,
                                                    frame.colour = "black",
                                                    frame.linewidth = 1,
                                                    draw.ulim = FALSE,
                                                    draw.llim = FALSE,
-                                                   label = use_text))
+                                                   label = ifelse(i == length(features) & use_text, use_text, FALSE)))
   }
 
   return(p)

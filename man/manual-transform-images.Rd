@@ -43,7 +43,7 @@ library(STUtility2)
 library(magick)
 
 im_mbrain <- system.file("extdata/mousebrain/spatial",
-                         "tissue_hires_image.png",
+                         "tissue_hires_image.jpg",
                          package = "STUtility2")
 
 img1 <- prep_image(im_mbrain |>

@@ -134,14 +134,14 @@ LoadImages.Seurat <- function (
 #'
 #' @param dataset One of "mousebrain" or "mousecolon"
 #'
-#' @return Path to "tissue_hires_image.png"
+#' @return Path to "tissue_hires_image.jpg"
 #'
 #' @noRd
 .load_ext_images <- function (
   dataset = "mousebrain"
 ) {
   hiresresimagefile <- system.file(paste0("extdata/", dataset, "/spatial"),
-                                   "tissue_hires_image.png",
+                                   "tissue_hires_image.jpg",
                                    package = "STUtility2")
   return(hiresresimagefile)
 }

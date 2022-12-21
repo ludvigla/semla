@@ -14,7 +14,7 @@ NULL
 #' @slot image_height The height of the scaled images in pixels
 #' @slot image_info A tibble with information about the raw images
 #' @slot scalefactors A tibble with information about scalefactors used to convert coordinates
-#' between the original image and down-scaled representations such as "tissue_lowres_image.png"
+#' between the original image and down-scaled representations such as "tissue_lowres_image.jpg"
 #' @slot pixels_per_um Numeric vector specifying the number of pixels in the raw images that
 #' corresponds to 1 micrometer
 #' @slot version Package version.

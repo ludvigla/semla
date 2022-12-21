@@ -51,7 +51,7 @@ library(leaflet)
 # Load H&E image with magick
 imfile <-
   system.file("extdata/mousecolon/spatial",
-              "tissue_hires_image.png",
+              "tissue_hires_image.jpg",
               package = "STUtility2")
 im <- image_read(imfile)
 

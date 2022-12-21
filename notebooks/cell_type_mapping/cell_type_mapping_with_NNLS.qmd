@@ -187,6 +187,28 @@ iwalk(plots, ~ {
 ```
 :::
 
+We can also visualize some of these cell types in one single plot with `MapMultipleFeatures`.
+
+```{r message=FALSE, fig.asp=0.4, fig.width=10}
+
+# Load H&E images
+se_brain_spatial <- se_brain_spatial |> 
+  LoadImages()
+
+# Generate colors
+
+# Plot multiple features
+MapMultipleFeatures(se_brain_spatial, 
+                    image_use = "raw", 
+                    pt_size = 2, max_cutoff = 0.99,
+                    override_plot_dims = TRUE, 
+                    colors = c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[1:7]) +
+  plot_layout(guides = "collect")
+
+```
+
+
 # Mouse kidney
 
 In the second example, we'll look at data from mouse kidney. We can obtain the single-cell data with the `TabulaMurisSenisData` R package from bioconductor. Let's load the data and create a `Seurat` object from it.
@@ -329,56 +351,58 @@ iwalk(plots, ~ {
 ```
 :::
 
+We can select some of these cell types and visualzie them in one plot
+
+```{r message=FALSE, fig.asp=0.4, fig.width=10}
+
+# Load H&E images
+se_kidney_spatial <- se_kidney_spatial |> 
+  LoadImages()
+
+# Generate colors
+
+# Plot multiple features
+MapMultipleFeatures(se_kidney_spatial, 
+                    image_use = "raw", 
+                    pt_size = 2, max_cutoff = 0.95,
+                    override_plot_dims = TRUE, 
+                    colors = c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[c(1, 2, 3, 4, 6, 7)]) +
+  plot_layout(guides = "collect")
+
+```
+
+Or zoom in on a region of interest
+
+```{r message=FALSE, fig.asp=0.8, fig.width=10}
+
+# Reload H&E image in higher resolution
+se_kidney_spatial <- LoadImages(se_kidney_spatial, image_height = 1500)
+
+# Plot H&E image
+rst <- GetImages(se_kidney_spatial)[[1]]
+p1 <- ggplot()  +
+  ggtitle("H&E image of zoomed in area") + 
+  theme(plot.title = element_text(hjust = 0.2)) +
+  inset_element(p = rst[(0.5*nrow(rst)):(0.7*nrow(rst)), (0.5*ncol(rst)):(0.7*ncol(rst))], 
+                left = 0, bottom = 0, right = 1, top = 1)
+
+# Plot multiple features with zoom
+p2 <- MapMultipleFeatures(se_kidney_spatial, 
+                    image_use = "raw", 
+                    pt_size = 4.5, max_cutoff = 0.95,
+                    crop_area = c(0.5, 0.5, 0.7, 0.7),
+                    colors = c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[c(1, 2, 3, 4, 6, 7)]) +
+  plot_layout(guides = "collect") &
+  theme(plot.title = element_blank())
+
+p1 / p2
+
+```
+
+
 ```{r eval=FALSE, include=FALSE}
 saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")
 saveRDS(se_kidney_spatial, file = "~/10x_data/R_objects/se_kidney_spatial")
-```
-
-```{r}
-coords <- GetStaffli(se_brain_spatial)@meta_data |> 
-  filter(sampleID == 1)
-xy <- coords |> 
-  select(pxl_col_in_fullres, pxl_row_in_fullres) |> 
-  setNames(nm = c("x", "y"))
-
-selected_celltypes <- c("L2/3 IT", "L4", "L5 IT", 
-                       "L5 PT", "L6 CT", "L6 IT", "L6b")
-
-expr_data <- FetchData(se_brain_spatial, cells = coords$barcode, 
-                       vars = selected_celltypes) |> 
-  as.matrix() |> 
-  apply(2, scales::rescale) |> 
-  apply(1, function(x) {
-    x[-which.max(x)] <- NA
-    return(x)
-  }) |> t()
-
-gg <- bind_cols(xy, expr_data, opacity = apply(expr_data, 1, function(x) na.omit(x)))
-gg_list <- lapply(selected_celltypes, function(x) {
-  gg |> filter(!is.na(!! sym(x)))
-}) |> 
-  setNames(nm = selected_celltypes)
-
-colors <- hsv(h = seq(0, 1, length.out = length(selected_celltypes) + 1), s = 1, v = 1)[-1]
-
-p <- ggplot() +
-  geom_point(data = gg_list[[selected_celltypes[1]]], 
-             aes_string("x", "y", fill = paste0("`", selected_celltypes[1], "`")), 
-             shape = 21, size = 2, 
-             alpha = gg_list[[selected_celltypes[1]]]$opacity) +
-  scale_fill_gradientn(colours = c("white", colors[1])) +
-  scale_y_reverse() +
-  coord_fixed() +
-  theme_void()
-
-for (i in 2:length(selected_celltypes)) {
-  p <- p + new_scale_fill() +
-    geom_point(data = gg_list[[selected_celltypes[i]]], 
-             aes_string("x", "y", fill = paste0("`", selected_celltypes[i], "`")), 
-             shape = 21, size = 2, 
-             alpha = gg_list[[selected_celltypes[i]]]$opacity) +
-    scale_fill_gradientn(colours = c("white", colors[i]))
-}
-
-p
 ```

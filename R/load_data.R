@@ -187,13 +187,13 @@ LoadSpatialCoordinates <- function (
 # TODO: not yet implemented, only to be used for SpatialExperiment class
 #' Read image data
 #'
-#' Load image related data from \strong{'tissue_hires_image.png'} files.
+#' Load image related data from \strong{'tissue_hires_image.jpg'} files.
 #'
 #' @family pre-process
 #'
 #' @param images An object of class `tibble` containing paths to images in PNG format, with
 #' one row per sample. Paths should specify `.png` files output by spaceranger such as
-#' `tissue_lowres_image.png` or `tissue_hires_image.png`. You do not have to load both
+#' `tissue_lowres_image.jpg` or `tissue_hires_image.jpg`. You do not have to load both
 #' H&E images.
 #' @param jsonfiles A character vector with file paths. Paths should specify `.json` files containing
 #' scalefactors output by spaceranger.
@@ -260,7 +260,7 @@ LoadImageData <- function (
 #'
 #' \itemize{
 #'    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
-#'    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.png`}
+#'    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
 #'    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
 #'    \item{"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`}
 #' }
@@ -304,7 +304,7 @@ LoadImageData <- function (
 #'                           "/*/filtered_feature_bc_matrix.h5"))
 #' imgs <-
 #'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                           "/*/spatial/tissue_hires_image.png"))
+#'                           "/*/spatial/tissue_hires_image.jpg"))
 #' spotfiles <-
 #'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
 #'                           "/*/spatial/tissue_positions_list.csv"))
@@ -401,12 +401,13 @@ ReadVisiumData <- function (
     image_data <- image_read(f) |>
       image_info() |>
       mutate(sampleID = paste0(i),
-             type = case_when(basename(f) == "tissue_hires_image.png" ~ "tissue_hires",
-                              basename(f) == "tissue_lowres_image.png" ~ "tissue_lowres"))
+             type = case_when(basename(f) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
+                              basename(f) %in% paste0("tissue_lowres_image", c("jpg", "png")) ~ "tissue_lowres",
+                              TRUE ~ "unknown"))
     return(image_data)
   })) |> as_tibble()
 
-  # Read scalefactors
+  # Read scale factors
   scalefactors <- do.call(rbind, lapply(seq_along(infoTable$json), function(i) {
     json_data <- data.frame(read_json(infoTable$json[i])) |> mutate(sampleID = paste0(i))
     return(json_data)

@@ -39,7 +39,7 @@ certain spaceranger output file paths. The table should consist of four columns:
 
 \itemize{
    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
-   \item{"imgs" : file paths to images, e.g. `tissue_hires_image.png`}
+   \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
    \item{"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`}
 }
@@ -67,7 +67,7 @@ samples <-
                           "/*/filtered_feature_bc_matrix.h5"))
 imgs <-
   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                          "/*/spatial/tissue_hires_image.png"))
+                          "/*/spatial/tissue_hires_image.jpg"))
 spotfiles <-
   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
                           "/*/spatial/tissue_positions_list.csv"))

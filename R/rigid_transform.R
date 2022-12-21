@@ -122,7 +122,7 @@ generate_rigid_transform <- function (
 #'
 #' # Load image
 #' lowresimagefile <- system.file("extdata/mousebrain/spatial",
-#'                                "tissue_lowres_image.png",
+#'                                "tissue_lowres_image.jpg",
 #'                                package = "STUtility2")
 #' im <- image_read(lowresimagefile)
 #'

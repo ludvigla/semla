@@ -31,7 +31,7 @@ from the `magick` R package instead.
 library(magick)
 library(STUtility2)
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
-                               "tissue_lowres_image.png",
+                               "tissue_lowres_image.jpg",
                                package = "STUtility2")
 im <- image_read(lowresimagefile)
 
