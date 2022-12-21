@@ -6,23 +6,26 @@ Authors@R:
     c(person(
         "Ludvig", "Larsson",
         email = "ludvig.larsson@scilifelab.se",
-        role = c("aut", "cre")
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0003-4209-2911")
     ),
     person(
         "Lovisa", "Franzen",
         email = "lovisa.franzen@scilifelab.se",
-        role = c("aut")
+        role = c("aut"),
+        comment = c(ORCID = "0000-0003-3755-718X")
     ))
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
 Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 License: MIT + file LICENSE
 Encoding: UTF-8
+VignetteBuilder: knitr
 Depends:
     Seurat (>= 4.0.0),
-    SeuratObject (>= 4.0.0)
-Imports:
+    SeuratObject (>= 4.0.0),
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.3.0),
+    ggplot2 (>= 3.3.0)
+Imports:
     cli, 
     forcats, 
     jsonlite, 
@@ -59,7 +62,8 @@ Suggests:
     beakr,
     colourpicker,
     fs,
-    shinyBS
+    shinyBS,
+    ggnewscale
 Collate: 
     'STUtility2-package.R'
     'checks.R'
@@ -92,6 +96,7 @@ Collate:
     'transformations_coordinates.R'
     'transformations_image.R'
     'visualization_spatial.R'
+    'visualization_spatial_multicolor.R'
     'visualization_spatial_stats.R'
     'visualization_spatial_viewer.R'
     'zzz.R'
