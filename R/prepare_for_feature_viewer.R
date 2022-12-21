@@ -9,7 +9,7 @@ NULL
 #' the H&E image tiles generated with \code{\link{TileImage}}
 #'
 #' @param object A `Seurat` object created with `STUtility2`
-#' @param sampleID An integer specifying a sample ID to export
+#' @param sampleNumber An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
 #' @param verbose Print messages
