@@ -333,3 +333,52 @@ iwalk(plots, ~ {
 saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")
 saveRDS(se_kidney_spatial, file = "~/10x_data/R_objects/se_kidney_spatial")
 ```
+
+```{r}
+coords <- GetStaffli(se_brain_spatial)@meta_data |> 
+  filter(sampleID == 1)
+xy <- coords |> 
+  select(pxl_col_in_fullres, pxl_row_in_fullres) |> 
+  setNames(nm = c("x", "y"))
+
+selected_celltypes <- c("L2/3 IT", "L4", "L5 IT", 
+                       "L5 PT", "L6 CT", "L6 IT", "L6b")
+
+expr_data <- FetchData(se_brain_spatial, cells = coords$barcode, 
+                       vars = selected_celltypes) |> 
+  as.matrix() |> 
+  apply(2, scales::rescale) |> 
+  apply(1, function(x) {
+    x[-which.max(x)] <- NA
+    return(x)
+  }) |> t()
+
+gg <- bind_cols(xy, expr_data, opacity = apply(expr_data, 1, function(x) na.omit(x)))
+gg_list <- lapply(selected_celltypes, function(x) {
+  gg |> filter(!is.na(!! sym(x)))
+}) |> 
+  setNames(nm = selected_celltypes)
+
+colors <- hsv(h = seq(0, 1, length.out = length(selected_celltypes) + 1), s = 1, v = 1)[-1]
+
+p <- ggplot() +
+  geom_point(data = gg_list[[selected_celltypes[1]]], 
+             aes_string("x", "y", fill = paste0("`", selected_celltypes[1], "`")), 
+             shape = 21, size = 2, 
+             alpha = gg_list[[selected_celltypes[1]]]$opacity) +
+  scale_fill_gradientn(colours = c("white", colors[1])) +
+  scale_y_reverse() +
+  coord_fixed() +
+  theme_void()
+
+for (i in 2:length(selected_celltypes)) {
+  p <- p + new_scale_fill() +
+    geom_point(data = gg_list[[selected_celltypes[i]]], 
+             aes_string("x", "y", fill = paste0("`", selected_celltypes[i], "`")), 
+             shape = 21, size = 2, 
+             alpha = gg_list[[selected_celltypes[i]]]$opacity) +
+    scale_fill_gradientn(colours = c("white", colors[i]))
+}
+
+p
+```
