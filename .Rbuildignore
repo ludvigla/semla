@@ -13,3 +13,4 @@ presentations/
 ^pkgdown$
 ^\.github$
 TODO.md
+vignettes
