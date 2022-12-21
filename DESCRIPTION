@@ -19,7 +19,6 @@ Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
 Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 License: MIT + file LICENSE
 Encoding: UTF-8
-VignetteBuilder: knitr
 Depends:
     Seurat (>= 4.0.0),
     SeuratObject (>= 4.0.0),
@@ -63,9 +62,7 @@ Suggests:
     colourpicker,
     fs,
     shinyBS,
-    ggnewscale,
-    knitr, 
-    rmarkdown
+    ggnewscale
 Collate: 
     'STUtility2-package.R'
     'checks.R'
