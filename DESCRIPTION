@@ -63,7 +63,9 @@ Suggests:
     colourpicker,
     fs,
     shinyBS,
-    ggnewscale
+    ggnewscale,
+    knitr, 
+    rmarkdown
 Collate: 
     'STUtility2-package.R'
     'checks.R'
