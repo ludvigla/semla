@@ -4,7 +4,7 @@
 \alias{MapFeatures}
 \alias{MapFeatures.default}
 \alias{MapFeatures.Seurat}
-\title{Map numeric features or categorical labels}
+\title{Map numeric features}
 \usage{
 MapFeatures(object, ...)
 
@@ -257,7 +257,8 @@ Other spatial-visualization-methods:
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapLabels}()},
+\code{\link{MapMultipleFeatures}()}
 
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
@@ -265,7 +266,8 @@ Other spatial-visualization-methods:
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapLabels}()},
+\code{\link{MapMultipleFeatures}()}
 }
 \author{
 Ludvig Larsson

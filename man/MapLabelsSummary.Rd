@@ -136,7 +136,8 @@ Other spatial-visualization-methods:
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabels}()}
+\code{\link{MapLabels}()},
+\code{\link{MapMultipleFeatures}()}
 }
 \author{
 Lovisa Franzen

@@ -9,12 +9,12 @@ export_coordinates(object, sampleNumber = 1L, outdir, verbose = TRUE)
 \arguments{
 \item{object}{A `Seurat` object created with `STUtility2`}
 
+\item{sampleNumber}{An integer specifying a sample ID to export
+spatial network for}
+
 \item{outdir}{Name of a directory to export JSON file to}
 
 \item{verbose}{Print messages}
-
-\item{sampleID}{An integer specifying a sample ID to export
-spatial network for}
 }
 \description{
 Utility function to prepare data for \code{\link{FeatureViewer}}.

@@ -6,6 +6,8 @@
 \alias{STUtility2-package}
 \title{STUtility2: Process, analyze and visualize Spatially Resolved Transcriptomcis data}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 }
 \seealso{
@@ -16,11 +18,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ludvig Larsson \email{ludvig.larsson@scilifelab.se}
+\strong{Maintainer}: Ludvig Larsson \email{ludvig.larsson@scilifelab.se} (\href{https://orcid.org/0000-0003-4209-2911}{ORCID})
 
 Authors:
 \itemize{
-  \item Lovisa Franzen \email{lovisa.franzen@scilifelab.se}
+  \item Lovisa Franzen \email{lovisa.franzen@scilifelab.se} (\href{https://orcid.org/0000-0003-3755-718X}{ORCID})
 }
 
 }

@@ -181,7 +181,8 @@ Other spatial-visualization-methods:
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()}
+\code{\link{MapLabelsSummary}()},
+\code{\link{MapMultipleFeatures}()}
 }
 \author{
 Ludvig Larsson

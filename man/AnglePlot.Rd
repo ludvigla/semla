@@ -115,7 +115,8 @@ Other spatial-visualization-methods:
 \code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapLabels}()},
+\code{\link{MapMultipleFeatures}()}
 }
 \author{
 Ludvig Larsson

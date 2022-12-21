@@ -7,6 +7,7 @@
 MapFeaturesSummary(
   object,
   features,
+  slot = "data",
   subplot_type = c("box", "violin", "histogram", "density"),
   image_use = NULL,
   coords_use = "raw",
@@ -32,6 +33,8 @@ MapFeaturesSummary(
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
+
+\item{slot}{slot to pull features values from}
 
 \item{subplot_type}{Select a summary plot to place next to the spatial plot:
 \itemize{
@@ -147,7 +150,8 @@ Other spatial-visualization-methods:
 \code{\link{ImagePlot}()},
 \code{\link{MapFeatures}()},
 \code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapLabels}()},
+\code{\link{MapMultipleFeatures}()}
 }
 \author{
 Lovisa Franzen
