@@ -15,8 +15,14 @@ development:
   mode: auto
 navbar:
   structure:
-    left:  [intro, reference, articles,  news]
-    right: [search, github]
+    left:
+    - intro
+    - reference
+    - articles
+    - news
+    right:
+    - search
+    - github
   components:
     articles:
       text: Tutorials
@@ -30,7 +36,7 @@ navbar:
         href: articles/images_and_coordinates.html
       - text: Spatial visualization
         href: articles/plotting_features.html
-      - text: -------
+      - text: '-------'
       - text: Analysis
       - text: Spatial methods
         href: articles/spatial_methods.html
@@ -54,6 +60,7 @@ reference:
 - subtitle: Visualization
 - contents:
   - MapFeatures
+  - MapMultipleFeatures
   - MapLabels
   - MapFeaturesSummary
   - MapLabelsSummary
@@ -121,3 +128,4 @@ reference:
   - paper
   - paperOutput
   - renderPaper
+
