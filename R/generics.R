@@ -44,7 +44,7 @@ CorSpatialFeatures <- function(object, ...) {
 }
 
 
-#' Map numeric features or categorical labels
+#' Map numeric features
 #'
 #' \code{MapFeatures} can be used to map numeric features to spots where the
 #' values are encoded as colors. If multiple features and samples are provided, these
@@ -64,6 +64,34 @@ CorSpatialFeatures <- function(object, ...) {
 #'
 MapFeatures <- function(object, ...) {
   UseMethod(generic = 'MapFeatures', object = object)
+}
+
+#' Map numeric features or categorical labels
+#'
+#' \code{MapMultipleFeatures} can be used to map multiple numeric feature on the
+#' same tissue section(s). \code{MapFeatures} provides an option to map 2 or 3
+#' features using RGB color blending, whereas \code{MapMultipleFeatures} can handle
+#' more than 3 features. See details below for more information.
+#'
+#' @details RGB color blending is only possible with 2 or 3 features. To visualize more
+#' than 3 colors in the same plot, we can instead assign a specific color to each spot
+#' depending on what feature has the highest value. This means that only the "dominant"
+#' feature will be shown in each spot.
+#'
+#' Before using \code{MapMultipleFeatures}, you should be aware that this type of visualization
+#' will bias what is being shown. Preferably, the selected features should be selecting in
+#' a way that they are mutually exclusive, i.e. expressed in different spatial locations.
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @family spatial-visualization-methods
+#' @rdname visualize-multiple-features
+#'
+#' @export
+#'
+MapMultipleFeatures <- function(object, ...) {
+  UseMethod(generic = 'MapMultipleFeatures', object = object)
 }
 
 
