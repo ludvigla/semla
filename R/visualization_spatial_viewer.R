@@ -3,7 +3,6 @@
 #'
 NULL
 
-# TODO: update docs
 #' Interactive spatial feature viewer
 #'
 #' `FeatureViewer` opens up an interactive shiny application where
@@ -55,7 +54,7 @@ FeatureViewer <- function (
 ) {
 
   # Set global variables to NULL
-  sampleID <- NULL
+  sampleID <- barcode <- NULL
 
   if (!requireNamespace("shinyBS"))
     install.packages("shinyBS")
@@ -188,7 +187,7 @@ FeatureViewer <- function (
       condition = "!output.panelStatus",
       uiOutput("catlegend")
     ),
-    bsModal("HelpBox", trigger = "help", title = "Usage instructions", size = "large",
+    shinyBS::bsModal("HelpBox", trigger = "help", title = "Usage instructions", size = "large",
             column(12, column(12, p())),
             column(12, column(12, p())),
             column(12, column(4, p(strong("Zoom and pan"))),
