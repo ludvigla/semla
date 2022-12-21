@@ -13,7 +13,7 @@ editor: visual
 
 Subsetting and merging data is done using the two functions `SubsetSTData` and `MergeSTData`.
 
-If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object.
+If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `STUtility2`.
 
 Let's load an example mouse brain 10x Visium data:
 

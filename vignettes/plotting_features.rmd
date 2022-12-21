@@ -38,8 +38,6 @@ se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 ```
 
-## A note about features
-
 We can use the functions `MapFeatures` and `MapLabels` to make spatial plots showing the distribution of numeric or categorical features. For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot` and `SpatialDimPlot` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
 
 ## Map numeric features
