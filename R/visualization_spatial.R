@@ -54,7 +54,7 @@ NULL
 #' @param center_zero a logical specifying whether color scale should be centered at 0
 #'
 #' @importFrom patchwork wrap_plots
-#' @importFrom dplyr select group_by group_split all_of pull
+#' @import dplyr
 #'
 #' @section color blending:
 #' Color blending can \strong{only} be used with 2 or three features. If blending is activated,
@@ -218,8 +218,6 @@ MapFeatures.default <- function (
 }
 
 
-#' Map numeric features in 2D using a Seurat object
-#'
 #' @param features a character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
 #' @param slot slot to pull features values from
@@ -234,7 +232,7 @@ MapFeatures.default <- function (
 #' (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 #' These arguments can be useful to make sure that the color map doesn't get dominated by outliers.
 #'
-#' @importFrom dplyr bind_cols filter all_of contains
+#' @import dplyr
 #' @importFrom tibble as_tibble
 #' @importFrom Seurat FetchData
 #' @importFrom rlang warn
@@ -495,7 +493,7 @@ MapFeatures.Seurat <- function (
 #' @param drop_na a logical specifying if NA values should be dropped
 #'
 #' @importFrom patchwork wrap_plots
-#' @importFrom dplyr select group_by group_split all_of pull
+#' @import dplyr
 #' @importFrom zeallot %<-%
 #' @importFrom rlang %||% warn
 #'
@@ -637,7 +635,7 @@ MapLabels.default <- function (
 #' from the data.
 #'
 #' @importFrom rlang warn
-#' @importFrom dplyr mutate select across all_of bind_cols contains
+#' @import dplyr
 #' @importFrom Seurat FetchData
 #' @importFrom tibble as_tibble
 #' @importFrom glue glue
@@ -852,10 +850,8 @@ MapLabels.Seurat <- function (
 #' @param drop_na should NA values be dropped from the data?
 #' @param center_zero a logical specifying whether color scale should be centered at 0
 #'
-#' @importFrom ggplot2 ggplot geom_point scale_x_continuous scale_y_reverse
-#' theme_void theme labs coord_fixed aes element_text
-#' margin scale_fill_gradientn guides guide_legend scale_color_manual
-#' @importFrom dplyr if_all
+#' @import ggplot2
+#' @import dplyr
 #'
 #' @return a `ggplot` object with a spatial plot
 #'
@@ -1024,11 +1020,9 @@ MapLabels.Seurat <- function (
 #' @param cur_label string with a title
 #' @param drop_na logical specifying whether NA values should be dropped
 #'
-#' @importFrom ggplot2 ggplot geom_point scale_x_continuous scale_y_reverse
-#' theme_void theme labs coord_fixed aes margin
-#' element_text scale_fill_manual
+#' @import ggplot2
 #' @importFrom stats na.omit
-#' @importFrom dplyr select all_of sym
+#' @import dplyr
 #' @importFrom rlang !!
 #'
 #' @return a `ggplot` object with a spatial plot
@@ -1129,10 +1123,12 @@ MapLabels.Seurat <- function (
 #' @param arrange_features one of "row" or "col". "col" will put the features in columns
 #' and samples in rows and "row" will transpose the arrangement
 #' @param coords_columns a character vector with column names for spot coordinates
+#' @param multi_color Logical specifying if multi-color plot is used. Necessary for
+#' compatibility with \code{\link{MapMultipleFeatures}}.
 #'
 #' @importFrom rlang abort
 #' @importFrom glue glue
-#' @importFrom dplyr count all_of select
+#' @import dplyr
 #' @importFrom tidyr unite
 #'
 #' @return nothing
@@ -1144,7 +1140,8 @@ MapLabels.Seurat <- function (
     label_by,
     scale,
     arrange_features,
-    coords_columns
+    coords_columns,
+    multi_color = FALSE
 ) {
 
   # Set global variables to NULL
@@ -1193,13 +1190,15 @@ MapLabels.Seurat <- function (
     if (any(!checks)) abort(glue("Features have to be numeric/integer. \n",
                                  "The following features are not valid: \n {paste(names(checks[!checks]))}"))
   } else {
-    checks <- object |>
-      select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-      sapply(function(x) {
-        is.character(x) | is.factor(x)
-      })
-    if (length(checks) > 1) abort("Only 1 label column is allowed.")
-    if (!checks) abort(glue("Label columns has to be a character/factor."))
+    if (!multi_color) {
+      checks <- object |>
+        select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+        sapply(function(x) {
+          is.character(x) | is.factor(x)
+        })
+      if (length(checks) > 1) abort("Only 1 meta.data column for a categorical variable is allowed.")
+      if (!checks) abort(glue("Categorical variables have to be a character/factor."))
+    }
   }
 }
 
@@ -1256,7 +1255,7 @@ MapLabels.Seurat <- function (
 #' groups in the label column
 #' @param drop_na should NA values be dropped?
 #'
-#' @importFrom dplyr mutate across all_of case_when filter
+#' @import dplyr
 #' @importFrom forcats fct_drop
 #' @importFrom rlang %||%
 #'
@@ -1325,7 +1324,7 @@ MapLabels.Seurat <- function (
 #' @param coords_columns a character vector specifying the columns
 #' names for the spot coordinate vectors
 #'
-#' @importFrom dplyr summarize sym
+#' @import dplyr
 #'
 #' @return a tibble with limits
 #'
@@ -1352,7 +1351,7 @@ MapLabels.Seurat <- function (
 #'
 #' @importFrom rlang abort
 #' @importFrom glue glue
-#' @importFrom dplyr mutate select
+#' @import dplyr
 #' @importFrom tibble tibble
 #'
 #' @return a tibble with plot dimension information
@@ -1383,7 +1382,7 @@ MapLabels.Seurat <- function (
 #' @param scale one of "free" or "shared". "free" will fix the value limits for each
 #' feature separately and "shared" will fix the value limits for all plots to be identical
 #'
-#' @importFrom dplyr select summarize_all contains all_of
+#' @import dplyr
 #'
 #' @return a list of tibbles with feature value limits
 #'
@@ -1429,7 +1428,7 @@ MapLabels.Seurat <- function (
 #' @importFrom rlang abort
 #' @importFrom glue glue
 #' @importFrom scales rescale
-#' @importFrom dplyr select mutate bind_cols everything
+#' @import dplyr
 #'
 #' @return a list of tibbles similar to input data but in which the feature
 #' columns have been replaced by a color vector with blended colors called
@@ -1563,7 +1562,7 @@ MapLabels.Seurat <- function (
 #' @param data list of `tibble` objects with spot coordinates
 #' @param coords_columns character vector specifying column names for spot coordinates
 #'
-#' @importFrom dplyr mutate if_any all_of between filter
+#' @import dplyr
 #'
 #' @return a tibble with modified image dimensions \code{dims} and list of `tibble` objects
 #' with cropped spot coordinates
