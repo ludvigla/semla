@@ -66,6 +66,7 @@ NULL
 MapFeaturesSummary <- function (
   object,
   features,
+  slot = "data",
   subplot_type = c("box", "violin", "histogram", "density"),
   image_use = NULL,
   coords_use = "raw",
@@ -117,7 +118,7 @@ MapFeaturesSummary <- function (
 
   # Get data (code copied from MapFeatures())
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, slot = slot) |> as_tibble())
 
   # Split data by sampleID (code copied from MapFeatures())
   data <- data_use |>
