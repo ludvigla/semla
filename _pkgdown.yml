@@ -9,10 +9,7 @@ authors:
   Spatial research:
     href: https://www.spatialresearch.org/
 template:
-  package: preferably
   bootstrap: 5
-  params:
-    toggle: manual
 development:
   mode: auto
 navbar:
@@ -36,12 +33,22 @@ navbar:
         href: articles/subset_and_merge.html
       - text: Images and spot coordinates
         href: articles/images_and_coordinates.html
+      - text: '-------'
       - text: Spatial visualization
-        href: articles/plotting_features.html
+      - text: Map numeric features
+        href: articles/numeric_features.html
+      - text: Map categorical features
+        href: articles/categorical_features.html
+      - text: Advanced visualization
+        href: articles/advanced_visualization.html
+      - text: '-------'
+      - text: Spatial methods
+      - text: Radial distances
+        href: articles/radial_distances.html
+      - text: Region neighbors
+        href: articles/region_neighbors.html
       - text: '-------'
       - text: Analysis
-      - text: Spatial methods
-        href: articles/spatial_methods.html
       - text: Cell type mapping
         href: articles/cell_type_mapping_with_NNLS.html
       - text: Digital unrolling

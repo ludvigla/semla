@@ -1,6 +1,8 @@
 ---
 title: "Cell type mapping with NNLS"
-format: html
+output:
+  html_document:
+    code_folding: show
 editor: visual
 editor_options: 
   chunk_output_type: inline
@@ -11,15 +13,18 @@ library(STUtility2)
 library(tibble)
 library(dplyr)
 library(TabulaMurisSenisData)
+library(SingleCellExperiment)
 library(Seurat)
 library(purrr)
 library(patchwork)
 library(ggplot2)
 ```
 
-# Mouse brain
+Cell type mapping with SRT data refers to a set of methods which allows you to infer the quantity of cells from SRT expression profiles. `STUtility2` offers a quick method based on Non-Negative Least Squares to infer cell type proportions directly from Visium spot expression profiles.
 
-## Download mouse brain data
+In this tutorial, we'll take a look at two examples. First, we have two tissue sections of a mouse brain and a single cell RNA-seq dataset from the Allen Brain Atlas. In the second example, we have a mouse kidney section and single cell RNA-seq data from the Tabula Muris Senis.
+
+## Mouse brain
 
 For this tutorial, we will use a single-cell dataset from the Allen Brain Atlas. You can check the code chunk below or follow [this](https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1) link to download it manually.
 
@@ -80,7 +85,7 @@ Load single-cell data
 
 ```{r eval=FALSE}
 
-se_allen <- readRDS("./mousebrain/single-cell/allen_cortex.rds")
+se_allen <- readRDS("./mousebrain/single-cell/allen_brain.rds")
 
 ```
 
@@ -131,7 +136,7 @@ DimPlot(se_allen, group.by = "subclass")
 
 ```
 
-## Run NNLS
+### Run NNLS
 
 The `RunNNLS` method requires a normalized `Seurat` object with 10x Visium data and a a normalized `Seurat` object with single-cell data. The `groups` argument defines where the cell type labels should be taken from in the single-cell `Seurat` object. In our single-cell `Seurat` object, the labels are stored in the "subclass" column.
 
@@ -150,14 +155,9 @@ rownames(se_brain_spatial)
 
 NB: the CR cell type was discarded because the number of cell was lower than 10. 10 is the lower limit for the allowed number of cells per cell type but this can be overridden with `minCells_per_celltype`.
 
-### Mouse brain cell types
-
 The plots below show the spatial distributions of proportions for a selected set of cell types.
 
-::: panel-tabset
-```{r}
-#| results: asis
-#| code-fold: true
+```{r class.source = 'fold-hide'}
 # Plot selected cell types
 DefaultAssay(se_brain_spatial) <- "celltypeprops"
 
@@ -176,22 +176,141 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
         plot.title = element_blank())
 }) |> setNames(nm = selected_celltypes)
 
-iwalk(plots, ~ {
-  cat('#### ', .y, '\n\n')
-  
-  print(.x)
-  
-  cat("\n\n")
-})
+```
+
+### Mouse brain cell types {.tabset}
+
+#### L2/3 IT
+
+```{r}
+
+plots[[1]]
 
 ```
-:::
 
-# Mouse kidney
+#### L4
+
+```{r}
+
+plots[[2]]
+
+```
+
+#### L5 IT
+
+```{r}
+
+plots[[3]]
+
+```
+
+#### L5 PT
+
+```{r}
+
+plots[[4]]
+
+```
+
+#### L6 CT
+
+```{r}
+
+plots[[5]]
+
+```
+
+#### L6 IT
+
+```{r}
+
+plots[[6]]
+
+```
+
+#### L6b
+
+```{r}
+
+plots[[7]]
+
+```
+
+#### Oligo
+
+```{r}
+
+plots[[8]]
+
+```
+
+#### Pvalb
+
+```{r}
+
+plots[[9]]
+
+```
+
+#### Meis2
+
+```{r}
+
+plots[[10]]
+
+```
+
+#### Astro
+
+```{r}
+
+plots[[11]]
+
+```
+
+#### VLMC
+
+```{r}
+
+plots[[12]]
+
+```
+
+#### SMC
+
+```{r}
+
+plots[[13]]
+
+```
+
+### Visualize multiple cell types
+
+We can also visualize some of these cell types in one single plot with MapMultipleFeatures.
+
+```{r message=FALSE, fig.asp=0.4, fig.width=10}
+
+# Load H&E images
+se_brain_spatial <- se_brain_spatial |> 
+  LoadImages()
+
+# Generate colors
+
+# Plot multiple features
+MapMultipleFeatures(se_brain_spatial, 
+                    image_use = "raw", 
+                    pt_size = 2, max_cutoff = 0.99,
+                    override_plot_dims = TRUE, 
+                    colors = c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[1:7]) +
+  plot_layout(guides = "collect")
+
+```
+
+
+## Mouse kidney
 
 In the second example, we'll look at data from mouse kidney. We can obtain the single-cell data with the `TabulaMurisSenisData` R package from bioconductor. Let's load the data and create a `Seurat` object from it.
-
-## Load mouse kidney data
 
 ```{r eval=FALSE}
 #| code-fold: true
@@ -246,7 +365,7 @@ For the single-cell kidney data, we'll also filter the data prior to normalizati
 
 ```{r eval=FALSE}
 
-keep_cells <- colnames(se_kidney_singlecell)[se_kidney$age == "18m" & (!se_kidney_singlecell$free_annotation %in% c("nan", "CD45"))]
+keep_cells <- colnames(se_kidney_singlecell)[se_kidney_singlecell$age == "18m" & (!se_kidney_singlecell$free_annotation %in% c("nan", "CD45"))]
 se_kidney_singlecell <- subset(se_kidney_singlecell, cells = keep_cells)
 
 ```
@@ -272,7 +391,7 @@ se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
 
 ```
 
-## Run NNLS
+### Run NNLS
 
 Again, the `RunNNLS` method requires a single-cell `Seurat` object and a 10x Visium `Seurat` object. The cell type annotations are stored in the "free_annotation" column.
 
@@ -292,12 +411,7 @@ rownames(se_kidney_spatial)
 
 NB: two cell types were discarded as they didn't pass the minimum allowed cells per cell type threshold. The cell types discarded were NK cells and plasma cells.
 
-### Kidney cell types
-
-::: panel-tabset
-```{r}
-#| results: asis
-#| code-fold: true
+```{r results='asis',  class.source = 'fold-hide'}
 # Plot selected cell types
 DefaultAssay(se_kidney_spatial) <- "celltypeprops"
 
@@ -318,18 +432,136 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
   theme(plot.title = element_blank())
 }) |> setNames(nm = selected_celltypes)
 
-iwalk(plots, ~ {
-  cat('#### ', .y, '\n\n')
-  
-  print(.x)
-  
-  cat("\n\n")
-})
+```
+
+### Kidney cell types {.tabset}
+
+#### kidney distal convoluted tubule epithelial cell
+
+```{r}
+
+plots[[1]]
 
 ```
-:::
+
+#### brush cell
+
+```{r}
+
+plots[[2]]
+
+```
+
+#### kidney collecting duct principal cell
+
+```{r}
+
+plots[[3]]
+
+```
+
+#### podocyte
+
+```{r}
+
+plots[[4]]
+
+```
+
+#### proximal tube epithelial cell
+
+```{r}
+
+plots[[5]]
+
+```
+
+#### thick ascending tube S epithelial cell
+
+```{r}
+
+plots[[6]]
+
+```
+
+#### fenestrated capillary endothelial
+
+```{r}
+
+plots[[7]]
+
+```
+
+#### kidney capillary endothelial cell
+
+```{r}
+
+plots[[8]]
+
+```
+
+#### kidney mesangial cell
+
+```{r}
+
+plots[[9]]
+
+```
 
 ```{r eval=FALSE, include=FALSE}
 saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")
 saveRDS(se_kidney_spatial, file = "~/10x_data/R_objects/se_kidney_spatial")
 ```
+
+### Visualize multiple cell types
+
+We can select some of these cell types and visualize them in one plot
+
+```{r message=FALSE, fig.asp=0.4, fig.width=10}
+
+# Load H&E images
+se_kidney_spatial <- se_kidney_spatial |> 
+  LoadImages()
+
+# Generate colors
+
+# Plot multiple features
+MapMultipleFeatures(se_kidney_spatial, 
+                    image_use = "raw", 
+                    pt_size = 2, max_cutoff = 0.95,
+                    override_plot_dims = TRUE, 
+                    colors = c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[c(1, 2, 3, 4, 6, 7)]) +
+  plot_layout(guides = "collect")
+
+```
+
+Or zoom in on a region of interest
+
+```{r message=FALSE, fig.asp=0.8, fig.width=10}
+
+# Reload H&E image in higher resolution
+se_kidney_spatial <- LoadImages(se_kidney_spatial, image_height = 1500)
+
+# Plot H&E image
+rst <- GetImages(se_kidney_spatial)[[1]]
+p1 <- ggplot()  +
+  ggtitle("H&E image of zoomed in area") + 
+  theme(plot.title = element_text(hjust = 0.2)) +
+  inset_element(p = rst[(0.5*nrow(rst)):(0.7*nrow(rst)), (0.5*ncol(rst)):(0.7*ncol(rst))], 
+                left = 0, bottom = 0, right = 1, top = 1)
+
+# Plot multiple features with zoom
+p2 <- MapMultipleFeatures(se_kidney_spatial, 
+                    image_use = "raw", 
+                    pt_size = 4.5, max_cutoff = 0.95,
+                    crop_area = c(0.5, 0.5, 0.7, 0.7),
+                    colors = c("#332288", "#88CCEE", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[c(1, 2, 3, 4, 6, 7)]) +
+  plot_layout(guides = "collect") &
+  theme(plot.title = element_blank())
+
+p1 / p2
+
+```
+

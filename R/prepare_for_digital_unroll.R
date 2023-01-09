@@ -63,7 +63,7 @@ export_graph <- function (
       select(from, to) |>
       mutate(value = 1L) |>
       add_count(from) |>
-      filter(n > 1) |>
+      #filter(n > 1) |>
       select(-n),
     names_from = "from",
     values_from = "value",

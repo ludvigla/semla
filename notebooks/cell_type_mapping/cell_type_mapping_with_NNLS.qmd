@@ -208,7 +208,6 @@ MapMultipleFeatures(se_brain_spatial,
 
 ```
 
-
 # Mouse kidney
 
 In the second example, we'll look at data from mouse kidney. We can obtain the single-cell data with the `TabulaMurisSenisData` R package from bioconductor. Let's load the data and create a `Seurat` object from it.
@@ -400,7 +399,6 @@ p2 <- MapMultipleFeatures(se_kidney_spatial,
 p1 / p2
 
 ```
-
 
 ```{r eval=FALSE, include=FALSE}
 saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")

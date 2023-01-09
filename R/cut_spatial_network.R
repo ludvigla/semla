@@ -3,6 +3,8 @@
 #'
 NULL
 
+# TODO: fix bug when only 1 spot is selected
+# TODO: fix feature range when 1 sample is selected
 #' Cut spatial networks in folded tissues
 #'
 #' Opens an interactive viewer where a spatial network is visualized on top
@@ -90,7 +92,7 @@ CutSpatialNetwork <- function (
     if (!file.exists(tilepath)) {
       abort(glue("Path {tilepath} is missing for sample {sampleID}"))
     }
-    infopath <- paste0(datadir, paste0("/image_info", sampleID, ".json"))
+    infopath <- paste0(datadir, paste0("/image_info_", sampleID, ".json"))
     if (!file.exists(infopath)) {
       abort(glue("Path {infopath} is missing for sample {sampleID}"))
     }

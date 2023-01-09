@@ -5,9 +5,12 @@
 notebooks/seeded_nmf_tests.qmd
 presentations/
 notebooks/nmf/seeded_nmf_tests.qmd
-notebooks/nmf/mousebrain/
-notebooks/nmf/kidney/
+notebooks/cell_type_mapping/mousebrain/
+notebooks/cell_type_mapping/kidney/
+vignettes/mousebrain/
+vignettes/kidney
 docs
 package.json
 webpack.config.js
 yarn.lock
+vignettes/bc_visium/

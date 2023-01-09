@@ -98,13 +98,16 @@ LoadAndMergeMatrices <- function (
   }
   # Merge matrices
   if (length(exprMats) > 1) {
-    if (verbose) cli_text(""); cli_alert_info("Merging matrices:")
+    if (verbose) {
+      cli_text("")
+      cli_alert_info("Merging matrices:")
+    }
     mergedMat <- RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
     if (verbose) cli_alert_success(glue("There are {cli::col_br_blue(nrow(mergedMat))} features and {cli::col_br_magenta(ncol(mergedMat))} ",
                                         "spots in the merged matrix."))
     return(mergedMat)
   } else {
-    cli_alert_info("only 1 expression matrix loaded.")
+    if (verbose) cli_alert_info("only 1 expression matrix loaded.")
     if (verbose) cli_alert_success(glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
                                      " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix."))
     return(exprMats[[1]])
