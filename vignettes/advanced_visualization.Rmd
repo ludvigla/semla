@@ -17,7 +17,6 @@ library(tibble)
 library(ggplot2)
 library(patchwork)
 library(STUtility2)
-library(scico)
 ```
 
 ## Load data

@@ -6,6 +6,10 @@ editor_options:
   chunk_output_type: inline
 ---
 
+```{r message=FALSE, warning=FALSE}
+library(STUtility2)
+```
+
 `STUtility2`'s Feature Viewer is an interactive application that can be run directly from R which makes it possible to interactively visualize features present in a `Seurat` object and it also makes it possible to manually annotate spots.
 
 Some of the functionality is similar to what you can do with the [Loupe Browser](https://www.10xgenomics.com/products/loupe-browser) or the [ST viewer](https://pubmed.ncbi.nlm.nih.gov/30875427/) but if you are using `Seurat` (or any other R package) for your analyses, it can be cumbersome to import/export results back and forth from R.
