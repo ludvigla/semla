@@ -169,7 +169,7 @@ MapFeatures(se, features = "r_dist_3_sqrt", center_zero = TRUE, pt_size = 2,
             override_plot_dims = TRUE)
 ```
 
-With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border. 
+With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border.
 
 ```{r fig.asp=0.5}
 sel_genes <- c("CRISP3", "IGLC2")
@@ -191,7 +191,7 @@ MapFeatures(SubsetSTData(se, expression = r_dist_3 < 1e3),
             image_use = "raw", pt_size = 2)
 ```
 
-So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase with distance from the tumor which gives us a useful tool to characterize the tumor microenvironment. 
+So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase with distance from the tumor which gives us a useful tool to characterize the tumor microenvironment.
 
 A perhaps even more useful application is to explore the relative abundance of cell types around or inside the tumor border, which we can do if we compute cell type proportions from our data fist.
 
@@ -263,7 +263,7 @@ se[[]] |>
     theme_minimal()
 ```
 
-If we map the expression of these genes spatially, it is quite clear that these genes are expressed in different niches of the microenvironment. In fact, two of these "niches" are mostly composed of tumor cells. 
+If we map the expression of these genes spatially, it is quite clear that these genes are expressed in different niches of the microenvironment. In fact, two of these "niches" are mostly composed of tumor cells.
 
 Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in `STUtility2` are easy to adapt to many different scenarios.
 

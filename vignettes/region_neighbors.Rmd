@@ -1,6 +1,8 @@
 ---
 title: "Region neighbors"
-format: html
+output:
+  html_document:
+    code_folding: show
 editor: visual
 editor_options: 
   chunk_output_type: inline
@@ -16,10 +18,11 @@ library(STUtility2)
 library(dplyr)
 ```
 
-In this tutorial, we will continue with the same Seurat object that we created in the 'radial distances' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial first. 
+In this tutorial, we will continue with the same Seurat object that we created in the 'radial distances' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial first.
 
 ```{r include=FALSE}
 se <- readRDS("bc_visium/bc")
+se <- LoadImages(se)
 ```
 
 ## Region neighbors
@@ -101,4 +104,4 @@ VlnPlot(se_border_spots, features = rownames(border_markers_up), group.by = "nb_
   
 ```
 
-If you want to select a wider band of spots surrounding a ROI, you can calculate radial distances and set thresholds instead. 
+If you want to select a wider band of spots surrounding a ROI, you can calculate radial distances and set thresholds instead.
