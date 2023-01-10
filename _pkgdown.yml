@@ -31,8 +31,10 @@ navbar:
         href: articles/getting_started.html
       - text: Subset/merge
         href: articles/subset_and_merge.html
-      - text: Images and spot coordinates
-        href: articles/images_and_coordinates.html
+      - text: '-------'
+      - text: Interactive
+      - text: Feature viewer
+        href: articles/feature_viewer.html
       - text: '-------'
       - text: Spatial visualization
       - text: Map numeric features
@@ -53,6 +55,11 @@ navbar:
         href: articles/cell_type_mapping_with_NNLS.html
       - text: Digital unrolling
         href: articles/digital_unrolling.html
+      - text: '-------'
+      - text: Image processing
+      - text: Images and spot coordinates
+        href: articles/images_and_coordinates.html
+
 reference:
 - title: Function reference
 - subtitle: Load & process
