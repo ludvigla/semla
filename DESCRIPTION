@@ -20,6 +20,7 @@ Description: STUtility2 collects useful tools for Spatially Resolved Transcripto
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
+    R (>= 4.1.0),
     Seurat (>= 4.0.0),
     SeuratObject (>= 4.0.0),
     dplyr (>= 1.0.0),

@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-In this notebook, we'll have a look at how you can use spatial methods in `STUtility2`.
+In this notebook, we'll have a look at so called 'spatial methods' provided in `STUtility2`. 'spatial methods' refers to analysis methods which somehow incorporate the position of spots in their calculations.
 
 ```{r warning=FALSE, message=FALSE}
 library(tibble)
@@ -219,7 +219,7 @@ se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3",
 MapFeatures(se, features = "r_dist_3", pt_size = 2)
 ```
 
-If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_length_out`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
+If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_nbreaks`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
 
 ```{r fig.asp=1}
 se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3", 
