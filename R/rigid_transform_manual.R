@@ -147,6 +147,7 @@ RunAlignment.default <- function (
 #' @import cli
 #' @import glue
 #'
+#' @export
 RunAlignment.Seurat <- function (
   object,
   image_height = 400,

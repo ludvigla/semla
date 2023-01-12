@@ -131,9 +131,7 @@ se_brain_spatial <- readRDS("~/10x_data/R_objects/se_brain_spatial")
 We can visualize the available cell types in our UMAP embedding of the cells. We have access to 23 annotated cell types, including L2-L6 layer neurons which have a distinct spatial distribution in the tissue.
 
 ```{r}
-
 DimPlot(se_allen, group.by = "subclass")
-
 ```
 
 ### Run NNLS
@@ -176,6 +174,29 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
         plot.title = element_blank())
 }) |> setNames(nm = selected_celltypes)
 
+```
+
+```{r}
+se_brain_spatial <- LoadImages(se_brain_spatial, image_height = 1e3)
+plots <- lapply(seq_along(selected_celltypes), function(i) {
+  MapFeatures(se_brain_spatial, pt_size = 1.3,
+            features = selected_celltypes[i], image_use = "raw",
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(), 
+            scale_alpha = TRUE)  +
+  plot_layout(guides = "collect") & 
+  theme(legend.position = "right", legend.margin = margin(b = 50),
+        legend.text = element_text(angle = 0),
+        plot.title = element_blank())
+}) |> setNames(nm = selected_celltypes)
+for (nm in names(plots)[1:7]) {
+  jpeg(filename = paste0("../../presentations/images/cell_types/", 
+                         gsub(nm, pattern = " |\\/", replacement = "_"), 
+                         ".jpg"), width = 1200, height = 600, res = 150)
+  (plots[[nm]] & labs(fill = "proportion\nestimate"))|> print()
+  dev.off()
+}
 ```
 
 ### Mouse brain cell types {.tabset}
@@ -307,6 +328,19 @@ MapMultipleFeatures(se_brain_spatial,
 
 ```
 
+```{r}
+p <- MapMultipleFeatures(se_brain_spatial, 
+                    image_use = "raw", 
+                    pt_size = 1.5, max_cutoff = 0.99,
+                    override_plot_dims = TRUE, 
+                    colors = c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499"),
+                    features = selected_celltypes[1:7]) +
+  plot_layout(guides = "collect")
+
+jpeg(filename = "../../presentations/images/cell_types/merged_celltypes.jpg", width = 1400, height = 600, res = 150)
+print(p)
+dev.off()
+```
 
 ## Mouse kidney
 
@@ -564,4 +598,3 @@ p2 <- MapMultipleFeatures(se_kidney_spatial,
 p1 / p2
 
 ```
-

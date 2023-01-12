@@ -1511,7 +1511,12 @@ MapLabels.Seurat <- function (
       abort(glue("'image_use' is invalid. Expected a character of length 1."))
     image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     images <- st_object@rasterlists[[image_use]]
-    if (is.null(images)) abort("Images have not yet been loaded. Did you run LoadImages()?")
+    if (image_use == "raw") {
+      if (is.null(images)) abort("Images have not yet been loaded. Did you run LoadImages()?")
+    }
+    if (image_use == "transformed") {
+      if (is.null(images)) abort("Images have not yet been transformed.")
+    }
     images <- setNames(images, paste0(seq_along(images)))
     if (!is.null(section_number)) {
       images <- images[section_number]
