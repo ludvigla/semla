@@ -103,7 +103,7 @@ example be dimensionality reduction results instead.
 - [x] migrate `RegionNeighbours` from STUtility
 - [x] `RadialDistance` : calculates the radial distances from the borders of a region of interest
 - [x] `DisconnectRegions` : separates spatially disconnected regions 
-- [ ] `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
+- [x] `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
 - [ ] `GroupClusteringTest` : (function name??) under development. Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
 
 ### Staffli

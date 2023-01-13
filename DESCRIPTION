@@ -44,7 +44,7 @@ Imports:
     shiny,
     shinyjs,
     reactR
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Suggests: 
     farver,
     tidygraph,
@@ -89,6 +89,7 @@ Collate:
     'rigid_transform.R'
     'rigid_transform_manual.R'
     'spatial_autocorrelation.R'
+    'spatial_neighborhood_stats.R'
     'spatial_network.R'
     'staffli_object.R'
     'subset_and_merge.R'

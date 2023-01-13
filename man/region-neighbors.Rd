@@ -146,7 +146,9 @@ Other spatial-methods:
 \code{\link{DisconnectRegions}()},
 \code{\link{GetSpatialNetwork}()},
 \code{\link{RadialDistance}()},
-\code{\link{RunLocalG}()}
+\code{\link{RunLabelAssortativityTest}()},
+\code{\link{RunLocalG}()},
+\code{\link{RunNeighborhoodEnrichmentTest}()}
 }
 \author{
 Ludvig Larsson

@@ -186,7 +186,9 @@ Other spatial-methods:
 \code{\link{DisconnectRegions}()},
 \code{\link{GetSpatialNetwork}()},
 \code{\link{RadialDistance}()},
-\code{\link{RegionNeighbors}()}
+\code{\link{RegionNeighbors}()},
+\code{\link{RunLabelAssortativityTest}()},
+\code{\link{RunNeighborhoodEnrichmentTest}()}
 }
 \author{
 Ludvig Larsson

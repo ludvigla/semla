@@ -95,7 +95,9 @@ Other spatial-methods:
 \code{\link{DisconnectRegions}()},
 \code{\link{RadialDistance}()},
 \code{\link{RegionNeighbors}()},
-\code{\link{RunLocalG}()}
+\code{\link{RunLabelAssortativityTest}()},
+\code{\link{RunLocalG}()},
+\code{\link{RunNeighborhoodEnrichmentTest}()}
 }
 \author{
 Ludvig Larsson

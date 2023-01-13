@@ -148,7 +148,9 @@ Other spatial-methods:
 \code{\link{GetSpatialNetwork}()},
 \code{\link{RadialDistance}()},
 \code{\link{RegionNeighbors}()},
-\code{\link{RunLocalG}()}
+\code{\link{RunLabelAssortativityTest}()},
+\code{\link{RunLocalG}()},
+\code{\link{RunNeighborhoodEnrichmentTest}()}
 }
 \author{
 Ludvig Larsson
