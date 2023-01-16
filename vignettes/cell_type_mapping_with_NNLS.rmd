@@ -328,20 +328,6 @@ MapMultipleFeatures(se_brain_spatial,
 
 ```
 
-```{r}
-p <- MapMultipleFeatures(se_brain_spatial, 
-                    image_use = "raw", 
-                    pt_size = 1.5, max_cutoff = 0.99,
-                    override_plot_dims = TRUE, 
-                    colors = c("#332288", "#88CCEE", "#44AA99", "#117733", "#DDCC77", "#CC6677","#AA4499"),
-                    features = selected_celltypes[1:7]) +
-  plot_layout(guides = "collect")
-
-jpeg(filename = "../../presentations/images/cell_types/merged_celltypes.jpg", width = 1400, height = 600, res = 150)
-print(p)
-dev.off()
-```
-
 ## Mouse kidney
 
 In the second example, we'll look at data from mouse kidney. We can obtain the single-cell data with the `TabulaMurisSenisData` R package from bioconductor. Let's load the data and create a `Seurat` object from it.
