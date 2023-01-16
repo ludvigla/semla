@@ -30,8 +30,8 @@ NULL
 #' [default: 200]. Recommended to increase the number of permutations to >=200 for more robust
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable z-scores.
-#' @param seed A seed for reproducibility
-#' @param n_cores Number of cores. [default: parallel::detectCores() - 1]
+#' @param seed A seed for reproducibility [default: 123]
+#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label pair.
@@ -94,7 +94,6 @@ RunNeighborhoodEnrichmentTest <- function(
   # checks
   if (n_permutations != round(n_permutations)) rlang::abort("Invalid input for 'n_permutations', expected a numeric integer.")
   if (n_permutations <= 1) rlang::abort("Invalid input for 'n_permutations', needs to be more than 1.")
-  if (!is.logical(fixed_random_seed)) rlang::abort("Invalid input for 'fixed_random_seed', expected a logical.")
 
   # check column labels
   if (!is.na(column_labels[1])) {
@@ -167,10 +166,8 @@ RunNeighborhoodEnrichmentTest <- function(
     cli_alert_warning("The number of selected permutations is low (<50). Consider increasing 'n_permutations' for more robust results")
   }
 
-  if (verbose & fixed_random_seed) cli_alert_info("Using a fixed unique random seed for each iteration")
-
   # Create random labels
-  perm_data <- .randomize_label_ids(object, column_name, seed)
+  perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
   perm_edge_list <- parallel::mclapply(1:n_permutations, function(i){
 
@@ -246,8 +243,8 @@ RunNeighborhoodEnrichmentTest <- function(
 #' [default: 100]. Recommended to increase the number of permutations to >=100 for more robust
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable output
-#' @param seed A seed to use for reproducibility
-#' @param n_cores Number of cores. [default: parallel::detectCores()-1]
+#' @param seed A seed to use for reproducibility [default: 123]
+#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label.
@@ -308,8 +305,6 @@ RunLabelAssortativityTest <- function(
   # checks
   if (n_permutations != round(n_permutations)) abort("Invalid input for 'n_permutations', expected a numeric integer.")
   if (n_permutations <= 1) abort("Invalid input for 'n_permutations', needs to be more than 1.")
-  if (!is.logical(fixed_random_seed)) abort("Invalid input for 'fixed_random_seed', expected a logical.")
-
 
   # Start analysis
   if (verbose) cli_h2("Running Label Assortativity Test")
@@ -350,10 +345,9 @@ RunLabelAssortativityTest <- function(
   if (verbose & n_permutations < 25) {
     cli_alert_warning("The number of selected permutations is low (<25). Consider increasing 'n_permutations' for more robust results")
   }
-  if (verbose & fixed_random_seed) cli_alert_info("Using a fixed unique random seed for each iteration")
 
   # Create random labels
-  perm_data <- .randomize_label_ids(object, column_name, seed)
+  perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
   # Iterate randomized labels
   perm_k_stats_list <- parallel::mclapply(1:n_permutations, function(i){
@@ -383,7 +377,7 @@ RunLabelAssortativityTest <- function(
   )
   if (verbose) cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
 
-  # Summarise permuted results
+  # Summarize permuted results
   perm_k_stats_df <- do.call(bind_rows, perm_k_stats_list)
   perm_k_res <- perm_k_stats_df |>
     group_by(label) |>
@@ -410,7 +404,8 @@ RunLabelAssortativityTest <- function(
 #'
 #' @param object Seurat object containing label and sample identities for each spot in the metadata.
 #' @param column_name Column name in metadata corresponding to label ID of the spots.
-#' @param seed A seed to use for reproducibility
+#' @param n_permutations Number of times labels should be randomized.
+#' @param seed A seed to use for reproducibility.
 #'
 #' @return A matrix of dimensions NxP with random labels, where N is the number of spots in the
 #' Seurat object and P is the number of permutations
@@ -419,11 +414,15 @@ RunLabelAssortativityTest <- function(
 .randomize_label_ids <- function (
     object,
     column_name,
+    n_permutations,
     seed
 ) {
 
   if (!inherits(seed, what = c("numeric", "integer")) | (length(seed) != 1)) abort("seed should be an integer of length 1")
   set.seed(seed)
+
+  # Set global variables to NULL
+  barcode <- sampleID <- NULL
 
   # Get barcodes and labels
   new_md <- GetStaffli(object)@meta_data |>

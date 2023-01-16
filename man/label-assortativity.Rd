@@ -8,8 +8,8 @@ RunLabelAssortativityTest(
   object,
   column_name,
   n_permutations = 100,
-  fixed_random_seed = FALSE,
   n_cores = parallel::detectCores() - 1,
+  seed = 123,
   verbose = TRUE
 )
 }
@@ -23,10 +23,9 @@ RunLabelAssortativityTest(
 results. A lower number of permutations will result in high standard deviations and thus more
 unreliable output}
 
-\item{fixed_random_seed}{A logical spefiying if a fixed random seed for the permutations
-should be used. [default: FALSE]}
+\item{n_cores}{Number of cores [default: parallel::detectCores()-1]}
 
-\item{n_cores}{Number of cores. [default: parallel::detectCores()-1]}
+\item{seed}{A seed to use for reproducibility [default: 123]}
 
 \item{verbose}{Print messages [default: TRUE]}
 }
