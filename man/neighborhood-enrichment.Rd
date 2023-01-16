@@ -9,8 +9,8 @@ RunNeighborhoodEnrichmentTest(
   column_name,
   column_labels = NA,
   n_permutations = 200,
-  fixed_random_seed = FALSE,
   n_cores = parallel::detectCores() - 1,
+  seed = 123,
   verbose = TRUE
 )
 }
@@ -27,10 +27,9 @@ Spots of all other labels will be excluded. Must be more than one. Default is al
 results. A lower number of permutations will result in high standard deviations and thus more
 unreliable z-scores.}
 
-\item{fixed_random_seed}{A logical specfying if a fixed random seed for the permutations
-should be used. [default: FALSE]}
+\item{n_cores}{Number of cores [default: parallel::detectCores() - 1]}
 
-\item{n_cores}{Number of cores. [default: parallel::detectCores()-1]}
+\item{seed}{A seed for reproducibility [default: 123]}
 
 \item{verbose}{Print messages [default: TRUE]}
 }

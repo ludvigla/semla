@@ -30,9 +30,8 @@ NULL
 #' [default: 200]. Recommended to increase the number of permutations to >=200 for more robust
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable z-scores.
-#' @param fixed_random_seed A logical specfying if a fixed random seed for the permutations
-#' should be used. [default: FALSE]
-#' @param n_cores Number of cores. [default: parallel::detectCores()-1]
+#' @param seed A seed for reproducibility [default: 123]
+#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label pair.
@@ -77,13 +76,13 @@ NULL
 #'
 #' @export
 RunNeighborhoodEnrichmentTest <- function(
-    object,
-    column_name,
-    column_labels = NA,
-    n_permutations = 200,
-    fixed_random_seed = FALSE,
-    n_cores = parallel::detectCores()-1,
-    verbose = TRUE
+  object,
+  column_name,
+  column_labels = NA,
+  n_permutations = 200,
+  n_cores = parallel::detectCores() - 1,
+  seed = 123,
+  verbose = TRUE
 ){
   # Set global variables to NULL
   edges <- label_from <- label_1 <- label_2 <- label_label <- NULL
@@ -95,7 +94,6 @@ RunNeighborhoodEnrichmentTest <- function(
   # checks
   if (n_permutations != round(n_permutations)) rlang::abort("Invalid input for 'n_permutations', expected a numeric integer.")
   if (n_permutations <= 1) rlang::abort("Invalid input for 'n_permutations', needs to be more than 1.")
-  if (!is.logical(fixed_random_seed)) rlang::abort("Invalid input for 'fixed_random_seed', expected a logical.")
 
   # check column labels
   if (!is.na(column_labels[1])) {
@@ -104,15 +102,15 @@ RunNeighborhoodEnrichmentTest <- function(
   }
 
   # Start analysis
-  if (verbose) cli::cli_h2("Running Neighborhood Enrichment Analysis")
-  if (verbose) cli::cli_alert_info("Generating neighborhood adjacency data from observed labels in column '{column_name}'")
+  if (verbose) cli_h2("Running Neighborhood Enrichment Analysis")
+  if (verbose) cli_alert_info("Generating neighborhood adjacency data from observed labels in column '{column_name}'")
 
   if (!is.na(column_labels[1])) {
     if (sum(duplicated(column_labels))>0) {
-      cli::cli_alert_warning("Provided 'column_labels' contains duplicated values. Continuing analysis with abundant labels removed.")
+      cli_alert_warning("Provided 'column_labels' contains duplicated values. Continuing analysis with abundant labels removed.")
       column_labels <- unique(column_labels)
     }
-    if (verbose) cli::cli_alert_info("Analysis limited to study {length(column_labels)} unique labels")
+    if (verbose) cli_alert_info("Analysis limited to study {length(column_labels)} unique labels")
   }
 
   # Filter object if custom column_labels are provided
@@ -151,73 +149,48 @@ RunNeighborhoodEnrichmentTest <- function(
 
   # Count number of edges per unique label-label pair
   edge_table_stats <- edge_table |>
-    group_by(label_label) |>
-    summarize(.groups = "keep", edges = n()) |>
-    ungroup()
+    count(label_label) |>
+    rename(edges = n)
 
-  edge_table_stats <- merge(x = label_label_template,
-                            y = edge_table_stats,
-                            by = "label_label",
-                            all.x = T,
-                            sort = FALSE) |>
-    mutate_at("edges", ~tidyr::replace_na(.,0)) |>
-    as_tibble()
+  edge_table_stats <- label_label_template |>
+    left_join(y = edge_table_stats |> select(label_label, edges), by = "label_label") |>
+    mutate_at("edges", ~tidyr::replace_na(., 0))
 
   if (verbose) message("")
-  if (verbose) cli::cli_alert_success("Observed label adjacency calculations complete")
+  if (verbose) cli_alert_success("Observed label adjacency calculations complete")
 
 
   # Generate weighted edge lists from region neighbors of randomized labels
-  if (verbose) cli::cli_alert_info("Generating neighborhood adjacency data from randomized labels")
+  if (verbose) cli_alert_info("Generating neighborhood adjacency data from randomized labels")
   if (verbose & n_permutations < 50) {
-    cli::cli_alert_warning("The number of selected permutations is low (<50). Consider increasing 'n_permutations' for more robust results")
+    cli_alert_warning("The number of selected permutations is low (<50). Consider increasing 'n_permutations' for more robust results")
   }
 
-  if (verbose & fixed_random_seed) cli::cli_alert_info("Using a fixed unique random seed for each iteration")
+  # Create random labels
+  perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
   perm_edge_list <- parallel::mclapply(1:n_permutations, function(i){
-    # Permute column_labels
-    if ("perm_labels" %in% colnames(object@meta.data)) {
-      object$perm_labels <- NULL
-    }
 
-    if(fixed_random_seed){
-      object <- .randomize_label_ids(object = object,
-                                     column_name = column_name,
-                                     random_seed = i)
-    } else {
-      object <- .randomize_label_ids(object = object,
-                                     column_name = column_name,
-                                     random_seed = NA)
-    }
-
-    # Generate weighted edge lists from region neighbors of randomized labels
     perm_edge_table <- spatnet |>
-      tibble::add_column(
-        label_1 = paste0("Label_", as.character(object[[]][spatnet$from, "perm_labels", drop = TRUE])),
-        label_2 = paste0("Label_", as.character(object[[]][spatnet$to, "perm_labels", drop = TRUE]))
-      ) |>
-      mutate(label_label = paste0(label_1, "-", label_2))
+      mutate(label_label = paste(paste0("Label_", perm_data[spatnet$from, i]),
+                                 paste0("Label_", perm_data[spatnet$to, i]),
+                                 sep = "-"))
 
     # Count number of edges per unique label-label pair
     perm_edge_table_stats <- perm_edge_table |>
-      group_by(label_label) |>
-      summarize(.groups = "keep", edges = n()) |>
-      ungroup()
+      count(label_label) |>
+      rename(edges = n)
 
-    perm_edge_table_stats <- merge(
-        x = label_label_template,
-        y = perm_edge_table_stats,
-        by = "label_label",
-        all.x = T,
-        sort = FALSE) |>
-      mutate_at("edges", ~tidyr::replace_na(.,0)) |>
-      as_tibble()
+    perm_edge_table_stats <- label_label_template |>
+      left_join(y = perm_edge_table_stats |> select(label_label, edges), by = "label_label") |>
+      mutate_at("edges", ~tidyr::replace_na(., 0))
+
+    return(perm_edge_table_stats)
     },
     mc.cores = n_cores,
     mc.preschedule = T
   )
-  if (verbose) cli::cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
+  if (verbose) cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
 
   # Compute mean and sd from permutations
   perm_edge_df <- do.call(bind_rows, perm_edge_list)
@@ -235,7 +208,7 @@ RunNeighborhoodEnrichmentTest <- function(
   res_out$z_score <- round((res_out$edges - res_out$perm_mean) / (res_out$perm_sd),
                            digits = 3)
 
-  if (verbose) cli::cli_alert_success("Scores calculated for each label pair and returned as output tibble")
+  if (verbose) cli_alert_success("Scores calculated for each label pair and returned as output tibble")
 
   return(res_out)
 }
@@ -270,9 +243,8 @@ RunNeighborhoodEnrichmentTest <- function(
 #' [default: 100]. Recommended to increase the number of permutations to >=100 for more robust
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable output
-#' @param fixed_random_seed A logical spefiying if a fixed random seed for the permutations
-#' should be used. [default: FALSE]
-#' @param n_cores Number of cores. [default: parallel::detectCores()-1]
+#' @param seed A seed to use for reproducibility [default: 123]
+#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label.
@@ -319,8 +291,8 @@ RunLabelAssortativityTest <- function(
     object,
     column_name,
     n_permutations = 100,
-    fixed_random_seed = FALSE,
-    n_cores = parallel::detectCores()-1,
+    n_cores = parallel::detectCores() - 1,
+    seed = 123,
     verbose = TRUE
 ){
   # Set global variables to NULL
@@ -331,14 +303,12 @@ RunLabelAssortativityTest <- function(
   .validate_column_name(object = object, column_name = column_name)
 
   # checks
-  if (n_permutations != round(n_permutations)) rlang::abort("Invalid input for 'n_permutations', expected a numeric integer.")
-  if (n_permutations <= 1) rlang::abort("Invalid input for 'n_permutations', needs to be more than 1.")
-  if (!is.logical(fixed_random_seed)) rlang::abort("Invalid input for 'fixed_random_seed', expected a logical.")
-
+  if (n_permutations != round(n_permutations)) abort("Invalid input for 'n_permutations', expected a numeric integer.")
+  if (n_permutations <= 1) abort("Invalid input for 'n_permutations', needs to be more than 1.")
 
   # Start analysis
-  if (verbose) cli::cli_h2("Running Label Assortativity Test")
-  if (verbose) cli::cli_alert_info("Generating neighborhood adjacency data from observed labels in column '{column_name}'")
+  if (verbose) cli_h2("Running Label Assortativity Test")
+  if (verbose) cli_alert_info("Generating neighborhood adjacency data from observed labels in column '{column_name}'")
 
   # Generate spatnet
   spatnet <- do.call(bind_rows, GetSpatialNetwork(object))
@@ -346,7 +316,7 @@ RunLabelAssortativityTest <- function(
   spatnet$label_to <- object[[]][spatnet$to, column_name, drop = TRUE] |> as.character()
 
   # Unique labels to use
-  unique_labels <-levels(object[[column_name]][,1])
+  unique_labels <- levels(object[[column_name]][,1])
 
   # Observed k for each label
   obs_label_k_list <- lapply(unique_labels, function(l){
@@ -358,7 +328,6 @@ RunLabelAssortativityTest <- function(
   })
   obs_label_k_df <- do.call(bind_rows, obs_label_k_list)
 
-
   # Calculate average degree per label
   obs_k_stats <- obs_label_k_df |>
     group_by(label) |>
@@ -369,63 +338,46 @@ RunLabelAssortativityTest <- function(
   obs_k_stats <- obs_k_stats |> arrange(label)
 
   if (verbose) message("")
-  if (verbose) cli::cli_alert_success("Observed label average degree calculations complete")
+  if (verbose) cli_alert_success("Observed label average degree calculations complete")
 
   # Randomise labels and count k per label
-  if (verbose) cli::cli_alert_info("Generating neighborhood adjacency data from randomized labels")
+  if (verbose) cli_alert_info("Generating neighborhood adjacency data from randomized labels")
   if (verbose & n_permutations < 25) {
-    cli::cli_alert_warning("The number of selected permutations is low (<25). Consider increasing 'n_permutations' for more robust results")
+    cli_alert_warning("The number of selected permutations is low (<25). Consider increasing 'n_permutations' for more robust results")
   }
-  if (verbose & fixed_random_seed) cli::cli_alert_info("Using a fixed unique random seed for each iteration")
+
+  # Create random labels
+  perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
   # Iterate randomized labels
   perm_k_stats_list <- parallel::mclapply(1:n_permutations, function(i){
-    # Permute column_labels
-    if ("perm_labels" %in% colnames(object@meta.data)) {
-      object$perm_labels <- NULL
-    }
 
-    if(fixed_random_seed){
-      object <- .randomize_label_ids(object = object,
-                                     column_name = column_name,
-                                     random_seed = i)
-    } else {
-      object <- .randomize_label_ids(object = object,
-                                     column_name = column_name,
-                                     random_seed = NA)
-    }
-
-    # Add permuted labels to spatnet
-    spatnet$random_label_from <- object[[]][spatnet$from, "perm_labels", drop = TRUE] |> as.character()
-    spatnet$random_label_to <- object[[]][spatnet$to, "perm_labels", drop = TRUE] |> as.character()
+    spatnet$random_label_from <- perm_data[spatnet$from, i]
+    spatnet$random_label_to <- perm_data[spatnet$to, i]
 
     # Permutation generated k for each label
-    perm_label_k_list <- lapply(unique_labels, function(l){
-      spatnet_subset <- subset(spatnet, random_label_from == l & random_label_to == l)
-      spatnet_subset <- spatnet_subset |>
-        group_by(from) |>
-        summarize(.groups = "keep", k = n()) |>
-        tibble::add_column(label = l)
-    })
-    perm_label_k_df <- do.call(bind_rows, perm_label_k_list)
+    perm_label_k_df <- spatnet |>
+      mutate(identical = random_label_from == random_label_to) |>
+      filter(identical) |>
+      mutate(label = random_label_from) |>
+      group_by(from, label) |>
+      summarize(.groups = "keep", k = n())
 
     # Calculate average degree per label
     perm_k_stats <- perm_label_k_df |>
       group_by(label) |>
       summarise(.groups = "keep", avg_k = mean(k)) |>
-      ungroup()
-
-    perm_k_stats$label <- factor(perm_k_stats$label, levels = unique_labels)
-    perm_k_stats <- perm_k_stats |>
+      ungroup() |>
+      mutate(label = factor(label, levels = unique_labels)) |>
       arrange(label) |>
       tibble::add_column(iteration = i)
     },
     mc.cores = n_cores,
-    mc.preschedule = T
+    mc.preschedule = TRUE
   )
-  if (verbose) cli::cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
+  if (verbose) cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
 
-  # Summarise permuted results
+  # Summarize permuted results
   perm_k_stats_df <- do.call(bind_rows, perm_k_stats_list)
   perm_k_res <- perm_k_stats_df |>
     group_by(label) |>
@@ -435,7 +387,7 @@ RunLabelAssortativityTest <- function(
     ungroup()
 
   if (verbose & max(perm_k_res$min_avg_k_sd) > 0.1) {
-    cli::cli_alert_warning("The standard deviation of some of the permuted results is relatively high (>0.1) which may indicate unreliable results. A possible solution could be to increase the number of permutations ('n_permutations').")
+    cli_alert_warning("The standard deviation of some of the permuted results is relatively high (>0.1) which may indicate unreliable results. A possible solution could be to increase the number of permutations ('n_permutations').")
   }
 
   # Prepare results output and compute scaled avg k
@@ -444,45 +396,50 @@ RunLabelAssortativityTest <- function(
   res_out$k_max <- network_k_max
   res_out$avg_k_scaled <- (res_out$avg_k-res_out$min_avg_k_mean)/(network_k_max-res_out$min_avg_k_mean)
 
-  if (verbose) cli::cli_alert_success("Scores calculated for each label and returned as output tibble")
+  if (verbose) cli_alert_success("Scores calculated for each label and returned as output tibble")
   return(res_out)
 }
-
-
 
 #' Randomize Label IDs within each sample
 #'
 #' @param object Seurat object containing label and sample identities for each spot in the metadata.
 #' @param column_name Column name in metadata corresponding to label ID of the spots.
-#' @param random_seed Random seed to be used for sampling. Default is NA.
+#' @param n_permutations Number of times labels should be randomized.
+#' @param seed A seed to use for reproducibility.
 #'
-#' @return New Seurat object with shuffled labels per sample in the "perm_labels" column of the meta data
+#' @return A matrix of dimensions NxP with random labels, where N is the number of spots in the
+#' Seurat object and P is the number of permutations
 #'
 #' @noRd
 .randomize_label_ids <- function (
     object,
     column_name,
-    random_seed = NA
+    n_permutations,
+    seed
 ) {
-  if(!is.na(random_seed)){
-    set.seed(random_seed)
-  }
+
+  if (!inherits(seed, what = c("numeric", "integer")) | (length(seed) != 1)) abort("seed should be an integer of length 1")
+  set.seed(seed)
+
   # Set global variables to NULL
-  sampleID <- original_labels <- NULL
+  barcode <- sampleID <- NULL
 
-  # Fetch original labels
-  new_md_rand <- setNames(GetStaffli(object)@meta_data[,c("barcode", "sampleID")] |>
-                            bind_cols(object[[]] |> select(all_of(column_name))),
-                          nm = c("barcode", "sampleID", "original_labels"))
+  # Get barcodes and labels
+  new_md <- GetStaffli(object)@meta_data |>
+    select(barcode, sampleID) |>
+    bind_cols(object[[]] |> select(all_of(column_name))) |>
+    setNames(nm = c("barcode", "sampleID", "original_labels"))
 
-  # Shuffle label ids for each sample
-  new_md_rand <- new_md_rand |>
+  # Create random labels
+  new_md_groups <- new_md |>
     group_by(sampleID) |>
-    mutate(perm_labels = original_labels[sample(dplyr::row_number())])
+    group_split()
+  perm_data <- do.call(rbind, lapply(new_md_groups, function(x) {
+    sapply(1:n_permutations, function(i) {
+      x$original_labels[sample.int(nrow(x))]
+    })
+  }))
+  rownames(perm_data) <- colnames(object)
 
-  # Add shuffled labels to se object metadata
-  object$perm_labels <- ""
-  object <- AddMetaData(object, new_md_rand$perm_labels, col.name = "perm_labels")
-
-  return(object)
+  return(perm_data)
 }
