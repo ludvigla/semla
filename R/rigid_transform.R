@@ -303,9 +303,11 @@ RigidTransformImages.Seurat <- function (
   if (!all(nSamples_transform %in% nSamples))
     abort(glue("Invalid sampleID(s) in 'transforms'. Samples available: ",
                "{paste(nSamples, collapse = ', ')}"))
-  if (verbose) cli_h2("Transforming images")
-  if (verbose) cli_alert_info(glue("Found transformations for sample(s): ",
+  if (verbose) {
+    cli_h2("Transforming images")
+    cli_alert_info(glue("Found transformations for sample(s): ",
                                    "{paste(nSamples_transform, collapse = ', ')}"))
+  }
   nSamples <- nSamples_transform
 
   # Check that transforms have been formatted correctly
@@ -314,7 +316,7 @@ RigidTransformImages.Seurat <- function (
 
   # Subset spots meta data and add transforms
   transforms <- st_object@image_info |>
-    filter(sampleID == nSamples) |>
+    filter(sampleID %in% nSamples) |>
     select(full_width, full_height) |>
     bind_cols(transforms)
 
@@ -335,7 +337,7 @@ RigidTransformImages.Seurat <- function (
 
   # Apply transformations to selected samples
   for (i in nSamples) {
-    if (verbose) cli_alert_info("Transforming sample {i}")
+    if (verbose) cli_alert_info("Transforming image {i}")
     transf_res <- RigidTransformImages(transforms[transforms$sampleID == i, ],
                                        image = raw_images[[i]],
                                        xy_coords = xy_coords[xy_coords$sampleID == i, ],
