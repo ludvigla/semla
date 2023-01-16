@@ -9,8 +9,9 @@ notebooks/cell_type_mapping/mousebrain/
 notebooks/cell_type_mapping/kidney/
 vignettes/mousebrain/
 vignettes/kidney
-docs
 package.json
 webpack.config.js
 yarn.lock
 vignettes/bc_visium/
+vignettes/R_objects/
+vignettes/demo_data/

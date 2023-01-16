@@ -49,6 +49,8 @@ navbar:
         href: articles/radial_distances.html
       - text: Region neighbors
         href: articles/region_neighbors.html
+      - text: Statistics for labelled spots
+        href: articles/spatial_statistics_for_labelled_spots.html
       - text: '-------'
       - text: Analysis
       - text: Cell type mapping
@@ -59,6 +61,8 @@ navbar:
       - text: Image processing
       - text: Images and spot coordinates
         href: articles/images_and_coordinates.html
+      - text: Image alignment
+        href: articles/image_alignment.html
 
 reference:
 - title: Function reference
@@ -113,6 +117,8 @@ reference:
   - CorSpatialFeatures
   - RadialDistance
   - RunLocalG
+  - RunLabelAssortativityTest
+  - RunNeighborhoodEnrichmentTest
 - subtitle: Cell type mapping
 - contents: RunNNLS
 - subtitle: Digital unroll

@@ -1,0 +1,23 @@
+pandoc: '2.18'
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  STUtility2: STUtility2.html
+  advanced_visualization: advanced_visualization.html
+  categorical_features: categorical_features.html
+  cell_type_mapping_with_NNLS: cell_type_mapping_with_NNLS.html
+  digital_unrolling: digital_unrolling.html
+  feature_viewer: feature_viewer.html
+  getting_started: getting_started.html
+  image_alignment: image_alignment.html
+  images_and_coordinates: images_and_coordinates.html
+  numeric_features: numeric_features.html
+  radial_distances: radial_distances.html
+  region_neighbors: region_neighbors.html
+  spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
+  subset_and_merge: subset_and_merge.html
+last_built: 2023-01-16T20:01Z
+urls:
+  reference: https://ludvigla.github.io/STUtility2/reference
+  article: https://ludvigla.github.io/STUtility2/articles
+
