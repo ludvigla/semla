@@ -49,6 +49,7 @@ MapFeatures(object, ...)
   center_zero = FALSE,
   scale = c("shared", "free"),
   arrange_features = c("col", "row"),
+  drop_na = FALSE,
   blend = FALSE,
   blend_order = 1:3,
   override_plot_dims = FALSE,

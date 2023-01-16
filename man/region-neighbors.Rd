@@ -85,8 +85,9 @@ library(STUtility2)
 library(dplyr)
 
 se_mbrain <-
-  readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-                                  "/mousebrain/se_mbrain")))
+  readRDS(system.file("extdata",
+  "/mousebrain/se_mbrain",
+  package = "STUtility2"))
 
 # Create Seurat object
 se_mbrain <- se_mbrain |>

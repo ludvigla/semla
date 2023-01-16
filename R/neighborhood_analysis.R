@@ -88,7 +88,7 @@ RegionNeighbors.default <- function (
     spots <- intersect(spots, spatnet_combined$from)
   }
 
-  # Filter spatial newtork to contain from spots in selected group
+  # Filter spatial network to contain from spots in selected group
   spatnet_combined <- spatnet_combined |>
     filter(from %in% spots)
 
@@ -132,7 +132,7 @@ RegionNeighbors.default <- function (
 #' @import cli
 #' @importFrom glue glue
 #' @importFrom rlang abort %||%
-#' @importFrom dplyr bind_cols select left_join filter bind_cols pull distinct sym all_of
+#' @import dplyr
 #' @importFrom tibble tibble
 #'
 #' @examples
@@ -141,8 +141,9 @@ RegionNeighbors.default <- function (
 #' library(dplyr)
 #'
 #' se_mbrain <-
-#'   readRDS(Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
-#'                                   "/mousebrain/se_mbrain")))
+#'   readRDS(system.file("extdata",
+#'   "/mousebrain/se_mbrain",
+#'   package = "STUtility2"))
 #'
 #' # Create Seurat object
 #' se_mbrain <- se_mbrain |>

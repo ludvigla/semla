@@ -22,3 +22,26 @@ From RStudio, click on `New Project...` in the top right corner, select `Existin
 Next, click on the `build` tab in the top right corner of RStudio and `Install`. You will most likely need to install a bunch of R packages to make it work. 
 
 If you find bugs or have any other feature requests, please open a new issue.
+
+## Setting up a conda environment
+
+First, you need to make sure to have anaconda installed. I suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+
+````
+conda create -n r-stutility2 r-essentials r-base
+````
+
+And then activate the environment
+
+````
+conda activate r-stutility
+````
+
+Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in 
+the conda environment. On Mac OS, you can open RStudio by running soemthing like:
+
+````
+/Applications/RStudio.app/Contents/MacOS/RStudio
+````
+
+When RStudio is opened, check that the R version is higher than v4.1.
