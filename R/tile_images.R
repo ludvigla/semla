@@ -13,7 +13,7 @@
 #' @param nCores Number of cores to use for threading
 #' @param verbose Print messages
 #'
-#' @importFrom parallel detectCores mclapply
+#' @importFrom parallel detectCores
 #' @importFrom magick image_read image_info image_crop image_scale image_blank image_composite image_transparent image_write
 #' @importFrom tibble tibble
 #' @importFrom rlang %||%
@@ -73,6 +73,15 @@ TileImage <- function (
     nCores = detectCores() - 1,
     verbose = TRUE
 ) {
+
+  # Define multicore lapply function depending on OS
+  if (!.Platform$OS.type %in% c("windows", "unix")) {
+    parLapplier <- lapply()
+  } else {
+    parLapplier <- switch(.Platform$OS.type,
+                          "windows" = .winLapply,
+                          "unix" = .unixLapply)
+  }
 
   # Validate input
   stopifnot(
@@ -151,9 +160,9 @@ TileImage <- function (
 
   # Export tiles
   if (verbose) cli_alert("  Exporting tiles")
-  results <- mclapply(names(tiles), function(tileName) {
+  results <- parLapplier(names(tiles), function(tileName) {
     image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
-  }, mc.cores = nCores)
+  }, nCores = nCores)
 
   # Export data as JSON
   if (verbose) cli_alert("  Exporting meta data")

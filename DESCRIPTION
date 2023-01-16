@@ -95,6 +95,7 @@ Collate:
     'tile_images.R'
     'transformations_coordinates.R'
     'transformations_image.R'
+    'utils.R'
     'visualization_spatial.R'
     'visualization_spatial_multicolor.R'
     'visualization_spatial_stats.R'

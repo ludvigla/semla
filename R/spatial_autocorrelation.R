@@ -58,7 +58,7 @@ NULL
 #' @rdname cor-features
 #'
 #' @importFrom stats cor
-#' @importFrom parallel mclapply detectCores
+#' @importFrom parallel detectCores
 #' @importFrom tibble tibble
 #' @importFrom Matrix rowSums
 #' @importFrom tidyr pivot_wider
@@ -114,6 +114,15 @@ CorSpatialFeatures.default <- function (
 
   # Set global variables to NULL
   from <- to <- NULL
+
+  # Define multicore lapply function depending on OS
+  if (!.Platform$OS.type %in% c("windows", "unix")) {
+    parLapplier <- lapply()
+  } else {
+    parLapplier <- switch(.Platform$OS.type,
+                          "windows" = .winLapply,
+                          "unix" = .unixLapply)
+  }
 
   if (verbose) cli_h2("Computing spatial autocorrelation")
 
@@ -173,10 +182,10 @@ CorSpatialFeatures.default <- function (
       }
       chunks <- ceiling((1:ncol(x_subset))/100)
       chunks <- split(1:ncol(x_subset), chunks)
-      spatial_autocorrelation <- unlist(mclapply(seq_along(chunks), function(i) {
+      spatial_autocorrelation <- unlist(parLapplier(seq_along(chunks), function(i) {
         inds <- chunks[[i]]
         .colCors(x_subset[, inds], lagMat[, inds])
-      }, mc.cores = nCores))
+      }, nCores = nCores))
     }
 
     if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
@@ -199,12 +208,12 @@ CorSpatialFeatures.default <- function (
         nCores <- detectCores() - 1
         cli_alert_info("Using {nCores} threads")
       }
-      chunks <- ceiling((1:ncol(object))/100)
-      chunks <- split(1:ncol(object), chunks)
-      spatial_autocorrelation <- unlist(mclapply(seq_along(chunks), function(i) {
+      #chunks <- ceiling((1:ncol(object))/100)
+      #chunks <- split(1:ncol(object), chunks)
+      spatial_autocorrelation <- unlist(parLapplier(seq_along(chunks), function(i) {
         inds <- chunks[[i]]
         .colCors(object[, inds], lagMat[, inds])
-      }, mc.cores = nCores))
+      }, nCores = nCores))
     }
 
     if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
