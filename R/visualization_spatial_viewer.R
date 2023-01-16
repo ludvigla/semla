@@ -3,6 +3,8 @@
 #'
 NULL
 
+# TODO: fix bug when only 1 spot is selected
+# TODO: fix feature range when 1 sample is selected
 #' Interactive spatial feature viewer
 #'
 #' `FeatureViewer` opens up an interactive shiny application where
@@ -397,7 +399,7 @@ FeatureViewer <- function (
     # Listen for changes in selbarcodes and add selection if
     # a label is submitted
     observeEvent(input$selbarcodes, {
-      if ((length(input$selbarcodes) > 1) & (input$label != "")) {
+      if ((length(input$selbarcodes) > 0) & (input$label != "")) {
         if (inherits(.categorical_data[, input$category], what = "factor")) {
           tmp <- .categorical_data |>
             select(contains(input$category)) |>
