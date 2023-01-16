@@ -13,6 +13,7 @@ RadialDistance(object, ...)
   spots,
   angles = NULL,
   angles_nbreaks = NULL,
+  remove_singletons = TRUE,
   verbose = TRUE,
   ...
 )
@@ -23,6 +24,7 @@ RadialDistance(object, ...)
   select_groups = NULL,
   angles = NULL,
   angles_nbreaks = NULL,
+  remove_singletons = TRUE,
   verbose = TRUE,
   ...
 )
@@ -47,6 +49,11 @@ to split the spatially disconnected regions first.}
 \item{angles_nbreaks}{An integer specifying a number of intervals to cut the "search interval"
 into. This can be useful if you want to group radial distances into different directions from
 the region center.}
+
+\item{remove_singletons}{Logical specifying if 'singletons' should be excluded. Spatially disconnected
+regions are not allowed when a "search interval" is defined, but single spots without neighbors are
+not detected as disconnected components. Single spots will most likely not interfere when calculating
+the centroid of the region of interest and can therefore be kept.}
 
 \item{verbose}{Print messages}
 
@@ -89,12 +96,17 @@ Spots located inside the selected region will have negative distances and
 spots located outside of the selected region will have positive distances.
 }
 
-\section{directions}{
+\section{search interval}{
 
 The microenvironment of the region of interest might be extremely heterogeneous
 depending on the direction from its center. For this reason, it can be useful to narrow
 down the search area by defining a smaller angle interval with `angles`. Alternativley,
 you can split the radial distances into an even number of slices with `angles_nbreaks`.
+When using a predefined search interval, the region of interest (e.g. manual annotation)
+should not contain multiple spatially disconnected regions. Angles are calculated from
+center of the region of interest so it only makes sense to investigate one region at the time.
+You can use \code{\link{DisconnectRegions}} to split a categorical variable that contains
+multiple spatially disconnected regions.
 }
 
 \section{default method}{
