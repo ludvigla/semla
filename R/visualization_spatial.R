@@ -6,7 +6,6 @@ NULL
 # Plot functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-# TODO: drop NA
 #' @param crop_area a numeric vector of length 4 specifying a rectangular area to crop
 #' the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 #' right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
@@ -338,6 +337,7 @@ MapFeatures.Seurat <- function (
     center_zero = FALSE,
     scale = c("shared", "free"),
     arrange_features = c("col", "row"),
+    drop_na = FALSE,
     blend = FALSE,
     blend_order = 1:3,
     override_plot_dims = FALSE,
@@ -427,7 +427,7 @@ MapFeatures.Seurat <- function (
   dims <- GetStaffli(object)@image_info
 
   # generate plots
-  wrapped_plots <- MapFeatures(
+  wrapped_plots <- MapFeatures.default(
     object = data_use,
     crop_area = crop_area,
     pt_size = pt_size,
@@ -443,6 +443,7 @@ MapFeatures.Seurat <- function (
     arrange_features = arrange_features,
     dims = dims,
     coords_columns = coords_columns,
+    drop_na = drop_na,
     blend = blend,
     blend_order = blend_order,
     return_plot_list = (!is.null(image_use)) | return_plot_list
