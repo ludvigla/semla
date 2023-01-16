@@ -68,7 +68,8 @@ LoadImages.default <- function (
     if (info$height != image_height) {
       im <- im |>
         image_scale(geometry = geometry_area(height = image_height))
-      if (verbose) cli_alert_info("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")
+      im_info_scaled <- image_info(im)
+      if (verbose) cli_alert_info("Scaled image from {info$height}x{info$width} to {image_height}x{im_info_scaled$width} pixels")
     } else {
       if (verbose) cli_alert_info("Loaded H&E image in full resolution")
     }
