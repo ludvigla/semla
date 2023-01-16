@@ -183,12 +183,12 @@ RunNeighborhoodEnrichmentTest <- function(
 
     if(fixed_random_seed){
       object <- .randomize_label_ids(object = object,
-                                    column_name = column_name,
-                                    random_seed = i)
+                                     column_name = column_name,
+                                     random_seed = i)
     } else {
       object <- .randomize_label_ids(object = object,
-                                    column_name = column_name,
-                                    random_seed = NA)
+                                     column_name = column_name,
+                                     random_seed = NA)
     }
 
     # Generate weighted edge lists from region neighbors of randomized labels
