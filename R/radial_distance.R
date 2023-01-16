@@ -29,11 +29,16 @@ NULL
 #' Spots located inside the selected region will have negative distances and
 #' spots located outside of the selected region will have positive distances.
 #'
-#' @section directions:
+#' @section search interval:
 #' The microenvironment of the region of interest might be extremely heterogeneous
 #' depending on the direction from its center. For this reason, it can be useful to narrow
 #' down the search area by defining a smaller angle interval with `angles`. Alternativley,
 #' you can split the radial distances into an even number of slices with `angles_nbreaks`.
+#' When using a predefined search interval, the region of interest (e.g. manual annotation)
+#' should not contain multiple spatially disconnected regions. Angles are calculated from
+#' center of the region of interest so it only makes sense to investigate one region at the time.
+#' You can use \code{\link{DisconnectRegions}} to split a categorical variable that contains
+#' multiple spatially disconnected regions.
 #'
 #' @section default method:
 #' `object` should be a tibble with four columns:
@@ -64,6 +69,11 @@ NULL
 #' @param angles_nbreaks An integer specifying a number of intervals to cut the "search interval"
 #' into. This can be useful if you want to group radial distances into different directions from
 #' the region center.
+#' @param remove_singletons Logical specifying if 'singletons' should be excluded. Spatially disconnected
+#' regions are not allowed when a "search interval" is defined, but single spots without neighbors are
+#' not detected as disconnected components. Single spots will most likely not interfere when calculating
+#' the centroid of the region of interest and can therefore be kept.
+#'
 #'
 #' @import dplyr
 #' @importFrom rlang abort warn
@@ -190,6 +200,7 @@ RadialDistance.default <- function (
   spots,
   angles = NULL,
   angles_nbreaks = NULL,
+  remove_singletons = TRUE,
   verbose = TRUE,
   ...
 ) {
@@ -227,8 +238,20 @@ RadialDistance.default <- function (
   spatnet <- GetSpatialNetwork(object)
   spatnet_region <- lapply(spatnet, function(x) {
     x |>
-      filter(from %in% spots, to %in% spots)
+      filter(from %in% spots, to %in% spots) |>
+      group_by(from) |>
+      mutate(nn = n())
   })
+
+  # Check for singletons
+  if (remove_singletons) {
+    spatnet_region2 <- lapply(spatnet_region, function(x) {
+      x |> filter(nn > 1)
+    })
+    spots_filtered <- lapply(spatnet_region2, function(x) x$from) |> unlist() |> unique()
+    if (verbose) cli_alert_info("Removing {length(spots) - length(spots_filtered)} spots with 0 neighbors.")
+    spots <- spots_filtered
+  }
 
   if (verbose) cli_alert_info("Extracting border spots from a region with {length(spots)} spots")
 
@@ -270,6 +293,11 @@ RadialDistance.default <- function (
     angles <- angles %||% c(0, 360)
   }
   if (!is.null(angles)) {
+    # Check if there are singletons
+    # spatnet_region <- lapply(names(spatnet_region), function(nm) {
+    #   singletons <- spatnet_region[[nm]] |>
+    #     filter(nn == 1)
+    # })
     # Check angles
     c(angles, centroids) %<-% .check_angles(spatnet_region, object, spots, angles, angles_nbreaks, verbose)
     # Calculate angles from center point
@@ -367,6 +395,7 @@ RadialDistance.Seurat <- function (
     select_groups = NULL,
     angles = NULL,
     angles_nbreaks = NULL,
+    remove_singletons = TRUE,
     verbose = TRUE,
     ...
 ) {
@@ -395,6 +424,7 @@ RadialDistance.Seurat <- function (
                             verbose = verbose,
                             angles = angles,
                             angles_nbreaks = angles_nbreaks,
+                            remove_singletons = remove_singletons,
                             ...)
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
