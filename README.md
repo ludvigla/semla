@@ -31,7 +31,14 @@ First, you need to make sure to have anaconda installed. I suggest using [minico
 conda create -n r-stutility2 r-essentials r-base
 ````
 
-And then activate the environment
+There's one R package that might cause a few issues if not configured properly, namely `magick`. I suggest installing it with conda within the 
+environment:
+
+````
+conda install -c conda-forge r-magick
+````
+
+Now activate the environment
 
 ````
 conda activate r-stutility
@@ -45,3 +52,4 @@ the conda environment. On Mac OS, you can open RStudio by running soemthing like
 ````
 
 When RStudio is opened, check that the R version is higher than v4.1.
+
