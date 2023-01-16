@@ -62,15 +62,17 @@ LoadImages.default <- function (
       image_info()
     if ((!inherits(image_height, what = "numeric")) | (length(image_height) != 1))
       abort("image_height should be a numeric of length 1")
-    if (info$height <= image_height) {
-      abort(glue("image_height has to be smaller than {info$height}px"))
+    if (info$height < image_height) {
+      abort(glue("image_height has to be smaller than or equal to {info$height}px"))
     }
-    im <- im |>
-      image_scale(geometry = geometry_area(height = image_height)) |>
-      as.raster()
+    if (info$height != image_height) {
+      im <- im |>
+        image_scale(geometry = geometry_area(height = image_height))
+      if (verbose) cli_alert_info("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")
+    } else {
+      if (verbose) cli_alert_info("Loaded H&E image in full resolution")
+    }
     rst <- im |> as.raster()
-
-    if (verbose) cli_alert_info("Scaled image from {info$height}x{info$width} to {image_height}x{ncol(rst)} pixels")
     return(rst)
   })
 
