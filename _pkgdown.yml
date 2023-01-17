@@ -10,9 +10,11 @@ authors:
     href: https://www.spatialresearch.org/
 template:
   bootstrap: 5
+  bootswatch: lumen
 development:
   mode: auto
 navbar:
+  type: inverse
   structure:
     left:
     - intro
@@ -21,7 +23,8 @@ navbar:
     - news
     right:
     - search
-    - github
+    - icon: fa-github fa-lg
+      href: https://github.com/ludvigla/STUtility2
   components:
     articles:
       text: Tutorials
