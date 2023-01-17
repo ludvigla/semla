@@ -169,9 +169,13 @@ LoadSpatialCoordinates <- function (
   # Load coordinates
   if (verbose) cli_alert_info("Loading coordinates:")
   coordDF <- do.call(bind_rows, lapply(seq_along(coordinatefiles), function(i) {
-    coords <- read.csv(file = coordinatefiles[i], header = FALSE) |>
+    bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
+    # New format since Space Ranger 2.0.0
+    use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
+    coords <- read.csv(file = coordinatefiles[i], header = use_header) |>
       tibble::as_tibble() |>
-      setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres"))
+      setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |>
+      mutate(across(pxl_col_in_fullres:pxl_row_in_fullres, ~as.integer(.x)))
     if (remove_spots_outside_tissue) {
       coords <- coords |>
         filter(selected == 1)
