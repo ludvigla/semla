@@ -63,7 +63,9 @@ Suggests:
     colourpicker,
     fs,
     shinyBS,
-    ggnewscale
+    ggnewscale,
+    ggsci,
+    TabulaMurisSenisData
 Collate: 
     'STUtility2-package.R'
     'checks.R'
