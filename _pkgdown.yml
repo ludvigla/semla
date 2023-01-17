@@ -23,8 +23,7 @@ navbar:
     - news
     right:
     - search
-    - icon: fa-github fa-lg
-      href: https://github.com/ludvigla/STUtility2
+    - github
   components:
     articles:
       text: Tutorials
@@ -135,8 +134,8 @@ reference:
   - GetImages
   - GetStaffli
   - ImageInfo
-  - '[[,Staffli,ANY,ANY-method'
-  - '[[<-,Staffli,ANY,ANY,ANY-method'
+  - '[[,Staffli-method'
+  - '[[<-,Staffli-method'
   - show,Staffli-method
 - subtitle: Data
 - contents:
