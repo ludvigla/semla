@@ -12,6 +12,9 @@ editor_options:
 library(STUtility2)
 library(tibble)
 library(dplyr)
+if (!requireNamespace('TabulaMurisSenisData', quietly = TRUE)) {
+  BiocManager::install("TabulaMurisSenisData")
+}
 library(TabulaMurisSenisData)
 library(SingleCellExperiment)
 library(Seurat)
