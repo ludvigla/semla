@@ -318,7 +318,7 @@ SubsetSTData <- function (
   # Subset image data
   st_object@image_info <- st_object@image_info |>
     filter(sampleID %in% remaining_samples) |>
-    mutate(sampleID = new_sampleIDs[sampleID])
+    mutate(sampleID = new_sampleIDs[as.character(sampleID)])
 
   # Subset scalefactors
   st_object@scalefactors <- st_object@scalefactors |>
