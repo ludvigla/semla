@@ -193,13 +193,6 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
         legend.text = element_text(angle = 0),
         plot.title = element_blank())
 }) |> setNames(nm = selected_celltypes)
-for (nm in names(plots)[1:7]) {
-  jpeg(filename = paste0("../../presentations/images/cell_types/", 
-                         gsub(nm, pattern = " |\\/", replacement = "_"), 
-                         ".jpg"), width = 1200, height = 600, res = 150)
-  (plots[[nm]] & labs(fill = "proportion\nestimate"))|> print()
-  dev.off()
-}
 ```
 
 ### Mouse brain cell types {.tabset}
