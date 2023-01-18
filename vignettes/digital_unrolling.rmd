@@ -80,7 +80,7 @@ In the plot above, you can see the edges that connects neighboring spots to each
 Now let's export this spatial network to make it available for our shiny application.
 
 ```{r eval=FALSE}
-export_graph(se_mcolon, sampleID = 1, outdir = tilepath)
+export_graph(se_mcolon, sampleID = 1, outdir = tilepath$datapath)
 ```
 
 Now we are ready to run the app! One the app loads, you should see the H&E image with spots and edges. The goal is to disconnect the layer of the roll by cutting the edges between spots in different layers. Cutting can be done by holding the SHIFT key while move the cursor across edges which will make them red. You can also "repair" edges by holding the CTRL key.
@@ -100,7 +100,7 @@ tidy_network <- readRDS("~/STUtility2/repo/tests/digital_unrolling_mcolon")
 ```
 
 ```{r eval=FALSE}
-tidy_network <- CutSpatialNetwork(tilepath)
+tidy_network <- CutSpatialNetwork(se_mcolon, datadir = tilepath$datapath)
 ```
 
 For downstream steps, it is *crucial* that the layers have been separated appropriately. Even a single edge between two layer will make it impossible to run down stream steps reliably. The image below demonstrates a situation where the separation will fail.
