@@ -8,16 +8,6 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{css echo=FALSE}
-/* Define a margin before h2 element */
-h2  {
-  margin-top: 2em;
-}
-h3  {
-  margin-top: 1em;
-}
-```
-
 ```{r include=FALSE}
 # knitr::opts_chunk$set(
 #   eval = FALSE
@@ -51,7 +41,9 @@ dir.create(paste0(tmpdir, "/demo_data"))
 dir.create(paste0(tmpdir, "/demo_data/kidney"))
 targetdir <- paste0(tmpdir, "/demo_data/kidney/visium")
 dir.create(targetdir)
+```
 
+```{r eval=FALSE}
 # Download data
 download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Mouse_Kidney/V1_Mouse_Kidney_filtered_feature_bc_matrix.h5",
               destfile = file.path(targetdir, "filtered_feature_bc_matrix.h5"))
@@ -61,6 +53,7 @@ untar(tarfile = file.path(targetdir, "spatial.tar.gz"),
       exdir =  file.path(targetdir))
 file.remove(file.path(targetdir, "spatial.tar.gz"))
 ```
+
 
 ```{r}
 # Read data
@@ -230,8 +223,11 @@ By default, the number of permutations, `n_permutations`, used is set to 100, ho
 
 In many cases though, the number of permutation will have little effect on the outcome of this analysis. For our current data set we can study the effect of this by running a few tests and looking at how the average degree differs if using a higher number of permutations
 
-```{r eval=FALSE}
+```{r}
 perm_test <- c(10, 20, 50, 100, seq(from=200, to=1000, by=200))
+```
+
+```{r eval=FALSE}
 lat_perm_test_list <- lapply(perm_test, function(n_perm){
   f_time <- system.time(result <- RunLabelAssortativityTest(object = se, 
                                                             column_name = "seurat_clusters", 
@@ -245,6 +241,7 @@ lat_perm_test <- do.call(bind_rows, lat_perm_test_list)
 ```
 
 ```{r eval=FALSE, include=FALSE}
+dir.create("R_objects")
 saveRDS(lat_perm_test, file = "R_objects/lat_perm_test")
 ```
 
@@ -256,7 +253,7 @@ lat_perm_test <- readRDS("R_objects/lat_perm_test")
 ggplot(lat_perm_test, aes(x=n_perm, y = min_avg_k_mean)) +
   geom_point(size=1) +
   geom_errorbar(aes(ymin = min_avg_k_mean - min_avg_k_sd, ymax = min_avg_k_mean + min_avg_k_sd)) +
-  geom_line(data = lat_perm_test, mapping = aes(x=n_perm, y = avg_k), color = "orange", size=0.5) +
+  geom_line(data = lat_perm_test, mapping = aes(x=n_perm, y = avg_k), color = "orange", linewidth=0.5) +
   facet_wrap(~label, scales = "free_y") +
   labs(title="Effect of n_permutations on average degree in randomized network", 
        caption = "Black dots and error bars: average degree mean and s.d from permutations. Orange line: actual observed average degree.",
@@ -435,8 +432,11 @@ p2 <- ggplot(spatial_network, aes(x = x_start, xend = x_end, y = y_start, yend =
 
 With the `RunNeighborhoodEnrichmentTest()` function you have option to adjust the number of permutations used for the label randomization. Picking a high enough value for this is crucial to the analysis, since the standard deviation is taken into account in the z-score calculations and will therefore influence the results. It could be valuable to test a few different options for this and have a look at when the results starts to stabilize and can therefore be regarded as more robust
 
-```{r eval=FALSE}
+```{r}
 perm_test <- c(10, 20, 50, 100, seq(from=200, to=1000, by=200))
+```
+
+```{r eval=FALSE}
 nea_perm_test_list <- lapply(perm_test, function(n_perm){
   f_time <- system.time(result <- RunNeighborhoodEnrichmentTest(object = se, 
                                                                 column_name = "seurat_clusters", 
@@ -454,7 +454,6 @@ saveRDS(nea_perm_test, file = "R_objects/nea_perm_test")
 ```
 
 ```{r include=FALSE}
-perm_test <- c(10, 20, 50, 100, seq(from=200, to=1000, by=200))
 nea_perm_test <- readRDS("R_objects/nea_perm_test")
 ```
 
