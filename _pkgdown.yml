@@ -59,6 +59,8 @@ navbar:
         href: articles/cell_type_mapping_with_NNLS.html
       - text: Digital unrolling
         href: articles/digital_unrolling.html
+      - text: Non-negative Matrix Factorization
+        href: articles/NNMF.html
       - text: '-------'
       - text: Image processing
       - text: Images and spot coordinates
@@ -89,6 +91,7 @@ reference:
   - ImagePlot
   - AnglePlot
   - centroid_angles_plot
+  - PlotFeatureLoadings
 - subtitle: Interactive viewer
 - contents:
   - FeatureViewer

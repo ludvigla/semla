@@ -15,8 +15,7 @@ Non-negative matrix factorization (NNMF or NMF) can be a useful technique to dec
 
 Below we'll use our mouse brain test data for the NNMF. The method automatically runs cross-validation to find the best rank and to learn a model at that rank.
 
-NB: The mouse brain test data only includes a subset of the entire data of 188 unique genes. With the
-full dataset, we would be able to find a higher optimal rank and therefore obtain more factors.
+NB: The mouse brain test data only includes a subset of the entire data of 188 unique genes. With the full dataset, we would be able to find a higher optimal rank and therefore obtain more factors.
 
 ```{r}
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
@@ -33,8 +32,8 @@ RankPlot(se_mbrain)
 
 The results are stored as a `DimReduc` object in our `Seurat` object and we can map the factors spatially with `MapFeatures`.
 
-```{r fig.asp=1.2}
-MapFeatures(se_mbrain, features = paste0("NMF_", 1:11), pt_size = 2, 
+```{r fig.asp=1.2, fig.width=9}
+MapFeatures(se_mbrain, features = paste0("NMF_", 1:11), 
             override_plot_dims = TRUE, colors = viridis::magma(n = 11, direction = -1)) &
   theme(plot.title = element_blank())
 ```
@@ -42,7 +41,7 @@ MapFeatures(se_mbrain, features = paste0("NMF_", 1:11), pt_size = 2,
 We can also investigate the gene loadings for each factor with `PlotFeatureLoadings` which will give us an idea about what the top contributing genes for each factor are. Below we can see the top 30 contributing genes for NMF_1 and NMF_2.
 
 ```{r}
-PlotFeatureLoadings(se_mbrain, dims = 1:2, reduction = "nmf", style = "dots", fill = "steelblue")
+PlotFeatureLoadings(se_mbrain, dims = 1:2, reduction = "nmf", mode = "dotplot", fill = "steelblue")
 ```
 
 We can also map multiple factors spatially in a single plot with `MapMultipleFeatures`:
@@ -66,4 +65,4 @@ PlotFeatureLoadings(se_mbrain, dims = 1:11, reduction = "nmf",
                     gradient_colors = viridis::magma(n = 11, direction = -1))
 ```
 
-NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy. 
+NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy.
