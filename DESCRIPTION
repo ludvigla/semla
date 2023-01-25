@@ -76,6 +76,7 @@ Collate:
     'spatial_utils.R'
     'disconnect_regions.R'
     'extdata.R'
+    'feature_loadings_plot.R'
     'file_server.R'
     'icp.R'
     'load_data.R'

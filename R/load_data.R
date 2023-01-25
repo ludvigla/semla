@@ -394,10 +394,14 @@ ReadVisiumData <- function (
 
   # Make sure that coordinates and expression matrix are compatible
   if (!all(colnames(mergedMat) %in% coordinates$barcode)) {
-    abort(glue("{sum(!colnames(mergedMat) %in% coordinates$barcode)} spots found in expression data but not in coordinate files."))
+    cli_alert_danger("{sum(!colnames(mergedMat) %in% coordinates$barcode)} spots found in the merged expression matrix but not in coordinate files.")
+    cli_alert_danger("Removing {sum(!colnames(mergedMat) %in% coordinates$barcode)} spots from the merged expression matrix")
+    mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
   }
   if (!all(coordinates$barcode %in% colnames(mergedMat))) {
-    abort(glue("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data."))
+    cli_alert_danger("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data.")
+    cli_alert_danger("Removing {sum(!coordinates$barcode %in% colnames(mergedMat))} spots from the meta data")
+    metaData <- metaData[colnames(mergedMat), ]
   }
   if (verbose) cli_h3(text = "Creating `Seurat` object")
   if (verbose) cli_alert_success("Expression matrices and coordinates are compatible")
