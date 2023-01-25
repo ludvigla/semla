@@ -62,15 +62,15 @@ PlotFeatureLoadings(
 An object of class `patchwork`
 }
 \description{
-This function can be used to visualize the relative contribution of features
-to dimensionality reduction vectors. The function provides two modes to draw either
-bar plot or a dot plot.
+This function can be used to visualize the relative contribution of features (e.g. genes)
+to dimensionality reduction vectors. The function provides three modes to draw a
+bar plot, a dot plot or a heatmap.
 }
 \section{Select type}{
 
 For centered dimensionality reduction vectors, such as principal components,
 it is best to select features with the highest and lowest loadings. For other types
-of dimensionality reduction results, it is better to only select the features with
+of dimensionality reduction results, it is likely better to only select the features with
 the highest loadings, in which case `type="positive"` is the appropriate choice.
 }
 
@@ -78,7 +78,9 @@ the highest loadings, in which case `type="positive"` is the appropriate choice.
 
 barplots or dotplots can be used to get detailed information about the loadings
 for individual factors whereas heatmap is useful to summarize the loadings for
-multiple factors.
+multiple factors. The heatmap option will override the `type` options and only
+select the top features. With the heatmap mode, the values data will also be scaled
+within each dimensionality reduction vectors to range between 0 and 1.
 }
 
 \examples{
@@ -92,9 +94,19 @@ se_mbrain <- se_mbrain |>
                 ScaleData() |>
                 RunPCA()
 
-# Plot feature loadings
-PlotFeatureLoadings(se_mbrain, reduction = "pca",
+# Plot feature loadings for PC_1 as a dotplot
+PlotFeatureLoadings(se_mbrain, reduction = "pca", dims = 1,
                     mode = "dotplot", type = "centered")
+
+# Plot feature loadings for PC_1 and PC_2 as barplots
+PlotFeatureLoadings(se_mbrain, reduction = "pca", dims = 1:2,
+                    mode = "barplot", type = "centered")
+
+# Plot feature loadings for PC_1 and color bars by loading
+PlotFeatureLoadings(se_mbrain, reduction = "pca", dims = 1:2,
+                    mode = "barplot", type = "centered",
+                    color_by_loadings = TRUE,
+                    gradient_colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
 }
 
 }
