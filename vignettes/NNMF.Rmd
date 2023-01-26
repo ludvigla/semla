@@ -1,5 +1,6 @@
 ---
 title: "Non-negative matrix factorization"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
 editor_options: 
@@ -11,8 +12,6 @@ Non-negative matrix factorization (NNMF or NMF) can be a useful technique to dec
 We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and at <https://www.zachdebruine.com/>.
 
 `RcppML` is avalilable on [GitHub](https://github.com/zdebruine/RcppML) and [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
-
-
 
 ```{r message=FALSE, warning=FALSE}
 library(STUtility2)
@@ -104,5 +103,31 @@ PlotFeatureLoadings(se_mbrain,
 ```
 
 NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy.
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `RcppML`: `r packageVersion("RcppML")`
+
+-   `singlet`: `r packageVersion("singlet")`
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
 
 <br>

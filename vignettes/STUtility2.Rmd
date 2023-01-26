@@ -5,9 +5,6 @@ format:
     toc: true
     toc-depth: 3
     embed-resources: true
-    theme:
-      light: flatly
-      dark: darkly
 editor: visual
 ---
 
@@ -39,4 +36,3 @@ The package is written by *Ludvig Larsson* and *Lovisa Franzén* who are both pa
 ## Publication
 
 If you use `STUtility2` in published research, please cite the following article:
-

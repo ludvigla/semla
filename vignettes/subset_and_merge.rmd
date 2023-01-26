@@ -1,5 +1,6 @@
 ---
 title: "Subset and merge"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: 
   html:
     toc: true
@@ -11,9 +12,9 @@ format:
 editor: visual
 ---
 
-Subsetting and merging data is done using the two functions `SubsetSTData` and `MergeSTData`.
+Subseting and merging data is done using the two functions `SubsetSTData()` and `MergeSTData()`.
 
-If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `STUtility2`.
+If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `STUtility2`, causing the spatial data to be lost or corrupted.
 
 Let's load an example mouse brain 10x Visium data:
 
@@ -22,9 +23,16 @@ library(STUtility2)
 se_mcolon <- readRDS(system.file("extdata/mousecolon", 
                                  "se_mcolon", 
                                  package = "STUtility2"))
+se_mcolon
+```
+
+```{r fig.asp=1, fig.width=4}
+MapFeaturesSummary(se_mcolon, features = "nFeature_Spatial", subplot_type = "histogram")
 ```
 
 ### Subset by selecting spots
+
+The data can be subseted by specifying which spots to keep using their barcode ID.
 
 ```{r}
 spots_to_keep <- c("AAACAAGTATCTCCCA-1", "AAACACCAATAACTGC-1", 
@@ -36,7 +44,13 @@ se_mcolon_small <- SubsetSTData(se_mcolon, spots = spots_to_keep)
 se_mcolon_small
 ```
 
+```{r fig.asp=1, fig.width=4}
+MapFeaturesSummary(se_mcolon_small, features = "nFeature_Spatial", subplot_type = "histogram")
+```
+
 ### Subset by selecting features
+
+We can also extract data corresponding to a few selected genes of interest.
 
 ```{r}
 genes_to_keep <- c("Hbb-bs", "Hba-a1", "Hba-a2", "Hbb-bt", "Slc6a3", "Th")
@@ -46,12 +60,64 @@ se_mcolon_fewgenes <- SubsetSTData(se_mcolon, features = genes_to_keep)
 se_mcolon_fewgenes
 ```
 
+```{r fig.asp=1, fig.width=4}
+MapFeaturesSummary(se_mcolon_fewgenes, features = "nFeature_Spatial", subplot_type = "histogram")
+```
+
 ### Subset with an expression
 
-If we want to subset data using information from the meta.data slot, it might be easier to use an expression instead.
+If we want to subset data using information from the `meta.data` slot, it might be easier to use an expression instead. This comes in handy when we want to perform QC filtering on our data.
 
 ```{r}
-# Filte by number of unique genes
-se_mcolon_filtered <- SubsetSTData(se_mcolon, expression = nFeature_Spatial > 20)
+# Filter by number of unique genes
+se_mcolon_filtered <- SubsetSTData(se_mcolon, expression = nFeature_Spatial > 30)
 se_mcolon_filtered
 ```
+
+```{r fig.asp=1, fig.width=4}
+MapFeaturesSummary(se_mcolon_filtered, features = "nFeature_Spatial", subplot_type = "histogram")
+```
+
+### Merge two data sets
+
+Finally, we can use `MergeSTData()` to join two objects. In this example, our colon data set will be merged with a brain data set.
+
+```{r warning=FALSE, message=FALSE}
+se_mbrain <- readRDS(system.file("extdata/mousebrain", 
+                                 "se_mbrain", 
+                                 package = "STUtility2"))
+```
+
+```{r}
+se_merged <- MergeSTData(se_mcolon, se_mbrain)
+
+unique(se_merged$sample_id)
+se_merged
+```
+
+```{r fig.width=6}
+MapFeatures(se_merged, features = "nFeature_Spatial")
+```
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
