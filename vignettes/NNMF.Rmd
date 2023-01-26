@@ -6,63 +6,103 @@ editor_options:
   chunk_output_type: inline
 ---
 
+Non-negative matrix factorization (NNMF or NMF) can be a useful technique to deconvolve 10x Visium data, in particular when a reference single-cell RNA-seq data is not available to conduct cell type deconvolution. In this vignette we will demonstrate how you can apply this method with `STUtility2` on spatial data.
+
+We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and at <https://www.zachdebruine.com/>.
+
+`RcppML` is avalilable on [GitHub](https://github.com/zdebruine/RcppML) and [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
+
+
+
 ```{r message=FALSE, warning=FALSE}
 library(STUtility2)
 library(singlet)
 ```
 
-Non-negative matrix factorization (NNMF or NMF) can be a useful technique to deconvolve 10x Visium data, in particular when a reference single-cell RNA-seq data is not available to conduct cell type deconvolution. We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at https://github.com/zdebruine and at https://www.zachdebruine.com/. `RcppML` is avalilable on CRAN and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
+<br>
 
-Below we'll use our mouse brain test data for the NNMF. The method automatically runs cross-validation to find the best rank and to learn a model at that rank.
+We'll use our mouse brain test data for the NNMF. The method automatically runs cross-validation to find the best rank and to learn a model at that rank.
 
 NB: The mouse brain test data only includes a subset of the entire data of 188 unique genes. With the full dataset, we would be able to find a higher optimal rank and therefore obtain more factors.
 
 ```{r}
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", 
+                                 "se_mbrain", 
+                                 package = "STUtility2"))
+
 # Set seed for reproducibility
 set.seed(42)
 se_mbrain <- RunNMF(se_mbrain)
 ```
 
-We can plot the cross-validation results and find that the optimal rank decided by the method is 11.
+```{r}
+k <- ncol(se_mbrain@reductions$nmf@feature.loadings)
+```
+
+We can plot the cross-validation results and find that the optimal rank decided by the method is `r toString(k)` which determines the number of factors we obtain from the NMF run.
 
 ```{r}
 RankPlot(se_mbrain)
 ```
 
-The results are stored as a `DimReduc` object in our `Seurat` object and we can map the factors spatially with `MapFeatures`.
+<br>
+
+The results are stored as a `DimReduc` object in our `Seurat` object and we can map the factors spatially with `MapFeatures()`.
 
 ```{r fig.asp=1.2, fig.width=9}
-MapFeatures(se_mbrain, features = paste0("NMF_", 1:11), 
-            override_plot_dims = TRUE, colors = viridis::magma(n = 11, direction = -1)) &
+MapFeatures(se_mbrain, 
+            features = paste0("NMF_", 1:k), 
+            override_plot_dims = TRUE, 
+            colors = viridis::magma(n = 11, direction = -1)) &
   theme(plot.title = element_blank())
 ```
 
-We can also investigate the gene loadings for each factor with `PlotFeatureLoadings` which will give us an idea about what the top contributing genes for each factor are. Below we can see the top 30 contributing genes for NMF_1 and NMF_2.
+<br>
+
+We can also investigate the gene loadings for each factor with `PlotFeatureLoadings()` which will give us an idea about what the top contributing genes for each factor are. Below we can see the top 30 contributing genes for NMF_1 and NMF_2.
 
 ```{r}
-PlotFeatureLoadings(se_mbrain, dims = 1:2, reduction = "nmf", mode = "dotplot", fill = "steelblue")
+PlotFeatureLoadings(se_mbrain, 
+                    dims = 1:2, 
+                    reduction = "nmf", 
+                    nfeatures = 30,
+                    mode = "dotplot", 
+                    fill = "darkmagenta",
+                    pt_size = 3)
 ```
 
-We can also map multiple factors spatially in a single plot with `MapMultipleFeatures`:
+<br>
+
+We can also map multiple factors spatially in a single plot with `MapMultipleFeatures()`:
 
 ```{r}
+se_mbrain <- LoadImages(se_mbrain)
 
 factor_colors <- c("#332288", "#88CCEE", "#44AA99", "#117733", 
                    "#999933", "#DDCC77", "#CC6677", "#882255", "#AA4499")
+n_k_plot <- ifelse(k<9, k, 9)
 
-se_mbrain <- LoadImages(se_mbrain)
-MapMultipleFeatures(se_mbrain, features = paste0("NMF_", 1:9), 
-                    colors = factor_colors, image_use = "raw", 
-                    override_plot_dims = TRUE, pt_size = 2)
+MapMultipleFeatures(se_mbrain, 
+                    features = paste0("NMF_", 1:n_k_plot), 
+                    colors = factor_colors[1:n_k_plot], 
+                    image_use = "raw", 
+                    override_plot_dims = TRUE, 
+                    pt_size = 2)
 ```
+
+<br>
 
 Similarly, we can also summarize the top feature loadings for each factor with a heatmap:
 
 ```{r fig.asp=1}
-PlotFeatureLoadings(se_mbrain, dims = 1:11, reduction = "nmf", 
-                    nfeatures = 10, mode = "heatmap", 
+PlotFeatureLoadings(se_mbrain, 
+                    dims = 1:k, 
+                    reduction = "nmf", 
+                    nfeatures = 10, 
+                    mode = "heatmap", 
                     gradient_colors = viridis::magma(n = 11, direction = -1))
 ```
 
 NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy.
+
+<br>
