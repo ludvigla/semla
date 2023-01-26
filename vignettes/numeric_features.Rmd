@@ -1,5 +1,6 @@
 ---
 title: "Visualization of numeric features"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
 editor_options: 
@@ -8,13 +9,13 @@ editor_options:
 
 In the visualization tutorials, we'll have a look at different ways of creating spatial plots with `STUtility2`.
 
-Functions such as `MapFeatures` and `MapLabels` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. The `patchwork` R package is extremely versatile and makes it easy to customize your figures!
+Functions such as `MapFeatures()` and `MapLabels()` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. The `patchwork` R package is extremely versatile and makes it easy to customize your figures!
 
-For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot` and `SpatialDimPlot` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
+For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot()` and `SpatialDimPlot()` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
 
-If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the 'advanced' tutorial.
+If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the ['Advanced visualization' tutorial](https://ludvigla.github.io/STUtility2/articles/advanced_visualization.html).
 
-Here we'll have a look at basic usage of the `MapFeatures` function.
+Here we'll have a look at basic usage of the `MapFeatures()` function.
 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
@@ -39,21 +40,32 @@ se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 ```
 
-We can use the functions `MapFeatures` and `MapLabels` to make spatial plots showing the distribution of numeric or categorical features. For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot` and `SpatialDimPlot` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
-
 ## Map numeric features
 
-Let's get started with `MapFeatures`. The most basic usage is to map gene expression spatially:
+Let's get started with `MapFeatures()`. The most basic usage is to map gene expression spatially:
 
 ```{r fig.asp=1.2}
-cols <- RColorBrewer::brewer.pal(n = 11, name = "Spectral") |> rev()
-p <- MapFeatures(se, features = c("Th", "Clu"), colors = cols)
+cols <- viridis::rocket(11, direction = -1)
+
+p <- MapFeatures(se, 
+                 features = c("Th", "Clu"), 
+                 colors = cols)
+p
+```
+
+We can also plot other numeric features present within the `meta.data` slot, such as the quality metrics 'nCount_Spatial' and 'nFeature_Spatial'. To view the distribution of the selected feature per sample, the function MapFeaturesSummary() can be used to add a subplot next to the spatial plot (choose from histogram, box, violin, or density plot).
+
+```{r fig.asp=0.5, fig.width=9}
+p <- MapFeaturesSummary(se, 
+                        features = "nFeature_Spatial", 
+                        subplot_type = "violin",
+                        colors = cols)
 p
 ```
 
 ## Map dimensionality reduction vectors
 
-`MapFeatures` handles any type of numeric features which can be fetched using the `Seurat` function `FetchData`. This includes latent vectors from dimensionality reduction methods.
+`MapFeatures` handles any type of numeric features which can be fetched using the `Seurat` function `FetchData()`. This includes latent vectors from dimensionality reduction methods.
 
 ```{r}
 se <- se |> 
@@ -64,8 +76,12 @@ se <- se |>
 
 When plotting numeric features that are centered at 0, it is more appropriate to also center the color scale and select a 'divergent' color palette.
 
-```{r fig.asp=1.2}
-MapFeatures(se, features = "PC_2", center_zero = TRUE, section_number = 1, pt_size = 2,
+```{r fig.asp=1}
+MapFeatures(se, 
+            features = "PC_2", 
+            center_zero = TRUE, 
+            section_number = 1, 
+            pt_size = 2,
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())
 ```
 
@@ -73,35 +89,62 @@ MapFeatures(se, features = "PC_2", center_zero = TRUE, section_number = 1, pt_si
 
 If we want to create a map with the H&E images we can do this by setting `image_use = raw`. But before we can do this, we need to load the images into our *Seurat* object:
 
-```{r fig.asp=1.2}
+```{r}
 se <- LoadImages(se, verbose = FALSE)
-p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", colors = cols)
+```
+
+```{r fig.asp=1.2}
+cols <- RColorBrewer::brewer.pal(11, "Spectral") |> rev()
+
+p <- MapFeatures(se, 
+                 features = c("Th", "Clu"), 
+                 image_use = "raw", 
+                 colors = cols)
 p
 ```
 
 Right now it's quite difficult to see the tissue underneath the spots. We can add some opacity to the colors which is scaled by the feature values to make spots with low expression transparent:
 
 ```{r fig.asp=1.2}
-
-p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
-                 colors = cols, scale_alpha = TRUE)
+p <- MapFeatures(se, 
+                 features = c("Th", "Clu"), 
+                 image_use = "raw", 
+                 colors = cols, 
+                 scale_alpha = TRUE)
 p
 ```
 
 ## Crop image
 
-We can crop the images manually by defining a `crop_area`. The `crop_area` should be a vector of length four defining the corners of a rectangle, where the x- and y-axes are defined from 0-1.
+We can crop the images manually by defining a `crop_area`. The `crop_area` should be a vector of length four defining the opposite corners of a rectangle, where the x- and y-axes are defined from 0-1.
 
-In order to decide how this rectangle should be defined, you can get some help by adding a grid to the plot:
+In order to more easily see how this rectangle could be defined we can get some help by adding a grid to the plot.
 
-```{r fig.asp=1.2}
-p <- MapFeatures(se, features = c("Th", "Clu"), image_use = "raw", 
-                 color = cols, pt_alpha = 0.5) &
-  theme(panel.grid.major = element_line(linetype = "dashed"), axis.text = element_text())
+```{r fig.asp=1}
+p <- MapFeatures(se, 
+                 section_number = 2, 
+                 features = "Clu", 
+                 image_use = "raw", 
+                 color = cols, 
+                 pt_alpha = 0.5) &
+  labs(x="x-axis", y="y-axis") &
+  theme(panel.grid.major = element_line(linetype = "dashed"), 
+        axis.text = element_text(), 
+        axis.title = element_text())
 p
 ```
 
-Now if we want to crop out the GALT tissue in the mouse colon sample we can cut the image at left=0.45, bottom=0.55, right=0.65, top=0.7:
+The Clu gene expression reveals where we have an area of lymphoid tissue in the colon sample. Now if we want to crop out the GALT tissue in the mouse colon sample we can cut the image at:
+
+-   x-left = 0.45
+
+-   y-left = 0.55
+
+-   x-right = 0.65
+
+-   y-right = 0.7
+
+Provide these coordinates to the `crop_area` argument in that order (x-left, y-left, x-right, y-right).
 
 ```{r fig.asp=0.5}
 p <- MapFeatures(se, features = c("Cd79a", "Clu"), image_use = "raw", 
@@ -113,17 +156,40 @@ p
 And we can patch together a nice figure showing the expression both at a global level and inside the GALT:
 
 ```{r fig.asp=1}
-p_global <- MapFeatures(se, features = c("Cd79a", "Clu"), 
-                        image_use = "raw", scale_alpha = TRUE,
-                        pt_size = 1, section_number = 2, color = cols, 
+p_global <- MapFeatures(se, 
+                        features = c("Cd79a", "Clu"), 
+                        image_use = "raw", 
+                        scale_alpha = TRUE,
+                        pt_size = 1, 
+                        section_number = 2, 
+                        color = cols, 
                         override_plot_dims = TRUE)
-p_GALT <- MapFeatures(se, features = c("Cd79a", "Clu"), 
-                      image_use = "raw", scale_alpha = TRUE, 
-                      pt_size = 3, section_number = 2, 
-                      color = cols, crop_area = c(0.45, 0.55, 0.65, 0.7)) &
+
+p_GALT <- MapFeatures(se, 
+                      features = c("Cd79a", "Clu"), 
+                      image_use = "raw", 
+                      scale_alpha = TRUE, 
+                      pt_size = 3, 
+                      section_number = 2, 
+                      color = cols, 
+                      crop_area = c(0.45, 0.55, 0.65, 0.7)) &
   theme(plot.title = element_blank(), 
         plot.subtitle = element_blank(), 
         legend.position = "none")
 
 (p_global / p_GALT)
 ```
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<br>
