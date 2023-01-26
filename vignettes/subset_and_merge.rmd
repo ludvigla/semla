@@ -98,13 +98,14 @@ se_merged
 ```{r fig.width=6}
 MapFeatures(se_merged, features = "nFeature_Spatial")
 ```
+
 <br>
 
 ------------------------------------------------------------------------
 
 <details open>
 
-<summary>**Package versions**</summary>
+<summary>**Package version**</summary>
 
 -   `STUtility2`: `r packageVersion("STUtility2")`
 
