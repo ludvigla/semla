@@ -79,7 +79,7 @@ images together with the spot coordinates.
 gene expression, PCs, QC metrics etc.
 - [x] `MapLabels` : similar to `ST.FeaturePlot` but only works with categorical features such as
 clusters, conditions etc.
-- [ ] `FactorGeneLoadingPlot` : Not sure if needed with the singlet R package available
+- [x] `FactorGeneLoadingPlot` : Not sure if needed with the singlet R package available
 - [x] `ImagePlot` : plots H&E images stored in a Seurat object
 - [x] `MapFeaturesSummary` : create spatial maps with `MapFeatures` and add a summary plot next to it
 - [x] `MapLabelsSummary` : create spatial maps with `MapLabels` and add a summary plot next to it
@@ -103,8 +103,8 @@ example be dimensionality reduction results instead.
 - [x] migrate `RegionNeighbours` from STUtility
 - [x] `RadialDistance` : calculates the radial distances from the borders of a region of interest
 - [x] `DisconnectRegions` : separates spatially disconnected regions 
-- [x] `NeighbourhoodEnrichmentTest` : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
-- [ ] `GroupClusteringTest` : (function name??) under development. Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
+- [x] `NeighbourhoodEnrichmentTest` : Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
+- [x] `LabelAssortativityTest` : Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
 
 ### Staffli
 

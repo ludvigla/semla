@@ -1,6 +1,6 @@
-<img src="man/figures/logo.png" alt="drawing" width="500"/>
 
-## Welcome to STUtility2 
+# STUtility2 <img src="man/figures/logo.png" alt="drawing" align="right" width="138"/>
+
 
 `STUtility2` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 
