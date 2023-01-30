@@ -62,3 +62,66 @@ MapFeatures(se_mbrain, features = tail(spatgenes[[1]])$gene,
             colors = viridis::magma(n = 11, direction = -1))
 ```
 
+With these spatial autocorrelation scores in our hands, we can for example prioritize genes with defined spatial structures
+for down stream analysis. As an example, hemoglobin transcripts are often highly variable due to the presence of blood vessels
+that are dispersed across tissue sections. These blood vessels might be of little interest if the goal is to identify larger
+"spatial domains" in the tissue. In fact, the hemoglobin transcripts "Hbb-bs", "Hba-a1", "Hba-a2" and "Hbb-bt" are the top four 
+most variable genes in our dataset and the expression of these transcripts might influence the downstream steps such as 
+data-driven clustering.
+
+```{r fig.asp=1}
+hemoglobin_genes <- c("Hbb-bs", "Hba-a1", "Hba-a2", "Hbb-bt")
+which(VariableFeatures(se_mbrain) %in% hemoglobin_genes)
+MapFeatures(se_mbrain, features = hemoglobin_genes, override_plot_dims = TRUE)
+```
+Let's demonstrate with an example how we can use spatial autocorrelation scores to assign higher importance
+to transcripts with more distinct spatial expression. In the histogram below, we can see the correlation scores
+for the genes in our dataset and we select genes with a score higher than 0.5 wich leaves us with 70 genes to 
+be used for down stream analysis.
+
+```{r}
+spatgenes[[1]] |> 
+            mutate(selected = ifelse(cor > 0.5, "selected", "discarded")) |> 
+  ggplot(aes(cor, fill = selected)) +
+    geom_histogram()
+```
+
+Now we can compare the results of data-driven clustering when using our top 70 "spatial genes" with 
+the results when using the to 70 most variable genes.
+
+```{r message=FALSE, warning=FALSE}
+
+top_var_features <- VariableFeatures(se_mbrain)[1:70]
+se_mbrain <- se_mbrain |> 
+  ScaleData(verbose = FALSE) |> 
+  RunPCA(features = top_var_features, verbose = FALSE) |> 
+  FindNeighbors(reduction = "pca", dims = 1:10, verbose = FALSE) |> 
+  FindClusters(verbose = FALSE, resolution = 1.2)
+se_mbrain$clusters_var_genes <- se_mbrain$seurat_clusters
+
+top_spatial_features <- spatgenes[[1]]$gene[1:70]
+se_mbrain <- se_mbrain |> 
+  ScaleData(verbose = FALSE) |> 
+  RunPCA(features = top_spatial_features, verbose = FALSE) |> 
+  FindNeighbors(reduction = "pca", dims = 1:10, verbose = FALSE) |> 
+  FindClusters(verbose = FALSE, resolution = 1.0)
+se_mbrain$clusters_spatial_genes <- se_mbrain$seurat_clusters
+```
+
+At a first glance, the results might not look too different from each other. However, if we look closely, we 
+can see that when we focus on the top variable genes, some clusters are more dispersed across the tissue section.
+
+```{r fig.asp=1}
+MapLabels(se_mbrain, column_name = "clusters_var_genes", split_labels = TRUE, 
+          override_plot_dims = TRUE, section_number = 1) &
+  theme(legend.position = "none")
+
+MapLabels(se_mbrain, column_name = "clusters_spatial_genes", split_labels = TRUE, 
+          override_plot_dims = TRUE, section_number = 1) &
+  theme(legend.position = "none")
+```
+
+The selection of genes boils down to what you are trying to achieve with your analysis. Note that if you 
+base your selection on spatial autocorrelation, you might end up hiding sources of biological variability
+such as blood vessels or infiltrating immune cells. If the goal is to identify more general structure ("spatial domains"),
+spatial autocorrelation can be a useful metric to base gene selection on.
