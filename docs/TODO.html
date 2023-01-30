@@ -47,6 +47,7 @@
     <h6 class="dropdown-header" data-toc-skip>Analysis</h6>
     <a class="dropdown-item" href="articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a>
     <a class="dropdown-item" href="articles/digital_unrolling.html">Digital unrolling</a>
+    <a class="dropdown-item" href="articles/NNMF.html">Non-negative Matrix Factorization</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
     <a class="dropdown-item" href="articles/images_and_coordinates.html">Images and spot coordinates</a>
@@ -176,7 +177,7 @@
 <li>
 <input type="checkbox" disabled checked><code>MapLabels</code> : similar to <code>ST.FeaturePlot</code> but only works with categorical features such as clusters, conditions etc.</li>
 <li>
-<input type="checkbox" disabled><code>FactorGeneLoadingPlot</code> : Not sure if needed with the singlet R package available</li>
+<input type="checkbox" disabled checked><code>FactorGeneLoadingPlot</code> : Not sure if needed with the singlet R package available</li>
 <li>
 <input type="checkbox" disabled checked><code>ImagePlot</code> : plots H&amp;E images stored in a Seurat object</li>
 <li>
@@ -210,9 +211,9 @@
 <li>
 <input type="checkbox" disabled checked><code>DisconnectRegions</code> : separates spatially disconnected regions</li>
 <li>
-<input type="checkbox" disabled checked><code>NeighbourhoodEnrichmentTest</code> : under development. Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).</li>
+<input type="checkbox" disabled checked><code>NeighbourhoodEnrichmentTest</code> : Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).</li>
 <li>
-<input type="checkbox" disabled><code>GroupClusteringTest</code> : (function name??) under development. Inspired by Newman’s Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.</li>
+<input type="checkbox" disabled checked><code>LabelAssortativityTest</code> : Inspired by Newman’s Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="staffli">Staffli<a class="anchor" aria-label="anchor" href="#staffli"></a></h3>
@@ -240,7 +241,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>.</p>
+  <p></p><p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

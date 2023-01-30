@@ -14,7 +14,11 @@ Authors@R:
         email = "lovisa.franzen@scilifelab.se",
         role = c("aut"),
         comment = c(ORCID = "0000-0003-3755-718X")
-    ))
+    ),
+    person(
+        "Spatial", "Research", 
+        role = c('fnd'))
+    )
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
 Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 License: MIT + file LICENSE
