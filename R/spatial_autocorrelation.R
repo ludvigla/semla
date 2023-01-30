@@ -166,7 +166,7 @@ CorSpatialFeatures.default <- function (
 
     # Subset feature data to only include spots with neighbors
     x_subset <- object[colnames(CN), ]
-    if (verbose) cli_alert("  Cleaned out spots without neighbors")
+    if (verbose) cli_alert("  Cleaned out spots with 0 adjacent neighbors")
 
     # Calculate lag matrix
     lagMat <- (CN %*% x_subset) / rowSums(CN)
@@ -207,17 +207,17 @@ CorSpatialFeatures.default <- function (
 
     if (is.null(nCores)) {
       # Calculate spatial autocorrelation for each gene
-      spatial_autocorrelation <- .colCors(object, lagMat)
+      spatial_autocorrelation <- .colCors(object[rownames(lagMat), ], lagMat)
     } else {
       if (nCores > (detectCores() - 1)) {
         nCores <- detectCores() - 1
         cli_alert_info("Using {nCores} threads")
       }
-      #chunks <- ceiling((1:ncol(object))/100)
-      #chunks <- split(1:ncol(object), chunks)
+      chunks <- ceiling((1:ncol(object))/100)
+      chunks <- split(1:ncol(object), chunks)
       spatial_autocorrelation <- unlist(parLapplier(seq_along(chunks), function(i) {
         inds <- chunks[[i]]
-        .colCors(object[, inds], lagMat[, inds])
+        .colCors(object[rownames(lagMat), inds], lagMat[, inds])
       }, nCores = nCores))
     }
 
@@ -231,7 +231,7 @@ CorSpatialFeatures.default <- function (
   return(results)
 }
 
-# TODO: error in evaluating the argument 'x' in selecting a method for function 'colSums': Matrices must have same number of rows for arithmetic
+
 #' @param features A character vector with features present in `Seurat` object. These
 #' features need to be accessible with \code{\link{FetchData}}
 #' @param assay_use Select assay to use for computation. If not specified, the default
