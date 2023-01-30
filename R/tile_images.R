@@ -50,17 +50,16 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   addResourcePath("mytiles", "/Users/ludviglarsson/Downloads/tiles")
+#'   addResourcePath("mytiles", tile_res$tilepath)
 #'   output$map <- renderLeaflet({
 #'     leaflet(options = leafletOptions(preferCanvas = TRUE)) %>%
 #'       addTiles(urlTemplate = "/mytiles/{z}/{x}_{y}.jpg",
 #'                options = tileOptions(continuousWorld = TRUE,
 #'                                      tileSize = "256",
-#'                                      minZoom = paste0(res$minZoomLevel),
-#'                                      maxZoom = paste0(res$maxZoomLevel)))
+#'                                      minZoom = 1,
+#'                                      maxZoom = 3))
 #'   })
 #' }
-#'
 #' shinyApp(ui, server)
 #' }
 #'
