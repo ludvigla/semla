@@ -1,7 +1,7 @@
 
 # STUtility2 <img src="man/figures/logo.png" align="right" width="120"/>
 
----
+
 
 `STUtility2` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 
