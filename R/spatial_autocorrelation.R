@@ -117,7 +117,12 @@ CorSpatialFeatures.default <- function (
 
   # Define multicore lapply function depending on OS
   if (!.Platform$OS.type %in% c("windows", "unix")) {
-    parLapplier <- lapply()
+    # Skip threading and use lapply instead
+    if (verbose) cli_alert_danger("Threading not supported. Using single thread.")
+    parLapplier <-  function(X, FUN, nCores) {
+      res <- lapply(X, FUN)
+      return(res)
+    }
   } else {
     parLapplier <- switch(.Platform$OS.type,
                           "windows" = .winLapply,
@@ -226,7 +231,7 @@ CorSpatialFeatures.default <- function (
   return(results)
 }
 
-
+# TODO: error in evaluating the argument 'x' in selecting a method for function 'colSums': Matrices must have same number of rows for arithmetic
 #' @param features A character vector with features present in `Seurat` object. These
 #' features need to be accessible with \code{\link{FetchData}}
 #' @param assay_use Select assay to use for computation. If not specified, the default
