@@ -204,7 +204,7 @@ FeatureViewer <- function (
             column(12, column(4, p(strong("Add new categories"))),
                    column(8, p("Click on the ", code("Category"), " drop-down list, write a new name and press ", code("ENTER"), "."))),
             column(12, column(4, p(strong("Lasso selection"))),
-                   column(8, p("Click on ", icon("fa-solid fa-draw-polygon", verify_fa = FALSE),
+                   column(8, p("Click on ", icon("draw-polygon", verify_fa = FALSE),
                                " and select spots with the cursor. ",
                                "Hold ", code("SHIFT"), "to deselect spots.",
                                "To save the selection, make sure that a ", code("Category"),
@@ -222,17 +222,17 @@ FeatureViewer <- function (
             column(12, column(4, p(strong("Trim values"))),
                    column(8, p("Adjust the  ", code("Trim"), " sliders to trim the lower/upper bounds of numeric feature values "))),
             column(12, column(4, p(strong("Scale alpha"))),
-                   column(8, p("Click on ", icon("fa-regular fa-floppy-disk", verify_fa = FALSE),
+                   column(8, p("Click on ", icon("floppy-disk", verify_fa = FALSE),
                                " to save changes and quit the application. If any new selections have been added, these will be ",
                                " stored in the 'meta.data' slot of the returned ", code("Seurat"), " object. ",
                                " The results will NOT be returned if the app is closed from the R session.")))),
 
     # UI for floating sidebar
     absolutePanel(
-      shinyBS::bsButton("lasso", "", icon = icon("fa-solid fa-draw-polygon", verify_fa = FALSE)),
+      shinyBS::bsButton("lasso", "", icon = icon("draw-polygon", verify_fa = FALSE)),
       shinyBS::bsTooltip(id = "lasso", title = "lasso selection", placement = "right", trigger = "hover"),
-      shinyBS::bsButton("help", "", icon = icon("fa-solid fa-question", verify_fa = FALSE)), # Opens up a help menu
-      shinyBS::bsButton("quit", "", icon = icon("fa-regular fa-floppy-disk", verify_fa = FALSE)), # Quits application and save changes
+      shinyBS::bsButton("help", "", icon = icon("question", verify_fa = FALSE)), # Opens up a help menu
+      shinyBS::bsButton("quit", "", icon = icon("floppy-disk", verify_fa = FALSE)), # Quits application and save changes
       shinyBS::bsTooltip(id = "quit", title = "save & quit", placement = "right", trigger = "hover"),
       fluidRow(),
       selectizeInput("sample", "Sample", selected = sampleIDs[1], choices = sampleIDs),
