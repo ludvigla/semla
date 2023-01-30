@@ -17,6 +17,7 @@
 #' @importFrom magick image_read image_info image_crop image_scale image_blank image_composite image_transparent image_write
 #' @importFrom tibble tibble
 #' @importFrom rlang %||%
+#' @importFrom jsonlite write_json
 #' @import cli
 #'
 #' @author Ludvig Larsson
@@ -73,15 +74,6 @@ TileImage <- function (
     nCores = detectCores() - 1,
     verbose = TRUE
 ) {
-
-  # Define multicore lapply function depending on OS
-  if (!.Platform$OS.type %in% c("windows", "unix")) {
-    parLapplier <- lapply()
-  } else {
-    parLapplier <- switch(.Platform$OS.type,
-                          "windows" = .winLapply,
-                          "unix" = .unixLapply)
-  }
 
   # Validate input
   stopifnot(
@@ -160,9 +152,17 @@ TileImage <- function (
 
   # Export tiles
   if (verbose) cli_alert("  Exporting tiles")
-  results <- parLapplier(names(tiles), function(tileName) {
-    image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
-  }, nCores = nCores)
+  # Define lapply function depending on OS
+  if (.Platform$OS.type == "windows") {
+    if (verbose) cli_alert_danger("  Threading not supported on Windows")
+    results <- lapply(names(tiles), function(tileName) {
+      image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
+    })
+  } else {
+    results <- .unixLapply(names(tiles), function(tileName) {
+      image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
+    }, nCores = nCores)
+  }
 
   # Export data as JSON
   if (verbose) cli_alert("  Exporting meta data")
@@ -174,7 +174,7 @@ TileImage <- function (
        image_height = info$height,
        tilesize = 256)
   image_info_outpath <- paste0(outpath_data, paste0("/image_info_", sampleID, ".json"))
-  jsonlite::write_json(x = d, path = image_info_outpath, auto_unbox = TRUE)
+  write_json(x = d, path = image_info_outpath, auto_unbox = TRUE)
 
   return(list(datapath = outpath_data, tilepath = outpath_tiles, infopath = image_info_outpath))
 }
