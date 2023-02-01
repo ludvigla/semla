@@ -34,7 +34,7 @@ LoadImages.default <- function (
   ...
 ) {
 
-  if (verbose) cli_h2("Load H&E images")
+  if (verbose) cli_h2("Loading H&E images")
 
   # Check input
   if (!is.character(object)) abort("Invalid class '{class(object)}', expected a 'character' vector.")
