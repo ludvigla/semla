@@ -6,8 +6,9 @@ authors:
     href: https://github.com/ludvigla
   Lovisa Franzen:
     href: https://github.com/lfranzen
-  Spatial research:
+  Spatial Research:
     href: https://www.spatialresearch.org/
+    html: "<img src='man/figures/sr-logo.png' height='36' alt='spatialresearch'/>"
 template:
   bootstrap: 5
   bootswatch: lumen

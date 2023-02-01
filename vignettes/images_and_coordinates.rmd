@@ -1,5 +1,6 @@
 ---
 title: "Images and spot coordinates"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
 ---
@@ -18,8 +19,6 @@ library(ggplot2)
 ```
 
 ## Image transformation
-
-------------------------------------------------------------------------
 
 `STUtility2` uses the `magick` R package to read and process images. Please have a look at [this](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) vignette if you want to know more about `magick`.
 
@@ -80,11 +79,11 @@ title(paste0("reflected along y axis (",
              image_info(im_yrefl)$width, "x", image_info(im_yrefl)$height, ")"))
 ```
 
-When working with multiple SRT datasets, it can be useful to align the tissue sections to have roughly the same orientation and size. In other words, we might want to register our H&E images to a reference image. When doing so, we want to apply rotations, reflections and translations. The issue with the default `magick` rotation function is that it creates a bounding box to hold the entire image, which makes the image bigger. In the plots above you cans see that the rotated image is 586x586 pixels in size compared to the 400x425 of the other images.
+When working with multiple SRT data sets, it can be useful to align the tissue sections to have roughly the same orientation and size. In other words, we might want to register our H&E images to a reference image. When doing so, we want to apply rotations, reflections and translations. The issue with the default `magick` rotation function is that it creates a bounding box to hold the entire image, which makes the image bigger. In the plots above you cans see that the rotated image is 586x586 pixels in size compared to the 400x425 of the other images.
 
 The main issue is that if we want to map spots to our H&E images after rotation, the scale has now changed and the spots will appear smaller. Instead, it is more convenient to keep the same input dimensions.
 
-`STUtility2` provide two functions to complement the transformation functions available in the `magick` R package: `ImageTranslate` and `ImageTransform`.
+`STUtility2` provide two functions to complement the transformation functions available in the `magick` R package: `ImageTranslate()` and `ImageTransform()`.
 
 `ImageTranslate` can be used to move H&E image. If you imagine that you have an art board with the same dimensions as your image, this function can be used to move the H&E image on the art board. However, only the part of the image that is inside the art board will be kept.
 
@@ -117,8 +116,6 @@ title(paste0("rotated 45 degrees clockwise and moved (",
 As you can see, regardless of what transformation we apply, the image dimensions remain the same.
 
 ## Spot transformation
-
-------------------------------------------------------------------------
 
 Let's load some spot coordinates for the H&E image that we have.
 
@@ -160,7 +157,7 @@ scalefactors <- jsonlite::read_json(scalefactorfile)
 scalefactors
 ```
 
-Now we can see that the scaling factor between the original H&E image and the tissue_lowres image is ~0.03. Let's load the tissue_lowres and convert our coordinates to fit the image:
+Now we can see that the scaling factor between the original H&E image and the tissue_lowres image is \~0.03. Let's load the tissue_lowres and convert our coordinates to fit the image:
 
 ```{r}
 lowresimagefile <- system.file("extdata/mousebrain/spatial", 
@@ -196,7 +193,7 @@ ggplot(xy, aes(pxl_col_in_fullres,
 
 ```
 
-There are also functions available to apply transformations to spots: `CoordTransform` and `CoordMirror`.
+There are also functions available to apply transformations to spots: `CoordTransform()` and `CoordMirror()`.
 
 `CoordTransform` is equivalent to `ImageTransform` but for spot coordinates, meaning that you can apply rotations and translations. The main difference is that `CoordTransform` rotates around a predefined center. If you want apply the same rotation to an H&E image and its corresponding spot coordinates, you want to set the `center` argument to be the center of the H&E image.
 
@@ -259,7 +256,7 @@ Now let's have a look at how we can transform coordinates and images at the same
 
 ### Rotation
 
-The `CoordAndImageTransform` makes the transformation process a bit simpler. You can provide the H&E image and its corresponding spot coordinates and apply transformations to both objects simultaneously. note that the spot coordinates are still defined the same way as before, i.e. the origin is in the top left corner. This means that we still need to invert the y axis.
+The `CoordAndImageTransform()` makes the transformation process a bit simpler. You can provide the H&E image and its corresponding spot coordinates and apply transformations to both objects simultaneously. note that the spot coordinates are still defined the same way as before, i.e. the origin is in the top left corner. This means that we still need to invert the y axis.
 
 Since some of the spots are now outside the "art board", they will be missed when drawing the plot. In this example, we lose 46 spots!
 
@@ -338,3 +335,29 @@ ggplot(transf.res$xy_transf, aes(tr_x, image_info(im)$height - tr_y,
   scale_x_continuous(limits = c(0, image_info(im)$width), expand = c(0, 0)) +
   scale_y_continuous(limits = c(0, image_info(im)$height), expand = c(0, 0))
 ```
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+-   `magick`: `r packageVersion("magick")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
