@@ -1,7 +1,7 @@
 ---
 title: "Image alignment"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 author: "Ludvig Larsson"
-date: "2023-01-12"
 output:
   html_document:
     code_folding: show
@@ -28,18 +28,18 @@ ImagePlot(se_mbrain)
 
 `STUtility2` offers two ways of manipulating the orientation and position of H&E images using rigid transformations. Allowed transformations are:
 
-  * translation => move H&E image along x- and/or y-axis
-  * rotation => rotate image by a fixed degree
-  * mirror => mirror H&E image along x- and/or y-axis
-  
+-   **translation** =\> move H&E image along x- and/or y-axis
+-   **rotation** =\> rotate image by a fixed degree
+-   **mirror** =\> mirror H&E image along x- and/or y-axis
+
 Transformations can be applied to the H&E images programatically or interactively:
 
-  * `RigidTranformImages`: if you know what transformations to apply
-  * `RunAlignment`: opens an interactive viewer where you can manipulate the H&E images
+-   `RigidTranformImages()`: if you know what transformations to apply
+-   `RunAlignment()`: opens an interactive viewer where you can manipulate the H&E images
 
 ## Basic image transformation
 
-The first step is to generate a tibble with the transformations that you want to apply. `generate_rigid_transform` is a helper function that makes this task a bit easier.
+The first step is to generate a tibble with the transformations that you want to apply. `generate_rigid_transform()` is a helper function that makes this task a bit easier.
 
 In the example below, we'll mirror the H&E image along the x axis, rotate it by 30 degrees, move it 20% to the right and 20% up. Translations (`tr_x` and `tr_y`) are provided as proportions. For example, `tr_x = 0.1` means that you'll move the H&E image 20% of the image width to the right.
 
@@ -63,7 +63,7 @@ ImagePlot(se_mbrain, image_use = "transformed")
 title("Transformed H&E image")
 ```
 
-The spot coordinates are transformed together with the H&E image, so if we use `MapFeatures` or `MapLabels`, we should see that the spots are still correctly positioned on the H&E image.
+The spot coordinates are transformed together with the H&E image, so if we use `MapFeatures()` or `MapLabels()`, we should see that the spots are still correctly positioned on the H&E image.
 
 NB: Translations might result in moving parts of the H&E image outside of the predefined 'canvas'. In our example below, this results in some spots being located outside of the view and these will therefore be dropped. The original image dimensions are always retained.
 
@@ -75,9 +75,12 @@ MapFeatures(se_mbrain, features = "nFeature_Spatial", image_use = "transformed")
 
 Here we will take a look at three H&E images with different orientations, and the goal is to align them to a common coordinate system.
 
-You can click on 'show' to see the code I have used to generate this dummy data using `RigidTransformImages`.
+You can click on 'show' to see the code used to generate this dummy data using `RigidTransformImages`.
 
-<details><summary>show</summary>
+<details>
+
+<summary>show</summary>
+
 ```{r message=FALSE}
 se_merged <- MergeSTData(se_mbrain, list(se_mbrain, se_mbrain)) |> LoadImages()
 transforms1 <- generate_rigid_transform(mirror_x = TRUE, angle = 45, sampleID = 1)
@@ -91,12 +94,12 @@ se_merged@tools$Staffli@meta_data <- se_merged@tools$Staffli@meta_data |>
   select(-pxl_col_in_fullres, -pxl_row_in_fullres) |> 
   rename(pxl_col_in_fullres = pxl_col_in_fullres_transformed, pxl_row_in_fullres = pxl_row_in_fullres_transformed)
 ```
+
 </details>
 
 ```{r fig.asp=0.4}
 ImagePlot(se_merged, mar = c(0, 0, 0, 0), ncol = 3)
 ```
-
 
 ```{r eval=FALSE}
 se_merged <- RunAlignment(se_merged)
@@ -106,7 +109,7 @@ When we call `RunAlignment`, an interactive application will open up in a separa
 
 ![](images/alignment/alignment_start.png)
 
-If you click on help, you will see instructions on how to use the app:
+If you click on `Help`, you will see instructions on how to use the app:
 
 ![](images/alignment/help_menu.png)
 
@@ -116,20 +119,21 @@ We can select what H&E images should be put into view by clicking on the button 
 
 H&E images can be moved around by dragging the image with the cursor. The dotted borders around the H&E images highlights the dimensions of the 'canvas'. Anything outside of these borders will be removed.
 
-Some of the interaction is handled by pressing a key and clicking on an H&E image. For example, you can change the transparency by holding `q` or `w` and clicking on an H&E image. 
+Some of the interaction is handled by pressing a key and clicking on an H&E image. For example, you can change the transparency by holding `q` or `w` and clicking on an H&E image.
 
 We can rotate an H&E image by holding `SHIFT` and dragging the blue dot in the corner of the image. Similarly, scaling can be done by holding and dragging the blue dot.
 
 In the example below, we can see that 'image2' has been scaled and rotated to align with 'image1'. All that is left is align 'image2' with 'image1':
 
 ![](images/alignment/rotated_and_scaled.png)
+
 In the end, we should be able to get a decent alignment of the three H&E images. The table on top of the alignment panel shows the transformations that have been applied:
 
 ![](images/alignment/aligned_images.png)
 
-Once we are satisfied with the alignment, we can press the `Quit & save` button which will trigger the alignment of our H&E images (in R) and the results will be saved to our `Seurat` object. 
+Once we are satisfied with the alignment, we can press the `Quit & Save` button which will trigger the alignment of our H&E images (in R) and the results will be saved to our `Seurat` object.
 
-If we set `image_use='transformed'` in `MapFeatures`, we will see that the the H&E images are now aligned. 
+If we set `image_use='transformed'` in `MapFeatures`, we will see that the the H&E images are now aligned.
 
 NB: Manipulating the images will often lead to some cropping. In the first image below, we can see that the corners are cropped and filled with empty white space.
 
@@ -150,3 +154,27 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
 ```
 
 ![](images/alignment/aligned_cropped.jpg)
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
