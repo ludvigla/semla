@@ -288,6 +288,9 @@ LoadImageData <- function (
 #'
 #' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
 #' @param assay Assay name (default = "Spatial")
+#' @param remove_spots_outside_HE Should spots outside the H&E be removed? This option
+#' can be useful for CytAssist data when the H&E image only cover a smaller part of the
+#' entire tissue section.
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
@@ -332,6 +335,7 @@ LoadImageData <- function (
 ReadVisiumData <- function (
     infoTable,
     assay = "Spatial",
+    remove_spots_outside_HE = FALSE,
     remove_spots_outside_tissue = TRUE,
     verbose = TRUE,
     ...
@@ -436,6 +440,72 @@ ReadVisiumData <- function (
   # Sort coordinates
   coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
 
+  # Remove coordinates that are located outside of the tissue
+  check_coordinates <- coordinates |>
+    group_by(sampleID) |>
+    mutate(check_x = case_when(between(x = pxl_col_in_fullres,
+                                       left = 0,
+                                       right = image_info[cur_group_id(), "full_width", drop = TRUE]) ~ "inside",
+                               TRUE ~ "outside"),
+           check_y = case_when(between(x = pxl_row_in_fullres,
+                                       left = 0,
+                                       right = image_info[cur_group_id(), "full_height", drop = TRUE]) ~ "inside",
+                               TRUE ~ "outside"))
+  remove_spots <- c()
+  if (any(check_coordinates$check_x == "outside")) {
+    check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_x == "outside"))
+    for (ID in check_coordinates_x$sampleID) {
+      cli_alert_danger("Found {check_coordinates_x |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with x coordinates outside of the H&E image for sample {ID}")
+    }
+    remove_spots <- c(remove_spots, check_coordinates |> filter(check_x == "outside") |> pull(barcode))
+  }
+  if (any(check_coordinates$check_y == "outside")) {
+    check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
+    for (ID in check_coordinates_y$sampleID) {
+      cli_alert_danger("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
+    }
+    remove_spots <- c(remove_spots, check_coordinates |> filter(check_y == "outside") |> pull(barcode))
+  }
+  if (length(remove_spots) > 0) {
+    if (remove_spots_outside_HE) {
+      cli_alert_danger("Removing {length(remove_spots)} spots from the dataset")
+      coordinates <- coordinates |> filter(!barcode %in% remove_spots)
+      mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
+    } else {
+      # Adjust width and height to match missing data
+      spot_ranges <- coordinates |>
+        mutate(sampleID = paste0(sampleID)) |>
+        group_by(sampleID) |>
+        summarize(min_x = min(pxl_col_in_fullres),
+                  max_x = max(pxl_col_in_fullres),
+                  min_y = min(pxl_row_in_fullres),
+                  max_y = max(pxl_row_in_fullres)) |>
+        left_join(y = image_info |>
+                    select(sampleID, full_width, full_height) |>
+                    mutate(sampleID = paste0(sampleID)), by = "sampleID")
+      image_pad <- spot_ranges |>
+        mutate(pad_before_x = ifelse(min_x < 0, abs(min_x), 0),
+               pad_after_x = ifelse(max_x > full_width, max_x - full_width, 0),
+               pad_before_y = ifelse(min_y < 0, abs(min_y), 0),
+               pad_after_y = ifelse(max_y > full_height, max_y - full_height, 0)) |>
+        mutate(across(pad_before_x:pad_after_y, ~ceiling(.x))) |>
+        mutate(full_width_new = full_width + pad_before_x + pad_after_x,
+               full_height_new = full_height + pad_before_y + pad_after_y)
+
+      image_info$pad <- image_pad |>
+        tidyr::unite("pad", pad_before_x:pad_after_y, sep = "x") |>
+        pull(pad)
+      coordinates$pxl_col_in_fullres <- coordinates$pxl_col_in_fullres + image_pad$pad_before_x
+      coordinates$pxl_row_in_fullres <- coordinates$pxl_row_in_fullres + image_pad$pad_before_y
+      sfx <- image_pad$full_width_new/image_info$full_width
+      sfy <- image_pad$full_height_new/image_info$full_height
+      image_info$width <- ceiling(sfx*image_info$width)
+      image_info$height <- ceiling(sfy*image_info$height)
+      image_info$full_width <- ceiling(image_pad$full_width_new)
+      image_info$full_height <- ceiling(image_pad$full_height_new)
+    }
+  }
+
   # Create a Seurat object from expression matrix
   object <- CreateSeuratObject(counts = mergedMat,
                                assay = assay,
@@ -443,7 +513,7 @@ ReadVisiumData <- function (
                                ...)
   if (verbose) cli_alert_info("Created `Seurat` object")
 
-  # Create a Stafli object
+  # Create a Staffli object
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
                                         meta_data = coordinates |>
                                           select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID),
