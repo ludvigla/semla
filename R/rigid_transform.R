@@ -212,7 +212,7 @@ RigidTransformImages.default <- function (
 
   if (verbose) {
     cli_alert("  Mirror along x-axis: {cli::col_br_magenta(object$mirror_x)}")
-    cli_alert("  Mirror along x-axis: {cli::col_br_magenta(object$mirror_y)}")
+    cli_alert("  Mirror along y-axis: {cli::col_br_magenta(object$mirror_y)}")
     cli_alert("  Rotation angle: {cli::col_br_magenta(round(object$angle, digits = 2))}")
     cli_alert("  Translation along x axis: {cli::col_br_magenta(round(object$tr_x*100, digits = 2))}%")
     cli_alert("  Translation along y axis: {cli::col_br_magenta(round(object$tr_y*100, digits = 2))}%")
