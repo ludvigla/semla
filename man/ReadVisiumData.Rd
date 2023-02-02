@@ -7,6 +7,7 @@
 ReadVisiumData(
   infoTable,
   assay = "Spatial",
+  remove_spots_outside_HE = FALSE,
   remove_spots_outside_tissue = TRUE,
   verbose = TRUE,
   ...
@@ -16,6 +17,10 @@ ReadVisiumData(
 \item{infoTable}{A `data.frame` or `tbl` with paths to spaceranger output files}
 
 \item{assay}{Assay name (default = "Spatial")}
+
+\item{remove_spots_outside_HE}{Should spots outside the H&E be removed? This option
+can be useful for CytAssist data when the H&E image only cover a smaller part of the
+entire tissue section.}
 
 \item{remove_spots_outside_tissue}{Should spots outside the tissue be removed?}
 

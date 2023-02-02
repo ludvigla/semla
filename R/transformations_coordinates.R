@@ -286,7 +286,7 @@ CoordTransform <- function (
   return(xy_coords_transformed)
 }
 
-
+# TODO fix bug with CytAssist data when spots are located outside of H&E
 #' Apply transformation to paired image and coordinates
 #'
 #' SRT data generated with Visium consists of an H&E image and a gene expression
@@ -451,10 +451,10 @@ CoordAndImageTransform <- function (
   # Mirror image
   if (mirror_x | mirror_y) {
     if (mirror_x) {
-      im_mirror <- image_flop(im)
+      im <- image_flop(im)
     }
     if (mirror_y) {
-      im_mirror <- image_flip(im)
+      im <- image_flip(im)
     }
     xy_coords_mirror <- xy_coords |>
       CoordMirror(mirror.x = mirror_x,
@@ -462,16 +462,20 @@ CoordAndImageTransform <- function (
                   center = imcenter)
 
     # Set new im and xy_coords
-    im <- im_mirror
     xy_coords <- xy_coords_mirror
   }
 
 
   # Apply transformations
-  im_transformed <- ImageTransform(im = im, angle = angle, xy_offset = xy_offset_image, scalefactor = scalefactor)
-  xy_coords_transformed <- CoordTransform(xy_coords, angle, center = imcenter, xy_offset = xy_offset_spots, scalefactor = scalefactor)
-  xy_coords_transformed <- xy_coords_transformed |>
-    select(tr_x, tr_y)
+  if (!(angle == 0 & all(xy_offset_image == c(0, 0)) & scalefactor == 1)) {
+    im_transformed <- ImageTransform(im = im, angle = angle, xy_offset = xy_offset_image, scalefactor = scalefactor)
+    xy_coords_transformed <- CoordTransform(xy_coords, angle, center = imcenter, xy_offset = xy_offset_spots, scalefactor = scalefactor)
+    xy_coords_transformed <- xy_coords_transformed |>
+      select(tr_x, tr_y)
+  } else {
+    im_transformed <- im
+    xy_coords_transformed <- xy_coords
+  }
 
   # Return list of results
   return(list(im_transf = im_transformed, xy_transf = xy_coords_transformed))
