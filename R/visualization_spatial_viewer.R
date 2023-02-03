@@ -61,6 +61,9 @@ FeatureViewer <- function (
   if (!requireNamespace("shinyBS"))
     install.packages("shinyBS")
 
+  # Create link to javascript and css files for package
+  shiny::addResourcePath("sbs", system.file("www", package = "shinyBS"))
+
   # Check Seurat object
   .check_seurat_object(object)
 
@@ -561,17 +564,17 @@ FeatureViewer <- function (
     if (verbose) cli_alert_info("Got data directory {datadir}")
     if (verbose) cli_alert_info("Checking for required files ...")
     for (i in sampleIDs) {
-      tilepath <- paste0(datadir, paste0("/tiles", sampleID))
+      tilepath <- paste0(datadir, paste0("/tiles", i))
       if (!file.exists(tilepath)) {
-        abort(glue("Path {tilepath} is missing for sample {sampleID}"))
+        abort(glue("Path {tilepath} is missing for sample {i}"))
       }
-      infopath <- paste0(datadir, paste0("/image_info", sampleID, ".json"))
+      infopath <- paste0(datadir, paste0("/image_info_", i, ".json"))
       if (!file.exists(infopath)) {
-        abort(glue("Path {infopath} is missing for sample {sampleID}"))
+        abort(glue("Path {infopath} is missing for sample {i}"))
       }
-      coordpath <- paste0(datadir,  paste0("/coords_Visium_", sampleID, ".json"))
+      coordpath <- paste0(datadir,  paste0("/coords_Visium_", i, ".json"))
       if (!file.exists(coordpath)) {
-        abort(glue("Path {coordpath} is missing for sample {sampleID}"))
+        abort(glue("Path {coordpath} is missing for sample {i}"))
       }
     }
     datapath <- datadir
