@@ -433,7 +433,9 @@ FeatureViewer <- function (
     # Send image data to widget
     output$ftrviewerWidget <- renderFtrviewer({
       if (length(rv$isNumeric) > 0) {
-        ftrviewer(values = rv$values,
+        ftrviewer(host = host,
+                  port = paste0(port),
+                  values = rv$values,
                   sampleID = input$sample |> as.integer(),
                   range = .trim_range(x = rv$range, minCutoff = input$trim[1], maxCutoff = input$trim[2]),
                   levels = rv$levels,
