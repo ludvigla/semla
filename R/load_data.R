@@ -455,20 +455,20 @@ ReadVisiumData <- function (
   if (any(check_coordinates$check_x == "outside")) {
     check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_x == "outside"))
     for (ID in check_coordinates_x$sampleID) {
-      cli_alert_danger("Found {check_coordinates_x |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with x coordinates outside of the H&E image for sample {ID}")
+      cli_alert_warning("Found {check_coordinates_x |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with x coordinates outside of the H&E image for sample {ID}")
     }
     remove_spots <- c(remove_spots, check_coordinates |> filter(check_x == "outside") |> pull(barcode))
   }
   if (any(check_coordinates$check_y == "outside")) {
     check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
     for (ID in check_coordinates_y$sampleID) {
-      cli_alert_danger("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
+      cli_alert_warning("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
     }
     remove_spots <- c(remove_spots, check_coordinates |> filter(check_y == "outside") |> pull(barcode))
   }
   if (length(remove_spots) > 0) {
     if (remove_spots_outside_HE) {
-      cli_alert_danger("Removing {length(remove_spots)} spots from the dataset")
+      cli_alert_warning("Removing {length(remove_spots)} spots from the dataset")
       coordinates <- coordinates |> filter(!barcode %in% remove_spots)
       mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
     } else {

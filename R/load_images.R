@@ -3,7 +3,8 @@
 #'
 NULL
 
-#' @param image_height an integer value specifying the height of the down-scaled images
+#' @param image_height An integer specifying the height of the down-scaled images
+#' @param pad_info A tibble with information about how the image should be padded
 #' @param verbose print messages
 #'
 #' @importFrom rlang abort
@@ -30,6 +31,7 @@ NULL
 LoadImages.default <- function (
   object,
   image_height = 400,
+  pad_info = NULL,
   verbose = TRUE,
   ...
 ) {
@@ -38,6 +40,12 @@ LoadImages.default <- function (
 
   # Check input
   if (!is.character(object)) abort("Invalid class '{class(object)}', expected a 'character' vector.")
+
+  # Check padding
+  if (!is.null(pad_info)) {
+    if (nrow(pad_info) != length(object)) abort("pad_info needs to have the same length as object")
+    stopifnot(inherits(pad_info, what = "tbl"))
+  }
 
   # Include images from example data if object is either "mousebrain" or "mousecolon"
   for (i in seq_along(object)) {
@@ -54,12 +62,25 @@ LoadImages.default <- function (
   }
 
   # Load images
-  raw_rasters <- lapply(object, function(f) {
+  raw_rasters <- lapply(seq_along(object), function(i) {
+    f <- object[i]
     if (verbose) cli_alert_info("Loading image from {f}")
     im <- f |>
       image_read()
     info <- im |>
       image_info()
+
+    # Check padding
+    if (!is.null(pad_info)) {
+      im_blank <- image_blank(width = info$width + pad_info[i, "before_x", drop = TRUE] + pad_info[i, "after_x", drop = TRUE],
+                  height = info$height + pad_info[i, "before_y", drop = TRUE] + pad_info[i, "after_y", drop = TRUE],
+                  color = "white")
+      im <- image_composite(im_blank, composite_image = im,
+                            offset = geometry_area(x_off = pad_info[i, "before_x", drop = TRUE],
+                                                   y_off = pad_info[i, "before_y", drop = TRUE]))
+
+    }
+
     if ((!inherits(image_height, what = "numeric")) | (length(image_height) != 1))
       abort("image_height should be a numeric of length 1")
     if (info$height < image_height) {
@@ -112,8 +133,26 @@ LoadImages.Seurat <- function (
   # Get the Staffli object
   st_object <- GetStaffli(object)
 
+  # Check if images needs to be padded
+  if ("pad" %in% colnames(st_object@image_info)) {
+    if (verbose) {
+      cli_alert_warning("White space will be added to H&E images to fit all spots on the images")
+    }
+    pad_info <- st_object@image_info |>
+      select(pad, sampleID, width, height, full_width, full_height) |>
+      separate(col = "pad", into = c("before_x", "after_x", "before_y", "after_y"), sep = "x") |>
+      mutate_if(is.character, as.integer) |>
+      mutate(before_x = (before_x/full_width)*width,
+             after_x = (after_x/full_width)*width,
+             before_y = (before_y/full_height)*height,
+             after_y = (after_y/full_height)*height) |>
+      mutate(across(before_x:after_y, ~ceiling(.x)))
+  } else {
+    pad_info <- NULL
+  }
+
   # Load images
-  raw_rasters <- LoadImages(st_object@imgs, image_height = image_height, verbose = verbose)
+  raw_rasters <- LoadImages(st_object@imgs, image_height = image_height, pad_info = pad_info, verbose = verbose)
 
   # Save loaded images in object
   st_object@rasterlists$raw <- raw_rasters

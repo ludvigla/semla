@@ -8,7 +8,7 @@
 \usage{
 LoadImages(object, ...)
 
-\method{LoadImages}{default}(object, image_height = 400, verbose = TRUE, ...)
+\method{LoadImages}{default}(object, image_height = 400, pad_info = NULL, verbose = TRUE, ...)
 
 \method{LoadImages}{Seurat}(object, image_height = 400, verbose = TRUE, ...)
 }
@@ -17,7 +17,9 @@ LoadImages(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{image_height}{an integer value specifying the height of the down-scaled images}
+\item{image_height}{An integer specifying the height of the down-scaled images}
+
+\item{pad_info}{A tibble with information about how the image should be padded}
 
 \item{verbose}{print messages}
 }

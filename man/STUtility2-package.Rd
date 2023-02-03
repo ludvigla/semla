@@ -25,5 +25,10 @@ Authors:
   \item Lovisa Franzen \email{lovisa.franzen@scilifelab.se} (\href{https://orcid.org/0000-0003-3755-718X}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Spatial Research [funder]
+}
+
 }
 \keyword{internal}
