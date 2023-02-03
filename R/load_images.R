@@ -135,6 +135,9 @@ LoadImages.Seurat <- function (
 
   # Check if images needs to be padded
   if ("pad" %in% colnames(st_object@image_info)) {
+    if (verbose) {
+      cli_alert_warning("White space will be added to H&E images to fit all spots on the images")
+    }
     pad_info <- st_object@image_info |>
       select(pad, sampleID, width, height, full_width, full_height) |>
       separate(col = "pad", into = c("before_x", "after_x", "before_y", "after_y"), sep = "x") |>
