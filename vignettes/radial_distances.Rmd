@@ -1,5 +1,6 @@
 ---
 title: "Radial distances"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
 editor_options: 
@@ -9,10 +10,10 @@ editor_options:
 In this notebook, we'll have a look at so called 'spatial methods' provided in `STUtility2`. 'spatial methods' refers to analysis methods which somehow incorporate the position of spots in their calculations.
 
 ```{r warning=FALSE, message=FALSE}
+library(STUtility2)
 library(tibble)
 library(ggplot2)
 library(patchwork)
-library(STUtility2)
 library(scico)
 library(tidyr)
 library(dplyr)
@@ -278,3 +279,28 @@ MapFeatures(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
 ```{r include=FALSE, eval=FALSE}
 saveRDS(se, file = "bc_visium/bc")
 ```
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
+
