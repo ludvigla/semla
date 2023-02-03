@@ -95,9 +95,9 @@ TileImage <- function (
 
   # Create output path
   outpath <- outpath %||% tempdir()
-  outpath_data <- paste0(outpath, "/osd_data") |> normalizePath()
+  outpath_data <- paste0(outpath, "/osd_data")
   dir.create(outpath_data, showWarnings = FALSE)
-  outpath_tiles <- paste0(outpath_data, paste0("/tiles", sampleID)) |> normalizePath()
+  outpath_tiles <- paste0(outpath_data, paste0("/tiles", sampleID))
   dir.create(outpath_tiles, showWarnings = FALSE)
 
   # Zoom levels
@@ -172,8 +172,10 @@ TileImage <- function (
        image_width = info$width,
        image_height = info$height,
        tilesize = 256)
-  image_info_outpath <- paste0(outpath_data, paste0("/image_info_", sampleID, ".json")) |> normalizePath()
+  image_info_outpath <- paste0(outpath_data, paste0("/image_info_", sampleID, ".json"))
   write_json(x = d, path = image_info_outpath, auto_unbox = TRUE)
 
-  return(list(datapath = outpath_data, tilepath = outpath_tiles, infopath = image_info_outpath))
+  return(list(datapath = outpath_data |> normalizePath(winslash = "/"),
+              tilepath = outpath_tiles |> normalizePath(winslash = "/"),
+              infopath = image_info_outpath |> normalizePath(winslash = "/")))
 }
