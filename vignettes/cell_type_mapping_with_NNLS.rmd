@@ -210,7 +210,6 @@ for(i in 1:length(selected_celltypes)){
 }
 ```
 
-
 ### Visualize multiple cell types
 
 We can also visualize some of these cell types in one single plot with `MapMultipleFeatures()`.
@@ -232,19 +231,28 @@ MapMultipleFeatures(se_brain_spatial,
 
 ```
 
+<br>
 
 ### Cell type co-localization
 
-By computing the pair-wise correlation between cell types across spots, we can get an idea of which cell types often appear together in the same areas.
+By computing the pair-wise correlation between cell types across spots, we can get an idea of which cell types often appear together in the same spots.
 
 ```{r fig.asp=1, fig.width=4}
-cor_matrix <- FetchData(se_brain_spatial, selected_celltypes) |> cor()
+cor_matrix <- FetchData(se_brain_spatial, selected_celltypes) |> 
+  mutate_all(~ if_else(.x<0.1, 0, .x)) |>  # Filter lowest values (-> set as 0)
+  cor()
+
 diag(cor_matrix) <- NA
+max_val <- max(cor_matrix, na.rm = T)
+cols <- RColorBrewer::brewer.pal(7, "RdYlBu") |> rev(); cols[4] <- "white"
 pheatmap::pheatmap(cor_matrix, 
+                   breaks = seq(-max_val, max_val, length.out = 100),
+                   color=colorRampPalette(cols)(100),
                    cellwidth = 14, cellheight = 14, 
                    treeheight_col = 10, treeheight_row = 10, 
-                   main = "Cell type spatial correlation\nwithin spots")
+                   main = "Cell type correlation\nwithin spots")
 ```
+
 <br>
 
 We can also use the predicted cell type proportions to compute factors using NMF, and thereby summarizing the cell types presence within the same location into a set of predefined factors. Each factor can be viewed as a niche of a certain cell type composition.
@@ -252,30 +260,31 @@ We can also use the predicted cell type proportions to compute factors using NMF
 ```{r fig.asp=1, fig.width=4}
 nmf_data <- FetchData(se_brain_spatial, selected_celltypes) |> 
   RcppML::nmf(k = 10, verbose = F)
-nmf_data <- nmf_data$w
-rownames(nmf_data) <- rownames(se_brain_spatial@meta.data)
-colnames(nmf_data) <- paste0("Factor_", 1:10)
 
-cor_df_factor <- bind_cols(FetchData(se_brain_spatial, selected_celltypes), nmf_data) |> 
-  cor() |>
-  data.frame() |> 
-  rownames_to_column(var = "Cell") |> 
-  filter(Cell %in% selected_celltypes) |> 
-  select( matches(c("Cell", paste0("Factor_", 1:10))) ) |> 
-  tidyr::pivot_longer(cols = paste0("Factor_", 1:10), 
-               names_to = "Factor", 
-               values_to = "cor")
-cor_df_factor$Factor <- factor(cor_df_factor$Factor, levels = paste0("Factor_", 1:10))
+nmf_data_h <- nmf_data$h |> as.data.frame()
+rownames(nmf_data_h) <- paste0("Factor_", 1:10)
+colnames(nmf_data_h) <- selected_celltypes
 
-ggplot(cor_df_factor, aes(x=Factor, y=Cell, size=abs(cor), color=cor)) +
+nmf_data_h <- nmf_data_h |> 
+  mutate_at(colnames(nmf_data_h), 
+            ~(scale(., center = FALSE, scale = max(., na.rm = TRUE)/1)))
+
+nmf_data_h$Factor <- rownames(nmf_data_h) |> 
+  factor(levels = paste0("Factor_", 1:10))
+nmf_data_h_df <- nmf_data_h |> 
+  tidyr::pivot_longer(cols = all_of(selected_celltypes), 
+                      names_to = "Cell", 
+                      values_to = "Weight")
+
+ggplot(nmf_data_h_df, aes(x=Factor, y=Cell, size=Weight, color=Weight)) +
   geom_point() +
-  labs(title="Cell type ~ NMF factor\ncorrelation within spots", x="Factor", y = "Cell type") +
-  scale_colour_gradient2(high = ("darkorange"), mid = "white", low = ("steelblue"), midpoint = 0) +
+  labs(title="Cell type contribution", x="Factor", y = "Cell type", 
+       color = "", size = "Scaled weight") +
+  scale_color_viridis_c(direction = -1, option = "magma") +
   theme_bw() +
-  theme(axis.text.x = element_text(angle=45, hjust=1))
+  theme(axis.text.x = element_text(angle=45, hjust=1), 
+        panel.grid = element_blank())
 ```
-
-
 
 ## Mouse kidney {#mkidney}
 
@@ -403,7 +412,6 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 
 ```
 
-
 ### Mapped kidney cell types {.tabset}
 
 ```{r results='asis'}
@@ -414,7 +422,6 @@ for(i in 1:length(selected_celltypes)){
   cat("\n\n")
 }
 ```
-
 
 ```{r eval=FALSE, include=FALSE}
 saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")
@@ -482,7 +489,6 @@ p1 / p2
 -   `STUtility2`: `r packageVersion("STUtility2")`
 
 -   `RcppML`: `r packageVersion("RcppML")`
-
 
 </details>
 
