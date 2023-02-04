@@ -1,37 +1,27 @@
 ---
 title: "Spatial autocorrelation"
-output:
-  html_document:
-    code_folding: show
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
 editor: visual
 editor_options: 
   chunk_output_type: inline
 ---
 
+`STUtility2` offers a fast method to compute spatial autocorrelation scores for numeric features.
+
+Spatial autocorrelation is a term used to describe the presence of systematic spatial variation. Positive spatial autocorrelation of a feature is the tendency for regions that are close together in space to have similar values for that feature.
+
+A simple example is when you have an anatomical structure or a tissue type that spans across multiple neighboring spots in an SRT experiment, for example a gland, an immune infiltrate or a region of the brain. Inside such structures, you might find that the expression levels of certain genes (or other features) are highly similar and hence these genes have a positive spatial autocorrelation.
+
+Perhaps the most widely used method for computing spatial autocorrelation scores is [Moran's I](https://en.wikipedia.org/wiki/Moran%27s_I). The computation of Moran's I doesn't scale well and often require some sort of binning strategy to mitigate this problem.
+
+The method provided in `STUtility2` uses a fast alternative which relies on computing the "spatial lag" vector of each feature. Here the spatial lag of a numeric feature is defined as the averaged value of that feature in adjacent spots. Once this score has been calculated, we can estimate spatial autocorrelation by computing the Pearson correlation between the original vector and its spatial lag vector.
+
+We will demonstrate how this method, using the function `CorSpatialFeatures()`, work with our mouse brain data set.
+
 ```{r message=FALSE, warning=FALSE}
 library(STUtility2)
 ```
-
-`STUtility2` offers a fast method to compute spatial autocorrelation scores for numeric features. 
-
-Spatial autocorrelation is a term used to describe the presence of systematic spatial variation. 
-Positive spatial autocorrelation of a feature is the tendency for regions that are close together 
-in space to have similar values for that feature.
-
-A simple example is when you have an anatomical structure or a tissue type that spans across multiple 
-neighboring spots in an SRT experiment, for example a gland, an immune infiltrate or a region of the brain. 
-Inside such structures, you might find that the expression levels of certain genes (or other features) are 
-highly similar and hence these genes have a positive spatial autocorrelation.
-
-Perhaps the most widely used method for computing spatial autocorrelation scores is [Moran's I](https://en.wikipedia.org/wiki/Moran%27s_I). 
-The computation of Moran's I doesn't scale well and often require some sort of binning strategy to mitigate this problem.
-
-The method provided in `STUtility2` uses a fast alternative which relies on computing the "spatial lag" 
-vector of each feature. Here the spatial lag of a numeric feature is defined as the averaged value of that 
-feature in adjacent spots. Once this score has been calculated, we can estimate spatial autocorrelation by 
-computing the Pearson correlation between the original vector and its spatial lag vector.
-
-We will demonstrate how this work with our mouse brain dataset.
 
 ```{r}
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
@@ -44,40 +34,35 @@ spatgenes <- CorSpatialFeatures(se_mbrain)
 spatgenes[[1]]
 ```
 
-By default, the method computes scores for the variable features of the `Seurat` objects returns the results
-in a list with one element per tissue section. If we plot the top ranked genes, we will see that these genes
-have a distinct spatial profile:
+By default, the method computes scores for the variable features of the `Seurat` objects returns the results in a list with one element per tissue section. If we plot the top ranked genes, we will see that these genes have a distinct spatial profile:
 
 ```{r fig.asp=1}
-MapFeatures(se_mbrain, features = spatgenes[[1]]$gene[1:6], override_plot_dims = TRUE,
-            colors = viridis::magma(n = 11, direction = -1), min_cutoff = 0.1)
+MapFeatures(se_mbrain, 
+            features = spatgenes[[1]]$gene[1:6], 
+            override_plot_dims = TRUE,
+            colors = viridis::magma(n = 11, direction = -1), 
+            min_cutoff = 0.1)
 ```
 
 In contrast, genes with a more random spatial distribution are assigned a low correlation score:
 
 ```{r fig.asp=1}
 tail(spatgenes[[1]])
-MapFeatures(se_mbrain, features = tail(spatgenes[[1]])$gene, 
+MapFeatures(se_mbrain, 
+            features = tail(spatgenes[[1]])$gene, 
             override_plot_dims = TRUE,
             colors = viridis::magma(n = 11, direction = -1))
 ```
 
-With these spatial autocorrelation scores in our hands, we can for example prioritize genes with defined spatial structures
-for down stream analysis. As an example, hemoglobin transcripts are often highly variable due to the presence of blood vessels
-that are dispersed across tissue sections. These blood vessels might be of little interest if the goal is to identify larger
-"spatial domains" in the tissue. In fact, the hemoglobin transcripts "Hbb-bs", "Hba-a1", "Hba-a2" and "Hbb-bt" are the top four 
-most variable genes in our dataset and the expression of these transcripts might influence the downstream steps such as 
-data-driven clustering.
+With these spatial autocorrelation scores in our hands, we can for example prioritize genes with defined spatial structures for down stream analysis. As an example, hemoglobin transcripts are often highly variable due to the presence of blood vessels that are dispersed across tissue sections. These blood vessels might be of little interest if the goal is to identify larger "spatial domains" in the tissue. In fact, the hemoglobin transcripts "Hbb-bs", "Hba-a1", "Hba-a2" and "Hbb-bt" are the top four most variable genes in our dataset and the expression of these transcripts might influence the downstream steps such as data-driven clustering.
 
 ```{r fig.asp=1}
 hemoglobin_genes <- c("Hbb-bs", "Hba-a1", "Hba-a2", "Hbb-bt")
 which(VariableFeatures(se_mbrain) %in% hemoglobin_genes)
 MapFeatures(se_mbrain, features = hemoglobin_genes, override_plot_dims = TRUE)
 ```
-Let's demonstrate with an example how we can use spatial autocorrelation scores to assign higher importance
-to transcripts with more distinct spatial expression. In the histogram below, we can see the correlation scores
-for the genes in our dataset and we select genes with a score higher than 0.5 wich leaves us with 70 genes to 
-be used for down stream analysis.
+
+Let's demonstrate with an example how we can use spatial autocorrelation scores to assign higher importance to transcripts with more distinct spatial expression. In the histogram below, we can see the correlation scores for the genes in our data set and we select genes with a score higher than 0.5 which leaves us with 70 genes to be used for downstream analysis.
 
 ```{r}
 spatgenes[[1]] |> 
@@ -86,8 +71,7 @@ spatgenes[[1]] |>
     geom_histogram()
 ```
 
-Now we can compare the results of data-driven clustering when using our top 70 "spatial genes" with 
-the results when using the to 70 most variable genes.
+Now we can compare the results of data-driven clustering when using our top 70 "spatial genes" with the results when using the to 70 most variable genes.
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -108,8 +92,7 @@ se_mbrain <- se_mbrain |>
 se_mbrain$clusters_spatial_genes <- se_mbrain$seurat_clusters
 ```
 
-At a first glance, the results might not look too different from each other. However, if we look closely, we 
-can see that when we focus on the top variable genes, some clusters are more dispersed across the tissue section.
+At a first glance, the results might not look too different from each other. However, if we look closely, we can see that when we focus on the top variable genes, some clusters are more dispersed across the tissue section.
 
 ```{r fig.asp=1}
 MapLabels(se_mbrain, column_name = "clusters_var_genes", split_labels = TRUE, 
@@ -121,7 +104,18 @@ MapLabels(se_mbrain, column_name = "clusters_spatial_genes", split_labels = TRUE
   theme(legend.position = "none")
 ```
 
-The selection of genes boils down to what you are trying to achieve with your analysis. Note that if you 
-base your selection on spatial autocorrelation, you might end up hiding sources of biological variability
-such as blood vessels or infiltrating immune cells. If the goal is to identify more general structure ("spatial domains"),
-spatial autocorrelation can be a useful metric to base gene selection on.
+The selection of genes boils down to what you are trying to achieve with your analysis. Note that if you base your selection on spatial autocorrelation, you might end up hiding sources of biological variability such as blood vessels or infiltrating immune cells. If the goal is to identify more general structure ("spatial domains"), spatial autocorrelation can be a useful metric to base gene selection on.
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<br>
