@@ -26,6 +26,12 @@ NULL
 #' @param sampleIDs An integer vector of section IDs to use for the viewer. All sections
 #' will be used by default.
 #' @param custom_color_palettes A names list of color vectors to use as custom color palettes
+#' @param categorical_colors A named list of character vectors with color names. The name of
+#' each character vector should correspond to a categorical variable in the meta.data slot of the
+#' `Seurat` object. Each character vector should be named where each name corresponds to a
+#' label of the category.
+#' @param save_colors_to A string specifying a variable name to save the colors from the
+#' viewer to. The variable name should not exist in globalenv().
 #' @param container_width,container_height Set height and width of container
 #' @param verbose Print messages
 #'
@@ -57,6 +63,8 @@ FeatureViewer <- function (
     host = "127.0.0.1",
     port = 8080L,
     custom_color_palettes = NULL,
+    categorical_colors = NULL,
+    save_colors_to = NULL,
     container_width = 800,
     container_height = 800,
     verbose = TRUE
@@ -64,16 +72,6 @@ FeatureViewer <- function (
 
   # Set global variables to NULL
   sampleID <- barcode <- NULL
-
-  # Remove global variables .categorical_data and .feature_viewer_colors
-  if (exists(x = ".categorical_data")) {
-    cli_alert_warning("Removing global variable .categorical_data")
-    rm(.categorical_data)
-  }
-  if (exists(x = ".feature_viewer_colors")) {
-    cli_alert_warning("Removing global variable .feature_viewer_colors")
-    rm(.feature_viewer_colors)
-  }
 
   if (!requireNamespace("shinyBS"))
     install.packages("shinyBS")
@@ -86,26 +84,22 @@ FeatureViewer <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
+  # Check save_colors_to
+  if (!is.null(save_colors_to)) {
+    stopifnot(inherits(save_colors_to, what = "character"),
+              length(save_colors_to) == 1)
+    if (exists(save_colors_to, envir = globalenv())) {
+      abort(glue("Invalid save_colors_to {col_br_magenta(save_colors_to)}. Variable already exists in globalenv().",
+                 " Remove {col_br_magenta(save_colors_to)} or use a different variable name."))
+    }
+  }
+
   # Check custom_color_palettes
   .color_palettes <- sapply(.color_scales(info = TRUE), function(nm) {
     .color_scales(colorscale = nm)
   }) |> setNames(nm = .color_scales(info = TRUE))
   if (!is.null(custom_color_palettes)) {
-    stopifnot(inherits(custom_color_palettes, what = "list"),
-              length(custom_color_palettes) > 0,
-              inherits(names(custom_color_palettes), what = "character"))
-    if (!all(sapply(custom_color_palettes, class) == "character")) {
-      abort("Invalid custom_color_palettes. Expected a named list of caharcter vectors.")
-    }
-    for (cols in custom_color_palettes) {
-      check_cols <- .areColors(cols)
-      if (!all(check_cols)) {
-        abort(glue("Invalid color(s) {paste(cols[!check_cols], collapse = ', ')}"))
-      }
-    }
-    if (any(names(custom_color_palettes) %in% .color_scales(info = TRUE))) {
-      abort(glue("Color palette {intersect(names(custom_color_palettes), .color_scales(info = TRUE))} already exists"))
-    }
+    .check_custom_palettes(custom_color_palettes)
     .color_palettes <- c(custom_color_palettes, .color_palettes)
   }
 
@@ -135,19 +129,6 @@ FeatureViewer <- function (
   if (any(!sampleIDs %in% available_sampleIDs))
     abort(glue("Invalid sampleIDs: {paste(sampleIDs[!sampleIDs %in% available_sampleIDs], collapse = ', ')}"))
 
-
-  # Check tile paths
-  params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, verbose = verbose)
-  datapath <- params$datapath
-  # This will make sure the temporary directory is removied when the app is closed
-  clean_after_close <- params$clean_after_close
-
-  # Get sample IDs barcodes
-  barcodes <- GetStaffli(object)@meta_data |>
-    select(barcode, sampleID)
-  # Split barcodes by sampleIDs
-  barcodes <- split(barcodes$barcode, barcodes$sampleID)
-
   # Fetch categorical data
   # Only select character or factor columns from meta.data slot
   .categorical_data <- object[[]] |>
@@ -155,15 +136,32 @@ FeatureViewer <- function (
   .categorical_data[is.na(.categorical_data)] <- "NA"
   categorical_features <- colnames(.categorical_data)
 
-  # Define a list of colors for each category
-  # .feature_viewer_colors will work as a dictionary for the app to select colors from
-  .feature_viewer_colors <- lapply(.categorical_data, function(x) {
-    if (inherits(x, what =  "factor")) {
-      setNames(.set_colors(length(levels(x))), nm = levels(x))
-    } else {
-      setNames(.set_colors(length(unique(x))), nm = unique(x))
-    }
-  })
+  # Check custom_color_palettes
+  if (!is.null(categorical_colors)) {
+    .feature_viewer_colors <- .check_categorical_colors(categorical_colors, .categorical_data)
+  } else {
+    # Define a list of colors for each category
+    # .feature_viewer_colors will work as a dictionary for the app to select colors from
+    .feature_viewer_colors <- lapply(.categorical_data, function(x) {
+      if (inherits(x, what =  "factor")) {
+        setNames(.set_colors(length(levels(x))), nm = levels(x))
+      } else {
+        setNames(.set_colors(length(unique(x))), nm = unique(x))
+      }
+    })
+  }
+
+  # Check tile paths
+  params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, verbose = verbose)
+  datapath <- params$datapath
+  # This will make sure the temporary directory is removed when the app is closed
+  clean_after_close <- params$clean_after_close
+
+  # Get sample IDs barcodes
+  barcodes <- GetStaffli(object)@meta_data |>
+    select(barcode, sampleID)
+  # Split barcodes by sampleIDs
+  barcodes <- split(barcodes$barcode, barcodes$sampleID)
 
   # Import beakr
   if (!requireNamespace("beakr"))
@@ -237,9 +235,9 @@ FeatureViewer <- function (
       condition = "output.panelStatus",
       absolutePanel(
         plotOutput("legend", height = "200px"),
-        width = "60px",
+        width = "90px",
         top = "50px",
-        left = paste0(container_width - 50, "px"),
+        left = paste0(container_width - 90, "px"),
         draggable = TRUE
       )
     ),
@@ -325,7 +323,7 @@ FeatureViewer <- function (
 
     # listen to changes in input$category and reactive value rv$category
     toListenCategory <- reactive({
-      list(input$category, rv$category, rv$curbarcodes)
+      list(input$category, rv$category, rv$curbarcodes, rv$levels)
     })
 
     # # Set last button to "category" when a categorical feature is selected
@@ -348,7 +346,7 @@ FeatureViewer <- function (
         rv$opacities = rep(1, length(rv$values))
         # Create levels for character vectors or select levels for factors
         if (inherits(rv$values, what =  "character")) {
-          rv$levels <- unique(rv$values)
+          rv$levels <- unique(.categorical_data |> pull(all_of(input$category)))
         } else {
           rv$levels <- levels(rv$values)
         }
@@ -378,10 +376,10 @@ FeatureViewer <- function (
           # Redefine the range of the color bar when centerzero is active
           if (input$centerzero) {
             maxAbsVal <- max(abs(rv$values))
-            rv$range = c(-maxAbsVal, maxAbsVal) |> round(digits = 2)
+            rv$range = c(-maxAbsVal, maxAbsVal)# |> round(digits = 2)
           } else {
             # TODO: handle data with low values
-            rv$range = range(rv$values) |> round(digits = 2)
+            rv$range = range(rv$values)# |> round(digits = 2)
           }
           # Trim data if the trim sliders have been changed or keep as is
           # if the trim sliders are default
@@ -401,7 +399,7 @@ FeatureViewer <- function (
           if (input$revpal) {
             rv$colors <- rev(rv$colors)
           }
-          # Switch isNumeric to TRU to tell app that the data should be treated as numeric
+          # Switch isNumeric to TRUE to tell app that the data should be treated as numeric
           # This will trigger showing the scale alpha, center zero, trim and colorscale UI elements
           rv$isNumeric <- TRUE
           rv$allClear <- TRUE
@@ -538,7 +536,6 @@ FeatureViewer <- function (
     })
 
     # Render categorical feature legend on client side
-    # TODO: make sure that the legend scales properly
     output$catlegend <- renderUI({
       panel_width = max(sapply(rv$levels, nchar) |> max(), 15)
       absolutePanel(
@@ -608,8 +605,10 @@ FeatureViewer <- function (
     unlink(x = datapath, recursive = TRUE)
   }
 
-  # Clean up global variable .categorical_data
-  rm(.categorical_data)
+  # Save colors to save_colors_to variable, only if it doesn't already exist in globalenv()
+  if (!is.null(save_colors_to)) {
+    assign(x = save_colors_to, value = .feature_viewer_colors, envir = globalenv())
+  }
 
   return(object)
 }
@@ -693,6 +692,77 @@ FeatureViewer <- function (
     tryCatch(is.matrix(col2rgb(X)),
              error = function(e) FALSE)
   })
+}
+
+
+#' Check custom color palettes
+#'
+#' @noRd
+.check_custom_palettes <- function (
+  custom_color_palettes
+) {
+  stopifnot(inherits(custom_color_palettes, what = "list"),
+            length(custom_color_palettes) > 0,
+            inherits(names(custom_color_palettes), what = "character"))
+  if (!all(sapply(custom_color_palettes, class) == "character")) {
+    abort("Invalid custom_color_palettes. Expected a named list of character vectors.")
+  }
+  for (cols in custom_color_palettes) {
+    check_cols <- .areColors(cols)
+    if (!all(check_cols)) {
+      abort(glue("Invalid color(s) {paste(cols[!check_cols], collapse = ', ')}"))
+    }
+  }
+  if (any(names(custom_color_palettes) %in% .color_scales(info = TRUE))) {
+    abort(glue("Color palette {intersect(names(custom_color_palettes), .color_scales(info = TRUE))} already exists"))
+  }
+}
+
+
+#' Check categoircal colors
+#'
+#' @import rlang
+#' @import glue
+#'
+#' @noRd
+.check_categorical_colors <- function (
+  categorical_colors,
+  .categorical_data
+) {
+  stopifnot(inherits(categorical_colors, what = "list"),
+            length(categorical_colors) > 0,
+            inherits(names(categorical_colors), what = "character"))
+  if (!all(sapply(categorical_colors, class) == "character")) {
+    abort("Invalid categorical_colors. Expected a named list of named character vectors.")
+  }
+  for (cols in categorical_colors) {
+    if (!inherits(names(cols), what = "character")) {
+      abort("Invalid categorical_colors. Expected named character vectors in every element of the list.")
+    }
+    check_cols <- .areColors(cols)
+    if (!all(check_cols)) {
+      abort(glue("Invalid color(s) {paste(cols[!check_cols], collapse = ', ')}"))
+    }
+  }
+  if (!all(categorical_features %in% names(categorical_colors))) {
+    abort("Invalid categorical_colors. Names do not match with available categorical features.")
+  }
+  for (ftr_name in categorical_features) {
+    x <- .categorical_data[, ftr_name, drop = TRUE]
+    if (inherits(x, what = "factor")) {
+      x_unique <- levels(x)
+      if (!all(x_unique %in% names(categorical_colors[[ftr_name]]))) {
+        abort(glue("Invalid categorical_colors. Missing colors for categorical feature {ftr_name}."))
+      }
+    } else {
+      x_unique <- unique(x)
+      if (!all(x_unique %in% names(categorical_colors[[ftr_name]]))) {
+        abort(glue("Invalid categorical_colors. Missing colors for categorical feature {ftr_name}."))
+      }
+    }
+    categorical_colors[[ftr_name]] <- categorical_colors[[ftr_name]][x_unique]
+  }
+  return(categorical_colors)
 }
 
 
@@ -799,14 +869,22 @@ FeatureViewer <- function (
       ggtitle(title)
     for (lvl in rownames(df)) {
       p <- p +
-        gg_circle(r = 0.4, xc = 0.5, yc = df[lvl, "yc", drop = TRUE], fill = colors[lvl])
+        .gg_circle(r = 0.4, xc = 0.5, yc = df[lvl, "yc", drop = TRUE], fill = colors[lvl])
     }
   } else {
+  # Try to shorten title
+  if (nchar(title) > 10) {
+    title <- gsub(pattern = "\\.|\ |_", replacement = "\n", x = title)
+    if (nchar(title) > 20) {
+      title <- paste0(substr(title, start = 1, stop = 17), "...")
+    }
+    title <- strwrap(title, width = 12) |> paste(collapse = "\n")
+  }
   df <- data.frame(y = seq(minVal, maxVal, length.out = ntiles))
   p <- ggplot(df, aes("", y, fill = y)) +
     geom_raster() +
     theme(legend.position = "none") +
-    scale_y_continuous(position = "right") +
+    scale_y_continuous(position = "right", labels = .format_numeric_label_text) +
     theme(axis.text.y = element_text(size = 14, colour = "black"), axis.title = element_blank(),
           plot.background = element_rect(fill = "#FFFFFFAA", colour = NA),
           panel.background = element_blank(), axis.ticks.x = element_blank(),
@@ -819,6 +897,19 @@ FeatureViewer <- function (
   return(p)
 }
 
+
+#' Format label numbers to have an exact width
+#'
+#' @noRd
+.format_numeric_label_text <- function(x) {
+  x <- format(x = x, digits = 3)
+  pad <- 8 - nchar(x)
+  sapply(seq_along(x), function(i) {
+    paste0(x[i], paste(rep(" ", pad[i]), collapse = ""))
+  })
+}
+
+
 #' Create a circle in ggplot2
 #'
 #' @param r Circle radius
@@ -830,7 +921,7 @@ FeatureViewer <- function (
 #' @import ggplot2
 #'
 #' @noRd
-gg_circle <- function (
+.gg_circle <- function (
   r,
   xc,
   yc,
