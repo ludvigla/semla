@@ -12,6 +12,7 @@ NULL
 #' @param sampleNumber An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
+#' @param overwrite Should an existing coordinate file be overwritten?
 #' @param verbose Print messages
 #'
 #' @import rlang
@@ -21,12 +22,24 @@ NULL
 #' @importFrom tidyr pivot_wider
 #' @importFrom jsonlite write_json
 #'
+#' @examples
+#' \dontrun{
+#' libary(STUtility2)
+#'
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain",
+#'                                  "se_mbrain",
+#'                                  package = "STUtility2"))
+#'
+#' export_coordinates(se_mbrain, outdir = "./")
+#' }
+#'
 #' @export
 #'
 export_coordinates <- function (
     object,
     sampleNumber = 1L,
     outdir,
+    overwrite = FALSE,
     verbose = TRUE
 ) {
 
@@ -68,6 +81,14 @@ export_coordinates <- function (
 
   # Export
   outpath <- file.path(outdir, paste0('coords_Visium_', sampleNumber, '.json'))
+  if (file.exists(outpath)) {
+    if (overwrite) {
+      cli_alert_warning("  Replacing file {outpath |> normalizePath(winslash = '/')}")
+      unlink(x = outpath, recursive = TRUE)
+    } else {
+      abort(glue("File {outpath |> normalizePath(winslash = '/')} already exists. Overwrite it with {col_br_magenta('overwrite=TRUE')} or change outdir path"))
+    }
+  }
   if (verbose) cli_alert_info("Exporting Visium coordinates to <DATADIR>/{paste0('coords_Visium_', sampleNumber, '.json')}")
   data_json <- data |>
     write_json(auto_unbox = TRUE,
