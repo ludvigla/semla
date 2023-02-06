@@ -34,7 +34,7 @@ file_server <- function (
 ) {
 
   # Normalize path
-  hostDir <- normalizePath(hostDir)
+  hostDir <- normalizePath(hostDir, winslash = "/")
 
   # Check if directory exists
   if (!dir.exists(hostDir)) abort(glue("Directory '{hostDir}' does not exist"))
@@ -50,7 +50,7 @@ file_server <- function (
   fs <- beakr |>
     beakr::cors(origin = "*", headers = c("Origin", "X-Requested-With", "Content-Type", "Accept", "Range")) |>
     # Host the directory of static files
-    beakr::serveStaticFiles(urlPath = "/", rootPath = hostDir, verbose = TRUE) |>
+    beakr::serveStaticFiles(urlPath = "/", rootPath = hostDir, verbose = FALSE) |>
     # Start the server on port 25118
     beakr::listen(host = host, port = port, daemon = TRUE)
 
