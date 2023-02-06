@@ -11,7 +11,7 @@ Non-negative matrix factorization (NNMF or NMF) can be a useful technique to dec
 
 We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and at <https://www.zachdebruine.com/>.
 
-`RcppML` is avalilable on [GitHub](https://github.com/zdebruine/RcppML) and [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
+`RcppML` is available on [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html) and [GitHub](https://github.com/zdebruine/RcppML), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
 
 ```{r message=FALSE, warning=FALSE}
 library(STUtility2)
@@ -112,11 +112,14 @@ NB: Although we are able to pick up distinct patterns in our data with the facto
 
 <summary>**Package versions**</summary>
 
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+```{=html}
+<!-- -->
+```
 -   `RcppML`: `r packageVersion("RcppML")`
 
 -   `singlet`: `r packageVersion("singlet")`
-
--   `STUtility2`: `r packageVersion("STUtility2")`
 
 </details>
 

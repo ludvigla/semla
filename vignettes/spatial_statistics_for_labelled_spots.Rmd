@@ -1,22 +1,13 @@
 ---
 title: "Spatial statistics for labelled spots"
-output:
-  html_document:
-    code_folding: show
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
 editor: visual
 editor_options: 
   chunk_output_type: inline
 ---
 
-```{r include=FALSE}
-# knitr::opts_chunk$set(
-#   eval = FALSE
-# )
-```
-
-<br>
-
-In this tutorial, we will continue to analyze the spatial relationships in Visium data, specifically describing how spots that have been clustered, i.e. labelled, are organized. We will take advantage of a few methods from graph theory to describe <b>1)</b> if a cluster displays an aggregated or dispersed spatial pattern using an [assortativity test](#lat), and <b>2)</b> if two clusters co-localize spatially by calculating [neighborhood enrichment](#net).
+In this tutorial, we will continue to analyze the spatial relationships in Visium data, specifically describing how spots that have been clustered, i.e. labelled, are organized. We will take advantage of a few methods from graph theory to describe **1**) if a cluster displays an aggregated or dispersed spatial pattern using an [assortativity test](#lat), and **2**) if two clusters co-localize spatially by calculating [neighborhood enrichment](#net).
 
 ```{r, message=FALSE, warning=FALSE}
 library(STUtility2)
@@ -53,7 +44,6 @@ untar(tarfile = file.path(targetdir, "spatial.tar.gz"),
       exdir =  file.path(targetdir))
 file.remove(file.path(targetdir, "spatial.tar.gz"))
 ```
-
 
 ```{r}
 # Read data
@@ -553,4 +543,16 @@ Now we can see that clusters 1 and 8 no longer have a positive enrichment, even 
 
 This highlights the importance of being familiar with your data set and to be cautions of the different parameters that might influence an analysis like this, such as section size and number of spots within each label.
 
-<br> <br>
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<br>

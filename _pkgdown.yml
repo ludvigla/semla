@@ -54,6 +54,8 @@ navbar:
         href: articles/region_neighbors.html
       - text: Statistics for labelled spots
         href: articles/spatial_statistics_for_labelled_spots.html
+      - text: Spatial auttocorrelation
+      - href: articles/spatial_autocorrelation.html
       - text: '-------'
       - text: Analysis
       - text: Cell type mapping

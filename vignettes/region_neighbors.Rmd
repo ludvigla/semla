@@ -1,24 +1,21 @@
 ---
 title: "Region neighbors"
-output:
-  html_document:
-    code_folding: show
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
 editor: visual
 editor_options: 
   chunk_output_type: inline
 ---
 
-In this notebook, we'll have a look at how you can use spatial methods in `STUtility2`.
+In this notebook, we'll have a look at how you can use spatial methods in `STUtility2`. we will continue with the same Seurat object that we created in the '[radial distances](https://ludvigla.github.io/STUtility2/articles/radial_distances.html)' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial before continuing with the analysis presented here.
 
 ```{r warning=FALSE, message=FALSE}
+library(STUtility2)
 library(tibble)
 library(ggplot2)
 library(patchwork)
-library(STUtility2)
 library(dplyr)
 ```
-
-In this tutorial, we will continue with the same Seurat object that we created in the 'radial distances' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial first.
 
 ```{r include=FALSE}
 se <- readRDS("bc_visium/bc")
@@ -29,16 +26,17 @@ se <- LoadImages(se)
 
 In the previous tutorial we calculated radial distances from the center of a tumor region. These distances can easily be used to define a 'tumor microenvironment' as well as the leading edge of the tumor.
 
-If you are only interested in finding spots that are located at the border of a region of interest, you can use the `RegionNeighbors` function instead. `RegionNeighbors` automatically detects spots that are located inside or outside the border or both.
+If you are only interested in finding spots that are located at the border of a region of interest, you can use the `RegionNeighbors()` function instead. `RegionNeighbors` automatically detects spots that are located inside or outside the border or both.
 
 Let's demonstrate how it works with an example. If we want to find the spots that are neighbors to cluster 3, we set `column_name = "seurat_clusters"` and `column_labels = "3"`:
 
 ```{r}
-se <- RegionNeighbors(se, column_name = "seurat_clusters", 
+se <- RegionNeighbors(se, 
+                      column_name = "seurat_clusters", 
                       column_labels = "3")
 ```
 
-In our meta.data slot, we now have a new column called "nb_to_3", short for "neighbors to cluster 3". In the plot below, you can see that this column provides information about which spots are outside the border of cluster 3.
+In our `meta.data` slot, we now have a new column called "nb_to_3", short for "neighbors to cluster 3". In the plot below, you can see that this column provides information about which spots are outside the border of cluster 3.
 
 ```{r fig.asp=1, fig.width=6}
 MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
@@ -46,16 +44,21 @@ MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
           image_use = "raw", pt_size = 3)
 ```
 
-We can tweak thee function to identify the inner border instead, i.e. the spots that are located at the "tumor edge". When we run `RegionNeighbors` with `mode="inner"`, we get a column called `inner_border_3` which tells us what spots are on the "tumor edge".
+We can tweak the function to identify the inner border instead, i.e. the spots that are located at the "tumor edge". When we run `RegionNeighbors` with `mode="inner"`, we get a column called `inner_border_3` which tells us what spots are on the "tumor edge".
 
 ```{r fig.asp=1, fig.width=6}
 
-se <- RegionNeighbors(se, column_name = "seurat_clusters", 
-                      column_labels = "3", mode = "inner")
+se <- RegionNeighbors(se, 
+                      column_name = "seurat_clusters", 
+                      column_labels = "3", 
+                      mode = "inner")
 
-MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
+MapLabels(se, 
+          crop_area = c(0.45, 0.6, 0.8, 0.93),
           column_name = "inner_border_3",
-          image_use = "raw", pt_size = 3, drop_na = TRUE)
+          image_use = "raw", 
+          pt_size = 3, 
+          drop_na = TRUE)
 ```
 
 If we want to get both the inner and outer borders, we set `mode="inner_outer`.
@@ -105,3 +108,27 @@ VlnPlot(se_border_spots, features = rownames(border_markers_up), group.by = "nb_
 ```
 
 If you want to select a wider band of spots surrounding a ROI, you can calculate radial distances and set thresholds instead.
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

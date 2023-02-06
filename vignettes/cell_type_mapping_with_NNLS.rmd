@@ -1,12 +1,15 @@
 ---
 title: "Cell type mapping with NNLS"
-output:
-  html_document:
-    code_folding: show
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
 editor: visual
 editor_options: 
   chunk_output_type: inline
 ---
+
+Cell type mapping with SRT data refers to a set of methods which allows you to infer the quantity of cells from SRT expression profiles. `STUtility2` offers a quick method based on *Non-Negative Least Squares* to infer cell type proportions directly from Visium spot expression profiles. We utilize the NNLS method implemented in the [RcppML](https://github.com/zdebruine/RcppML) *v0.3.7* package available on CRAN: <https://cran.r-project.org/web/packages/RcppML/index.html>. Please ensure you have the correct version installed before proceeding with this tutorial.
+
+In this tutorial, we'll take a look at two examples. First, we have two tissue sections of a [mouse brain](#mbrain) and a single cell RNA-seq dataset from the Allen Brain Atlas. In the second example, we have a [mouse kidney](#mkidney) section and single cell RNA-seq data from the Tabula Muris Senis.
 
 ```{r, message=FALSE, warning=FALSE}
 library(STUtility2)
@@ -15,6 +18,7 @@ library(dplyr)
 if (!requireNamespace('TabulaMurisSenisData', quietly = TRUE)) {
   BiocManager::install("TabulaMurisSenisData")
 }
+
 library(TabulaMurisSenisData)
 library(SingleCellExperiment)
 library(Seurat)
@@ -23,13 +27,9 @@ library(patchwork)
 library(ggplot2)
 ```
 
-Cell type mapping with SRT data refers to a set of methods which allows you to infer the quantity of cells from SRT expression profiles. `STUtility2` offers a quick method based on Non-Negative Least Squares to infer cell type proportions directly from Visium spot expression profiles.
+## Mouse brain {#mbrain}
 
-In this tutorial, we'll take a look at two examples. First, we have two tissue sections of a mouse brain and a single cell RNA-seq dataset from the Allen Brain Atlas. In the second example, we have a mouse kidney section and single cell RNA-seq data from the Tabula Muris Senis.
-
-## Mouse brain
-
-For this tutorial, we will use a single-cell dataset from the Allen Brain Atlas. You can check the code chunk below or follow [this](https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1) link to download it manually.
+For this tutorial, we will use a single-cell data set from the Allen Brain Atlas. You can check the code chunk below or follow [this](https://www.dropbox.com/s/cuowvm4vrf65pvq/allen_cortex.rds?dl=1) link to download it manually.
 
 ```{r eval=FALSE}
 #| code-fold: true
@@ -51,7 +51,8 @@ dir.create(paste0(targetdir, "/visium"))
 
 # Download section 1
 dir.create(paste0(targetdir, "/visium/S1"))
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5", destfile = paste0(targetdir, "/visium/S1/filtered_feature_bc_matrix.h5"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5", 
+              destfile = paste0(targetdir, "/visium/S1/filtered_feature_bc_matrix.h5"))
 download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_spatial.tar.gz",
               destfile = paste0(targetdir, "/visium/S1/spatial.tar.gz"))
 untar(tarfile = paste0(targetdir, "/visium/S1/spatial.tar.gz"), 
@@ -60,7 +61,8 @@ file.remove(paste0(targetdir, "/visium/S1/spatial.tar.gz"))
 
 # Download section 2
 dir.create(paste0(targetdir, "/visium/S2"))
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5", destfile = paste0(targetdir, "/visium/S2/filtered_feature_bc_matrix.h5"))
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_filtered_feature_bc_matrix.h5", 
+              destfile = paste0(targetdir, "/visium/S2/filtered_feature_bc_matrix.h5"))
 download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Posterior/V1_Mouse_Brain_Sagittal_Posterior_spatial.tar.gz",
               destfile = paste0(targetdir, "/visium/S2/spatial.tar.gz"))
 untar(tarfile = paste0(targetdir, "/visium/S2/spatial.tar.gz"), 
@@ -77,7 +79,8 @@ imgs <- Sys.glob("./mousebrain/visium/*/spatial/tissue_hires_image.png")
 spotfiles <- Sys.glob("./mousebrain/visium/*/spatial/tissue_positions_list.csv")
 json <- Sys.glob("./mousebrain/visium/*/spatial/scalefactors_json.json")
 
-infoTable <- tibble(samples, imgs, spotfiles, json, section_id = paste0("section_", 1:2))
+infoTable <- tibble(samples, imgs, spotfiles, json, 
+                    section_id = paste0("section_", 1:2))
 
 # Create Seurat object with 1 Sagittal Anterior section and 1 Sagittal Posterior section
 se_brain_spatial <- ReadVisiumData(infoTable)
@@ -139,7 +142,7 @@ DimPlot(se_allen, group.by = "subclass")
 
 ### Run NNLS
 
-The `RunNNLS` method requires a normalized `Seurat` object with 10x Visium data and a a normalized `Seurat` object with single-cell data. The `groups` argument defines where the cell type labels should be taken from in the single-cell `Seurat` object. In our single-cell `Seurat` object, the labels are stored in the "subclass" column.
+The `RunNNLS()` method requires a normalized `Seurat` object with 10x Visium data and a a normalized `Seurat` object with single-cell data. The `groups` argument defines where the cell type labels should be taken from in the single-cell `Seurat` object. In our single-cell `Seurat` object, the labels are stored in the "subclass" column.
 
 ```{r}
 DefaultAssay(se_brain_spatial) <- "Spatial"
@@ -195,123 +198,25 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 }) |> setNames(nm = selected_celltypes)
 ```
 
-### Mouse brain cell types {.tabset}
+### Mapped mouse brain cell types {.tabset}
 
-#### L2/3 IT
-
-```{r}
-
-plots[[1]]
-
-```
-
-#### L4
-
-```{r}
-
-plots[[2]]
-
-```
-
-#### L5 IT
-
-```{r}
-
-plots[[3]]
-
-```
-
-#### L5 PT
-
-```{r}
-
-plots[[4]]
-
-```
-
-#### L6 CT
-
-```{r}
-
-plots[[5]]
-
-```
-
-#### L6 IT
-
-```{r}
-
-plots[[6]]
-
-```
-
-#### L6b
-
-```{r}
-
-plots[[7]]
-
-```
-
-#### Oligo
-
-```{r}
-
-plots[[8]]
-
-```
-
-#### Pvalb
-
-```{r}
-
-plots[[9]]
-
-```
-
-#### Meis2
-
-```{r}
-
-plots[[10]]
-
-```
-
-#### Astro
-
-```{r}
-
-plots[[11]]
-
-```
-
-#### VLMC
-
-```{r}
-
-plots[[12]]
-
-```
-
-#### SMC
-
-```{r}
-
-plots[[13]]
-
+```{r results='asis'}
+for(i in 1:length(selected_celltypes)){
+  cat("#### ", selected_celltypes[i],"\n")
+  print(plots[[i]])
+  cat("\n\n")
+}
 ```
 
 ### Visualize multiple cell types
 
-We can also visualize some of these cell types in one single plot with MapMultipleFeatures.
+We can also visualize some of these cell types in one single plot with `MapMultipleFeatures()`.
 
 ```{r message=FALSE, fig.asp=0.4, fig.width=10}
 
 # Load H&E images
 se_brain_spatial <- se_brain_spatial |> 
   LoadImages()
-
-# Generate colors
 
 # Plot multiple features
 MapMultipleFeatures(se_brain_spatial, 
@@ -324,7 +229,62 @@ MapMultipleFeatures(se_brain_spatial,
 
 ```
 
-## Mouse kidney
+<br>
+
+### Cell type co-localization
+
+By computing the pair-wise correlation between cell types across spots, we can get an idea of which cell types often appear together in the same spots.
+
+```{r fig.asp=1, fig.width=4}
+cor_matrix <- FetchData(se_brain_spatial, selected_celltypes) |> 
+  mutate_all(~ if_else(.x<0.1, 0, .x)) |>  # Filter lowest values (-> set as 0)
+  cor()
+
+diag(cor_matrix) <- NA
+max_val <- max(cor_matrix, na.rm = T)
+cols <- RColorBrewer::brewer.pal(7, "RdYlBu") |> rev(); cols[4] <- "white"
+pheatmap::pheatmap(cor_matrix, 
+                   breaks = seq(-max_val, max_val, length.out = 100),
+                   color=colorRampPalette(cols)(100),
+                   cellwidth = 14, cellheight = 14, 
+                   treeheight_col = 10, treeheight_row = 10, 
+                   main = "Cell type correlation\nwithin spots")
+```
+
+<br>
+
+We can also use the predicted cell type proportions to compute factors using NMF, and thereby summarizing the cell types presence within the same location into a set of predefined factors. Each factor can be viewed as a niche of a certain cell type composition.
+
+```{r fig.asp=1, fig.width=4}
+nmf_data <- FetchData(se_brain_spatial, selected_celltypes) |> 
+  RcppML::nmf(k = 10, verbose = F)
+
+nmf_data_h <- nmf_data$h |> as.data.frame()
+rownames(nmf_data_h) <- paste0("Factor_", 1:10)
+colnames(nmf_data_h) <- selected_celltypes
+
+nmf_data_h <- nmf_data_h |> 
+  mutate_at(colnames(nmf_data_h), 
+            ~(scale(., center = FALSE, scale = max(., na.rm = TRUE)/1)))
+
+nmf_data_h$Factor <- rownames(nmf_data_h) |> 
+  factor(levels = paste0("Factor_", 1:10))
+nmf_data_h_df <- nmf_data_h |> 
+  tidyr::pivot_longer(cols = all_of(selected_celltypes), 
+                      names_to = "Cell", 
+                      values_to = "Weight")
+
+ggplot(nmf_data_h_df, aes(x=Factor, y=Cell, size=Weight, color=Weight)) +
+  geom_point() +
+  labs(title="Cell type contribution", x="Factor", y = "Cell type", 
+       color = "", size = "Scaled weight") +
+  scale_color_viridis_c(direction = -1, option = "magma") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=45, hjust=1), 
+        panel.grid = element_blank())
+```
+
+## Mouse kidney {#mkidney}
 
 In the second example, we'll look at data from mouse kidney. We can obtain the single-cell data with the `TabulaMurisSenisData` R package from bioconductor. Let's load the data and create a `Seurat` object from it.
 
@@ -367,7 +327,7 @@ se_kidney_spatial <- ReadVisiumData(infoTable)
 
 ### Normalize data
 
-We apply the same normalization procedure to `se_kidney_spatial` and `se_kidney_singlecell` and run `FindVariableFeatures` to detect the top most variable genes.
+We apply the same normalization procedure to `se_kidney_spatial` and `se_kidney_singlecell` and run `FindVariableFeatures()` to detect the top most variable genes.
 
 ```{r eval=FALSE}
 
@@ -409,7 +369,7 @@ se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
 
 ### Run NNLS
 
-Again, the `RunNNLS` method requires a single-cell `Seurat` object and a 10x Visium `Seurat` object. The cell type annotations are stored in the "free_annotation" column.
+Again, the `RunNNLS()` method requires a single-cell `Seurat` object and a 10x Visium `Seurat` object. The cell type annotations are stored in the "free_annotation" column.
 
 ```{r}
   
@@ -450,78 +410,15 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 
 ```
 
-### Kidney cell types {.tabset}
+### Mapped kidney cell types {.tabset}
 
-#### kidney distal convoluted tubule epithelial cell
-
-```{r}
-
-plots[[1]]
-
-```
-
-#### brush cell
-
-```{r}
-
-plots[[2]]
-
-```
-
-#### kidney collecting duct principal cell
-
-```{r}
-
-plots[[3]]
-
-```
-
-#### podocyte
-
-```{r}
-
-plots[[4]]
-
-```
-
-#### proximal tube epithelial cell
-
-```{r}
-
-plots[[5]]
-
-```
-
-#### thick ascending tube S epithelial cell
-
-```{r}
-
-plots[[6]]
-
-```
-
-#### fenestrated capillary endothelial
-
-```{r}
-
-plots[[7]]
-
-```
-
-#### kidney capillary endothelial cell
-
-```{r}
-
-plots[[8]]
-
-```
-
-#### kidney mesangial cell
-
-```{r}
-
-plots[[9]]
-
+```{r results='asis'}
+for(i in 1:length(selected_celltypes)){
+  cat("#### ", selected_celltypes[i], "\n")
+  cat("\n")
+  print(plots[[i]])
+  cat("\n\n")
+}
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -538,8 +435,6 @@ We can select some of these cell types and visualize them in one plot
 # Load H&E images
 se_kidney_spatial <- se_kidney_spatial |> 
   LoadImages()
-
-# Generate colors
 
 # Plot multiple features
 MapMultipleFeatures(se_kidney_spatial, 
@@ -580,3 +475,29 @@ p2 <- MapMultipleFeatures(se_kidney_spatial,
 p1 / p2
 
 ```
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `STUtility2`: `r packageVersion("STUtility2")`
+
+-   `RcppML`: `r packageVersion("RcppML")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

@@ -2,9 +2,10 @@
 title: "Image alignment"
 date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 author: "Ludvig Larsson"
-output:
-  html_document:
-    code_folding: show
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
 ---
 
 In this tutorial, we will look at two ways of transforming the H&E images in a 10x Visium dataset. The is typically useful if you want to align similar tissue sections to make it easier to compare results between them.
