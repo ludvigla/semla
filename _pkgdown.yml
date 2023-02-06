@@ -98,6 +98,7 @@ reference:
 - subtitle: Interactive viewer
 - contents:
   - FeatureViewer
+  - ExportDataForViewer
   - ftrviewer
   - ftrviewerOutput
   - renderFtrviewer
