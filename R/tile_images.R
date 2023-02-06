@@ -11,6 +11,7 @@
 #' @param maxZoomLevel Max zoom level
 #' @param maxImgWidth Safety threshold to make sure that the zoom level doesn't get too deep.
 #' @param nCores Number of cores to use for threading
+#' @param overwrite If the the folder '<outpath>/viwer_data' already exists, it will be overwritten.
 #' @param verbose Print messages
 #'
 #' @importFrom parallel detectCores
@@ -71,6 +72,7 @@ TileImage <- function (
     maxZoomLevel = 4,
     maxImgWidth = 1e4,
     nCores = detectCores() - 1,
+    overwrite = FALSE,
     verbose = TRUE
 ) {
 
@@ -95,9 +97,17 @@ TileImage <- function (
 
   # Create output path
   outpath <- outpath %||% tempdir()
-  outpath_data <- paste0(outpath, "/osd_data")
+  outpath_data <- paste0(outpath, "/viewer_data")
   dir.create(outpath_data, showWarnings = FALSE)
   outpath_tiles <- paste0(outpath_data, paste0("/tiles", sampleID))
+  if (dir.exists(outpath_tiles)) {
+    if (overwrite) {
+      cli_alert_warning("  Replacing directory {outpath_tiles |> normalizePath(winslash = '/')}")
+      unlink(x = outpath_tiles, recursive = TRUE)
+    } else {
+      abort(glue("Diectory {outpath_tiles |> normalizePath(winslash = '/')} already exists. Overwrite it with {col_br_magenta('overwrite=TRUE')} or change {col_br_magenta('outpath')}"))
+    }
+  }
   dir.create(outpath_tiles, showWarnings = FALSE)
 
   # Zoom levels
@@ -173,6 +183,14 @@ TileImage <- function (
        image_height = info$height,
        tilesize = 256)
   image_info_outpath <- paste0(outpath_data, paste0("/image_info_", sampleID, ".json"))
+  if (file.exists(image_info_outpath)) {
+    if (overwrite) {
+      cli_alert_warning("  Replacing file {image_info_outpath |> normalizePath(winslash = '/')}")
+      unlink(x = image_info_outpath, recursive = TRUE)
+    } else {
+      abort(glue("File {image_info_outpath |> normalizePath(winslash = '/')} already exists. Overwrite it with {col_br_magenta('overwrite=TRUE')} or change {col_br_magenta('outpath')}"))
+    }
+  }
   write_json(x = d, path = image_info_outpath, auto_unbox = TRUE)
 
   return(list(datapath = outpath_data |> normalizePath(winslash = "/"),
