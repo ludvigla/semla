@@ -6,6 +6,14 @@
 #' @param overwrite Overwrite files if they already exists
 #' @param verbose Print messages
 #'
+#' @family feature-viewer
+#'
+#' @import rlang
+#' @import glue
+#' @import cli
+#'
+#' @return A path to the directory where the data is saved
+#'
 #' @examples
 #' \dontrun{
 #' libary(STUtility2)
