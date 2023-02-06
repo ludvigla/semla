@@ -127,6 +127,10 @@ LoadImages.Seurat <- function (
     ...
 ) {
 
+  # Set global variables to NULL
+  pad <- sampleID <- width <- height <- full_width <- full_height <- NULL
+  before_x <- after_x <- before_y <- after_y <- NULL
+
   # validate Seurat object
   .check_seurat_object(object)
 

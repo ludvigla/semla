@@ -158,7 +158,7 @@ LoadSpatialCoordinates <- function (
 ) {
 
   # Set global variables to NULL
-  selected <- NULL
+  selected <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
   # Run checks
   if (!is.character(coordinatefiles)) abort("'coordinatefiles' must be a character vector.")
@@ -344,6 +344,7 @@ ReadVisiumData <- function (
   # Set global variables to NULL
   samples <- imgs <- spotfiles <- json <- barcode <- width <- height <- full_width <- full_height <- NULL
   colorspace <- density <- sampleID <- type <- pxl_col_in_fullres <- pxl_row_in_fullres <- filesize <- NULL
+  check_x <- check_y <- min_x <- max_x <- min_y <- max_y <- pad_before_x <- pad_after_x <- pad_after_y <- pad_before_y <- pad <- NULL
 
   if (verbose) cli_h2("Reading 10x Visium data")
 

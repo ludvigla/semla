@@ -206,7 +206,7 @@ RadialDistance.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- x <- y <- sampleID <- from  <- to <- centroids <- diff_x <- diff_y <- angle <- intervals <- r_dist <- NULL
+  barcode <- x <- y <- sampleID <- from  <- to <- centroids <- diff_x <- diff_y <- angle <- intervals <- r_dist <- nn <- NULL
 
   # Check object class
   if (!any(class(object) %in% c("data.frame", "matrix", "tbl")))

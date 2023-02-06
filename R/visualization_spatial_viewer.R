@@ -87,6 +87,9 @@ FeatureViewer <- function (
   .check_seurat_object(object)
 
   # Check custom_color_palettes
+  .color_palettes <- sapply(.color_scales(info = TRUE), function(nm) {
+    .color_scales(colorscale = nm)
+  }) |> setNames(nm = .color_scales(info = TRUE))
   if (!is.null(custom_color_palettes)) {
     stopifnot(inherits(custom_color_palettes, what = "list"),
               length(custom_color_palettes) > 0,
@@ -103,9 +106,6 @@ FeatureViewer <- function (
     if (any(names(custom_color_palettes) %in% .color_scales(info = TRUE))) {
       abort(glue("Color palette {intersect(names(custom_color_palettes), .color_scales(info = TRUE))} already exists"))
     }
-    .color_palettes <- sapply(.color_scales(info = TRUE), function(nm) {
-      .color_scales(colorscale = nm)
-    }) |> setNames(nm = .color_scales(info = TRUE))
     .color_palettes <- c(custom_color_palettes, .color_palettes)
   }
 
@@ -684,6 +684,8 @@ FeatureViewer <- function (
 }
 
 #' Check if colors are valid
+#'
+#' @importFrom grDevices col2rgb
 #'
 #' @noRd
 .areColors <- function(x) {

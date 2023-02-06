@@ -90,6 +90,9 @@ PlotFeatureLoadings <- function (
   ncols = NULL
 ) {
 
+  # Set global variables to NULL
+  name <- value <- value_scaled <- NULL
+
   # Run checks
   mode <- match.arg(mode, choices = c("dotplot", "barplot", "heatmap"))
   type <- match.arg(type, choices = c("positive", "negative", "centered"))
