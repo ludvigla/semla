@@ -9,9 +9,10 @@ FeatureViewer(
   slot = "data",
   datadir = NULL,
   selected_features = NULL,
-  sampleIDs = 1,
+  sampleIDs = NULL,
   host = "127.0.0.1",
   port = 8080L,
+  custom_color_palettes = NULL,
   container_width = 800,
   container_height = 800,
   verbose = TRUE
@@ -26,12 +27,15 @@ FeatureViewer(
 
 \item{selected_features}{A character vector of features to select for viewer}
 
-\item{sampleIDs}{A vector of section IDs to use for the viewer}
+\item{sampleIDs}{An integer vector of section IDs to use for the viewer. All sections
+will be used by default.}
 
 \item{host}{A string with a valid IPv4 or IPv6 address to listen on,
 Defaults to localhost "127.0.0.1"}
 
 \item{port}{An integer that indicates the port to listen on.}
+
+\item{custom_color_palettes}{A names list of color vectors to use as custom color palettes}
 
 \item{container_width, container_height}{Set height and width of container}
 
@@ -44,16 +48,22 @@ A `Seurat` object
 `FeatureViewer` opens up an interactive shiny application where
 one can zoom and pan the H&E image while overlaying and color selected features.
 It is also possible to add new categorical features or modify existing
-categorical features using a lasso tool.
+categorical features with a lasso tool.
 }
 \details{
-The viewer requires a tiled H&E image along with some additional image data to work.
+The viewer requires a tiled H&E image along with some additional image data to work. By default,
+the function will try to create these files and export them to a temporary directory, but it
+is also possible to export the files before running the app and provide the path to the
+data directory with `datadir` (see \code{\link{ExportDataForViewer}}).
 
 A more detailed tutorial can be found on the `STUtility2` website. You can also
 get more detailed instructions by pressing the help icon in the app.
 }
 \seealso{
-TileImage
+\code{\link{TileImage}},\code{\link{export_coordinates}}
+
+Other feature-viewer: 
+\code{\link{ExportDataForViewer}()}
 
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
@@ -67,4 +77,5 @@ Other spatial-visualization-methods:
 \author{
 Ludvig Larsson
 }
+\concept{feature-viewer}
 \concept{spatial-visualization-methods}

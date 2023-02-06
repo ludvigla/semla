@@ -23,6 +23,9 @@ ExportDataForViewer(
 
 \item{verbose}{Print messages}
 }
+\value{
+A path to the directory where the data is saved
+}
 \description{
 Export data for FeatureViewer
 }
@@ -39,3 +42,8 @@ ExportDataForViewer(se_mbrain, outdir = "./")
 }
 
 }
+\seealso{
+Other feature-viewer: 
+\code{\link{FeatureViewer}()}
+}
+\concept{feature-viewer}
