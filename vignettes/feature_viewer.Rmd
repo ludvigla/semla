@@ -27,7 +27,13 @@ se <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtilit
 ImagePlot(se)
 ```
 
-To initiate the viewer, we call the `FeatureViewer()` function with our `Seurat` object as input. When the app is closed, any changes made in the app will be returned to our `Seurat` object, so we need to call `se <- FeatureViewer(se)`. It is important to note that the application should be exited by clicking on the '**save**'icon in the top right corner, otherwise any changes that we've made will not be returned to R.
+### Data export
+
+To initiate the viewer, we call the `FeatureViewer()` function with our `Seurat` object as input. `FeatureViewer()` will automatically attempt to export all necessary files to a temporary directory (default) or a specified directory (`datadir`). These files include tiled H&E images, spot coordinates and an additional meta data file with image related information. If you are working with a larger dataset with multiple tissue sections, you probably want to avoid exporting these files each time you open the viewer. You can find more instruction further down in this tutorial under **Advanced**.
+
+### Running the interactive viewer
+
+When the app is closed, any changes made in the app will be returned to our `Seurat` object, so we need to call `se <- FeatureViewer(se)` to save changes to our `Seurat` object. It is important to note that the application should be exited by clicking on the '**save**' icon in the top right corner of the app, otherwise any changes that we've made will not be returned to R.
 
 NB: Like most functions provided in `STUtility2`, `FeatureViewer` only works with `Seurat` objects processed with `STUtility2`.
 
@@ -98,6 +104,36 @@ To add a new category, you simply click on the 'Category' drop-down box, delete 
 ### Save changes
 
 To continue working in R you will need to quit the application by pressing the '**save & quit**' icon in the top right corner of the toolbar.
+
+## Advanced
+
+### Export data
+
+You export all necessary data for the viewer to a specific output directory with the `ExportDataForViewer()` function. This can come in handy when you are working with larger datasets and you don't want re-export data every time you run the viewer. The output directory is specified with the `outdir` argument which needs to be an existing writable directory. If the files already exist in this location, you will need to set `overwrite=TRUE` if you want to overwrite the files.
+
+`ExportDataForViewer()` creates a new directory inside `outdir` called 'viewer_data', so the full path will be <OUTDIR>/viewer_data. This path is returned by the function to be passed to `FeatureViewer`. You can also specify what samples to export data for with the `sampleIDs` argument. For example, if you chose to export one section 1 (sampleIDs=1), you will only be able to view this section with `FeatureViewer`.
+
+```{r eval=FALSE}
+datapath <- ExportDataForViewer(se, sampleIDs = 1, outdir = "~/Downloads/")
+```
+
+Now we can pass `datadir = datapath` to `FeatureViewer` and it will load files from that directory instead of exporting the files again.
+
+```{r eval=FALSE}
+se <- FeatureViewer(se, datadir = datapath)
+```
+
+### Multiple sections
+
+When using multiple datasets, you will be able to select them from the `Sample` drop-down list in the viewer. Note that when working with many datasets, the app might slow down considerably. In this case, it might be better to view only a few selected sections specified with `sampleIDs`.
+
+```{r eval=FALSE}
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
+se_merged <- FeatureViewer(se_merged)
+```
+
 
 <br>
 

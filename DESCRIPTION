@@ -69,7 +69,8 @@ Suggests:
     shinyBS,
     ggnewscale,
     ggsci,
-    TabulaMurisSenisData
+    TabulaMurisSenisData,
+    scico
 Collate: 
     'STUtility2-package.R'
     'checks.R'
