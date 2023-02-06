@@ -4,7 +4,13 @@
 \alias{export_coordinates}
 \title{Export spatial coordinates to a JSON file}
 \usage{
-export_coordinates(object, sampleNumber = 1L, outdir, verbose = TRUE)
+export_coordinates(
+  object,
+  sampleNumber = 1L,
+  outdir,
+  overwrite = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{object}{A `Seurat` object created with `STUtility2`}
@@ -14,10 +20,24 @@ spatial network for}
 
 \item{outdir}{Name of a directory to export JSON file to}
 
+\item{overwrite}{Should an existing coordinate file be overwritten?}
+
 \item{verbose}{Print messages}
 }
 \description{
 Utility function to prepare data for \code{\link{FeatureViewer}}.
 The exported JSON file should be exported to the same directory as
 the H&E image tiles generated with \code{\link{TileImage}}
+}
+\examples{
+\dontrun{
+libary(STUtility2)
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain",
+                                 "se_mbrain",
+                                 package = "STUtility2"))
+
+export_coordinates(se_mbrain, outdir = "./")
+}
+
 }

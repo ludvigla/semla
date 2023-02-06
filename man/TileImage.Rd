@@ -11,6 +11,7 @@ TileImage(
   maxZoomLevel = 4,
   maxImgWidth = 10000,
   nCores = detectCores() - 1,
+  overwrite = FALSE,
   verbose = TRUE
 )
 }
@@ -27,6 +28,8 @@ If this is not provided, a temporary directory will be created}
 \item{maxImgWidth}{Safety threshold to make sure that the zoom level doesn't get too deep.}
 
 \item{nCores}{Number of cores to use for threading}
+
+\item{overwrite}{If the the folder '<outpath>/viwer_data' already exists, it will be overwritten.}
 
 \item{verbose}{Print messages}
 }
