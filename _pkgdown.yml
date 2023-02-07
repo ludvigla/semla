@@ -150,6 +150,7 @@ reference:
   - mcolon_dataset
 - subtitle: Misc
 - contents:
+  - UpdateSTUtilityV1Object
   - file_server
   - icp
   - kabsch

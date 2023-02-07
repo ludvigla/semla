@@ -108,6 +108,7 @@ Collate:
     'tile_images.R'
     'transformations_coordinates.R'
     'transformations_image.R'
+    'update_stutilityv1_object.R'
     'utils.R'
     'visualization_spatial.R'
     'visualization_spatial_multicolor.R'
