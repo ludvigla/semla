@@ -73,7 +73,6 @@ Suggests:
     scico,
     ggfittext
 Collate: 
-    'STUtility2-package.R'
     'checks.R'
     'generics.R'
     'cell_type_prediction.R'
@@ -102,6 +101,7 @@ Collate:
     'rigid_transform.R'
     'rigid_transform_manual.R'
     'scalebar.R'
+    'semla-package.R'
     'spatial_autocorrelation.R'
     'spatial_neighborhood_stats.R'
     'spatial_network.R'
