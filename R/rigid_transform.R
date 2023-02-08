@@ -216,6 +216,7 @@ RigidTransformImages.default <- function (
     cli_alert("  Rotation angle: {cli::col_br_magenta(round(object$angle, digits = 2))}")
     cli_alert("  Translation along x axis: {cli::col_br_magenta(round(object$tr_x*100, digits = 2))}%")
     cli_alert("  Translation along y axis: {cli::col_br_magenta(round(object$tr_y*100, digits = 2))}%")
+    cli_alert("  Scaling factor: {cli::col_br_magenta(round(object$scalefactor, digits = 2))}")
   }
 
   # Run transformation
