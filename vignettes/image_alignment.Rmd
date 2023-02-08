@@ -10,16 +10,16 @@ editor_options:
 
 In this tutorial, we will look at two ways of transforming the H&E images in a 10x Visium dataset. The is typically useful if you want to align similar tissue sections to make it easier to compare results between them.
 
-The alignment functions in `STUtility2` only handles rigid transformations, meaning that non-linear distortions are not possible to mitigate. If rigid transformations are sufficient to generate a decent alignment, one could for example use the aligned coordinates for 3D visualization. However, we do not provide visualization functions for 3D in `STUtility2`.
+The alignment functions in `semla` only handles rigid transformations, meaning that non-linear distortions are not possible to mitigate. If rigid transformations are sufficient to generate a decent alignment, one could for example use the aligned coordinates for 3D visualization. However, we do not provide visualization functions for 3D in `semla`.
 
 ```{r message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 ```
 
 ```{r message=FALSE}
 se_mbrain <- readRDS(file = system.file("extdata", 
                                         "mousebrain/se_mbrain", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mbrain <- LoadImages(se_mbrain)
 ```
 
@@ -27,7 +27,7 @@ se_mbrain <- LoadImages(se_mbrain)
 ImagePlot(se_mbrain)
 ```
 
-`STUtility2` offers two ways of manipulating the orientation and position of H&E images using rigid transformations. Allowed transformations are:
+`semla` offers two ways of manipulating the orientation and position of H&E images using rigid transformations. Allowed transformations are:
 
 -   **translation** =\> move H&E image along x- and/or y-axis
 -   **rotation** =\> rotate image by a fixed degree
@@ -164,7 +164,7 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

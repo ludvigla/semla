@@ -1,13 +1,13 @@
-# STUtility2
+# semla
 
 ## TODO
 
 ### External data
 
 - [x] : An external data resource with mouse brain data. Contains spaceranger output files and a prepared Seurat object. These 
-files can be accessed with `system.file("extdata/mousebrain", "path_to_file", package = "STUtility2")` 
+files can be accessed with `system.file("extdata/mousebrain", "path_to_file", package = "semla")` 
 - [x] : An external data resource with mouse colon data. Contains spaceranger output files and a prepared Seurat object. These 
-files can be accessed with `system.file("extdata/mousecolon", "path_to_file", package = "STUtility2")`
+files can be accessed with `system.file("extdata/mousecolon", "path_to_file", package = "semla")`
 
 ### Data loading
 
@@ -19,8 +19,8 @@ compatibility with "1k" and "2k" arrays. The function is similar to `InputFromTa
 
 ### Subset and Merge
 
-- [x] `SubsetSTData` : for subsetting `Seurat` objects created with `STUtility2`
-- [x] `MergeSTData` : for merging `Seurat` objects created with `STUtility2`
+- [x] `SubsetSTData` : for subsetting `Seurat` objects created with `semla`
+- [x] `MergeSTData` : for merging `Seurat` objects created with `semla`
 
 ### On load
 
@@ -110,7 +110,7 @@ example be dimensionality reduction results instead.
 
 - [x] migrate and modify STUtility S4 class object `Staffli`
 
-### STUtility2 website
+### semla website
 
 - [x] _getting started_
 - [x] _visualization_

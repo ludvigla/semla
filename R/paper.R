@@ -40,7 +40,7 @@ paper <- function (
     component,
     width = width,
     height = height,
-    package = 'STUtility2',
+    package = 'semla',
     elementId = elementId
   )
 }
@@ -96,7 +96,7 @@ paperOutput <- function (
     install.packages("htmlwidgets")
   }
 
-  htmlwidgets::shinyWidgetOutput(outputId, 'paper', width, height, package = 'STUtility2')
+  htmlwidgets::shinyWidgetOutput(outputId, 'paper', width, height, package = 'semla')
 }
 
 #' @rdname paper-shiny

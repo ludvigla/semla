@@ -1,4 +1,4 @@
-Package: STUtility2
+Package: semla
 Type: Package
 Title: Process, analyze and visualize Spatially Resolved Transcriptomcis data
 Version: 0.1.0
@@ -20,7 +20,7 @@ Authors@R:
         role = c('fnd'))
     )
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
-Description: STUtility2 collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
+Description: semla collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
@@ -117,4 +117,4 @@ Collate:
     'visualization_spatial_stats.R'
     'visualization_spatial_viewer.R'
     'zzz.R'
-URL: https://ludvigla.github.io/STUtility2/
+URL: https://ludvigla.github.io/semla/

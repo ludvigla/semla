@@ -8,7 +8,7 @@ NULL
 #' The exported JSON file should be exported to the same directory as
 #' the H&E image tiles generated with \code{\link{TileImage}}
 #'
-#' @param object A `Seurat` object created with `STUtility2`
+#' @param object A `Seurat` object created with `semla`
 #' @param sampleNumber An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
@@ -24,11 +24,11 @@ NULL
 #'
 #' @examples
 #' \dontrun{
-#' libary(STUtility2)
+#' libary(semla)
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
-#'                                  package = "STUtility2"))
+#'                                  package = "semla"))
 #'
 #' export_coordinates(se_mbrain, outdir = "./")
 #' }

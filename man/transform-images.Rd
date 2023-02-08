@@ -71,7 +71,7 @@ The required columns are:
 
 \examples{
 
-library(STUtility2)
+library(semla)
 library(tibble)
 library(dplyr)
 library(magick)
@@ -89,7 +89,7 @@ transforms
 # get example coordinate file
 coordinatefile <- system.file("extdata/mousebrain/spatial",
                               "tissue_positions_list.csv",
-                              package = "STUtility2")
+                              package = "semla")
 
 # Load coordinates
 # These coordinates are defined on the H&E image used as input for
@@ -100,7 +100,7 @@ xy
 # Load image
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
                                "tissue_lowres_image.jpg",
-                               package = "STUtility2")
+                               package = "semla")
 im <- image_read(lowresimagefile)
 
 # Transform image and coordinates
@@ -130,11 +130,11 @@ ggplot(transf_res$xy_transf, aes(tr_x, tr_y)) +
                 right = 1, top = 1,
                 on_top = FALSE)
 
-library(STUtility2)
+library(semla)
 library(dplyr)
 
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
-se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
   LoadImages()
 

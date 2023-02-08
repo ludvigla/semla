@@ -58,26 +58,26 @@ Returns a Seurat object with masked images
 
 \examples{
 
-library(STUtility2)
+library(semla)
 library(magick)
 library(dplyr)
 
 # Load image
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
                                "tissue_lowres_image.jpg",
-                               package = "STUtility2")
+                               package = "semla")
 im <- image_read(lowresimagefile)
 
 # Load coordinates
 coordinatesfile <- system.file("extdata/mousebrain/spatial",
                                "tissue_positions_list.csv",
-                               package = "STUtility2")
+                               package = "semla")
 xy <- LoadSpatialCoordinates(coordinatefiles = coordinatesfile)
 
 # Load scalefactors
 json <- system.file("extdata/mousebrain/spatial",
                     "scalefactors_json.json",
-                    package = "STUtility2")
+                    package = "semla")
 scalefactors <- jsonlite::read_json(path = json)
 xy <- xy |>
   mutate(across(pxl_row_in_fullres:pxl_col_in_fullres,
@@ -91,11 +91,11 @@ im |> as.raster() |> plot()
 im_masked |> as.raster() |> plot()
 
 
-library(STUtility2)
+library(semla)
 
 # Load example Visium data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
-se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
 se_merged <- se_merged |> MaskImages()
 

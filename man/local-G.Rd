@@ -86,7 +86,7 @@ prefixed with "Gi" and p-values are prefixed with one of "Pr(z <!=",
 }
 
 \examples{
-library(STUtility2)
+library(semla)
 library(tibble)
 library(dplyr)
 library(ggplot2)
@@ -95,7 +95,7 @@ library(viridis)
 # read coordinates
 coordfile <- system.file("extdata/mousebrain/spatial",
                          "tissue_positions_list.csv",
-                         package = "STUtility2")
+                         package = "semla")
 coords <- read.csv(coordfile, header = FALSE) |>
   filter(V2 == 1) |>
   select(V1, V6, V5) |>
@@ -109,7 +109,7 @@ spatnet <- GetSpatialNetwork(coords)
 # Load expression data
 feature_matrix <- system.file("extdata/mousebrain",
                               "filtered_feature_bc_matrix.h5",
-                              package = "STUtility2") |>
+                              package = "semla") |>
   Seurat::Read10X_h5()
 featureMat <- t(as.matrix(feature_matrix[c("Mgp", "Th", "Nrgn"), ]))
 featureMat <- featureMat[coords$barcode, ]
@@ -138,11 +138,11 @@ p <- p1 + p2 + p3 &
 p
 
 
-library(STUtility2)
+library(semla)
 library(dplyr)
 
 # Load Seurat object with mouse bain data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mbrain <- se_mbrain |>
   ScaleData(verbose = FALSE) |>
   FindVariableFeatures(verbose = FALSE) |>

@@ -27,14 +27,14 @@ The point sets can be of unequal length.
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 library(dplyr)
 library(ggplot2)
 
 # Load example mouse brain data
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 # Get spatial network
 spatnet <- GetSpatialNetwork(se_mbrain)

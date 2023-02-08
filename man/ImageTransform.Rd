@@ -29,10 +29,10 @@ from the `magick` R package instead.
 \examples{
 
 library(magick)
-library(STUtility2)
+library(semla)
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
                                "tissue_lowres_image.jpg",
-                               package = "STUtility2")
+                               package = "semla")
 im <- image_read(lowresimagefile)
 
 # rotate image 45 degrees clockwise, move image 100 pixels to the right and 100 pixels down

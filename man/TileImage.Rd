@@ -55,7 +55,7 @@ library(leaflet)
 imfile <-
   system.file("extdata/mousecolon/spatial",
               "tissue_hires_image.jpg",
-              package = "STUtility2")
+              package = "semla")
 im <- image_read(imfile)
 
 # tile image and return path to tiles

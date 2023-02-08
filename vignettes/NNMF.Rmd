@@ -7,14 +7,14 @@ editor_options:
   chunk_output_type: inline
 ---
 
-Non-negative matrix factorization (NNMF or NMF) can be a useful technique to deconvolve 10x Visium data, in particular when a reference single-cell RNA-seq data is not available to conduct cell type deconvolution. In this vignette we will demonstrate how you can apply this method with `STUtility2` on spatial data.
+Non-negative matrix factorization (NNMF or NMF) can be a useful technique to deconvolve 10x Visium data, in particular when a reference single-cell RNA-seq data is not available to conduct cell type deconvolution. In this vignette we will demonstrate how you can apply this method with `semla` on spatial data.
 
 We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and at <https://www.zachdebruine.com/>.
 
 `RcppML` is available on [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html) and [GitHub](https://github.com/zdebruine/RcppML), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
 
 ```{r message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 library(singlet)
 ```
 
@@ -27,7 +27,7 @@ NB: The mouse brain test data only includes a subset of the entire data of 188 u
 ```{r}
 se_mbrain <- readRDS(system.file("extdata/mousebrain", 
                                  "se_mbrain", 
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 # Set seed for reproducibility
 set.seed(42)
@@ -112,7 +112,7 @@ NB: Although we are able to pick up distinct patterns in our data with the facto
 
 <summary>**Package versions**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 ```{=html}
 <!-- -->

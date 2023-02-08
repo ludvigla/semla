@@ -7,7 +7,7 @@
 export_graph(object, sampleID = 1L, outdir, verbose = TRUE)
 }
 \arguments{
-\item{object}{A `Seurat` object created with `STUtility2`}
+\item{object}{A `Seurat` object created with `semla`}
 
 \item{sampleID}{An integer specifying a sample ID to export
 spatial network for}

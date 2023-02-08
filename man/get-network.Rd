@@ -52,10 +52,10 @@ library(ggplot2)
 # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs
 coordfiles <- c(system.file("extdata/mousebrain/spatial",
                             "tissue_positions_list.csv",
-                            package = "STUtility2"),
+                            package = "semla"),
                 system.file("extdata/mousecolon/spatial",
                             "tissue_positions_list.csv",
-                            package = "STUtility2"))
+                            package = "semla"))
 
 # Load coordinate data into a tibble
 xys <- do.call(rbind, lapply(seq_along(coordfiles), function(i) {

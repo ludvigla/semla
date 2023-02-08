@@ -62,7 +62,7 @@ and translations.
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 library(ggplot2)
 library(patchwork)
 library(magick)
@@ -71,7 +71,7 @@ library(dplyr)
 # get example coordinate file
 coordinatefile <- system.file("extdata",
                               "mousebrain/spatial/tissue_positions_list.csv",
-                              package = "STUtility2")
+                              package = "semla")
 
 # Load coordinates
 xy <- LoadSpatialCoordinates(coordinatefiles = coordinatefile)
@@ -80,13 +80,13 @@ xy
 # Load image
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
                                "tissue_lowres_image.jpg",
-                               package = "STUtility2")
+                               package = "semla")
 im <- image_read(lowresimagefile)
 
 # read scalefactors
 scalefactorfile <- system.file("extdata/mousebrain/spatial",
                                "scalefactors_json.json",
-                               package = "STUtility2")
+                               package = "semla")
 scalefactors <- jsonlite::read_json(scalefactorfile)
 scalefactors
 

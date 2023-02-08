@@ -16,7 +16,7 @@ NULL
 #' which can be processed further with \code{\link{AdjustTissueCoordinates}}
 #' to perform "digital unrolling".
 #'
-#' A more detailed tutorial can be found on the `STUtility2` website.
+#' A more detailed tutorial can be found on the `semla` website.
 #'
 #' @param object A `Seurat` object
 #' @param sampleID An integer specifying a tissue section in the `Seurat` object

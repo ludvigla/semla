@@ -10,7 +10,7 @@ editor_options:
 In this tutorial, we'll look at basic usage of the `MapLabels()` function for plotting features that represent discrete groups of spots. This could for example be manually selected spots or clusters. Such features as stored in the `meta.data` slot of our `Seurat` object and can be represented as either 'character' vectors of 'factors'.
 
 ```{r message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 
 library(tibble)
 library(ggplot2)
@@ -19,17 +19,17 @@ library(patchwork)
 
 ## Load data
 
-First we need to load some 10x Visium data. Here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `STUtility2`.
+First we need to load some 10x Visium data. Here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `semla`.
 
 ```{r}
 # Load data
 se_mbrain <- readRDS(file = system.file("extdata", 
                                         "mousebrain/se_mbrain", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mbrain$sample_id <- "mousebrain"
 se_mcolon <- readRDS(file = system.file("extdata", 
                                         "mousecolon/se_mcolon", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 ```
@@ -154,7 +154,7 @@ p_GALT <- MapLabels(se,
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

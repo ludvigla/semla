@@ -123,11 +123,11 @@ Only 1 categorical feature can be provided.
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 library(ggplot2)
 
 # Load Seurat object
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 
 # Run PCA and data-driven clustering
 se_mbrain <- se_mbrain |>

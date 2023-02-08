@@ -39,12 +39,12 @@ samples <-
     system.file(
       "extdata/mousebrain",
       "filtered_feature_bc_matrix.h5",
-      package = "STUtility2"
+      package = "semla"
     ),
     system.file(
       "extdata/mousecolon",
       "filtered_feature_bc_matrix.h5",
-      package = "STUtility2"
+      package = "semla"
     )
   )
 mergedMatrix <- LoadAndMergeMatrices(samples)

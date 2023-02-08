@@ -48,7 +48,7 @@ layers. The output is a `tbl_graph` object representing the spatial network
 which can be processed further with \code{\link{AdjustTissueCoordinates}}
 to perform "digital unrolling".
 
-A more detailed tutorial can be found on the `STUtility2` website.
+A more detailed tutorial can be found on the `semla` website.
 }
 \seealso{
 export_graph

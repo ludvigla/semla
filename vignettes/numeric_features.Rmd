@@ -7,35 +7,35 @@ editor_options:
   chunk_output_type: inline
 ---
 
-In the visualization tutorials, we'll have a look at different ways of creating spatial plots with `STUtility2`.
+In the visualization tutorials, we'll have a look at different ways of creating spatial plots with `semla`.
 
 Functions such as `MapFeatures()` and `MapLabels()` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. The `patchwork` R package is extremely versatile and makes it easy to customize your figures!
 
 For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot()` and `SpatialDimPlot()` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
 
-If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the ['Advanced visualization' tutorial](https://ludvigla.github.io/STUtility2/articles/advanced_visualization.html).
+If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the ['Advanced visualization' tutorial](https://ludvigla.github.io/semla/articles/advanced_visualization.html).
 
 Here we'll have a look at basic usage of the `MapFeatures()` function.
 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
 library(patchwork)
-library(STUtility2)
+library(semla)
 ```
 
 ## Load data
 
-First we need to load some 10x Visium data. Here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `STUtility2`.
+First we need to load some 10x Visium data. Here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `semla`.
 
 ```{r}
 # Load data
 se_mbrain <- readRDS(file = system.file("extdata", 
                                         "mousebrain/se_mbrain", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mbrain$sample_id <- "mousebrain"
 se_mcolon <- readRDS(file = system.file("extdata", 
                                         "mousecolon/se_mcolon", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 ```
@@ -188,7 +188,7 @@ p_GALT <- MapFeatures(se,
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

@@ -72,14 +72,14 @@ kabsch <- function(pm, qm) {
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #' library(dplyr)
 #' library(ggplot2)
 #'
 #' # Load example mouse brain data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
-#'                                  package = "STUtility2"))
+#'                                  package = "semla"))
 #'
 #' # Get spatial network
 #' spatnet <- GetSpatialNetwork(se_mbrain)
@@ -171,7 +171,7 @@ icp <- function (
 #
 # se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #                                  "se_mbrain",
-#                                  package = "STUtility2"))
+#                                  package = "semla"))
 #
 # se_mbrain <- LoadImages(se_mbrain)
 # im <- se_mbrain@tools$Staffli@rasterlists$raw[[1]]

@@ -137,13 +137,13 @@ RegionNeighbors.default <- function (
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #' library(dplyr)
 #'
 #' se_mbrain <-
 #'   readRDS(system.file("extdata",
 #'   "/mousebrain/se_mbrain",
-#'   package = "STUtility2"))
+#'   package = "semla"))
 #'
 #' # Create Seurat object
 #' se_mbrain <- se_mbrain |>

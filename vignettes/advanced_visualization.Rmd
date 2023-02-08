@@ -7,14 +7,14 @@ editor_options:
   chunk_output_type: inline
 ---
 
-In this tutorial, we'll have a look at different ways of creating spatial plots with `STUtility2`. Functions such as `MapFeatures()` and `MapLabels()` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. In addition to these two fundamental plotting functions, there are also `MapFeaturesSummary()` and `MapLabelsSummary()`, which works just as their parent functions but also adds a subplot with informative summary statistics attached.s
+In this tutorial, we'll have a look at different ways of creating spatial plots with `semla`. Functions such as `MapFeatures()` and `MapLabels()` produce patchworks (see R package [patchwork](https://patchwork.data-imaginist.com/)) which are easy to manipulate after they have been created. In addition to these two fundamental plotting functions, there are also `MapFeaturesSummary()` and `MapLabelsSummary()`, which works just as their parent functions but also adds a subplot with informative summary statistics attached.s
 
 The `patchwork` R package is extremely versatile and makes it easy to customize your figures! Here we'll have a look at some options that comes with `MapFeatures` and `MapLabels` a couple of tips and tricks for how to use the `patchwork` R package.
 
-This tutorial is an extension of the '[Map numeric features](https://ludvigla.github.io/STUtility2/articles/numeric_features.html)' and '[Map categorical features](https://ludvigla.github.io/STUtility2/articles/categorical_features.html)' tutorials. Here you can find more in depth details about how to manipulate various components of the plots generated with `MapFeatures` and `MapLabels` as well as some additional plot functions.
+This tutorial is an extension of the '[Map numeric features](https://ludvigla.github.io/semla/articles/numeric_features.html)' and '[Map categorical features](https://ludvigla.github.io/semla/articles/categorical_features.html)' tutorials. Here you can find more in depth details about how to manipulate various components of the plots generated with `MapFeatures` and `MapLabels` as well as some additional plot functions.
 
 ```{r message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 library(tibble)
 library(ggplot2)
 library(patchwork)
@@ -22,17 +22,17 @@ library(patchwork)
 
 ## Load data
 
-First we need to load some 10x Visium data. here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `STUtility2`.
+First we need to load some 10x Visium data. here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with `semla`.
 
 ```{r}
 # Load data
 se_mbrain <- readRDS(file = system.file("extdata", 
                                         "mousebrain/se_mbrain", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mbrain$sample_id <- "mousebrain"
 se_mcolon <- readRDS(file = system.file("extdata", 
                                         "mousecolon/se_mcolon", 
-                                        package = "STUtility2"))
+                                        package = "semla"))
 se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 ```
@@ -593,7 +593,7 @@ MapLabels(se,
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

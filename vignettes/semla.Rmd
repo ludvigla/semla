@@ -16,17 +16,17 @@ The goal with this package is to provide sample, fast and flexible methods for p
 
 ## Installation
 
-`STUtility2` is currently only available as a development version on GitHub:
+`semla` is currently only available as a development version on GitHub:
 
 ```{r eval=FALSE}
-remotes::install_github("ludvigla/STUtility2")
+remotes::install_github("ludvigla/semla")
 ```
 
 Load library
 
 ```{r eval=FALSE}
-library(STUtility2)
-packageVersion("STUtility2")
+library(semla)
+packageVersion("semla")
 ```
 
 ## Authors
@@ -35,4 +35,4 @@ The package is written by *Ludvig Larsson* and *Lovisa Franzén* who are both pa
 
 ## Publication
 
-If you use `STUtility2` in published research, please cite the following article:
+If you use `semla` in published research, please cite the following article:

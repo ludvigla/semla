@@ -44,12 +44,12 @@ NULL
 #'     system.file(
 #'       "extdata/mousebrain",
 #'       "filtered_feature_bc_matrix.h5",
-#'       package = "STUtility2"
+#'       package = "semla"
 #'     ),
 #'     system.file(
 #'       "extdata/mousecolon",
 #'       "filtered_feature_bc_matrix.h5",
-#'       package = "STUtility2"
+#'       package = "semla"
 #'     )
 #'   )
 #' mergedMatrix <- LoadAndMergeMatrices(samples)
@@ -138,16 +138,16 @@ LoadAndMergeMatrices <- function (
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #'
 #' # Load and merge coordinates from two samples
 #' coordinatefiles <-
 #'   c(system.file("extdata/mousebrain/spatial",
 #'                 "tissue_positions_list.csv",
-#'                 package = "STUtility2"),
+#'                 package = "semla"),
 #'     system.file("extdata/mousecolon/spatial",
 #'                 "tissue_positions_list.csv",
-#'                 package = "STUtility2"))
+#'                 package = "semla"))
 #' coordinates <- LoadSpatialCoordinates(coordinatefiles)
 #'
 #' @export
@@ -310,16 +310,16 @@ LoadImageData <- function (
 #' @examples
 #' # Assemble spaceranger output files
 #' samples <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
 #'                           "/*/filtered_feature_bc_matrix.h5"))
 #' imgs <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
 #'                           "/*/spatial/tissue_hires_image.jpg"))
 #' spotfiles <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
 #'                           "/*/spatial/tissue_positions_list.csv"))
 #' json <-
-#'   Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
 #'                           "/*/spatial/scalefactors_json.json"))
 #'
 #' # Create a tibble/data.frame with file paths

@@ -25,7 +25,7 @@ NULL
 #' expression levels of certain genes (or other features) are highly similar and hence
 #' these genes have a positive spatial autocorrelation.
 #'
-#' The method provided in `STUtility2` works as follows. For each feature and spot,
+#' The method provided in `semla` works as follows. For each feature and spot,
 #' the expression is averaged across all neighboring spots (typically the 6 closest neighbors)
 #' to produce a lag expression vector. Since this vector represents the average of the surrounding
 #' spots, we can use it to test if the expression in those spots is similar to the center spot.
@@ -74,13 +74,13 @@ NULL
 #' \dontrun{
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
-#'                                  package = "STUtility2"))
+#'                                  package = "semla"))
 #' featureMat <- FetchData(se_mbrain, vars = VariableFeatures(se_mbrain)[1:100])
 #'
 #' coordfile <-
 #'   system.file("extdata/mousebrain/spatial",
 #'               "tissue_positions_list.csv",
-#'               package = "STUtility2")
+#'               package = "semla")
 #'
 #' # Load coordinate data into a tibble
 #' xys <- setNames(read.csv(coordfile, header = FALSE),
@@ -250,7 +250,7 @@ CorSpatialFeatures.default <- function (
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
-#'                                  package = "STUtility2"))
+#'                                  package = "semla"))
 #' se_mbrain <- se_mbrain |>
 #'   ScaleData() |>
 #'   RunPCA()
@@ -280,7 +280,7 @@ CorSpatialFeatures.default <- function (
 #' # Compute spatial autocorrelation scores for multiple datasets
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon",
 #'                                  "se_mcolon",
-#'                                  package = "STUtility2"))
+#'                                  package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
 #'   FindVariableFeatures()
 #'

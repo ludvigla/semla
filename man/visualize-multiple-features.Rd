@@ -160,12 +160,12 @@ of features that are expressed in different regions. It is best to map such feat
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 
 # Load example Visium data
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 # Select features to plot
 sel_features = c("Th", "Trh", "Calb2", "Prkcd")

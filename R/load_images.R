@@ -108,11 +108,11 @@ LoadImages.default <- function (
 #'
 #' @examples
 #'
-#' #' library(STUtility2)
+#' #' library(semla)
 #'
 #' # Load example Visium data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
 #'
 #' # Load images
@@ -188,6 +188,6 @@ LoadImages.Seurat <- function (
 ) {
   hiresresimagefile <- system.file(paste0("extdata/", dataset, "/spatial"),
                                    "tissue_hires_image.jpg",
-                                   package = "STUtility2")
+                                   package = "semla")
   return(hiresresimagefile)
 }

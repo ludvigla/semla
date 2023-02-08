@@ -93,7 +93,7 @@ ftrviewer <- function (
     component,
     width = paste0(container_width, "px"),
     height = paste0(container_height, "px"),
-    package = 'STUtility2',
+    package = 'semla',
     elementId = elementId
   )
 }
@@ -139,7 +139,7 @@ ftrviewerOutput <- function(outputId, width = '100%', height = '400px'){
     install.packages("htmlwidgets")
   }
 
-  htmlwidgets::shinyWidgetOutput(outputId, 'ftrviewer', width, height, package = 'STUtility2')
+  htmlwidgets::shinyWidgetOutput(outputId, 'ftrviewer', width, height, package = 'semla')
 }
 
 #' @rdname ftrviewer-shiny

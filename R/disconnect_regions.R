@@ -31,21 +31,21 @@ NULL
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #' library(dplyr)
 #' library(ggplot2)
 #' library(patchwork)
 #'
 #' galt_spots_file <- system.file("extdata/mousecolon",
 #'                                "galt_spots.csv",
-#'                                 package = "STUtility2")
+#'                                 package = "semla")
 #' galt_spots <- read.csv(galt_spots_file) |>
 #'   as_tibble()
 #'
 #' # read coordinates
 #' coordfile <- system.file("extdata/mousecolon/spatial",
 #'                          "tissue_positions_list.csv",
-#'                          package = "STUtility2")
+#'                          package = "semla")
 #' coords <- read.csv(coordfile, header = FALSE) |>
 #'   filter(V2 == 1) |>
 #'   select(V1, V6, V5) |>
@@ -180,11 +180,11 @@ DisconnectRegions.default <- function (
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #' library(ggplot2)
 #' library(patchwork)
 #'
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #'
 #' # Plot selected variable
 #' MapLabels(se_mcolon, column_name = "selection",

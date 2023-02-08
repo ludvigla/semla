@@ -39,12 +39,12 @@ the rigid transformations applied to the images.
 \examples{
 \dontrun{
 
-library(STUtility2)
+library(semla)
 library(magick)
 
 im_mbrain <- system.file("extdata/mousebrain/spatial",
                          "tissue_hires_image.jpg",
-                         package = "STUtility2")
+                         package = "semla")
 
 img1 <- prep_image(im_mbrain |>
                    image_read(),

@@ -75,7 +75,7 @@ widget_html.osddu <- function(id, style, class, ...) {
 #'
 #' @export
 osdduOutput <- function(outputId, width = '100%', height = '400px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'osddu', width, height, package = 'STUtility2')
+  htmlwidgets::shinyWidgetOutput(outputId, 'osddu', width, height, package = 'semla')
 }
 
 #' @rdname osddu-shiny

@@ -16,7 +16,7 @@ NULL
 #' is also possible to export the files before running the app and provide the path to the
 #' data directory with `datadir` (see \code{\link{ExportDataForViewer}}).
 #'
-#' A more detailed tutorial can be found on the `STUtility2` website. You can also
+#' A more detailed tutorial can be found on the `semla` website. You can also
 #' get more detailed instructions by pressing the help icon in the app.
 #'
 #' @param object A `Seurat` object

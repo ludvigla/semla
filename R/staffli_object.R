@@ -78,7 +78,7 @@ CreateStaffliObject <- function (
     image_height = image_height,
     image_info = image_info,
     scalefactors = scalefactors,
-    version = packageVersion(pkg = 'STUtility2')
+    version = packageVersion(pkg = 'semla')
   )
 
   return(object)

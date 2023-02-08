@@ -26,13 +26,13 @@ Subset a `Seurat` object while making sure that the spatial data
 }
 \details{
 If you use the default \code{\link{subset}} function you will most likely not be able
-to use any of the `STUtility2` visualization methods on the output object as
+to use any of the `semla` visualization methods on the output object as
 the `Staffli` object will be broken. The exception is when filtering is only
 done at the feature level.
 }
 \examples{
 
-se_mbrain <- readRDS(system.file("extdata", "mousebrain/se_mbrain", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata", "mousebrain/se_mbrain", package = "semla"))
 
 # Create Seurat object
 se_mbrain <- se_mbrain |> LoadImages()

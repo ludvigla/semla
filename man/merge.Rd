@@ -36,16 +36,16 @@ spatial data (images and spot coordinates) are handled correctly.
 }
 \details{
 NB: If you use the generic \code{\link{merge}} function you will not be able
-to use any of the `STUtility2` visualization methods on the output object as
+to use any of the `semla` visualization methods on the output object as
 the `Staffli` object will be broken.
 }
 \examples{
 se_mbrain <- readRDS(system.file("extdata",
                                  "mousebrain/se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 se_mcolon <- readRDS(system.file("extdata",
                                  "mousecolon/se_mcolon",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 se_mbrain
 se_mcolon

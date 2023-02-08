@@ -102,16 +102,16 @@ Note that currently, only 1 label can be selected
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 
 # Load data
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 se_mbrain$sample_id <- "mousebrain"
 se_mcolon <- readRDS(system.file("extdata/mousecolon",
                                  "se_mcolon",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 se_mcolon$sample_id <- "mousecolon"
 se <- MergeSTData(se_mbrain, se_mcolon)
 

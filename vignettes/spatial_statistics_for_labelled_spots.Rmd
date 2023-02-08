@@ -10,7 +10,7 @@ editor_options:
 In this tutorial, we will continue to analyze the spatial relationships in Visium data, specifically describing how spots that have been clustered, i.e. labelled, are organized. We will take advantage of a few methods from graph theory to describe **1**) if a cluster displays an aggregated or dispersed spatial pattern using an [assortativity test](#lat), and **2**) if two clusters co-localize spatially by calculating [neighborhood enrichment](#net).
 
 ```{r, message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 library(tibble)
 library(dplyr)
 library(ggsci)
@@ -82,7 +82,7 @@ MapLabelsSummary(se,
 
 <br>
 
-Looking at the clusters we just generated we can see that many of them seem to follow some kind of spatial pattern. Cluster 1 is dominating in the center of the tissue section, forming a core (the medulla), while for instance clusters 0, 2, 3 are intermingled in the cortical area of the section. To describe how these spatial clusters behave and relate to each other, we can use a couple of analyses within `STUtility2` called `RunLabelAssortativityTest()` and `RunNeighborhoodEnrichmentTest()`.
+Looking at the clusters we just generated we can see that many of them seem to follow some kind of spatial pattern. Cluster 1 is dominating in the center of the tissue section, forming a core (the medulla), while for instance clusters 0, 2, 3 are intermingled in the cortical area of the section. To describe how these spatial clusters behave and relate to each other, we can use a couple of analyses within `semla` called `RunLabelAssortativityTest()` and `RunNeighborhoodEnrichmentTest()`.
 
 ## Visium data as a network
 
@@ -551,7 +551,7 @@ This highlights the importance of being familiar with your data set and to be ca
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

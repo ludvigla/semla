@@ -7,10 +7,10 @@ editor_options:
   chunk_output_type: inline
 ---
 
-In this notebook, we'll have a look at so called 'spatial methods' provided in `STUtility2`. 'spatial methods' refers to analysis methods which somehow incorporate the position of spots in their calculations.
+In this notebook, we'll have a look at so called 'spatial methods' provided in `semla`. 'spatial methods' refers to analysis methods which somehow incorporate the position of spots in their calculations.
 
 ```{r warning=FALSE, message=FALSE}
-library(STUtility2)
+library(semla)
 library(tibble)
 library(ggplot2)
 library(patchwork)
@@ -266,7 +266,7 @@ se[[]] |>
 
 If we map the expression of these genes spatially, it is quite clear that these genes are expressed in different niches of the microenvironment. In fact, two of these "niches" are mostly composed of tumor cells.
 
-Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in `STUtility2` are easy to adapt to many different scenarios.
+Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in `semla` are easy to adapt to many different scenarios.
 
 ```{r fig.asp=0.4}
 MapFeatures(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
@@ -288,7 +288,7 @@ saveRDS(se, file = "bc_visium/bc")
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

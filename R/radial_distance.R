@@ -90,20 +90,20 @@ NULL
 #' @examples
 #'
 #' \dontrun{
-#' library(STUtility2)
+#' library(semla)
 #' library(ggplot2)
 #' library(patchwork)
 #' library(RColorBrewer)
 #'
 #' # Get coordinates
-#' galt_spots_file <- "~/STUtility2/repo/STUtility2/inst/extdata/mousecolon/galt_spots.csv"
+#' galt_spots_file <- "~/semla/repo/semla/inst/extdata/mousecolon/galt_spots.csv"
 #' galt_spots <- read.csv(galt_spots_file) |>
 #'   as_tibble()
 #'
 #' # read coordinates
 #' coordfile <- system.file("extdata/mousecolon/spatial",
 #'                          "tissue_positions_list.csv",
-#'                          package = "STUtility2")
+#'                          package = "semla")
 #' coords <- read.csv(coordfile, header = FALSE) |>
 #'   filter(V2 == 1) |>
 #'   select(V1, V6, V5) |>
@@ -351,13 +351,13 @@ RadialDistance.default <- function (
 #'
 #' @examples
 #'
-#' library(STUtility2)
+#' library(semla)
 #' library(ggplot2)
 #' library(patchwork)
 #' library(tidyr)
 #' library(RColorBrewer)
 #'
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", select_groups = "GALT")
 #'
 #' # Plot results

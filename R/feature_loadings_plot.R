@@ -47,9 +47,9 @@
 #' @return An object of class `patchwork`
 #'
 #' @examples {
-#' library(STUtility2)
+#' library(semla)
 #'
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #'
 #' # Run PCA
 #' se_mbrain <- se_mbrain |>

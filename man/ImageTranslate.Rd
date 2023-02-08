@@ -24,10 +24,10 @@ This function takes an `magick-image` object as input and applies translations
 \examples{
 
 library(magick)
-library(STUtility2)
+library(semla)
 lowresimagefile <- system.file("extdata/mousebrain/spatial",
                                "tissue_lowres_image.jpg",
-                               package = "STUtility2")
+                               package = "semla")
 im <- image_read(lowresimagefile)
 
 # move image 100 pixels to the right and 100 pixels down

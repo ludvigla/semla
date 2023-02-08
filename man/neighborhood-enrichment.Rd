@@ -55,12 +55,12 @@ results (`perm_mean`), the standard deviation of the permuted results (`perm_sd`
 and the z-score (`z_score`).
 }
 \examples{
-library(STUtility2)
+library(semla)
 
 # Read data
 se <- readRDS(system.file("extdata/mousebrain",
                           "se_mbrain",
-                          package = "STUtility2"))
+                          package = "semla"))
 
 # Generate clusters
 se <- se |>

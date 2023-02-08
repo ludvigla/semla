@@ -13,7 +13,7 @@ ExportDataForViewer(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object created with STUtility2}
+\item{object}{A `Seurat` object created with semla}
 
 \item{sampleIDs}{An integer vector specifying}
 
@@ -31,11 +31,11 @@ Export data for FeatureViewer
 }
 \examples{
 \dontrun{
-libary(STUtility2)
+libary(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 # Export files to current working directory
 ExportDataForViewer(se_mbrain, outdir = "./")

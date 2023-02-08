@@ -30,16 +30,16 @@ be assigned with 0 expression.
 }
 \examples{
 
-library(STUtility2)
+library(semla)
 
 # Load and merge coordinates from two samples
 coordinatefiles <-
   c(system.file("extdata/mousebrain/spatial",
                 "tissue_positions_list.csv",
-                package = "STUtility2"),
+                package = "semla"),
     system.file("extdata/mousecolon/spatial",
                 "tissue_positions_list.csv",
-                package = "STUtility2"))
+                package = "semla"))
 coordinates <- LoadSpatialCoordinates(coordinatefiles)
 
 }

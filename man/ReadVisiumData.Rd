@@ -68,16 +68,16 @@ after the object has been created.
 \examples{
 # Assemble spaceranger output files
 samples <-
-  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+  Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                           "/*/filtered_feature_bc_matrix.h5"))
 imgs <-
-  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+  Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                           "/*/spatial/tissue_hires_image.jpg"))
 spotfiles <-
-  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+  Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                           "/*/spatial/tissue_positions_list.csv"))
 json <-
-  Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+  Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                           "/*/spatial/scalefactors_json.json"))
 
 # Create a tibble/data.frame with file paths

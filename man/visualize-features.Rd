@@ -199,15 +199,15 @@ first feature is "red", the second is "green" and the last feature is "blue".
 
 \examples{
 
-library(STUtility2)
+library(semla)
 if (!requireNamespace("viridis"))
   install.packages("viridis")
 library(viridis)
 library(ggplot2)
 
 # Load example Visium data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "STUtility2"))
-se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "STUtility2"))
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 se_merged <- MergeSTData(se_mbrain, se_mcolon)
 
 \dontrun{

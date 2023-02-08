@@ -13,7 +13,7 @@ export_coordinates(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object created with `STUtility2`}
+\item{object}{A `Seurat` object created with `semla`}
 
 \item{sampleNumber}{An integer specifying a sample ID to export
 spatial network for}
@@ -31,11 +31,11 @@ the H&E image tiles generated with \code{\link{TileImage}}
 }
 \examples{
 \dontrun{
-libary(STUtility2)
+libary(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 export_coordinates(se_mbrain, outdir = "./")
 }

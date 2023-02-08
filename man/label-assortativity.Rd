@@ -53,12 +53,12 @@ has been scaled towards the network max avg k (`k_max`) and thus goes from 0 (co
 dispersed) to 1 (fully connected).
 }
 \examples{
-library(STUtility2)
+library(semla)
 
 # Read data
 se <- readRDS(system.file("extdata/mousebrain",
                           "se_mbrain",
-                          package = "STUtility2"))
+                          package = "semla"))
 
 # Generate clusters
 se <- se |>

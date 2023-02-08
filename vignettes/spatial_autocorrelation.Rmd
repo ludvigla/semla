@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-`STUtility2` offers a fast method to compute spatial autocorrelation scores for numeric features.
+`semla` offers a fast method to compute spatial autocorrelation scores for numeric features.
 
 Spatial autocorrelation is a term used to describe the presence of systematic spatial variation. Positive spatial autocorrelation of a feature is the tendency for regions that are close together in space to have similar values for that feature.
 
@@ -15,18 +15,18 @@ A simple example is when you have an anatomical structure or a tissue type that 
 
 Perhaps the most widely used method for computing spatial autocorrelation scores is [Moran's I](https://en.wikipedia.org/wiki/Moran%27s_I). The computation of Moran's I doesn't scale well and often require some sort of binning strategy to mitigate this problem.
 
-The method provided in `STUtility2` uses a fast alternative which relies on computing the "spatial lag" vector of each feature. Here the spatial lag of a numeric feature is defined as the averaged value of that feature in adjacent spots. Once this score has been calculated, we can estimate spatial autocorrelation by computing the Pearson correlation between the original vector and its spatial lag vector.
+The method provided in `semla` uses a fast alternative which relies on computing the "spatial lag" vector of each feature. Here the spatial lag of a numeric feature is defined as the averaged value of that feature in adjacent spots. Once this score has been calculated, we can estimate spatial autocorrelation by computing the Pearson correlation between the original vector and its spatial lag vector.
 
 We will demonstrate how this method, using the function `CorSpatialFeatures()`, work with our mouse brain data set.
 
 ```{r message=FALSE, warning=FALSE}
-library(STUtility2)
+library(semla)
 ```
 
 ```{r}
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 # Compute spatial autocorrelation for variable features
 spatgenes <- CorSpatialFeatures(se_mbrain)
@@ -114,7 +114,7 @@ The selection of genes boils down to what you are trying to achieve with your an
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

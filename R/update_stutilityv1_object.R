@@ -77,9 +77,9 @@ UpdateSTUtilityV1Object <- function (
       select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID)
   }))
 
-  # Create new Staffli object for STUtility2
+  # Create new Staffli object for semla
   if (verbose) cli_alert_info("Creating new Staffli object")
-  staffli <- STUtility2::CreateStaffliObject(imgs = imgs, meta_data = meta_data, image_info = image_info, scalefactors = tibble())
+  staffli <- semla::CreateStaffliObject(imgs = imgs, meta_data = meta_data, image_info = image_info, scalefactors = tibble())
   staffli@rasterlists <- list(raw = raw_rasters)
 
   # Save staffli object to Seurat object
