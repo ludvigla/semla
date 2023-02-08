@@ -70,7 +70,8 @@ Suggests:
     ggnewscale,
     ggsci,
     TabulaMurisSenisData,
-    scico
+    scico,
+    ggfittext
 Collate: 
     'STUtility2-package.R'
     'checks.R'
@@ -100,6 +101,7 @@ Collate:
     'radial_distance_plot.R'
     'rigid_transform.R'
     'rigid_transform_manual.R'
+    'scalebar.R'
     'spatial_autocorrelation.R'
     'spatial_neighborhood_stats.R'
     'spatial_network.R'
