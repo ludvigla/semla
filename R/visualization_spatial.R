@@ -51,7 +51,17 @@ NULL
 #' @param blend_order an integer vector of length 2-3 specifying the order to blend features by. Only
 #' active when \code{blend = TRUE}. See color blending for more information.
 #' @param drop_na a logical specifying if NA values should be dropped
-#' @param center_zero a logical specifying whether color scale should be centered at 0
+#' @param center_zero a logical specifying whether the color scale should be centered at 0
+#' @param add_scalebar a logical specifying if a scale bar should be added to the plots
+#' @param scalebar_gg a 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+#' bar is styled by passing parameters to \code{\link{scalebar}}.
+#' @param scalebar_height a numeric value specifying the height of the scale bar relative to the
+#' height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
+#' scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
+#' the height of the scale bar can sometimes be useful to increase the text size to make it more
+#' visible in small plots.
+#' @param scalebar_position a numeric vector of length 2 specifying the position of the scale bar
+#' relative to the plot area. Default is to place it in the top right corner.
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -95,6 +105,10 @@ MapFeatures.default <- function (
   drop_na = FALSE,
   blend = FALSE,
   blend_order = 1:3,
+  add_scalebar = FALSE,
+  scalebar_gg = NULL,
+  scalebar_height = 0.05,
+  scalebar_position = c(0.8, 0.8),
   ...
 ) {
 
@@ -205,6 +219,30 @@ MapFeatures.default <- function (
     }
     return(p)
   }), nm = names(data))
+
+  if (add_scalebar) {
+    if (!requireNamespace("dbscan")) {
+      install.packages("dbscan")
+    }
+    scalebar_width <- scalebar_gg$labels$scalebar_width
+    # Check scale bar
+    sample_plots <- lapply(names(sample_plots), function(nm) {
+      gg <- data[[nm]]
+      nn_dist <- dbscan::kNN(gg |> select(pxl_col_in_fullres, pxl_row_in_fullres), k = 1)$dist[, 1] |> min()
+      plots <- sample_plots[[nm]]
+      d <- dims |> filter(sampleID == nm)
+      sf <- scalebar_width/100
+      prop_width <- (nn_dist*sf)/(d$full_width - d$x_start)
+      plots <- lapply(names(plots), function(ftr_nm) {
+        scalebar_pos <- scalebar_position %||% c(0.8, 0.8)
+        scalebar_pos[1] <- ifelse((1 - prop_width) > scalebar_pos[1], scalebar_pos[1], (1 - prop_width))
+        scalebar_pos[2] <- ifelse((1 - scalebar_height) > scalebar_pos[2], scalebar_pos[2], (1 - scalebar_height))
+        plots[[ftr_nm]] +
+          inset_element(p = scalebar_gg, left = scalebar_pos[1], bottom = scalebar_pos[2], align_to = "full",
+                        right = scalebar_pos[1] + prop_width, top = scalebar_pos[2] + scalebar_height, on_top = TRUE)
+      }) |> setNames(nm = names(plots))
+    }) |> setNames(nm = names(sample_plots))
+  }
 
   # Create final patchwork
   if (!return_plot_list) {
@@ -344,6 +382,10 @@ MapFeatures.Seurat <- function (
     max_cutoff = NULL,
     min_cutoff = NULL,
     return_plot_list = FALSE,
+    add_scalebar = FALSE,
+    scalebar_height = 0.05,
+    scalebar_gg = scalebar(x = 500, text_height = 5),
+    scalebar_position = c(0.8, 0.7),
     ...
 ) {
 
@@ -426,8 +468,28 @@ MapFeatures.Seurat <- function (
   # Set dims
   dims <- GetStaffli(object)@image_info
 
+  if (add_scalebar) {
+    # Check input param
+    if (!inherits(scalebar_gg, what = "gg")) {
+      abort(glue("Invalid {col_br_magenta('scalebar_gg')}. Expected a 'ggplot' object"))
+    }
+    if (!between(x = scalebar_height, left = 0, right = 1)) {
+      abort(glue("Invalid {col_br_magenta('scalebar_height')}. Expected a numeric of length 1 between 0 and 1"))
+    }
+    if (length(scalebar_position) != 2) {
+      abort(glue("Invalid {col_br_magenta('scalebar_position')}. Expected a numeric of length 2"))
+    }
+   if (!all(between(x = scalebar_position, left = 0, right = 1))) {
+     abort(glue("Invalid {col_br_magenta('scalebar_position')}. Expected values between 0 and 1"))
+   }
+  } else {
+    scalebar_height <- NULL
+    scalebar_gg <- NULL
+    scalebar_position <- NULL
+  }
+
   # generate plots
-  wrapped_plots <- MapFeatures.default(
+  wrapped_plots <- MapFeatures(
     object = data_use,
     crop_area = crop_area,
     pt_size = pt_size,
@@ -446,7 +508,11 @@ MapFeatures.Seurat <- function (
     drop_na = drop_na,
     blend = blend,
     blend_order = blend_order,
-    return_plot_list = (!is.null(image_use)) | return_plot_list
+    return_plot_list = (!is.null(image_use)) | return_plot_list,
+    add_scalebar = add_scalebar,
+    scalebar_height = scalebar_height,
+    scalebar_gg = scalebar_gg,
+    scalebar_position = scalebar_position
   )
 
   # Inject images if image_use is provided

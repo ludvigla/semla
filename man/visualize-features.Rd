@@ -28,6 +28,10 @@ MapFeatures(object, ...)
   drop_na = FALSE,
   blend = FALSE,
   blend_order = 1:3,
+  add_scalebar = FALSE,
+  scalebar_gg = NULL,
+  scalebar_height = 0.05,
+  scalebar_position = c(0.8, 0.8),
   ...
 )
 
@@ -56,6 +60,10 @@ MapFeatures(object, ...)
   max_cutoff = NULL,
   min_cutoff = NULL,
   return_plot_list = FALSE,
+  add_scalebar = FALSE,
+  scalebar_height = 0.05,
+  scalebar_gg = scalebar(x = 500, text_height = 5),
+  scalebar_position = c(0.8, 0.7),
   ...
 )
 }
@@ -101,7 +109,7 @@ preferably consist of a set of colors from a scientific color palette designed f
 data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 \code{scico} R packages.}
 
-\item{center_zero}{a logical specifying whether color scale should be centered at 0}
+\item{center_zero}{a logical specifying whether the color scale should be centered at 0}
 
 \item{scale}{a character vector of length 1 specifying one of "shared" or "free" which will
 determine how the color bars are structured. If scale is set to "shared", the color bars for
@@ -128,6 +136,20 @@ if you want to manipulate each sub plot independently.}
 
 \item{blend_order}{an integer vector of length 2-3 specifying the order to blend features by. Only
 active when \code{blend = TRUE}. See color blending for more information.}
+
+\item{add_scalebar}{a logical specifying if a scale bar should be added to the plots}
+
+\item{scalebar_gg}{a 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+bar is styled by passing parameters to \code{\link{scalebar}}.}
+
+\item{scalebar_height}{a numeric value specifying the height of the scale bar relative to the
+height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
+scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
+the height of the scale bar can sometimes be useful to increase the text size to make it more
+visible in small plots.}
+
+\item{scalebar_position}{a numeric vector of length 2 specifying the position of the scale bar
+relative to the plot area. Default is to place it in the top right corner.}
 
 \item{features}{a character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
