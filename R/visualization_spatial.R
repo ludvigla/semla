@@ -228,7 +228,7 @@ MapFeatures.default <- function (
     # Check scale bar
     sample_plots <- lapply(names(sample_plots), function(nm) {
       gg <- data[[nm]]
-      nn_dist <- dbscan::kNN(gg |> select(pxl_col_in_fullres, pxl_row_in_fullres), k = 1)$dist[, 1] |> min()
+      nn_dist <- dbscan::kNN(gg |> select(all_of(coords_columns)), k = 1)$dist[, 1] |> min()
       plots <- sample_plots[[nm]]
       d <- dims |> filter(sampleID == nm)
       sf <- scalebar_width/100
