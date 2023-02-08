@@ -19,10 +19,12 @@
 #'
 #' @examples
 #'
-#' # Draw a scale bar for a 500 micron distance with 6 breaks where the ends are highlighted
+#' # Draw a scale bar for a 500 micron distance with 6 breaks where
+#' # the ends are highlighted
 #' scalebar()
 #'
-#' # Draw a scale bar for a 1mm mm distance with 1 breaks where the ends and the mid point are highlighted
+#' # Draw a scale bar for a 1mm mm distance with 1 breaks where the
+#' # ends and the mid point are highlighted
 #' scalebar(breaks = 11, highlight_breaks = c(1, 6, 11))
 #'
 #' @export
@@ -40,6 +42,9 @@ scalebar <- function (
   if (!requireNamespace("ggfittext")) {
     install.packages("ggfittext")
   }
+
+  # Set global variables to NULL
+  ord <- min_y <- max_y <- NULL
 
   # Check input
   if (!inherits(x = x, what = c("numeric", "integer"))) {

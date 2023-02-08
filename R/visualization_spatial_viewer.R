@@ -138,7 +138,7 @@ FeatureViewer <- function (
 
   # Check custom_color_palettes
   if (!is.null(categorical_colors)) {
-    .feature_viewer_colors <- .check_categorical_colors(categorical_colors, .categorical_data)
+    .feature_viewer_colors <- .check_categorical_colors(categorical_colors, categorical_features, .categorical_data)
   } else {
     # Define a list of colors for each category
     # .feature_viewer_colors will work as a dictionary for the app to select colors from
@@ -727,6 +727,7 @@ FeatureViewer <- function (
 #' @noRd
 .check_categorical_colors <- function (
   categorical_colors,
+  categorical_features,
   .categorical_data
 ) {
   stopifnot(inherits(categorical_colors, what = "list"),

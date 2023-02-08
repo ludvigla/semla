@@ -27,6 +27,7 @@ UpdateSTUtilityV1Object <- function (
 
   # Set global variables to NULL
   barcode <- pixel_x <- pixel_y <- sample <- width <- height <- colorspace <- filesize <- density <- format <- NULL
+  sampleID <- full_width <- full_height <- NULL
 
   # Check object
   if (!"Staffli" %in% names(object@tools)) {

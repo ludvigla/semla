@@ -461,7 +461,7 @@ ReadVisiumData <- function (
     remove_spots <- c(remove_spots, check_coordinates |> filter(check_x == "outside") |> pull(barcode))
   }
   if (any(check_coordinates$check_y == "outside")) {
-    check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
+    check_coordinates_y <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
     for (ID in check_coordinates_y$sampleID) {
       cli_alert_warning("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
     }
