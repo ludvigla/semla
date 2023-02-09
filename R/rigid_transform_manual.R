@@ -17,7 +17,8 @@ NULL
 #' shiny application where rigid transformations can be applied to the images.
 #' When the application stops (after clicking "quit & save"), the transformations 
 #' are applied to the images using \code{\link{RigidTransformImages}} and a 
-#' `Seurat` object is returned.
+#' `Seurat` object is returned. If no transformations are supplied, the function
+#' will return the input `Seurat` object unmodified.
 #'
 #' @importFrom shiny fluidPage actionButton tableOutput uiOutput reactiveTimer
 #' observe fluidRow column p h4 helpText strong code h5 observeEvent stopApp
@@ -97,7 +98,7 @@ RunAlignment.default <- function (
 
     # Send image data to widget
     output$paperWidget <- renderPaper({
-      paper(data = object)
+      paper(data = object, width = container_width, height = container_height)
     })
 
     # Fill table when values are passed from react app
@@ -216,6 +217,11 @@ RunAlignment.Seurat <- function (
       return(res)
     }
   }))
+  
+  if (length(transforms_tibble) == 0) {
+    cli_alert_warning("Found no transformations. Returning unmodified {col_br_magenta('Seurat')} object")
+    return(object)
+  }
 
   object <- RigidTransformImages(object, transforms = transforms_tibble, verbose = verbose)
 
