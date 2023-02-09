@@ -42,7 +42,8 @@ Takes a `Seurat` object with at least 2 tissue sections and opens an interactive
 shiny application where rigid transformations can be applied to the images.
 When the application stops (after clicking "quit & save"), the transformations 
 are applied to the images using \code{\link{RigidTransformImages}} and a 
-`Seurat` object is returned.
+`Seurat` object is returned. If no transformations are supplied, the function
+will return the input `Seurat` object unmodified.
 }
 
 \examples{
