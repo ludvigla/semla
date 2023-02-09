@@ -23,7 +23,7 @@ se_mbrain <- readRDS(file = system.file("extdata",
 se_mbrain <- LoadImages(se_mbrain)
 ```
 
-```{r}
+```{r fig.asp=1}
 ImagePlot(se_mbrain)
 ```
 
@@ -155,6 +155,63 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
 ```
 
 ![](images/alignment/aligned_cropped.jpg)
+
+## Images with different dimensions
+
+`RunAlignment` applies the transformations to each image independently and makes sure that the original dimensions of the images are kept. This behavior might seem confusing at first. Let's say that you want to force all images to align with the first H&E image so that you can use the transformed coordinates for 3D visualization, this will not work without some additional processing. 
+
+In the example below, we can see two H&E images with slightly different dimensions. The second image (mouse colon tissue) has an aspect ration lower than 1 whereas the first image (mouse brain tissue) has an aspect ratio higher than 1 but both images are loaded with the same height. When applying transformations to the second image, the dashed box will only define where the image will be placed relative to the first image, but the image will keep its aspect ratio.
+
+```{r eval=FALSE}
+se_mbrain <- readRDS(file = system.file("extdata", 
+                                        "mousebrain/se_mbrain", 
+                                        package = "semla"))
+se_mcolon <- readRDS(file = system.file("extdata", 
+                                        "mousecolon/se_mcolon", 
+                                        package = "semla"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
+
+se_merged <- RunAlignment(se_merged)
+```
+
+![](images/alignment/alignment_brain_colon.png)
+If we apply rigid transformations according to the image above, the result will be this:
+
+```{r eval=FALSE}
+ImagePlot(se_merged, image_use = "transformed")
+```
+
+![](images/alignment/transformed_images_brain_colon.jpg)
+
+Here you can see that the second image fits the top and bottom of the dashed box, but the sides are wider than the box.
+
+## 3D visualization
+
+3D visualization requires some additional processing. For each tissue section, the spot coordinates can be defined on completely different scales. In order to place the coordinates on the same scale, we can adjust the coordinates by dividing them with the width/height of the H&E images.
+
+The code below can be used to scale the transformed coordinates to a common coordinate system, in this case they will range from 0 to 1. We can use the `sampleID` as a z-coordinate to create a "z-stack" that can be visualized in 3D. We'll leave the actual 3D visualization as an exercise, but to achieve this you can for example use the R package [plotly](https://plotly.com/r/).
+
+```{r eval=FALSE}
+xy_coords <- GetStaffli(se_merged)@meta_data |> 
+  select(pxl_col_in_fullres_transformed, pxl_row_in_fullres_transformed, sampleID) |> 
+  group_by(sampleID) |> 
+  group_split()
+  
+image_info <- GetStaffli(se_merged)@image_info
+
+# Adjust coordinates
+adjusted_coords <- do.call(bind_rows, lapply(seq_along(xy_coords), function(i) {
+  xy <- xy_coords[[i]]
+  full_width <- image_info[i, ]$full_width
+  full_height <- image_info[i, ]$full_height
+  xy <- xy |> 
+    mutate(x = pxl_col_in_fullres_transformed/full_width,
+           y = pxl_row_in_fullres_transformed/full_height) |> 
+    select(x, y, sampleID)
+}))
+
+```
+
 
 <br>
 

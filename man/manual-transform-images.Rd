@@ -36,6 +36,15 @@ and send them to the interactive application. When the application stops
 the rigid transformations applied to the images.
 }
 
+\section{Seurat method}{
+
+Takes a `Seurat` object with at least 2 tissue sections and opens an interactive
+shiny application where rigid transformations can be applied to the images.
+When the application stops (after clicking "quit & save"), the transformations 
+are applied to the images using \code{\link{RigidTransformImages}} and a 
+`Seurat` object is returned.
+}
+
 \examples{
 \dontrun{
 
