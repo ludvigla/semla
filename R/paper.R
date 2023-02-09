@@ -28,7 +28,7 @@ paper <- function (
 
   content <- reactR::component(
     "Paper",
-    list(data = data)
+    list(data = data, width = width, height = height)
   )
 
   # describe a React component to send to the browser for rendering.
