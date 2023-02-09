@@ -286,7 +286,7 @@ CoordTransform <- function (
   return(xy_coords_transformed)
 }
 
-# TODO fix bug with CytAssist data when spots are located outside of H&E
+
 #' Apply transformation to paired image and coordinates
 #'
 #' SRT data generated with Visium consists of an H&E image and a gene expression
