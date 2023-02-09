@@ -11,6 +11,13 @@ NULL
 #' and send them to the interactive application. When the application stops
 #' (after clicking "quit & save") a tibble is returned with information about
 #' the rigid transformations applied to the images.
+#' 
+#' @section Seurat method:
+#' Takes a `Seurat` object with at least 2 tissue sections and opens an interactive
+#' shiny application where rigid transformations can be applied to the images.
+#' When the application stops (after clicking "quit & save"), the transformations 
+#' are applied to the images using \code{\link{RigidTransformImages}} and a 
+#' `Seurat` object is returned.
 #'
 #' @importFrom shiny fluidPage actionButton tableOutput uiOutput reactiveTimer
 #' observe fluidRow column p h4 helpText strong code h5 observeEvent stopApp
@@ -100,7 +107,9 @@ RunAlignment.default <- function (
     output$HelpBox = renderUI({
       if (input$help %% 2){
         fluidRow(column(12, helpText(h4("How to use the tool"), hr())),
-                 column(12, helpText(h5(strong("NB:"), " The dashed lines highlight the borders of the canvas area. Only part of images that are inside this area will be kept."))),
+                 column(12, helpText(h5(strong("NB:"), " The dashed lines highlight the borders of the canvas area defined by the first image in the stack. ",
+                                        "Only parts of the first image that are inside this area will be kept. Every image will be transformed independently, ",
+                                        "meaning that each image will keep their original dimensions."))),
                  column(12, column(3, helpText(p(strong("Select images")))),
                         column(9, p("use the blue image buttons above the viewer to select images to show"))),
                  column(12, column(3, helpText(p(strong("Move to front")))),
@@ -174,6 +183,7 @@ RunAlignment.Seurat <- function (
                                           glue("Either decrease the value for image_height or rerun ",
                                              "LoadImages() with a higher image_height.")))
   }
+
   images <- lapply(rstrs, function(rst) {
     im <- prep_image(rst |>
                        image_read(),
@@ -183,15 +193,19 @@ RunAlignment.Seurat <- function (
 
   # Run app
   transforms <- RunAlignment(images, container_width = container_width, container_height = container_height, ...)
+  transforms$shift_x <- -transforms$shift_x
+  transforms$shift_y <- -transforms$shift_y
 
   # Apply transformations to images
   transforms_tibble <- do.call(bind_rows, lapply(1:nrow(transforms), function(i) {
+    dimx <- transforms[i, "dimx", drop = TRUE]
+    dimy <- transforms[i, "dimy", drop = TRUE]
     res <- try({
       generate_rigid_transform(sampleID = i,
                                mirror_y = transforms[i, "flip", drop = TRUE],
                                angle = transforms[i, "angle", drop = TRUE],
-                               tr_x = transforms[i, "shift_x", drop = TRUE]/image_height,
-                               tr_y = transforms[i, "shift_y", drop = TRUE]/image_height,
+                               tr_x = transforms[i, "shift_x", drop = TRUE]/dimx,
+                               tr_y = transforms[i, "shift_y", drop = TRUE]/dimy,
                                scalefactor = transforms[i, "scalefactor", drop = TRUE])
     }, silent = TRUE)
 
