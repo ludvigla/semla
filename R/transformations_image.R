@@ -158,14 +158,13 @@ ImageTransform <- function (
 
   # Get width/height of input image
   info <- image_info(im)
-  sf <- 1
 
   # Rotate image and get width/height of rotated image
   if (angle != 0) {
     im_rot <- image_rotate(im, degrees = angle)
     rot_info <- image_info(im_rot)
     # Create a blank image with the same dimensions as the rotated image
-    im_blank <- image_blank(width = rot_info$width, rot_info$height, color = "#FFFFFFFF")
+    im_blank <- image_blank(width = rot_info$width, rot_info$height, color = "#FFFFFF")
     # Place rotated image on top of blank image and apply translations
     # The first step is required to be able to crop the image later
     im <- image_composite(im_blank, composite_image = im_rot)
@@ -178,12 +177,20 @@ ImageTransform <- function (
                                                             height = im_cur_info$height*scalefactor))
     im_scaled_info <-  image_info(im_scaled)
     if (scalefactor < 1) {
-      im_blank <- image_blank(width = im_cur_info$width, im_cur_info$height, color = "#FFFFFFFF")
+      im_blank <- image_blank(width = im_cur_info$width, im_cur_info$height, color = "white")
       offset_x <- (im_cur_info$width - im_scaled_info$width)/2
       offset_y <- (im_cur_info$height - im_scaled_info$height)/2
       im_scaled <- image_composite(im_blank, composite_image = im_scaled,
                                    offset = geometry_area(x_off = offset_x, y_off = offset_y))
+      if (any(xy_offset != c(0, 0))) {
+        im_scaled <- im_scaled |>
+          ImageTranslate(xy_offset)
+      }
     } else {
+      if (any(xy_offset != c(0, 0))) {
+        im_scaled <- im_scaled |>
+          ImageTranslate(xy_offset)
+      }
       offset_x <- (im_scaled_info$width - im_cur_info$width)/2
       offset_y <- (im_scaled_info$height - im_cur_info$height)/2
       im_scaled <- im_scaled |> image_crop(geometry = geometry_area(width = im_cur_info$width,
@@ -192,15 +199,13 @@ ImageTransform <- function (
                                                                     y_off = offset_y))
     }
     im <- im_scaled
-    sf <- im_cur_info$height/info$height
+  } else {
+    if (any(xy_offset != c(0, 0))) {
+      im <- im |>
+        ImageTranslate(xy_offset)
+    }
   }
-
-  # Apply translations
-  if (any(xy_offset != c(0, 0))) {
-    im <- im |>
-      ImageTranslate(xy_offset)
-  }
-
+  
   if (angle != 0) {
     # Crop rotated image at center so that it get the same dimensions as the input image
     im <- image_extent(im, geometry = geometry_area(width = info$width, height = info$height))
