@@ -12,7 +12,7 @@ In this tutorial, we will look at how to perform digital unrolling of folded "sw
 The data set comes from a "swiss roll" of a mouse colon which was published by M. Parigi et al. (including yours truly) [*The spatial transcriptomic landscape of the healing mouse intestine following damage*](https://www.nature.com/articles/s41467-022-28497-0).
 
 ```{r warning=FALSE, message=FALSE}
-library(STUtility2)
+library(semla)
 ```
 
 ## Mouse colon data
@@ -22,7 +22,7 @@ Let's load and have a quick look at the data.
 ```{r}
 se_mcolon <- readRDS(system.file("extdata/mousecolon", 
                                  "se_mcolon", 
-                                 package = "STUtility2"))
+                                 package = "semla"))
 
 se_mcolon <- se_mcolon |> 
   LoadImages()
@@ -44,7 +44,7 @@ MapFeatures(se_mcolon, features = "Fxyd4",
 
 ## Pre-processing
 
-The goal of this tutorial is to show how `STUtility2` can be used to find an "unrolled" coordinate system. To achieve this, we can start a shiny application with `CutSpatialNetwork()` which will allow us to do some interesting stuff. More about that later.
+The goal of this tutorial is to show how `semla` can be used to find an "unrolled" coordinate system. To achieve this, we can start a shiny application with `CutSpatialNetwork()` which will allow us to do some interesting stuff. More about that later.
 
 Before we get started, we need to do a little bit of pre-processing. First, we will tile the H&E image using `TileImage()`. Tiling is necessary to make it possible to visualize the H&E images in a more interactive way. The path to the raw H&E image can be found with `GetStaffli(se_mcolon)@imgs`.
 
@@ -99,8 +99,8 @@ Once all edges has been cut, you have to press the `Quit & Save` button. If you 
 NB: We need to make sure to save the output to a variable. Here, we will save the output to `tidy_network`.
 
 ```{r include=FALSE}
-tidy_network <- readRDS("~/STUtility2/repo/tests/digital_unrolling_mcolon")
-#saveRDS(tidy_network, "~/STUtility2/repo/tests/digital_unrolling_mcolon")
+tidy_network <- readRDS("~/semla/repo/tests/digital_unrolling_mcolon")
+#saveRDS(tidy_network, "~/semla/repo/tests/digital_unrolling_mcolon")
 #export_tidygraph(tidy_network, outdir = tilepath)
 ```
 
@@ -252,7 +252,7 @@ pheatmap::pheatmap(binMat, cluster_cols = FALSE, border_color = FALSE,
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

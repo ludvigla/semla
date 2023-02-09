@@ -14,15 +14,15 @@ editor: visual
 
 Subseting and merging data is done using the two functions `SubsetSTData()` and `MergeSTData()`.
 
-If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `STUtility2`, causing the spatial data to be lost or corrupted.
+If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `semla`, causing the spatial data to be lost or corrupted.
 
 Let's load an example mouse brain 10x Visium data:
 
 ```{r warning=FALSE, message=FALSE}
-library(STUtility2)
+library(semla)
 se_mcolon <- readRDS(system.file("extdata/mousecolon", 
                                  "se_mcolon", 
-                                 package = "STUtility2"))
+                                 package = "semla"))
 se_mcolon
 ```
 
@@ -85,7 +85,7 @@ Finally, we can use `MergeSTData()` to join two objects. In this example, our co
 ```{r warning=FALSE, message=FALSE}
 se_mbrain <- readRDS(system.file("extdata/mousebrain", 
                                  "se_mbrain", 
-                                 package = "STUtility2"))
+                                 package = "semla"))
 ```
 
 ```{r}
@@ -107,7 +107,7 @@ MapFeatures(se_merged, features = "nFeature_Spatial")
 
 <summary>**Package version**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 </details>
 

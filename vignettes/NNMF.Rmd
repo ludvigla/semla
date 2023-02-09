@@ -114,9 +114,6 @@ NB: Although we are able to pick up distinct patterns in our data with the facto
 
 -   `semla`: `r packageVersion("semla")`
 
-```{=html}
-<!-- -->
-```
 -   `RcppML`: `r packageVersion("RcppML")`
 
 -   `singlet`: `r packageVersion("singlet")`

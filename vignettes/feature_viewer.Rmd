@@ -134,7 +134,6 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
 se_merged <- FeatureViewer(se_merged)
 ```
 
-
 <br>
 
 ------------------------------------------------------------------------

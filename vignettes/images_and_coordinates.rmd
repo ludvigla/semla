@@ -9,7 +9,7 @@ Load required libraries:
 
 ```{r message=FALSE, warning=FALSE}
 
-library(STUtility2)
+library(semla)
 library(magick)
 library(dplyr)
 library(jsonlite)
@@ -20,13 +20,13 @@ library(ggplot2)
 
 ## Image transformation
 
-`STUtility2` uses the `magick` R package to read and process images. Please have a look at [this](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) vignette if you want to know more about `magick`.
+`semla` uses the `magick` R package to read and process images. Please have a look at [this](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) vignette if you want to know more about `magick`.
 
 Let's load an H&E image and visualize it:
 
 ```{r fig.width=6, fig.height=6}
 
-he <- system.file("extdata/mousebrain/spatial", "tissue_hires_image.png", package = "STUtility2")
+he <- system.file("extdata/mousebrain/spatial", "tissue_hires_image.png", package = "semla")
 im <- image_read(he)
 
 # get information about image
@@ -83,7 +83,7 @@ When working with multiple SRT data sets, it can be useful to align the tissue s
 
 The main issue is that if we want to map spots to our H&E images after rotation, the scale has now changed and the spots will appear smaller. Instead, it is more convenient to keep the same input dimensions.
 
-`STUtility2` provide two functions to complement the transformation functions available in the `magick` R package: `ImageTranslate()` and `ImageTransform()`.
+`semla` provide two functions to complement the transformation functions available in the `magick` R package: `ImageTranslate()` and `ImageTransform()`.
 
 `ImageTranslate` can be used to move H&E image. If you imagine that you have an art board with the same dimensions as your image, this function can be used to move the H&E image on the art board. However, only the part of the image that is inside the art board will be kept.
 
@@ -124,7 +124,7 @@ Let's load some spot coordinates for the H&E image that we have.
 # get example coordinate file
 cordinatefile <- system.file("extdata/mousebrain/spatial", 
                              "tissue_positions_list.csv", 
-                             package = "STUtility2")
+                             package = "semla")
 
 # Load coordinates
 xy <- LoadSpatialCoordinates(coordinatefiles = cordinatefile, verbose = T)
@@ -150,7 +150,7 @@ Unfortunately, we don't have access to this information right now so we need to 
 ```{r}
 scalefactorfile <- system.file("extdata/mousebrain/spatial", 
                              "scalefactors_json.json", 
-                             package = "STUtility2")
+                             package = "semla")
 
 # read scalefactors
 scalefactors <- jsonlite::read_json(scalefactorfile)
@@ -162,7 +162,7 @@ Now we can see that the scaling factor between the original H&E image and the ti
 ```{r}
 lowresimagefile <- system.file("extdata/mousebrain/spatial", 
                              "tissue_lowres_image.png", 
-                             package = "STUtility2")
+                             package = "semla")
 
 # Load image
 im <- image_read(lowresimagefile)
@@ -344,7 +344,7 @@ ggplot(transf.res$xy_transf, aes(tr_x, image_info(im)$height - tr_y,
 
 <summary>**Package versions**</summary>
 
--   `STUtility2`: `r packageVersion("STUtility2")`
+-   `semla`: `r packageVersion("semla")`
 
 -   `magick`: `r packageVersion("magick")`
 

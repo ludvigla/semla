@@ -11,26 +11,26 @@ format:
 editor: visual
 ---
 
-`STUtility2` is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data.
+`semla` is a toolbox for processing, analysis and visualization of spatially resolved transcriptomics data.
 
 ## Installation
 
-To install `STUtility2`, run the following command from R:
+To install `semla`, run the following command from R:
 
 ```{r eval=FALSE}
-remotes::install_github("ludvigla/STUtility2")
+remotes::install_github("ludvigla/semla")
 ```
 
 Load libraries
 
 ```{r warning=FALSE, message=FALSE}
-library(STUtility2)
+library(semla)
 library(tibble)
 ```
 
 ## Load data
 
-Currently, `STUtility2` only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files output by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object with one sample per row that can be used by `readVisiumData`.
+Currently, `semla` only supports 10x Visium data. The easiest way to load data is to use the `readVisiumData` function. First, you need a couple of files output by the 10x Genomics [Space Ranger](https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger) command line tool. These files are then assembled into a `data.frame`-like object with one sample per row that can be used by `readVisiumData`.
 
 -   `samples` : file paths to expression matrices
 
@@ -43,13 +43,13 @@ Currently, `STUtility2` only supports 10x Visium data. The easiest way to load d
 We can also add any number of columns to our `infoTable` which will be passed as meta data columns in our `Seurat` object. This can for example be useful when you want to add clinical metadata, experimental information etc. The example data below is from two Visium data sets, one mouse brain and one mouse colon data set. Here we add a `sample_id` column describing what tissue type we have.
 
 ```{r}
-samples <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"), 
+samples <- Sys.glob(paths = paste0(system.file("extdata", package = "semla"), 
                                    "/*/filtered_feature_bc_matrix.h5"))
-imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+imgs <- Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                                 "/*/spatial/tissue_hires_image.png"))
-spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+spotfiles <- Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                                      "/*/spatial/tissue_positions_list.csv"))
-json <- Sys.glob(paths = paste0(system.file("extdata", package = "STUtility2"),
+json <- Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                                 "/*/spatial/scalefactors_json.json"))
 
 infoTable <- tibble(samples, imgs, spotfiles, json, # Add required columns
@@ -63,7 +63,7 @@ se <- ReadVisiumData(infoTable)
 se
 ```
 
-You can use most Seurat methods as long as they do not require spatial information. It's important to know that the `Seurat` R package stores spatial information (such as H&E images and coordinates) differently that `STUtility2`, meaning that `Seurat` unctions such as `SpatialFeaturePlot` and `FindSpatiallyVariableFeatures` will not work. `STUtility2` comes with it's own suite of tools and methods that you can learn more about in other tutorials.
+You can use most Seurat methods as long as they do not require spatial information. It's important to know that the `Seurat` R package stores spatial information (such as H&E images and coordinates) differently that `semla`, meaning that `Seurat` unctions such as `SpatialFeaturePlot` and `FindSpatiallyVariableFeatures` will not work. `semla` comes with it's own suite of tools and methods that you can learn more about in other tutorials.
 
 If you need to access the spatial data, such as images and coordinates, you can use the `GetStaffli` function on your `Seurat` object.
 
@@ -80,4 +80,4 @@ ImagePlot(se)
 
 This should be enough to get you started with the rest of the tutorials.
 
-NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `STUtility2`. Instead, use the `SubsetSTData` and `MergeSTData` functions.
+NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `semla`. Instead, use the `SubsetSTData` and `MergeSTData` functions.
