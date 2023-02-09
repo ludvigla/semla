@@ -91,7 +91,7 @@ RunNNLS.default <- function (
 
   # Run NNLS
   if (verbose) cli_alert_info("Predicting cell type proportions with NNLS for {ncol(W)} cell types")
-  proj_expr <- RcppML::project(w = W, A = object, L1 = L1, ...)
+  proj_expr <- RcppML::project(W, object, L1 = L1, ...)
 
   # Convert predicted values to proportions
   prop <- apply(proj_expr, 2, function(x) {prop.table(x)})
