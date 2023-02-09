@@ -170,8 +170,6 @@ RigidTransformImages.default <- function (
   if (!all(c("full_width", "full_height") %in% colnames(object)))
     abort("Couldn't find image dimensions in `object`, expected columns 'full_width' and 'full_height'")
 
-  .check_transforms(object)
-
   # Check image
   if (!inherits(image, what = c("StoredSpatialImage", "raster", "character", "magick-image")))
     abort(glue("Invalid class {class(image)} of 'image', expected one of ",
