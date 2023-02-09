@@ -15,3 +15,5 @@ yarn.lock
 vignettes/bc_visium/
 vignettes/R_objects/
 vignettes/demo_data/
+BC_data/
+demo_data/
