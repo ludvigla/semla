@@ -76,6 +76,7 @@ Collate:
     'checks.R'
     'generics.R'
     'cell_type_prediction.R'
+    'cell_type_prediction_mixed.R'
     'cut_spatial_network.R'
     'cut_spatial_network_utils.R'
     'spatial_utils.R'
