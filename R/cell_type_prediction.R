@@ -91,7 +91,7 @@ RunNNLS.default <- function (
 
   # Run NNLS
   if (verbose) cli_alert_info("Predicting cell type proportions with NNLS for {ncol(W)} cell types")
-  proj_expr <- RcppML::project(W, object, L1 = L1, ...)
+  proj_expr <- RcppML::project(object, W, L1 = L1, ...)
 
   # Convert predicted values to proportions
   prop <- apply(proj_expr, 2, function(x) {prop.table(x)})
@@ -223,6 +223,7 @@ RunNNLS.Seurat <- function (
 #' @param st_assay Assay used for spatial data
 #' @param assay_name Assay name for returned data. Only used if `return_as_dimred=FALSE`
 #' @param dimred_name Name for `DimReduc` object. Only used if `return_as_dimred=TRUE`
+#' @param dimred_prefix Prefix for `DimReduc` object vectors.
 #' @param verbose Print messages
 #'
 #' @import glue
@@ -238,18 +239,19 @@ RunNNLS.Seurat <- function (
     st_assay,
     assay_name,
     dimred_name,
+    dimred_prefix = "cFactor_",
     verbose
 ) {
   # Return results as a DimReduc object or an Assay object
   if (return_as_dimred) {
     if (verbose) cli_alert_info("Returning results as a 'DimReduc' object")
     prop <- t(prop)
-    colnames(prop) <- paste0("cFactor_", 1:ncol(prop))
+    colnames(prop) <- paste0(dimred_prefix, 1:ncol(prop))
     feature_loadings <- W
-    colnames(feature_loadings) <- paste0("cFactor_", 1:ncol(prop))
+    colnames(feature_loadings) <- paste0(dimred_prefix, 1:ncol(prop))
     props_dimreduc <- CreateDimReducObject(embeddings = prop,
                                            loadings = feature_loadings,
-                                           key = "cFactor_",
+                                           key = dimred_prefix,
                                            assay = st_assay)
     st_object[[dimred_name]] <- props_dimreduc
   } else {
