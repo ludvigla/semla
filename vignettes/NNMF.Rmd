@@ -13,7 +13,7 @@ We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package
 
 `RcppML` is available on [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html) and [GitHub](https://github.com/zdebruine/RcppML), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
 
-```{r include=FALSE}
+```{r include=FALSE, eval=FALSE}
 devtools::install_github("zdebruine/RcppML")
 # devtools::install_github("zdebruine/singlet", force = T)
 ```
