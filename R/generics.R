@@ -316,3 +316,28 @@ RunAlignment <- function(object, ...) {
 RunNNLS <- function(object, ...) {
   UseMethod(generic = "RunNNLS", object = object)
 }
+
+#' @title Mixed cell type prediction with NNLS
+#' 
+#' @description
+#'
+#' This function can be used to obtain proportion estimates for a mixture of cell types 
+#' and unknown factors. The input spatial expression matrix is first deconvolved using
+#' Non-negative Matrix Factorization (NMF) with the rank set to number of cell types + k 
+#' additional factors. The estimated factor expression profiles are are then compared with 
+#' the cell type expression profiles by computing pairwise correlation scores. 
+#' Factor expression profiles with the lowest correlation scores are kept and combined
+#' with the cell type expression profiles to predict proportions directly from the spatial
+#' data using Non-negative Least Squares (NNLS).
+#'
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname celltype-prediction-mixed
+#'
+#' @export
+#'
+#' @md
+RunMixedNNLS <- function(object, ...) {
+  UseMethod(generic = "RunMixedNNLS", object = object)
+}

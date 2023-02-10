@@ -120,6 +120,11 @@ se_allen <- se_allen |>
 
 ```
 
+```{r eval=FALSE, include=FALSE}
+saveRDS(se_brain_spatial, "~/10x_data/R_objects/se_brain_spatial")
+```
+
+
 ```{r include=FALSE}
 
 se_allen <- readRDS("~/10x_data/R_objects/allen_brain")
