@@ -214,6 +214,10 @@ PlotFeatureLoadings <- function (
     }
   } else {
     stopifnot(length(dims) > 1)
+    
+    # Convert dim to factor
+    dimred_data$dim <- factor(dimred_data$dim, levels = dimred_data$dim |> unique())
+    
     top_features <- dimred_data |>
       group_by(dim) |>
       arrange(-value) |>
@@ -221,6 +225,7 @@ PlotFeatureLoadings <- function (
       pull(name) |>
       unique() |>
       rev()
+    
     # Subset dimred data
     dimred_data_subset <- dimred_data |>
       group_by(dim) |>
@@ -231,7 +236,9 @@ PlotFeatureLoadings <- function (
     p <- ggplot(dimred_data_subset, aes(dim, name, fill = value_scaled)) +
       geom_tile() +
       scale_fill_gradientn(colours = gradient_colors) +
-      theme(panel.background = element_blank(), axis.text = element_text(colour = "black")) +
+      theme(panel.background = element_blank(), 
+            axis.text.y = element_text(colour = "black"), 
+            axis.text.x = element_text(colour = "black", angle = 60, hjust = 1)) +
       labs(x = "", y = "Feature name", fill = "scaled\nFeature\nLoading")
   }
 
