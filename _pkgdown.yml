@@ -1,6 +1,8 @@
 url: https://ludvigla.github.io/semla/
+
 home:
   title: analysis of SRT data
+
 authors:
   Ludvig Larsson:
     href: https://github.com/ludvigla
@@ -9,11 +11,14 @@ authors:
   Spatial Research:
     href: https://www.spatialresearch.org/
     html: "<img src='man/figures/sr-logo.png' height='36' alt='spatialresearch'/>"
+
 template:
   bootstrap: 5
   bootswatch: lumen
+
 development:
   mode: auto
+
 navbar:
   type: inverse
   structure:
@@ -26,6 +31,10 @@ navbar:
     - search
     - github
   components:
+    github:
+      icon: fa-github
+      href: https://github.com/ludvigla/semla
+      aria-label: GitHub
     articles:
       text: Tutorials
       menu:
