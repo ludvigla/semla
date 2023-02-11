@@ -1,6 +1,10 @@
 
 # semla <img src="man/figures/logo.png" align="right" height="120"/>
 
+<!-- badges: start -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main)
+<!-- badges: end -->
 
 
 `semla` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization. 
