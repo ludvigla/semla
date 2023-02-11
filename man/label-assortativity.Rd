@@ -8,7 +8,7 @@ RunLabelAssortativityTest(
   object,
   column_name,
   n_permutations = 100,
-  n_cores = parallel::detectCores() - 1,
+  nCores = parallel::detectCores() - 1,
   seed = 123,
   verbose = TRUE
 )
@@ -23,7 +23,7 @@ RunLabelAssortativityTest(
 results. A lower number of permutations will result in high standard deviations and thus more
 unreliable output}
 
-\item{n_cores}{Number of cores [default: parallel::detectCores() - 1]}
+\item{nCores}{Number of cores [default: parallel::detectCores() - 1]}
 
 \item{seed}{A seed to use for reproducibility [default: 123]}
 
@@ -73,7 +73,7 @@ se <- se |>
 res <- RunLabelAssortativityTest(object = se,
                                  column_name = "seurat_clusters",
                                  n_permutations = 100,
-                                 n_cores = 2)
+                                 nCores = 2)
 
 res |> arrange(desc(avg_k_scaled))
 

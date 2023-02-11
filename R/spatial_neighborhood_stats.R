@@ -31,7 +31,7 @@ NULL
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable z-scores.
 #' @param seed A seed for reproducibility [default: 123]
-#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
+#' @param nCores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label pair.
@@ -41,6 +41,7 @@ NULL
 #' @import tibble
 #' @importFrom tidyr crossing replace_na
 #' @importFrom rlang abort
+#' @importFrom parallel detectCores
 #'
 #' @rdname neighborhood-enrichment
 #' @family spatial-methods
@@ -68,8 +69,8 @@ NULL
 #' # Run Neigborhood Enrichment Analysis
 #' res <- RunNeighborhoodEnrichmentTest(object = se,
 #'                                      column_name = "seurat_clusters",
-#'                                      n_permutations = 500,
-#'                                      n_cores = 2)
+#'                                      n_permutations = 100,
+#'                                      nCores = 2)
 #'
 #' res |> arrange(desc(abs(z_score)))
 #'
@@ -80,7 +81,7 @@ RunNeighborhoodEnrichmentTest <- function(
   column_name,
   column_labels = NA,
   n_permutations = 200,
-  n_cores = parallel::detectCores() - 1,
+  nCores = parallel::detectCores() - 1,
   seed = 123,
   verbose = TRUE
 ){
@@ -100,6 +101,21 @@ RunNeighborhoodEnrichmentTest <- function(
     if (length(unique(column_labels))<=1) rlang::abort("Provided unique 'column_labels' needs to be more than 1.")
     if (sum(column_labels %in% unique(object[[column_name]][,1])) < length(column_labels)) rlang::abort("Some of the provided 'column_labels' can not be found among the 'column_name' labels. Please provide valid 'column_labels'.")
   }
+  
+  # Define multicore lapply function depending on OS
+  if (!.Platform$OS.type %in% c("windows", "unix")) {
+    # Skip threading and use lapply instead
+    if (verbose) cli_alert_danger("Threading not supported. Using single thread.")
+    parLapplier <-  function(X, FUN, nCores) {
+      res <- lapply(X, FUN)
+      return(res)
+    }
+  } else {
+    parLapplier <- switch(.Platform$OS.type,
+                          "windows" = .winLapply,
+                          "unix" = .unixLapply)
+  }
+
 
   # Start analysis
   if (verbose) cli_h2("Running Neighborhood Enrichment Analysis")
@@ -156,7 +172,6 @@ RunNeighborhoodEnrichmentTest <- function(
     left_join(y = edge_table_stats |> select(label_label, edges), by = "label_label") |>
     mutate_at("edges", ~tidyr::replace_na(., 0))
 
-  if (verbose) message("")
   if (verbose) cli_alert_success("Observed label adjacency calculations complete")
 
 
@@ -165,11 +180,14 @@ RunNeighborhoodEnrichmentTest <- function(
   if (verbose & n_permutations < 50) {
     cli_alert_warning("The number of selected permutations is low (<50). Consider increasing 'n_permutations' for more robust results")
   }
-
+  if (nCores > (detectCores() - 1)) {
+    nCores <- detectCores() - 1
+    if (verbose) cli_alert_info("Using {nCores} threads")
+  }
   # Create random labels
   perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
-  perm_edge_list <- parallel::mclapply(1:n_permutations, function(i){
+  perm_edge_list <- parLapplier(1:n_permutations, function(i){
 
     perm_edge_table <- spatnet |>
       mutate(label_label = paste(paste0("Label_", perm_data[spatnet$from, i]),
@@ -187,8 +205,7 @@ RunNeighborhoodEnrichmentTest <- function(
 
     return(perm_edge_table_stats)
     },
-    mc.cores = n_cores,
-    mc.preschedule = T
+    nCores = nCores
   )
   if (verbose) cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
 
@@ -244,7 +261,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #' results. A lower number of permutations will result in high standard deviations and thus more
 #' unreliable output
 #' @param seed A seed to use for reproducibility [default: 123]
-#' @param n_cores Number of cores [default: parallel::detectCores() - 1]
+#' @param nCores Number of cores [default: parallel::detectCores() - 1]
 #' @param verbose Print messages [default: TRUE]
 #'
 #' @return A tibble with scores for each label.
@@ -253,6 +270,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #' @import cli
 #' @import tibble
 #' @importFrom rlang abort
+#' @importFrom parallel detectCores
 #'
 #' @rdname label-assortativity
 #' @family spatial-methods
@@ -281,7 +299,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #' res <- RunLabelAssortativityTest(object = se,
 #'                                  column_name = "seurat_clusters",
 #'                                  n_permutations = 100,
-#'                                  n_cores = 2)
+#'                                  nCores = 2)
 #'
 #' res |> arrange(desc(avg_k_scaled))
 #'
@@ -291,7 +309,7 @@ RunLabelAssortativityTest <- function(
     object,
     column_name,
     n_permutations = 100,
-    n_cores = parallel::detectCores() - 1,
+    nCores = parallel::detectCores() - 1,
     seed = 123,
     verbose = TRUE
 ){
@@ -305,6 +323,20 @@ RunLabelAssortativityTest <- function(
   # checks
   if (n_permutations != round(n_permutations)) abort("Invalid input for 'n_permutations', expected a numeric integer.")
   if (n_permutations <= 1) abort("Invalid input for 'n_permutations', needs to be more than 1.")
+  
+  # Define multicore lapply function depending on OS
+  if (!.Platform$OS.type %in% c("windows", "unix")) {
+    # Skip threading and use lapply instead
+    if (verbose) cli_alert_danger("Threading not supported. Using single thread.")
+    parLapplier <-  function(X, FUN, nCores) {
+      res <- lapply(X, FUN)
+      return(res)
+    }
+  } else {
+    parLapplier <- switch(.Platform$OS.type,
+                          "windows" = .winLapply,
+                          "unix" = .unixLapply)
+  }
 
   # Start analysis
   if (verbose) cli_h2("Running Label Assortativity Test")
@@ -337,7 +369,6 @@ RunLabelAssortativityTest <- function(
   obs_k_stats$label <- factor(obs_k_stats$label, levels = unique_labels)
   obs_k_stats <- obs_k_stats |> arrange(label)
 
-  if (verbose) message("")
   if (verbose) cli_alert_success("Observed label average degree calculations complete")
 
   # Randomise labels and count k per label
@@ -345,12 +376,15 @@ RunLabelAssortativityTest <- function(
   if (verbose & n_permutations < 25) {
     cli_alert_warning("The number of selected permutations is low (<25). Consider increasing 'n_permutations' for more robust results")
   }
-
+  if (nCores > (detectCores() - 1)) {
+    nCores <- detectCores() - 1
+    if (verbose) cli_alert_info("Using {nCores} threads")
+  }
   # Create random labels
   perm_data <- .randomize_label_ids(object, column_name, n_permutations, seed)
 
   # Iterate randomized labels
-  perm_k_stats_list <- parallel::mclapply(1:n_permutations, function(i){
+  perm_k_stats_list <- parLapplier(1:n_permutations, function(i){
 
     spatnet$random_label_from <- perm_data[spatnet$from, i]
     spatnet$random_label_to <- perm_data[spatnet$to, i]
@@ -372,8 +406,7 @@ RunLabelAssortativityTest <- function(
       arrange(label) |>
       tibble::add_column(iteration = i)
     },
-    mc.cores = n_cores,
-    mc.preschedule = TRUE
+    nCores = nCores
   )
   if (verbose) cli_alert_success("Randomized label adjacency calculations complete from {n_permutations} iterations")
 
@@ -387,7 +420,7 @@ RunLabelAssortativityTest <- function(
     ungroup()
 
   if (verbose & max(perm_k_res$min_avg_k_sd) > 0.1) {
-    cli_alert_warning("The standard deviation of some of the permuted results is relatively high (>0.1) which may indicate unreliable results. A possible solution could be to increase the number of permutations ('n_permutations').")
+    cli_alert_warning("The standard deviation of some of the permuted results is relatively high (>0.1) which may indicate unreliable results.\nA possible solution could be to increase the number of permutations ('n_permutations').")
   }
 
   # Prepare results output and compute scaled avg k
