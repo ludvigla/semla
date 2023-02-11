@@ -1,5 +1,5 @@
 
-# semla <img src="man/figures/logo.png" alight="right" height="76"/>
+# semla <img src="man/figures/logo.png" align="right" height="76"/>
 
 
 
