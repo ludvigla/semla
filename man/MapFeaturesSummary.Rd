@@ -115,18 +115,11 @@ distribution of the selected feature next to the spatial feature plot.
 Note that currently, only 1 feature can be selected
 }
 \examples{
+# Prepare Seurat object
+se <- readRDS(system.file("extdata/mousebrain",
+                          "se_mbrain",
+                           package = "semla"))
 
-se_mbrain <- readRDS(system.file("extdata/mousebrain",
-                                 "se_mbrain",
-                                 package = "semla"))
-se_mbrain$sample_id <- "mousebrain"
-se_mcolon <- readRDS(system.file("extdata/mousecolon",
-                                 "se_mcolon",
-                                 package = "semla"))
-se_mcolon$sample_id <- "mousecolon"
-se <- MergeSTData(se_mbrain, se_mcolon)
-
-# Create Seurat object
 se <- se |>
   NormalizeData()
 

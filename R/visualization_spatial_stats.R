@@ -34,18 +34,11 @@ NULL
 #' @return a `patchwork` object
 #'
 #' @examples
+#' # Prepare Seurat object
+#' se <- readRDS(system.file("extdata/mousebrain",
+#'                           "se_mbrain",
+#'                            package = "semla"))
 #'
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain",
-#'                                  "se_mbrain",
-#'                                  package = "semla"))
-#' se_mbrain$sample_id <- "mousebrain"
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon",
-#'                                  "se_mcolon",
-#'                                  package = "semla"))
-#' se_mcolon$sample_id <- "mousecolon"
-#' se <- MergeSTData(se_mbrain, se_mcolon)
-#'
-#' # Create Seurat object
 #' se <- se |>
 #'   NormalizeData()
 #'
@@ -239,21 +232,11 @@ MapFeaturesSummary <- function (
 #' @return a `patchwork` object
 #'
 #' @examples
+#' # Prepare Seurat object
+#' se <- readRDS(system.file("extdata/mousebrain",
+#'                           "se_mbrain",
+#'                            package = "semla"))
 #'
-#' library(semla)
-#'
-#' # Load data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain",
-#'                                  "se_mbrain",
-#'                                  package = "semla"))
-#' se_mbrain$sample_id <- "mousebrain"
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon",
-#'                                  "se_mcolon",
-#'                                  package = "semla"))
-#' se_mcolon$sample_id <- "mousecolon"
-#' se <- MergeSTData(se_mbrain, se_mcolon)
-#'
-#' # Create Seurat object
 #' se <- se |>
 #'   NormalizeData()  |>
 #'   ScaleData() |>
