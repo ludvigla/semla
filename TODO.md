@@ -105,6 +105,7 @@ example be dimensionality reduction results instead.
 - [x] `DisconnectRegions` : separates spatially disconnected regions 
 - [x] `NeighbourhoodEnrichmentTest` : Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).
 - [x] `LabelAssortativityTest` : Inspired by Newman's Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.
+- [] Add `CentralityScore` method?
 
 ### Staffli
 
