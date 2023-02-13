@@ -1,15 +1,10 @@
 ---
 title: "Subset and merge"
 date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
-format: 
-  html:
-    toc: true
-    toc-depth: 3
-    embed-resources: true
-    theme:
-      light: flatly
-      dark: darkly
+format: html
 editor: visual
+editor_options: 
+  chunk_output_type: inline
 ---
 
 Subseting and merging data is done using the two functions `SubsetSTData()` and `MergeSTData()`.
