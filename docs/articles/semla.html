@@ -43,13 +43,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
+<li class="active nav-item">
   <a class="nav-link" href="../articles/semla.html">Get started</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
     <h6 class="dropdown-header" data-toc-skip>Intro</h6>
@@ -106,107 +106,39 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get started</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 13 February
-2023</h4>
       
       
-      <div class="d-none name"><code>getting_started.rmd</code></div>
+      <div class="d-none name"><code>semla.Rmd</code></div>
     </div>
 
     
     
-<p><code>semla</code> is a toolbox for processing, analysis and
-visualization of spatially resolved transcriptomics data.</p>
+<p>The goal with this package is to provide sample, fast and flexible
+methods for processing, analysis and visualization of spatially resolved
+transcriptomics data. Currently, the package only supports <a href="https://satijalab.org/seurat/" class="external-link">Seurat</a> objects.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>To install <code>semla</code>, run the following command from R:</p>
+<p><code>semla</code> is currently only available as a development
+version on GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ludvigla/semla"</span><span class="op">)</span></span></code></pre></div>
-<p>Load libraries</p>
+<p>Load library</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"semla"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
+<h2 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
 </h2>
-<p>Currently, <code>semla</code> exclusively supports 10x Visium data.
-The easiest way to load data is to use the <code><a href="../reference/ReadVisiumData.html">ReadVisiumData()</a></code>
-function. First, you need a couple of files output by the 10x Genomics
-<a href="https://support.10xgenomics.com/spatial-gene-expression/software/pipelines/latest/what-is-space-ranger" class="external-link">Space
-Ranger</a> command line tool. These files are then assembled into a
-<code>data.frame</code>-like object with one sample per row that can be
-used by <code><a href="../reference/ReadVisiumData.html">ReadVisiumData()</a></code>.</p>
-<ul>
-<li><p><code>samples</code> : file paths to expression matrices</p></li>
-<li><p><code>imgs</code> : file paths to H&amp;E images</p></li>
-<li><p><code>spotfiles</code> : file paths to spot coordinate
-tables</p></li>
-<li><p><code>json</code> : file paths to scale factor json
-files</p></li>
-</ul>
-<p>We can also add any number of columns to our <code>infoTable</code>
-which will be passed as meta data columns in our <code>Seurat</code>
-object. This can for example be useful when you want to add clinical
-metadata, experimental information etc. The example data below is from
-two Visium data sets, one mouse brain and one mouse colon data set. Here
-we add a <code>sample_id</code> column describing what tissue type we
-have.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_root_directory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span>, <span class="st">"*"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_root_directory</span>, </span>
-<span>                                      <span class="st">"filtered_feature_bc_matrix.h5"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">imgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_root_directory</span>, </span>
-<span>                                   <span class="st">"spatial"</span>, <span class="st">"tissue_hires_image.png"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">spotfiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_root_directory</span>, </span>
-<span>                                        <span class="st">"spatial"</span>, <span class="st">"tissue_positions_list.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">json</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">data_root_directory</span>, </span>
-<span>                                   <span class="st">"spatial"</span>, <span class="st">"scalefactors_json.json"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">infoTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">samples</span>, <span class="va">imgs</span>, <span class="va">spotfiles</span>, <span class="va">json</span>, <span class="co"># Add required columns</span></span>
-<span>                    sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mousebrain"</span>, <span class="st">"mousecolon"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Add additional column</span></span></code></pre></div>
-<p><br></p>
-<p>Now we are ready to load the 10x Visium data into a
-<code>Seurat</code> object:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ReadVisiumData.html">ReadVisiumData</a></span><span class="op">(</span><span class="va">infoTable</span><span class="op">)</span></span>
-<span><span class="va">se</span></span></code></pre></div>
-<pre><code><span><span class="co">## An object of class Seurat </span></span>
-<span><span class="co">## 188 features across 5164 samples within 1 assay </span></span>
-<span><span class="co">## Active assay: Spatial (188 features, 0 variable features)</span></span></code></pre>
-<p><br></p>
-<p>You can use most Seurat methods as long as they do not require
-spatial information. It’s important to know that the <code>Seurat</code>
-R package stores spatial information (such as H&amp;E images and
-coordinates) differently than <code>semla</code>, meaning that
-<code>Seurat</code> functions such as <code>SpatialFeaturePlot()</code>
-and <code>FindSpatiallyVariableFeatures()</code> will <em>not</em> work.
-<code>semla</code> comes with it’s own suite of tools and methods that
-you can learn more about in other tutorials.</p>
-<p><br></p>
-<p>If you need to access the spatial data, such as images and
-coordinates, you can use the <code>GetStaffli</code> function on your
-<code>Seurat</code> object.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spatial_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
-<p><br></p>
-<p>The H&amp;E images are only loaded when <code>LoadImages</code> is
-called on the <code>Seurat</code> object.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
-<p><img src="getting_started_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
-<p>This should be enough to get you started with the rest of the
-tutorials!</p>
-<p>NB: An important thing to know is that some generic functions, such
-as <code>subset</code> and <code>merge</code> should not be used with
-<code>semla</code>. Instead, use the <code><a href="../reference/subset.html">SubsetSTData()</a></code> and
-<code><a href="../reference/merge.html">MergeSTData()</a></code> functions - See the vignette <a href="https://ludvigla.github.io/semla/articles/subset_and_merge.html">Subset/merge</a>.</p>
+<p>The package is written by <em>Ludvig Larsson</em> and <em>Lovisa
+Franzén</em> who are both part of the <a href="https://www.spatialresearch.org/" class="external-link">Spatial Research lab</a> at <a href="https://www.scilifelab.se/" class="external-link">SciLifeLab</a> in Stockholm.</p>
+</div>
+<div class="section level2">
+<h2 id="publication">Publication<a class="anchor" aria-label="anchor" href="#publication"></a>
+</h2>
+<p>If you use <code>semla</code> in published research, please cite the
+following article:</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
