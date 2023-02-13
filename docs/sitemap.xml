@@ -1,246 +1,273 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/404.html</loc>
+    <loc>https://ludvigla.github.io/semla/404.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/LICENSE-text.html</loc>
+    <loc>https://ludvigla.github.io/semla/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/LICENSE.html</loc>
+    <loc>https://ludvigla.github.io/semla/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/TODO.html</loc>
+    <loc>https://ludvigla.github.io/semla/TODO.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/STUtility2.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/NNMF.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/advanced_visualization.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/STUtility2.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/categorical_features.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/advanced_visualization.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/cell_type_mapping_with_NNLS.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/categorical_features.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/digital_unrolling.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/feature_viewer.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/digital_unrolling.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/getting_started.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/feature_viewer.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/image_alignment.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/getting_started.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/images_and_coordinates.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/image_alignment.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/index.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/images_and_coordinates.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/numeric_features.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/radial_distances.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/numeric_features.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/region_neighbors.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/radial_distances.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/spatial_statistics_for_labelled_spots.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/region_neighbors.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/articles/subset_and_merge.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/semla.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/authors.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/spatial_autocorrelation.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/index.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/spatial_statistics_for_labelled_spots.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/AdjustTissueCoordinates.html</loc>
+    <loc>https://ludvigla.github.io/semla/articles/subset_and_merge.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/AnglePlot.html</loc>
+    <loc>https://ludvigla.github.io/semla/authors.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/CoordAndImageTransform.html</loc>
+    <loc>https://ludvigla.github.io/semla/index.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/CoordMirror.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/AdjustTissueCoordinates.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/CoordTransform.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/AnglePlot.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/CreateStaffliObject.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/CoordAndImageTransform.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/CutSpatialNetwork.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/CoordMirror.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/FeatureViewer.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/CoordTransform.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/GetImages.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/CreateStaffliObject.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/GetStaffli.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/CutSpatialNetwork.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ImageInfo.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ExportDataForViewer.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ImagePlot.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/FeatureViewer.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ImageTransform.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/GetImages.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ImageTranslate.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/GetStaffli.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/LoadAndMergeMatrices.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ImageInfo.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/LoadSpatialCoordinates.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ImagePlot.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/MapFeaturesSummary.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ImageTransform.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/MapLabelsSummary.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ImageTranslate.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ReadVisiumData.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/LoadAndMergeMatrices.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/STUtility2-package.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/LoadSpatialCoordinates.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/Staffli-class.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/MapFeaturesSummary.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/Staffli-get-methods.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/MapLabelsSummary.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/Staffli-set-methods.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/PlotFeatureLoadings.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/TileImage.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ReadVisiumData.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/celltype-prediction.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/STUtility2-package.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/centroid_angles_plot.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/Staffli-class.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/cor-features.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/Staffli-get-methods.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/disconnect-regions.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/Staffli-set-methods.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/export_coordinates.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/TileImage.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/export_graph.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/UpdateSTUtilityV1Object.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/file_server.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/celltype-prediction-mixed.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ftrviewer-shiny.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/celltype-prediction.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/ftrviewer.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/centroid_angles_plot.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/generate_rigid_transform.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/cor-features.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/get-network.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/disconnect-regions.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/icp.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/export_coordinates.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/index.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/export_graph.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/kabsch.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/file_server.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/label-assortativity.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ftrviewer-shiny.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/load-images.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/ftrviewer.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/local-G.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/generate_rigid_transform.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/manual-transform-images.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/get-network.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/mask-images.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/icp.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/mbrain_dataset.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/mcolon_dataset.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/kabsch.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/merge.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/label-assortativity.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/neighborhood-enrichment.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/load-images.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/osddu-shiny.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/local-G.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/osddu.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/manual-transform-images.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/paper-shiny.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/mask-images.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/paper.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/mbrain_dataset.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/prep_image.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/mcolon_dataset.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/radial-distance.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/merge.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/region-neighbors.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/neighborhood-enrichment.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/show.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/osddu-shiny.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/subset.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/osddu.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/transform-images.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/paper-shiny.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/visualize-features.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/paper.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/visualize-labels.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/prep_image.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/STUtility2/reference/visualize-multiple-features.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/radial-distance.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/region-neighbors.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/scalebar.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/semla-package.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/show.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/subset.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/transform-images.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/visualize-features.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/visualize-labels.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/visualize-multiple-features.html</loc>
   </url>
 </urlset>

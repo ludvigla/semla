@@ -5,8 +5,8 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="STUtility2">
-<title>Visualization of categorical features • STUtility2</title>
+<meta name="description" content="semla">
+<title>Interactve Feature Viewer • semla</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -14,13 +14,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Visualization of categorical features">
-<meta property="og:description" content="STUtility2">
-<meta property="og:image" content="https://ludvigla.github.io/STUtility2/logo.png">
+<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Interactve Feature Viewer">
+<meta property="og:description" content="semla">
+<meta property="og:image" content="https://ludvigla.github.io/semla/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,7 +32,7 @@
 
     <nav class="navbar fixed-top navbar-inverse navbar-expand-lg bg-light"><div class="container">
     
-    <a class="navbar-brand me-2" href="../index.html">STUtility2</a>
+    <a class="navbar-brand me-2" href="../index.html">semla</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
@@ -44,7 +44,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="../articles/STUtility2.html">Get started</a>
+  <a class="nav-link" href="../articles/semla.html">Get started</a>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
@@ -68,10 +68,12 @@
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
     <a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a>
     <a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a>
+    <a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Analysis</h6>
     <a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a>
     <a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a>
+    <a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
@@ -83,7 +85,14 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
@@ -95,8 +104,10 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Visualization of categorical features</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Interactve Feature Viewer</h1>
             
+            <h4 data-toc-skip class="date">Last compiled: 13 February
+2023</h4>
       
       
       <div class="d-none name"><code>feature_viewer.Rmd</code></div>
@@ -104,66 +115,87 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/STUtility2/">STUtility2</a></span><span class="op">)</span></span></code></pre></div>
-<p><code>STUtility2</code>’s Feature Viewer is an interactive
-application that can be run directly from R which makes it possible to
-interactively visualize features present in a <code>Seurat</code> object
-and it also makes it possible to manually annotate spots.</p>
+<p><code>semla</code>’s Feature Viewer is an interactive application
+that can be run directly from R which makes it possible to interactively
+visualize features present in a <code>Seurat</code> object and it also
+makes it possible to manually annotate spots.</p>
 <p>Some of the functionality is similar to what you can do with the <a href="https://www.10xgenomics.com/products/loupe-browser" class="external-link">Loupe
 Browser</a> or the <a href="https://pubmed.ncbi.nlm.nih.gov/30875427/" class="external-link">ST viewer</a> but if
 you are using <code>Seurat</code> (or any other R package) for your
 analyses, it can be cumbersome to import/export results back and forth
 from R.</p>
-<p>Having the option to interactively explore an SRT dataset can be very
-useful. For example, a common task is to manually annotate spots based
-on morphological features of an H&amp;E image which can only be done
-through an interactive application. Moreover, when we map gene
+<p>Having the option to interactively explore an SRT data set can be
+very useful. For example, a common task is to manually annotate spots
+based on morphological features of an H&amp;E image which can only be
+done through an interactive application. Moreover, when we map gene
 expression to our H&amp;E images in R, it is often difficult to
 associate their patterns with small morphological structures. At a quick
 glance, the expression of marker genes associated with small structures
 might appear random in plots, and it is only when we zoom in at the
 H&amp;E image that we can see the tissues and cells that they are
 associated with.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="feature-viewer">Feature viewer<a class="anchor" aria-label="anchor" href="#feature-viewer"></a>
 </h2>
-<p>Using our mouse brain dataset as an example, we’ll go through how to
-use the <code>FeatureViewer</code> application.</p>
+<p>Using our mouse brain data set as an example, we’ll go through how to
+use the <code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></code> application.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"STUtility2"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## ── <span style="font-weight: bold;">Load H&amp;E images</span> ──</span></span></code></pre>
+<pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/91/twz8ld_x3f98sr9yc2hq9xpn47blx2/T/RtmprkM4Jp/temp_libpath183557ba4179/STUtility2/extdata/mousecolon/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 400x443 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
 <p><img src="feature_viewer_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<p>To initiate the viewer, we call the <code>FeatureViewer</code>
-function with our <code>Seurat</code> object as input. When the app is
-closed, any changes made in the app will be returned to our
-<code>Seurat</code> object, so we need to call
-<code>se &lt;- FeatureViewer(se)</code>. it is important to note that
-the application should be exited by clicking on the save icon in the top
-right corner, otherwise any changes that we’ve made will not be returned
-to R.</p>
-<p>NB: Like most functions provided in <code>STUtility2</code>,
+<div class="section level3">
+<h3 id="data-export">Data export<a class="anchor" aria-label="anchor" href="#data-export"></a>
+</h3>
+<p>To initiate the viewer, we call the <code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></code>
+function with our <code>Seurat</code> object as input.
+<code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></code> will automatically attempt to export all
+necessary files to a temporary directory (default) or a specified
+directory (<code>datadir</code>). These files include tiled H&amp;E
+images, spot coordinates and an additional meta data file with image
+related information. If you are working with a larger dataset with
+multiple tissue sections, you probably want to avoid exporting these
+files each time you open the viewer. You can find more instruction
+further down in this tutorial under <strong>Advanced</strong>.</p>
+</div>
+<div class="section level3">
+<h3 id="running-the-interactive-viewer">Running the interactive viewer<a class="anchor" aria-label="anchor" href="#running-the-interactive-viewer"></a>
+</h3>
+<p>When the app is closed, any changes made in the app will be returned
+to our <code>Seurat</code> object, so we need to call
+<code>se &lt;- FeatureViewer(se)</code> to save changes to our
+<code>Seurat</code> object. It is important to note that the application
+should be exited by clicking on the ‘<strong>save</strong>’ icon in the
+top right corner of the app, otherwise any changes that we’ve made will
+not be returned to R.</p>
+<p>NB: Like most functions provided in <code>semla</code>,
 <code>FeatureViewer</code> only works with <code>Seurat</code> objects
-processed with <code>STUtility2</code>.</p>
+processed with <code>semla</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
-<p>The app should open in your default browser: <img src="feature_viewer_start.png"></p>
-<p>To get started, you can click on the question mark icon which will
-give instructions on how to use the app: <img src="help_menu.png"></p>
+<p>The app should open in your default browser:</p>
+<p><img src="feature_viewer_start.png"></p>
+<p><br></p>
+<p>To get started, you can click on the ‘<strong>question mark</strong>’
+icon which will give instructions on how to use the app:</p>
+<p><img src="help_menu.png"></p>
+</div>
 <div class="section level3">
 <h3 id="zoom-and-pan">Zoom and pan<a class="anchor" aria-label="anchor" href="#zoom-and-pan"></a>
 </h3>
 <p>You can zoom in and out using the mouse wheel and pan by dragging
 clicking and dragging the H&amp;E image. The opacity slider allows us to
-hide spots if we wish to view clear the view of the H&amp;E image: <img src="zoom_in.png"></p>
+hide spots if we wish to view clear the view of the H&amp;E image:</p>
+<p><img src="zoom_in.png"></p>
 </div>
 <div class="section level3">
 <h3 id="selecting-features">Selecting features<a class="anchor" aria-label="anchor" href="#selecting-features"></a>
@@ -184,16 +216,17 @@ you want to select raw or scaled counts, you can specify what
 <h3 id="other-options">Other options<a class="anchor" aria-label="anchor" href="#other-options"></a>
 </h3>
 <ul>
-<li><p>opacity slider: scale spot opacity.</p></li>
-<li><p>scale alpha: scale the spot opacity of numeric features based on
-feature values.</p></li>
-<li><p>Trim slider: trim lower and upper bounds of the selected numeric
-feature values. 0 corresponds to the minimum value and 1 corresponds to
-the maximum value.</p></li>
-<li><p>Colorscale: select a color palette for numeric features.</p></li>
-<li><p>center zero: centers the color scale at 0 which can be useful
-when visualizing centered values, for example principal component
-vectors or scaled expression. If center zero is active, it is
+<li><p><strong>opacity slider</strong>: scale spot opacity.</p></li>
+<li><p><strong>scale alpha</strong>: scale the spot opacity of numeric
+features based on feature values.</p></li>
+<li><p><strong>Trim slider</strong>: trim lower and upper bounds of the
+selected numeric feature values. 0 corresponds to the minimum value and
+1 corresponds to the maximum value.</p></li>
+<li><p><strong>Colorscale</strong>: select a color palette for numeric
+features.</p></li>
+<li><p><strong>center zero</strong>: centers the color scale at 0 which
+can be useful when visualizing centered values, for example principal
+component vectors or scaled expression. If center zero is active, it is
 appropriate to use a divergent color palette from ‘Colorscales’, such as
 <code>RdBu</code>.</p></li>
 </ul>
@@ -214,21 +247,21 @@ category and press <code>ENTER</code> to update the view.</p>
 called <code>orig.ident</code> which currently only contains one label.
 When a categorical variable is selected, we get the option to add new
 labels. Before we can add a new label, we need to select spots with the
-lasso tool in the top left corner of the toolbar:</p>
+‘<strong>lasso tool</strong>’ in the top left corner of the toolbar:</p>
 <p><img src="lasso_tool.png"></p>
 <p>Select a color from the color picker, write a new label name and
 press <code>ENTER</code> to save the changes:</p>
 <p><img src="new_label.png"></p>
-<p>One a new label has been added, it should pop up in the color
+<p>Once a new label has been added, it should pop up in the color
 legend.</p>
 <p>Labels can share the same color, but if you wish to update the color
 of an existing label, you can select spots from the same selection,
-select a new color, write the same label name and press ENTER. This will
-update the color for all spots with that label.</p>
-<p>Unfortunately, the lasso tool will freeze the current view, meaning
-that you will not be able to zoom and pan while the lasso tool is
-active. Deactivate the lasso tool to enable navigation in the
-viewer.</p>
+select a new color, write the same label name and press
+<code>ENTER</code>. This will update the color for all spots with that
+label.</p>
+<p>NB: The lasso tool will freeze the current view, meaning that you
+will not be able to zoom and pan while the lasso tool is active.
+Deactivate the lasso tool to enable navigation in the viewer.</p>
 </div>
 <div class="section level3">
 <h3 id="add-new-categories">Add new categories<a class="anchor" aria-label="anchor" href="#add-new-categories"></a>
@@ -241,8 +274,59 @@ box, delete the text, write a new category name and press
 <h3 id="save-changes">Save changes<a class="anchor" aria-label="anchor" href="#save-changes"></a>
 </h3>
 <p>To continue working in R you will need to quit the application by
-pressing the ‘save &amp; quit’ icon in the top right corner of the
-toolbar.</p>
+pressing the ‘<strong>save &amp; quit</strong>’ icon in the top right
+corner of the toolbar.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="advanced">Advanced<a class="anchor" aria-label="anchor" href="#advanced"></a>
+</h2>
+<div class="section level3">
+<h3 id="export-data">Export data<a class="anchor" aria-label="anchor" href="#export-data"></a>
+</h3>
+<p>You export all necessary data for the viewer to a specific output
+directory with the <code><a href="../reference/ExportDataForViewer.html">ExportDataForViewer()</a></code> function. This can
+come in handy when you are working with larger datasets and you don’t
+want re-export data every time you run the viewer. The output directory
+is specified with the <code>outdir</code> argument which needs to be an
+existing writable directory. If the files already exist in this
+location, you will need to set <code>overwrite=TRUE</code> if you want
+to overwrite the files.</p>
+<p><code><a href="../reference/ExportDataForViewer.html">ExportDataForViewer()</a></code> creates a new directory inside
+<code>outdir</code> called ‘viewer_data’, so the full path will be
+<outdir>/viewer_data. This path is returned by the function to be passed
+to <code>FeatureViewer</code>. You can also specify what samples to
+export data for with the <code>sampleIDs</code> argument. For example,
+if you chose to export one section 1 (sampleIDs=1), you will only be
+able to view this section with <code>FeatureViewer</code>.</outdir></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datapath</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ExportDataForViewer.html">ExportDataForViewer</a></span><span class="op">(</span><span class="va">se</span>, sampleIDs <span class="op">=</span> <span class="fl">1</span>, outdir <span class="op">=</span> <span class="st">"~/Downloads/"</span><span class="op">)</span></span></code></pre></div>
+<p>Now we can pass <code>datadir = datapath</code> to
+<code>FeatureViewer</code> and it will load files from that directory
+instead of exporting the files again.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se</span>, datadir <span class="op">=</span> <span class="va">datapath</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="multiple-sections">Multiple sections<a class="anchor" aria-label="anchor" href="#multiple-sections"></a>
+</h3>
+<p>When using multiple datasets, you will be able to select them from
+the <code>Sample</code> drop-down list in the viewer. Note that when
+working with many datasets, the app might slow down considerably. In
+this case, it might be better to view only a few selected sections
+specified with <code>sampleIDs</code>.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, <span class="st">"se_mbrain"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/merge.html">MergeSTData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="va">se_mcolon</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
+<hr>
+<details open><summary><strong>Package version</strong>
+</summary><ul>
+<li>
+<code>semla</code>: 0.1.0</li>
+</ul></details><p><br></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -253,12 +337,12 @@ toolbar.</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>.</p>
+<p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
