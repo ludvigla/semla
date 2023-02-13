@@ -104,6 +104,7 @@ reference:
   - AnglePlot
   - centroid_angles_plot
   - PlotFeatureLoadings
+  - scalebar
 - subtitle: Interactive viewer
 - contents:
   - FeatureViewer
@@ -138,7 +139,9 @@ reference:
   - RunLabelAssortativityTest
   - RunNeighborhoodEnrichmentTest
 - subtitle: Cell type mapping
-- contents: RunNNLS
+- contents: 
+  - RunNNLS
+  - RunMixedNNLS
 - subtitle: Digital unroll
 - contents:
   - CutSpatialNetwork
@@ -150,8 +153,8 @@ reference:
   - GetImages
   - GetStaffli
   - ImageInfo
-  - '[[,Staffli-method'
-  - '[[<-,Staffli-method'
+  - '[[,Staffli,ANY,ANY-method'
+  - '[[<-,Staffli,ANY,ANY,ANY-method'
   - show,Staffli-method
 - subtitle: Data
 - contents:

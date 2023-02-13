@@ -7,6 +7,8 @@ NULL
 #' Utility function to prepare data for \code{\link{FeatureViewer}}.
 #' The exported JSON file should be exported to the same directory as
 #' the H&E image tiles generated with \code{\link{TileImage}}
+#' 
+#' Coordinates are located outside the H&E images will not be shown in the viewer.
 #'
 #' @param object A `Seurat` object created with `semla`
 #' @param sampleNumber An integer specifying a sample ID to export
@@ -67,13 +69,52 @@ export_coordinates <- function (
   image_info <- GetStaffli(object)@image_info |>
     filter(sampleID == sampleNumber)
   max_imwidth <- image_info[image_info$sampleID == sampleNumber, ]$full_width
+  max_imheight <- image_info[image_info$sampleID == sampleNumber, ]$full_height
+  
+  # Check if image has been padded
+  if ("pad" %in% colnames(image_info)) {
+    if (verbose) cli_alert_warning("Spots located outside of the H&E image(s) will be removed")
+    pad <- strsplit(image_info[image_info$sampleID == sampleNumber, ]$pad, "x") |> unlist() |> as.integer()
+    # Remove spots outside image and subtract padding from coordinates
+    # This is to make sure that the tiled images behave as expected
+    # If spots are located outside of the H&E images, the dimensions 
+    # of the viewer will no longer correspond to the dimensions of the 
+    # H&E image
+    # See reference: https://openseadragon.github.io/examples/viewport-coordinates/
+    spatial_coords <- spatial_coords |> 
+      mutate(pxl_col_in_fullres = pxl_col_in_fullres - pad[1]) |> 
+      mutate(pxl_row_in_fullres = pxl_row_in_fullres - pad[3]) |> 
+      filter(between(x = pxl_col_in_fullres, left = 0, right = max_imwidth - (pad[1] + pad[2]))) |> 
+      filter(between(x = pxl_row_in_fullres, left = 0, right = max_imheight - (pad[3] + pad[4])))
+    # Reduce the image dimensions with padding
+    max_imwidth_reduced <- max_imwidth - (pad[1] + pad[2])
+    max_imheight_reduced <- max_imheight - (pad[3] + pad[4])
+    asp_ratio <- max_imheight_reduced/max_imwidth_reduced
+    # Set ranges for coordinate transformation with reduced image dimensions
+    from_x <- c(0, max_imwidth_reduced)
+    from_y <- c(0, max_imheight_reduced)
+    # The width of the viewer goes from 0 to 1 in openseadragon
+    to_x <- c(0, 1)
+    # The height of the viewer goes from 0 to the aspect ratio
+    to_y <- c(0, asp_ratio)
+  } else {
+    # Set ranges for coordinate transformation with original image dimensions
+    # if no padding is found
+    asp_ratio <- max_imheight/max_imwidth
+    from_x <- c(0, max_imwidth)
+    from_y <- c(0, max_imheight)
+    to_x <- c(0, 1)
+    to_y <- c(0, asp_ratio)
+  }
+  
+  # Transform spatial coordinates using ranges from and to
   spatial_coords <- spatial_coords |>
     mutate(x = pxl_col_in_fullres, y = pxl_row_in_fullres) |>
     select(-pxl_col_in_fullres, -pxl_row_in_fullres) |>
-    mutate(across(x, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, max_imwidth)))) |>
-    mutate(across(y, ~ scales::rescale(x = .x, to = c(0, 1),
-                                       from = c(0, max_imwidth)))) |>
+    mutate(across(x, ~ scales::rescale(x = .x, to = to_x,
+                                       from = from_x))) |>
+    mutate(across(y, ~ scales::rescale(x = .x, to = to_y,
+                                       from = from_y))) |>
     mutate(index = 1:n())
 
   # Put nodes and edges into a list

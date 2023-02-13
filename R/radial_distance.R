@@ -73,6 +73,13 @@ NULL
 #' regions are not allowed when a "search interval" is defined, but single spots without neighbors are
 #' not detected as disconnected components. Single spots will most likely not interfere when calculating
 #' the centroid of the region of interest and can therefore be kept.
+#' @param convert_to_microns Logical specifying if pixel distances should be converted to microns. 
+#' This requires the `dbscan` R package to be installed. When this option sis set to TRUE, the method
+#' will first attempt to estimate the center to center distance between adjacent spots which 
+#' corresponds to 100 microns in Visium. The center to center distance will then be used to 
+#' convert the radial distances. Note that if no spots are adjacent in the dataset or if any other data 
+#' type than Visium is used, the distances will not correspond to micrometers.
+#' 
 #'
 #'
 #' @import dplyr
@@ -201,6 +208,7 @@ RadialDistance.default <- function (
   angles = NULL,
   angles_nbreaks = NULL,
   remove_singletons = TRUE,
+  convert_to_microns = FALSE,
   verbose = TRUE,
   ...
 ) {
@@ -236,19 +244,18 @@ RadialDistance.default <- function (
 
   # Get spatial network
   spatnet <- GetSpatialNetwork(object)
-  spatnet_region <- lapply(spatnet, function(x) {
-    x |>
-      filter(from %in% spots, to %in% spots) |>
-      group_by(from) |>
-      mutate(nn = n())
-  })
+  if (length(spatnet) > 1) {
+    abort(glue("Default method can only handle 1 tissue section at the time, got {length(spatnet)}"))
+  }
+  spatnet_region <- spatnet[[1]] |>
+    filter(from %in% spots, to %in% spots) |>
+    group_by(from) |>
+    mutate(nn = n())
 
   # Check for singletons
   if (remove_singletons) {
-    spatnet_region2 <- lapply(spatnet_region, function(x) {
-      x |> filter(nn > 1)
-    })
-    spots_filtered <- lapply(spatnet_region2, function(x) x$from) |> unlist() |> unique()
+    spatnet_region2 <- spatnet_region |> filter(nn > 1)
+    spots_filtered <- spatnet_region2$from |> unlist() |> unique()
     if (verbose) cli_alert_info("Removing {length(spots) - length(spots_filtered)} spots with 0 neighbors.")
     spots <- spots_filtered
   }
@@ -285,6 +292,17 @@ RadialDistance.default <- function (
   radial_dists_inside <- setNames(knn_spatial_inside$dist[, 1, drop = TRUE], nm = object$barcode[inside_spots_indices])
   radial_dists[names(radial_dists_outside)] <- radial_dists_outside
   radial_dists[names(radial_dists_inside)] <- -radial_dists_inside
+  
+  # Convert to microns
+  if (convert_to_microns) {
+    if (!requireNamespace("dbscan")) {
+      install.packages("dbscan")
+    }
+    center_to_center_pixel_distances <- sapply(object |> group_by(sampleID) |> group_split(), function(xy) {
+      kNN(x = xy |> select(x, y), k = 1)$dist |> min()
+    })
+    radial_dists <- radial_dists/(center_to_center_pixel_distances/100)
+  }
 
   # Split radial distances by angle if angles are specified
   if (!is.null(angles_nbreaks)) {
@@ -293,13 +311,8 @@ RadialDistance.default <- function (
     angles <- angles %||% c(0, 360)
   }
   if (!is.null(angles)) {
-    # Check if there are singletons
-    # spatnet_region <- lapply(names(spatnet_region), function(nm) {
-    #   singletons <- spatnet_region[[nm]] |>
-    #     filter(nn == 1)
-    # })
     # Check angles
-    c(angles, centroids) %<-% .check_angles(spatnet_region, object, spots, angles, angles_nbreaks, verbose)
+    c(angles, centroids) %<-% .check_angles(list(spatnet_region) |> setNames(nm = "1"), object, spots, angles, angles_nbreaks, verbose)
     # Calculate angles from center point
     dist_angle <- object |>
       group_by(sampleID) |>
@@ -396,6 +409,7 @@ RadialDistance.Seurat <- function (
     angles = NULL,
     angles_nbreaks = NULL,
     remove_singletons = TRUE,
+    convert_to_microns = FALSE,
     verbose = TRUE,
     ...
 ) {
@@ -425,6 +439,7 @@ RadialDistance.Seurat <- function (
                             angles = angles,
                             angles_nbreaks = angles_nbreaks,
                             remove_singletons = remove_singletons,
+                            convert_to_microns = convert_to_microns,
                             ...)
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>

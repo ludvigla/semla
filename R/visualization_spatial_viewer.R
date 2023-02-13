@@ -154,11 +154,36 @@ FeatureViewer <- function (
   # Check tile paths
   params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, verbose = verbose)
   datapath <- params$datapath
+  
+  # Load subset barcodes
+  image_info <- GetStaffli(object)@image_info |>
+    filter(sampleID %in% sampleIDs)
+  
+  # Check if image has been padded
+  if ("pad" %in% colnames(image_info)) {
+    pad <- strsplit(image_info[image_info$sampleID %in% sampleIDs, ]$pad, "x") |> unlist() |> as.integer() |> split(f = rep(sampleIDs, 4))
+    spatial_coords <- GetStaffli(object)@meta_data |> 
+      group_by(sampleID) |> 
+      group_split()
+    spatial_coords <- lapply(seq_along(spatial_coords), function(i) {
+      max_imwidth <- image_info[image_info$sampleID == i, ]$full_width
+      max_imheight <- image_info[image_info$sampleID == i, ]$full_height
+      spatial_coords[[i]] |> mutate(pxl_col_in_fullres = pxl_col_in_fullres - pad[[i]][1]) |> 
+        mutate(pxl_row_in_fullres = pxl_row_in_fullres - pad[[i]][3]) |> 
+        filter(between(x = pxl_col_in_fullres, left = 0, right = max_imwidth - (pad[[i]][1] + pad[[i]][2]))) |> 
+        filter(between(x = pxl_row_in_fullres, left = 0, right = max_imheight - (pad[[i]][3] + pad[[i]][4])))
+    })
+    spatial_coords <- do.call(bind_rows, spatial_coords)
+    .categorical_data <- .categorical_data[spatial_coords$barcode, ]
+  } else {
+    spatial_coords <- GetStaffli(object)@meta_data
+  }
+  
   # This will make sure the temporary directory is removed when the app is closed
   clean_after_close <- params$clean_after_close
 
   # Get sample IDs barcodes
-  barcodes <- GetStaffli(object)@meta_data |>
+  barcodes <- spatial_coords |>
     select(barcode, sampleID)
   # Split barcodes by sampleIDs
   barcodes <- split(barcodes$barcode, barcodes$sampleID)
@@ -495,7 +520,7 @@ FeatureViewer <- function (
           tmp[input$selbarcodes, input$category] <- input$label
           tmp <- tmp |>
             mutate(across(everything(), ~factor(.x)))
-          .categorical_data[, input$category] <<- tmp[, input$category]
+          .categorical_data[, input$category] <<- tmp[, input$category, drop = TRUE]
         } else {
           .categorical_data[input$selbarcodes, input$category] <<- input$label
         }
@@ -592,12 +617,48 @@ FeatureViewer <- function (
 
   # Save new categorical variables
   if (verbose) cli_alert_info("Saving changes to meta data")
-  initial_categories <- colnames(.categorical_data)
-  new_mdata <- object[[]] |>
-    select(-contains(initial_categories)) |>
-    bind_cols(.categorical_data)
-  new_mdata[new_mdata == "NA"] <- NA
-  object@meta.data <- new_mdata
+  
+  # Fetch new categories if available
+  initial_categories <- colnames(object[[]])
+  new_categories <- setdiff(colnames(.categorical_data), initial_categories)
+
+  # Create a copy of the original meta data object
+  mdata_copy <- object[[]] |> 
+    mutate_if(is.factor, as.character)
+  if (length(new_categories) > 0) {
+    # Create empty columns for new data
+    mdata_copy[new_categories] <- NA_character_
+  }
+
+  # Fetch factor levels
+  factor_levels <- lapply(.categorical_data, function(x) {
+    if (inherits(x, what = "factor")) {
+      levels(x)
+    }
+  })
+  factor_levels <- factor_levels[!sapply(factor_levels, is.null)]
+  
+  # Convert all factors to character vectors to enable conversion 
+  .categorical_data <- .categorical_data |> 
+    mutate_if(is.factor, as.character)
+  
+  # Convert all "NA" to NA
+  .categorical_data[.categorical_data == "NA"] <- NA_character_
+  
+  # Place modified data in meta data copy
+  for (ctgry in colnames(.categorical_data)) {
+    mdata_copy[rownames(.categorical_data), ctgry] <- .categorical_data[, ctgry, drop = TRUE] |> as.character()
+  }
+  
+  # Restore factor levels
+  if (length(factor_levels) > 0) {
+    for (ctgry in names(factor_levels)) {
+      mdata_copy[, ctgry] <- factor(mdata_copy[, ctgry, drop = TRUE], levels = factor_levels[[ctgry]])
+    }
+  }
+  
+  # Place new meta data in Seurat object
+  object@meta.data <- mdata_copy
 
   # Remove temporary directory
   if (clean_after_close) {

@@ -29,6 +29,9 @@ Utility function to prepare data for \code{\link{FeatureViewer}}.
 The exported JSON file should be exported to the same directory as
 the H&E image tiles generated with \code{\link{TileImage}}
 }
+\details{
+Coordinates are located outside the H&E images will not be shown in the viewer.
+}
 \examples{
 \dontrun{
 libary(semla)

@@ -155,8 +155,15 @@ The distances are calculated from the border of the ROI, where positive values r
 
 The distances are given as pixels relative to the image pixels coordinates that were loaded when creating the `Seurat` object. If we know the conversion factor between pixels in our original H&E image and microns, we can easily convert the radial distances to microns. In this example data, the center-to-center spot distance is 273 pixels in the image and we know that the actual center-to-center spot distance is 100 microns.
 
-```{r}
+```{r eval=FALSE}
 se$r_dist_3 <- (100/273)*se$r_dist_3
+```
+
+Alternatively, you can set `convert_to_microns = TRUE` to make `RadialDistance` do the conversion for you. Note that the conversion assumes that you are working with Visium data and that at least some spots are adjacent in the dataset.
+
+```{r}
+se <- RadialDistance(se, column_name = "seurat_clusters", 
+                     select_groups = "3", convert_to_microns = TRUE)
 ```
 
 ### Convert radial distances

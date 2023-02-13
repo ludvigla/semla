@@ -1,8 +1,8 @@
 pandoc: 2.19.2
-pkgdown: 2.0.7
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
-  STUtility2: STUtility2.html
+  NNMF: NNMF.html
   advanced_visualization: advanced_visualization.html
   categorical_features: categorical_features.html
   cell_type_mapping_with_NNLS: cell_type_mapping_with_NNLS.html
@@ -14,10 +14,12 @@ articles:
   numeric_features: numeric_features.html
   radial_distances: radial_distances.html
   region_neighbors: region_neighbors.html
+  semla: semla.html
+  spatial_autocorrelation: spatial_autocorrelation.html
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
-last_built: 2023-01-18T21:30Z
+last_built: 2023-02-13T15:43Z
 urls:
-  reference: https://ludvigla.github.io/STUtility2/reference
-  article: https://ludvigla.github.io/STUtility2/articles
+  reference: https://ludvigla.github.io/semla/reference
+  article: https://ludvigla.github.io/semla/articles
 

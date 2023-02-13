@@ -14,6 +14,7 @@ RadialDistance(object, ...)
   angles = NULL,
   angles_nbreaks = NULL,
   remove_singletons = TRUE,
+  convert_to_microns = FALSE,
   verbose = TRUE,
   ...
 )
@@ -25,6 +26,7 @@ RadialDistance(object, ...)
   angles = NULL,
   angles_nbreaks = NULL,
   remove_singletons = TRUE,
+  convert_to_microns = FALSE,
   verbose = TRUE,
   ...
 )
@@ -54,6 +56,13 @@ the region center.}
 regions are not allowed when a "search interval" is defined, but single spots without neighbors are
 not detected as disconnected components. Single spots will most likely not interfere when calculating
 the centroid of the region of interest and can therefore be kept.}
+
+\item{convert_to_microns}{Logical specifying if pixel distances should be converted to microns. 
+This requires the `dbscan` R package to be installed. When this option sis set to TRUE, the method
+will first attempt to estimate the center to center distance between adjacent spots which 
+corresponds to 100 microns in Visium. The center to center distance will then be used to 
+convert the radial distances. Note that if no spots are adjacent in the dataset or if any other data 
+type than Visium is used, the distances will not correspond to micrometers.}
 
 \item{verbose}{Print messages}
 
