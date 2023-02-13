@@ -12,7 +12,7 @@ editor: visual
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-The goal with this package is to provide sample, fast and flexible methods for processing, analysis and visualization of spatially resolved transcriptomics data. Currently, the package only supports [Seurat](https://satijalab.org/seurat/) objects.
+The goal with this package is to provide simple, fast and flexible methods for processing, analysis and visualization of spatially resolved transcriptomics data. Currently, the package only supports [Seurat](https://satijalab.org/seurat/) objects.
 
 ## Installation
 
@@ -36,3 +36,7 @@ The package is written by *Ludvig Larsson* and *Lovisa Franzén* who are both pa
 ## Publication
 
 If you use `semla` in published research, please cite the following article:
+
+*TBD*
+
+<br>
