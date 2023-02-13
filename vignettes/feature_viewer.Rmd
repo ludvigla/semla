@@ -1,5 +1,5 @@
 ---
-title: "Interactve Feature Viewer"
+title: "Interactive Feature Viewer"
 date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
@@ -29,13 +29,13 @@ ImagePlot(se)
 
 ### Data export
 
-To initiate the viewer, we call the `FeatureViewer()` function with our `Seurat` object as input. `FeatureViewer()` will automatically attempt to export all necessary files to a temporary directory (default) or a specified directory (`datadir`). These files include tiled H&E images, spot coordinates and an additional meta data file with image related information. If you are working with a larger dataset with multiple tissue sections, you probably want to avoid exporting these files each time you open the viewer. You can find more instruction further down in this tutorial under **Advanced**.
+To initiate the viewer, we call the `FeatureViewer()` function with our `Seurat` object as input. `FeatureViewer()` will automatically attempt to export all necessary files to a temporary directory (default) or a specified directory (`datadir`). These files include tiled H&E images, spot coordinates and an additional meta data file with image related information. If you are working with a larger data set with multiple tissue sections, you probably want to avoid exporting these files each time you open the viewer. You can find more instruction further down in this tutorial under [Advanced](#adv).
 
 ### Running the interactive viewer
 
 When the app is closed, any changes made in the app will be returned to our `Seurat` object, so we need to call `se <- FeatureViewer(se)` to save changes to our `Seurat` object. It is important to note that the application should be exited by clicking on the '**save**' icon in the top right corner of the app, otherwise any changes that we've made will not be returned to R.
 
-NB: Like most functions provided in `semla`, `FeatureViewer` only works with `Seurat` objects processed with `semla`.
+NB: Like most functions provided in `semla`, `FeatureViewer()` only works with `Seurat` objects processed with `semla`.
 
 ```{r eval=FALSE}
 se <- FeatureViewer(se)
@@ -105,7 +105,7 @@ To add a new category, you simply click on the 'Category' drop-down box, delete 
 
 To continue working in R you will need to quit the application by pressing the '**save & quit**' icon in the top right corner of the toolbar.
 
-## Advanced
+## Advanced {#adv}
 
 ### Export data
 

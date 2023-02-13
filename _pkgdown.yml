@@ -20,7 +20,7 @@ development:
   mode: auto
 
 navbar:
-  type: inverse
+  type: light
   structure:
     left:
     - intro
