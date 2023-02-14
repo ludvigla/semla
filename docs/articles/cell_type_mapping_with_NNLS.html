@@ -30,7 +30,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-inverse navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
@@ -77,6 +77,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
+    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
@@ -106,7 +107,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cell type mapping with NNLS</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 13 February
+            <h4 data-toc-skip class="date">Last compiled: 14 February
 2023</h4>
       
       
@@ -271,7 +272,7 @@ single-cell <code>Seurat</code> object, the labels are stored in the
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Finished</span></span></code></pre>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"RunNNLS completed in %s seconds"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "RunNNLS completed in 2.72 seconds"</span></span></code></pre>
+<pre><code><span><span class="co">## [1] "RunNNLS completed in 2.77 seconds"</span></span></code></pre>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check available cell types</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_brain_spatial</span><span class="op">)</span></span></code></pre></div>
@@ -344,15 +345,8 @@ selected set of cell types.</p>
 
 
 
-
 <ul class="nav nav-tabs" id="mapped-mouse-brain-cell-types" role="tablist">
-<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
-<code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">selected_celltypes</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"#### "</span>, <span class="va">selected_celltypes</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>,<span class="st">"\n"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plots</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n\n"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></button></li>
-<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#l23-it" id="l23-it-tab" type="button" role="tab" aria-controls="l23-it" aria-selected="false" class="nav-link">L2/3 IT</button></li>
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#l23-it" id="l23-it-tab" type="button" role="tab" aria-controls="l23-it" aria-selected="true" class="active nav-link">L2/3 IT</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#l4" id="l4-tab" type="button" role="tab" aria-controls="l4" aria-selected="false" class="nav-link">L4</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#l5-it" id="l5-it-tab" type="button" role="tab" aria-controls="l5-it" aria-selected="false" class="nav-link">L5 IT</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#l5-pt" id="l5-pt-tab" type="button" role="tab" aria-controls="l5-pt" aria-selected="false" class="nav-link">L5 PT</button></li>
@@ -367,8 +361,7 @@ selected set of cell types.</p>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#smc" id="smc-tab" type="button" role="tab" aria-controls="smc" aria-selected="false" class="nav-link">SMC</button></li>
 </ul>
 <div class="tab-content">
-<div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab"></div>
-<div class="tab-pane" id="l23-it" role="tabpanel" aria-labelledby="l23-it-tab">
+<div class="active  tab-pane" id="l23-it" role="tabpanel" aria-labelledby="l23-it-tab">
 
 <p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
@@ -427,7 +420,7 @@ selected set of cell types.</p>
 </h3>
 <p>We can also visualize some of these cell types in one single plot
 with <code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load H&amp;E images</span></span>
 <span><span class="va">se_brain_spatial</span> <span class="op">&lt;-</span> <span class="va">se_brain_spatial</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -449,7 +442,7 @@ with <code><a href="../reference/visualize-multiple-features.html">MapMultipleFe
 <p>By computing the pair-wise correlation between cell types across
 spots, we can get an idea of which cell types often appear together in
 the same spots.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cor_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, <span class="va">selected_celltypes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">.x</span><span class="op">&lt;</span><span class="fl">0.1</span>, <span class="fl">0</span>, <span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Filter lowest values (-&gt; set as 0)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -469,7 +462,7 @@ the same spots.</p>
 factors using NMF, and thereby summarizing the cell types presence
 within the same location into a set of predefined factors. Each factor
 can be viewed as a niche of a certain cell type composition.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nmf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, <span class="va">selected_celltypes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">RcppML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RcppML/man/nmf.html" class="external-link">nmf</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span></span>
@@ -506,13 +499,13 @@ can be viewed as a niche of a certain cell type composition.</p>
 obtain the single-cell data with the <code>TabulaMurisSenisData</code> R
 package from bioconductor. Let’s load the data and create a
 <code>Seurat</code> object from it.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/TabulaMurisSenisData/man/TabulaMurisSenisDroplet.html" class="external-link">TabulaMurisSenisDroplet</a></span><span class="op">(</span>tissues <span class="op">=</span> <span class="st">"Kidney"</span><span class="op">)</span><span class="op">$</span><span class="va">Kidney</span></span>
 <span><span class="va">umis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span>, <span class="st">"dgCMatrix"</span><span class="op">)</span></span>
 <span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">umis</span>, meta.data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The 10x Visium mouse kidney data can be downloaded from the 10x
 genomics website.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"/kidney"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">targetdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"/kidney"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">targetdir</span>, <span class="st">"/visium"</span><span class="op">)</span><span class="op">)</span></span>
@@ -541,17 +534,17 @@ genomics website.</p>
 <code>se_kidney_spatial</code> and <code>se_kidney_singlecell</code> and
 run <code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures()</a></code> to detect the top most variable
 genes.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="va">se_kidney_spatial</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span>nfeatures <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
 <p>For the single-cell kidney data, we’ll also filter the data prior to
 normalization to include cells collected at age 18m and remove cells
 with labels “nan” and “CD45”. This leaves us with 17 cell types.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">keep_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se_kidney_singlecell</span><span class="op">)</span><span class="op">[</span><span class="va">se_kidney_singlecell</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="st">"18m"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="op">!</span><span class="va">se_kidney_singlecell</span><span class="op">$</span><span class="va">free_annotation</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nan"</span>, <span class="st">"CD45"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">se_kidney_singlecell</span>, cells <span class="op">=</span> <span class="va">keep_cells</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="va">se_kidney_singlecell</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -569,7 +562,7 @@ with labels “nan” and “CD45”. This leaves us with 17 cell types.</p>
 <code>Seurat</code> object and a 10x Visium <code>Seurat</code> object.
 The cell type annotations are stored in the “free_annotation”
 column.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/celltype-prediction.html">RunNNLS</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">se_kidney_spatial</span>, </span>
@@ -590,10 +583,10 @@ column.</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Returning results in a new 'Assay' named 'celltypeprops'</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting default assay to 'celltypeprops'</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Finished</span></span></code></pre>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"RunNNLS finished in %s seconds"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "RunNNLS finished in 0.47 seconds"</span></span></code></pre>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check available cell types</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "CD45    B cell"                                            </span></span>
@@ -614,7 +607,7 @@ column.</p>
 <p>NB: two cell types were discarded as they didn’t pass the minimum
 allowed cells per cell type threshold. The cell types discarded were NK
 cells and plasma cells.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot selected cell types</span></span>
 <span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"celltypeprops"</span></span>
 <span></span>
@@ -648,16 +641,8 @@ cells and plasma cells.</p>
 
 
 
-
 <ul class="nav nav-tabs" id="mapped-kidney-cell-types" role="tablist">
-<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#NA" id="NA-tab" type="button" role="tab" aria-controls="NA" aria-selected="true" class="active nav-link">
-<code class="sourceCode R"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">selected_celltypes</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"#### "</span>, <span class="va">selected_celltypes</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">plots</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n\n"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></button></li>
-<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#epcam-kidney-distal-convoluted-tubule-epithelial-cell" id="epcam-kidney-distal-convoluted-tubule-epithelial-cell-tab" type="button" role="tab" aria-controls="epcam-kidney-distal-convoluted-tubule-epithelial-cell" aria-selected="false" class="nav-link">Epcam kidney distal convoluted tubule epithelial cell</button></li>
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#epcam-kidney-distal-convoluted-tubule-epithelial-cell" id="epcam-kidney-distal-convoluted-tubule-epithelial-cell-tab" type="button" role="tab" aria-controls="epcam-kidney-distal-convoluted-tubule-epithelial-cell" aria-selected="true" class="active nav-link">Epcam kidney distal convoluted tubule epithelial cell</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#epcam-brush-cell" id="epcam-brush-cell-tab" type="button" role="tab" aria-controls="epcam-brush-cell" aria-selected="false" class="nav-link">Epcam brush cell</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#epcam-kidney-collecting-duct-principal-cell" id="epcam-kidney-collecting-duct-principal-cell-tab" type="button" role="tab" aria-controls="epcam-kidney-collecting-duct-principal-cell" aria-selected="false" class="nav-link">Epcam kidney collecting duct principal cell</button></li>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#epcam-kidney-proximal-convoluted-tubule-epithelial-cell" id="epcam-kidney-proximal-convoluted-tubule-epithelial-cell-tab" type="button" role="tab" aria-controls="epcam-kidney-proximal-convoluted-tubule-epithelial-cell" aria-selected="false" class="nav-link">Epcam kidney proximal convoluted tubule epithelial cell</button></li>
@@ -669,8 +654,7 @@ cells and plasma cells.</p>
 <li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#stroma-kidney-mesangial-cell" id="stroma-kidney-mesangial-cell-tab" type="button" role="tab" aria-controls="stroma-kidney-mesangial-cell" aria-selected="false" class="nav-link">Stroma kidney mesangial cell</button></li>
 </ul>
 <div class="tab-content">
-<div class="active  tab-pane" id="NA" role="tabpanel" aria-labelledby="NA-tab"></div>
-<div class="tab-pane" id="epcam-kidney-distal-convoluted-tubule-epithelial-cell" role="tabpanel" aria-labelledby="epcam-kidney-distal-convoluted-tubule-epithelial-cell-tab">
+<div class="active  tab-pane" id="epcam-kidney-distal-convoluted-tubule-epithelial-cell" role="tabpanel" aria-labelledby="epcam-kidney-distal-convoluted-tubule-epithelial-cell-tab">
 
 <p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 </div>
@@ -717,7 +701,7 @@ cells and plasma cells.</p>
 </h3>
 <p>We can select some of these cell types and visualize them in one
 plot</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load H&amp;E images</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="va">se_kidney_spatial</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -732,7 +716,7 @@ plot</p>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-28-1.png" width="960"></p>
 <p>Or zoom in on a region of interest</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Reload H&amp;E image in higher resolution</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span>, image_height <span class="op">=</span> <span class="fl">1500</span><span class="op">)</span></span>
 <span></span>
@@ -763,7 +747,7 @@ plot</p>
 <li><p><code>semla</code>: 0.1.0</p></li>
 <li><p><code>RcppML</code>: 0.3.7</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>

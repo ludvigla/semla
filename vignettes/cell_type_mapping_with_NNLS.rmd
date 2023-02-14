@@ -129,7 +129,6 @@ se_allen <- se_allen |>
 saveRDS(se_brain_spatial, "~/10x_data/R_objects/se_brain_spatial")
 ```
 
-
 ```{r include=FALSE}
 
 se_allen <- readRDS("~/10x_data/R_objects/allen_brain")
@@ -203,7 +202,7 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 
 ### Mapped mouse brain cell types {.tabset}
 
-```{r results='asis'}
+```{r results='asis', echo=FALSE}
 for(i in 1:length(selected_celltypes)){
   cat("#### ", selected_celltypes[i],"\n")
   print(plots[[i]])
@@ -390,7 +389,7 @@ rownames(se_kidney_spatial)
 
 NB: two cell types were discarded as they didn't pass the minimum allowed cells per cell type threshold. The cell types discarded were NK cells and plasma cells.
 
-```{r results='asis',  class.source = 'fold-hide'}
+```{r class.source = 'fold-hide'}
 # Plot selected cell types
 DefaultAssay(se_kidney_spatial) <- "celltypeprops"
 
@@ -415,7 +414,7 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 
 ### Mapped kidney cell types {.tabset}
 
-```{r results='asis'}
+```{r results='asis', echo=FALSE}
 for(i in 1:length(selected_celltypes)){
   cat("#### ", selected_celltypes[i], "\n")
   cat("\n")

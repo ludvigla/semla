@@ -77,6 +77,8 @@ navbar:
       - text: Image processing
       - text: Images and spot coordinates
         href: articles/images_and_coordinates.html
+      - text: Image masking
+        href: articles/mask_images.html
       - text: Image alignment
         href: articles/image_alignment.html
 

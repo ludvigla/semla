@@ -30,7 +30,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-inverse navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
@@ -77,6 +77,7 @@
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
+    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
@@ -106,7 +107,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Spatial autocorrelation</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 13 February
+            <h4 data-toc-skip class="date">Last compiled: 14 February
 2023</h4>
       
       
@@ -184,6 +185,7 @@ that these genes have a distinct spatial profile:</p>
 <span>            colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span>
 <span>            min_cutoff <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial_autocorrelation_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><br></p>
 <p>In contrast, genes with a more random spatial distribution are
 assigned a low correlation score:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -203,6 +205,7 @@ assigned a low correlation score:</p>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>            colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial_autocorrelation_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><br></p>
 <p>With these spatial autocorrelation scores in our hands, we can for
 example prioritize genes with defined spatial structures for down stream
 analysis. As an example, hemoglobin transcripts are often highly
@@ -220,6 +223,7 @@ clustering.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">hemoglobin_genes</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial_autocorrelation_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><br></p>
 <p>Let’s demonstrate with an example how we can use spatial
 autocorrelation scores to assign higher importance to transcripts with
 more distinct spatial expression. In the histogram below, we can see the
@@ -233,6 +237,7 @@ for downstream analysis.</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span></code></pre>
 <p><img src="spatial_autocorrelation_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><br></p>
 <p>Now we can compare the results of data-driven clustering when using
 our top 70 “spatial genes” with the results when using the to 70 most
 variable genes.</p>
@@ -252,6 +257,7 @@ variable genes.</p>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span>reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span>, resolution <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
 <span><span class="va">se_mbrain</span><span class="op">$</span><span class="va">clusters_spatial_genes</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span><span class="op">$</span><span class="va">seurat_clusters</span></span></code></pre></div>
+<p><br></p>
 <p>At a first glance, the results might not look too different from each
 other. However, if we look closely, we can see that when we focus on the
 top variable genes, some clusters are more dispersed across the tissue
@@ -266,6 +272,7 @@ section.</p>
 <span>          override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, section_number <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial_autocorrelation_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
+<p><br></p>
 <p>The selection of genes boils down to what you are trying to achieve
 with your analysis. Note that if you base your selection on spatial
 autocorrelation, you might end up hiding sources of biological
