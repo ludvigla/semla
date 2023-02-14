@@ -1,0 +1,157 @@
+---
+title: "Mask images"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+Here we'll have a quick look at how you can mask H&E images with `semla`. Masking means removing the background from the tissue section and is mostly useful for aesthetic purposes. 
+
+```{r warning=FALSE, message=FALSE}
+library(semla)
+library(magick)
+```
+
+## Load data
+
+First we need to load some 10x Visium data. here we'll use a mouse brain tissue dataset and a mouse colon dataset that are shipped with semla.
+
+```{r warning=FALSE, message=FALSE}
+# Load data
+se_mbrain <- readRDS(file = system.file("extdata", 
+                                        "mousebrain/se_mbrain", 
+                                        package = "semla"))
+se_mbrain$sample_id <- "mousebrain"
+se_mcolon <- readRDS(file = system.file("extdata", 
+                                        "mousecolon/se_mcolon", 
+                                        package = "semla"))
+se_mcolon$sample_id <- "mousecolon"
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
+  LoadImages()
+```
+
+When we plot the H&E images, we can see that the entire capture area is shown, including the fiducials (the dots that marks the edges of the capture area).
+
+```{r}
+ImagePlot(se_merged)
+```
+
+## Mask images
+
+`MaskImages` makes it possible to remove the background:
+
+```{r warning=FALSE, message=FALSE}
+se_merged <- se_merged |> 
+  MaskImages()
+
+ImagePlot(se_merged)
+```
+
+When masking H&E images in a `Seurat` object created with `semla`, the "raw" image is replaced, meaning that plot functions such as `MapFeatures` and `MapLabels` will now use the masked image instead.
+
+```{r fig.asp=1.2}
+MapFeatures(se_merged, features = c("Th", "Il22ra2"), image_use = "raw", 
+            override_plot_dims = TRUE, colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev())
+```
+
+If you want to use the original H&E images, you can simply reload them with `LoadImages`. 
+
+```{r warning=FALSE, message=FALSE}
+# Reload images from source files
+se_merged <- LoadImages(se_merged)
+```
+
+## Notes about H&E masking
+
+Masking is not always a trivial task and `MaskImages` might fail, in particular when faced with one of the following issues:
+
+-   presence of staining artefacts
+
+-   when using other stains than H&E
+
+-   presence of bubbles or other types of speckles/dust
+
+-   tissues with low contrast to background, e.g. adipose tissue
+
+-   if the image is loaded in high resolution
+
+### Custom masking (advanced)
+
+If `MaskImages` fails, it is possible to mask the images manually, but this requires some knowledge about image processing. Below is a simple example of how one can mask the mouse brain tissue section using the `magick` R package:
+
+```{r fig.asp=1, message=FALSE, warning=FALSE}
+
+# Fetch H&E rasters 
+mcolon_rasters <- se_mcolon |> LoadImages() |> GetImages()
+
+# Load image as a magick-image object
+image <- image_read(mcolon_rasters[[1]])
+
+# Convert image to CMYK colorspace and extract the magenta channel
+im_magenta <- image |>
+    image_convert(colorspace = "cmyk") |>
+    image_channel(channel = "Magenta")
+
+# Add blur effect to image and threshold image
+im_threshold <- im_magenta |>
+    image_blur(sigma = 2) |>
+    image_threshold(type = "black", threshold = "20%") |>
+    image_threshold(type = "white", threshold = "20%") 
+
+# Mask H&E by combining H&E image with mask
+mask <- im_threshold |> 
+  image_transparent(color = "black")
+im_composite <- image_composite(mask, image)
+
+# Plot images
+par(mfrow = c(2, 2), mar = c(0, 0, 0, 0))
+image |> as.raster() |> plot()
+title("H&E image", line = -2)
+im_magenta |> as.raster() |> plot()
+title("Magenta color channel", col.main = "white", line = -2)
+im_threshold |> as.raster() |> plot()
+title("Image mask", col.main = "white", line = -2)
+im_composite |> as.raster() |> plot()
+title("Masked H&E image", line = -2)
+```
+
+The results are not perfect because there are still a few speckles in the background and some parts of the tissue section are masked. But even a simple approach like this can give decent results!
+
+The processing was done using the R package `magick` and with this package you should be able to manipulate images to get pretty much any result you want. The package vignette is a good resource to get started: [magick intro](https://cran.r-project.org/web/packages/magick/vignettes/intro.html)
+
+Once you have masked the image, you can convert it back to a `raster` object and place it into your `Seurat` object. Now we are only working with 1 tissue section, but if you have multiple tissue sections you need to make sure that the list of `raster` objects contains 1 image per sample in the correct order.
+
+Also, you cannot adjust the dimensions of the image!!! They have to have exactly the same dimensions as the images that you started with otherwise, the spots will no longer be aligned properly.
+
+```{r fig.asp=1}
+se_mcolon@tools$Staffli@rasterlists$raw <- list(as.raster(im_composite))
+
+MapFeatures(se_mcolon, features = "nFeature_Spatial", image_use = "raw", 
+            pt_alpha = 0.5, pt_size = 1.5)
+```
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
