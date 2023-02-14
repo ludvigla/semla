@@ -8,10 +8,6 @@ h2  {
 h3  {
   margin-top: 1em;
 }
-h4  {
-  font-size: calc(0.6rem + .3vw);
-  font-family: monospace;
-}
 p {
   margin-top: 1em;
   margin-bottom: 1em;
