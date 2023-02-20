@@ -1042,7 +1042,7 @@ FeatureViewer <- function (
     blues = colorRampPalette(RColorBrewer::brewer.pal(n = 9, name = "Blues"))(50),
     RdBu = colorRampPalette(RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev())(50)
   )
-  if (requireNamespace("scico")) {
+  if (requireNamespace("scico", quietly = TRUE)) {
     scico_paletets <- lapply(scico::scico_palette_names(), function(nm) {
       scico::scico(n = 11, palette = nm)
     }) |> setNames(scico::scico_palette_names())
