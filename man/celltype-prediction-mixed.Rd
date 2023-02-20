@@ -27,7 +27,7 @@ RunMixedNNLS(object, ...)
   object,
   singlecell_object,
   groups = NULL,
-  k = 10,
+  k = 10L,
   features = NULL,
   singlecell_assay = "RNA",
   spatial_assay = "Spatial",
