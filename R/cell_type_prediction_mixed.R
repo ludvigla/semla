@@ -83,9 +83,10 @@ RunMixedNNLS.default <- function (
   # Make sure that dev version of RcppML is installed
   if (!requireNamespace("RcppML"))
     install.packages("RcppML") # compile dev version
-  if ((packageVersion("RcppML") |> as.character()) != "0.3.7")
-    warn(c("The NNLS function might break if using a dev version of RcppML is used. ",
-           "If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML."))
+  if ((packageVersion("RcppML") |> as.character()) != "0.3.7") {
+    cli_alert_warning("  The NNLS function might break if a dev version of RcppML is used. ")
+    cli_alert_warning("  If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML.")
+  }
   
   # Prepare data
   if (verbose) cli_alert_info("Preparing data for NNLS")
@@ -99,22 +100,29 @@ RunMixedNNLS.default <- function (
   
   # Run nmf
   if (verbose) cli_alert_info("Computing NMF with rank {ncol(W) + k} (k={k})")
-  nmf_model <- RcppML::nmf(object |> as.matrix(), k = ncol(W) + k, L1 = L1, maxit = 1, verbose = FALSE)
+  nmf_model <- RcppML::nmf(data = object |> as.matrix(), k = ncol(W) + k, L1 = L1, maxit = 1, verbose = FALSE)
   W_nmf <- apply(nmf_model$w, 2, function(x) {
     x/max(x)
   })
   
   # Check correlations
   if (verbose) cli_alert_info("Keeping {k} factors with lowest correlation scores")
-  corMat <- cor(W, W_nmf, method = "pearson") |> as.matrix()
+  corMat <- try({RcppML::cosine(W, W_nmf)})
+  if (inherits(cosineMat, what = "try-error")) {
+    corMat <- cor(W, W_nmf, method = "pearson") |> as.matrix()
+  }
+  
   cors_ordered <- apply(corMat, 2, function(x) {
-    max(x)
+   max(x)
   }) |> order()
   W_combined <- cbind(W, W_nmf[, cors_ordered[1:k]])
   
   # Run NNLS
   if (verbose) cli_alert_info("Predicting proportions with NNLS for {ncol(W)} cell types and {k} factors")
-  proj_expr <- RcppML::project(object, W_combined, L1 = L1, ...)
+  proj_expr <- try({RcppML::project(object, W_combined, L1 = L1, ...)}, silent = TRUE)
+  if (inherits(proj_expr, what = "try-error")) {
+    proj_expr <- RcppML::project(w = W_combined, data = object, L1 = L1, ...)
+  }
   
   # Convert predicted values to proportions
   prop <- apply(proj_expr, 2, function(x) {prop.table(x)})
@@ -170,7 +178,7 @@ RunMixedNNLS.Seurat <- function (
     object,
     singlecell_object,
     groups = NULL,
-    k = 10,
+    k = 10L,
     features = NULL,
     singlecell_assay = "RNA",
     spatial_assay = "Spatial",
