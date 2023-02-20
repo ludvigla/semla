@@ -75,10 +75,13 @@ LoadImages.default <- function (
       im_blank <- image_blank(width = info$width + pad_info[i, "before_x", drop = TRUE] + pad_info[i, "after_x", drop = TRUE],
                   height = info$height + pad_info[i, "before_y", drop = TRUE] + pad_info[i, "after_y", drop = TRUE],
                   color = "white")
-      im <- image_composite(im_blank, composite_image = im,
+      if (any(pad_info[i, c("before_x", "before_y"), drop = TRUE] |> as.numeric() > 0)) {
+        im <- image_composite(im_blank, composite_image = im,
                             offset = geometry_area(x_off = pad_info[i, "before_x", drop = TRUE],
                                                    y_off = pad_info[i, "before_y", drop = TRUE]))
-
+      } else {
+        im <- image_composite(im_blank, composite_image = im)
+      }
     }
 
     if ((!inherits(image_height, what = "numeric")) | (length(image_height) != 1))
