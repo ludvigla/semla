@@ -6,6 +6,7 @@ NULL
 # Plot functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+# TODO: fix scalebar with blend
 #' @param crop_area a numeric vector of length 4 specifying a rectangular area to crop
 #' the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 #' right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
@@ -156,7 +157,8 @@ MapFeatures.default <- function (
     }
     data <- .color_blender(data, features, blend_order, feature_limits, scale_alpha)
     extreme_colors <- farver::encode_colour(diag(ncol = 3, nrow = 3)*255, from = "rgb")
-    features <- features[blend_order[1:length(features)]]
+    extreme_colors <- extreme_colors[blend_order[1:length(features)]]
+    #features <- features[blend_order[1:length(features)]]
   }
 
   # Edit dims of a crop area is provided
@@ -225,7 +227,6 @@ MapFeatures.default <- function (
       install.packages("dbscan")
     }
     scalebar_width <- scalebar_gg$labels$scalebar_width
-    # Check scale bar
     sample_plots <- lapply(names(sample_plots), function(nm) {
       gg <- data[[nm]]
       nn_dist <- dbscan::kNN(gg |> select(all_of(coords_columns)), k = 1)$dist[, 1] |> min()
@@ -233,14 +234,20 @@ MapFeatures.default <- function (
       d <- dims |> filter(sampleID == nm)
       sf <- scalebar_width/100
       prop_width <- (nn_dist*sf)/(d$full_width - d$x_start)
-      plots <- lapply(names(plots), function(ftr_nm) {
-        scalebar_pos <- scalebar_position %||% c(0.8, 0.8)
-        scalebar_pos[1] <- ifelse((1 - prop_width) > scalebar_pos[1], scalebar_pos[1], (1 - prop_width))
-        scalebar_pos[2] <- ifelse((1 - scalebar_height) > scalebar_pos[2], scalebar_pos[2], (1 - scalebar_height))
-        plots[[ftr_nm]] +
+      scalebar_pos <- scalebar_position %||% c(0.8, 0.8)
+      scalebar_pos[1] <- ifelse((1 - prop_width) > scalebar_pos[1], scalebar_pos[1], (1 - prop_width))
+      scalebar_pos[2] <- ifelse((1 - scalebar_height) > scalebar_pos[2], scalebar_pos[2], (1 - scalebar_height))
+      if (blend) {
+        plots <- plots +
           inset_element(p = scalebar_gg, left = scalebar_pos[1], bottom = scalebar_pos[2], align_to = "full",
                         right = scalebar_pos[1] + prop_width, top = scalebar_pos[2] + scalebar_height, on_top = TRUE)
-      }) |> setNames(nm = names(plots))
+      } else {
+        plots <- lapply(names(plots), function(ftr_nm) {
+          plots[[ftr_nm]] +
+            inset_element(p = scalebar_gg, left = scalebar_pos[1], bottom = scalebar_pos[2], align_to = "full",
+                          right = scalebar_pos[1] + prop_width, top = scalebar_pos[2] + scalebar_height, on_top = TRUE)
+        }) |> setNames(nm = names(plots))
+      }
     }) |> setNames(nm = names(sample_plots))
   }
 
@@ -1298,8 +1305,8 @@ MapLabels.Seurat <- function (
   data <- data |>
     mutate(across(
       all_of(features),
-      ~ case_when(.x < quantile(.x, probs = min_cutoff) ~ quantile(.x, probs = min_cutoff),
-                  .x > quantile(.x, probs = max_cutoff) ~ quantile(.x, probs = max_cutoff),
+      ~ case_when(.x < quantile(.x, probs = min_cutoff, na.rm = TRUE) ~ quantile(.x, probs = min_cutoff, na.rm = TRUE),
+                  .x > quantile(.x, probs = max_cutoff, na.rm = TRUE) ~ quantile(.x, probs = max_cutoff, na.rm = TRUE),
                   TRUE ~ .x)
     ))
   return(data)
