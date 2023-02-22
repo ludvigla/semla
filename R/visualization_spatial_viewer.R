@@ -71,7 +71,7 @@ FeatureViewer <- function (
 ) {
 
   # Set global variables to NULL
-  sampleID <- barcode <- NULL
+  sampleID <- barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
   if (!requireNamespace("shinyBS"))
     install.packages("shinyBS")
