@@ -156,7 +156,9 @@ The distances are calculated from the border of the ROI, where positive values r
 The distances are given as pixels relative to the image pixels coordinates that were loaded when creating the `Seurat` object. If we know the conversion factor between pixels in our original H&E image and microns, we can easily convert the radial distances to microns. In this example data, the center-to-center spot distance is 273 pixels in the image and we know that the actual center-to-center spot distance is 100 microns.
 
 ```{r eval=FALSE}
+
 se$r_dist_3 <- (100/273)*se$r_dist_3
+
 ```
 
 Alternatively, you can set `convert_to_microns = TRUE` to make `RadialDistance` do the conversion for you. Note that the conversion assumes that you are working with Visium data and that at least some spots are adjacent in the dataset.
@@ -171,6 +173,7 @@ se <- RadialDistance(se, column_name = "seurat_clusters",
 The scale of the distances is somewhat inconvenient for our color scale, so we can apply some transformation to make them easier to visualize, for example the square root of the distance:
 
 ```{r fig.asp=1}
+
 se$r_dist_3_sqrt <- sign(se$r_dist_3)*sqrt(abs(se$r_dist_3))
 MapFeatures(se, features = "r_dist_3_sqrt", center_zero = TRUE, pt_size = 2, 
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(),
@@ -180,6 +183,7 @@ MapFeatures(se, features = "r_dist_3_sqrt", center_zero = TRUE, pt_size = 2,
 With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border.
 
 ```{r fig.asp=0.5}
+
 sel_genes <- c("CRISP3", "IGLC2")
 
 se[[]] |> 
@@ -189,6 +193,7 @@ se[[]] |>
   ggplot(aes(r_dist_3, value, color = variable)) +
     geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
     geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed")
+
 ```
 
 Here we can see that the expression of CRISP3 is high inside cluster "3" and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:

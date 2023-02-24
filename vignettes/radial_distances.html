@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2023-02-20">
 
 <title>Radial distances</title>
 <style>
@@ -111,18 +112,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 20, 2023</p>
+    </div>
+  </div>
     
   </div>
   
 
 </header>
 
-<p>In this notebook, we’ll have a look at how you can use spatial methods in <code>STUtility2</code>.</p>
+<p>In this notebook, we’ll have a look at so called ‘spatial methods’ provided in <code>semla</code>. ‘spatial methods’ refers to analysis methods which somehow incorporate the position of spots in their calculations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(STUtility2)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semla)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scico)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -191,7 +198,7 @@ Elapsed time: 0 seconds</code></pre>
 <pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>── Load H&amp;E images ──</code></pre>
+<pre><code>── Loading H&amp;E images ──</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
@@ -286,16 +293,19 @@ Elapsed time: 0 seconds</code></pre>
 <pre><code>ℹ Calculating radial distances for group '3'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+<pre><code>ℹ Removing 3 spots with 0 neighbors.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 86 spots on borders</code></pre>
+<pre><code>ℹ Extracting border spots from a region with 413 spots</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 416 spots inside borders</code></pre>
+<pre><code>→   Detected 75 spots on borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 3397 spots outside borders</code></pre>
+<pre><code>→   Detected 413 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3400 spots outside borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Returning radial distances</code></pre>
@@ -303,9 +313,9 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 <p>We can illustrate the results by coloring the spots based on the radial distances from cluster “3”:</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -315,43 +325,72 @@ Elapsed time: 0 seconds</code></pre>
 <h3 class="anchored" data-anchor-id="pixel-coordinates">Pixel coordinates</h3>
 <p>The distances are given as pixels relative to the image pixels coordinates that were loaded when creating the <code>Seurat</code> object. If we know the conversion factor between pixels in our original H&amp;E image and microns, we can easily convert the radial distances to microns. In this example data, the center-to-center spot distance is 273 pixels in the image and we know that the actual center-to-center spot distance is 100 microns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3 <span class="ot">&lt;-</span> (<span class="dv">100</span><span class="sc">/</span><span class="dv">273</span>)<span class="sc">*</span>se<span class="sc">$</span>r_dist_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3 <span class="ot">&lt;-</span> (<span class="dv">100</span><span class="sc">/</span><span class="dv">273</span>)<span class="sc">*</span>se<span class="sc">$</span>r_dist_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternatively, you can set <code>convert_to_microns = TRUE</code> to make <code>RadialDistance</code> do the conversion for you. Note that the conversion assumes that you are working with Visium data and that at least some spots are adjacent in the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">select_groups =</span> <span class="st">"3"</span>, <span class="at">convert_to_microns =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Running calculations for sample 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Calculating radial distances for group '3'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Removing 3 spots with 0 neighbors.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Extracting border spots from a region with 413 spots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 75 spots on borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 413 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3400 spots outside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ Returning radial distances</code></pre>
+</div>
 </div>
 </section>
 <section id="convert-radial-distances" class="level3">
 <h3 class="anchored" data-anchor-id="convert-radial-distances">Convert radial distances</h3>
 <p>The scale of the distances is somewhat inconvenient for our color scale, so we can apply some transformation to make them easier to visualize, for example the square root of the distance:</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3_sqrt <span class="ot">&lt;-</span> <span class="fu">sign</span>(se<span class="sc">$</span>r_dist_3)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">abs</span>(se<span class="sc">$</span>r_dist_3))</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3_sqrt"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="radial_distances_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border.</p>
-<div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>r_dist_3_sqrt <span class="ot">&lt;-</span> <span class="fu">sign</span>(se<span class="sc">$</span>r_dist_3)<span class="sc">*</span><span class="fu">sqrt</span>(<span class="fu">abs</span>(se<span class="sc">$</span>r_dist_3))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3_sqrt"</span>, <span class="at">center_zero =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">11</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>) <span class="sc">|&gt;</span> <span class="fu">rev</span>(),</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Here we can see that the expression of CRISP3 is high inside cluster “3” and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:</p>
-<div class="cell" data-fig.asp="0.6">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(<span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>), </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border.</p>
+<div class="cell" data-fig.asp="0.5">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Here we can see that the expression of CRISP3 is high inside cluster “3” and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:</p>
+<div class="cell" data-fig.asp="0.6">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(<span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>), </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="radial_distances_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>So why bother using radial distances? Having access to this information makes it possible to identify genes that change with distance to a ROI. In the example above, we could for example identify genes whose expression decrease or increase with distance from the tumor which gives us a useful tool to characterize the tumor microenvironment.</p>
@@ -362,10 +401,10 @@ Elapsed time: 0 seconds</code></pre>
 <p>It is rarely the case that the microenvironment is homogeneous in all directions from the region of interest. In our breast cancer tissue section, we can clearly see that the tissue composition is different depending on which direction you look from our region of interest. <code>RadialDistance</code> therefore provides an option to narrow down the search space to a predefined interval of angles.</p>
 <p>The plot below (generated with <code>AnglePlot</code>) should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, …</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AnglePlot</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">selected_group =</span> <span class="st">"3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>,</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">radius =</span> <span class="fl">0.3</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AnglePlot</span>(se, <span class="at">column_name =</span> <span class="st">"cluster_3"</span>, <span class="at">selected_group =</span> <span class="st">"3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>,</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="dv">1</span>, <span class="dv">1</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">radius =</span> <span class="fl">0.3</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="radial_distances_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="radial_distances_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="disconnected-regions" class="level4">
@@ -373,8 +412,8 @@ Elapsed time: 0 seconds</code></pre>
 <p>Before you proceed, note that it is important that the ROI is spatially connected. If not, <code>RadialDistance</code> will complain that it finds disconnected components and will abort the function. This is intended to prevent users from defining a center outside of the ROI which would likely happen if multiple ROIs are present. It doesn’t make much sense to compute radial distances from one center when there are multiple centers present. Instead, you can split the disconnected components with <code>DisconnectRegions</code> and focus on one ROI.</p>
 <p>Now that we have an idea about how the angles are defined, we can provide an interval of angles to narrow down the search area and calculate radial distances. The color scale in the plot below represents the radial distances from the tumor (cluster 3) center.</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">240</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">200</span>, <span class="dv">240</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>ℹ Running calculations for sample 1</code></pre>
 </div>
@@ -382,16 +421,19 @@ Elapsed time: 0 seconds</code></pre>
 <pre><code>ℹ Calculating radial distances for group '3'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+<pre><code>ℹ Removing 3 spots with 0 neighbors.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 86 spots on borders</code></pre>
+<pre><code>ℹ Extracting border spots from a region with 413 spots</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 416 spots inside borders</code></pre>
+<pre><code>→   Detected 75 spots on borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 3397 spots outside borders</code></pre>
+<pre><code>→   Detected 413 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3400 spots outside borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Returning radial distances</code></pre>
@@ -399,15 +441,15 @@ Elapsed time: 0 seconds</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>ℹ Setting search area between 200 and 240 degrees from region center</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"r_dist_3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="radial_distances_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="radial_distances_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>If we want to go for a more exploratory approach, we can split the radial distances into slices by setting <code>angles_length_out</code>. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.</p>
+<p>If we want to go for a more exploratory approach, we can split the radial distances into slices by setting <code>angles_nbreaks</code>. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">320</span>), <span class="at">angles_nbreaks =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">RadialDistance</span>(se, <span class="at">column_name =</span> <span class="st">"seurat_clusters"</span>, <span class="at">select_groups =</span> <span class="st">"3"</span>, </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">angles =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">320</span>), <span class="at">angles_nbreaks =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>ℹ Running calculations for sample 1</code></pre>
 </div>
@@ -415,16 +457,19 @@ Elapsed time: 0 seconds</code></pre>
 <pre><code>ℹ Calculating radial distances for group '3'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>ℹ Extracting border spots from a region with 416 spots</code></pre>
+<pre><code>ℹ Removing 3 spots with 0 neighbors.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 86 spots on borders</code></pre>
+<pre><code>ℹ Extracting border spots from a region with 413 spots</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 416 spots inside borders</code></pre>
+<pre><code>→   Detected 75 spots on borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>→   Detected 3397 spots outside borders</code></pre>
+<pre><code>→   Detected 413 spots inside borders</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Detected 3400 spots outside borders</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>✔ Returning radial distances</code></pre>
@@ -435,61 +480,141 @@ Elapsed time: 0 seconds</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>ℹ Splitting search area into 6 interval(s)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"intervals_3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">6</span>, <span class="at">name =</span> <span class="st">"Spectral"</span>)) <span class="sc">&amp;</span></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="radial_distances_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Inside our <code>Seurat</code> object meta data slot, we now have three new columns: ‘angle_3’, ‘r_dist_3’ and ‘intervals_3’. The ‘intervals_3’ columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:</p>
-<div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapLabels</span>(se, <span class="at">column_name =</span> <span class="st">"intervals_3"</span>, <span class="at">pt_size =</span> <span class="dv">2</span>, <span class="at">drop_na =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">colors =</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">6</span>, <span class="at">name =</span> <span class="st">"Spectral"</span>)) <span class="sc">&amp;</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">5</span>), <span class="at">ncol =</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>However, the trend varies substantially depending on direction for other genes. Below we can see the expression along the radial axis for three genes. Depending on the direction, these genes have very distinct expression profiles.</p>
+<p>Inside our <code>Seurat</code> object meta data slot, we now have three new columns: ‘angle_3’, ‘r_dist_3’ and ‘intervals_3’. The ‘intervals_3’ columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:</p>
 <div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PGM5-AS1"</span>, <span class="st">"CXCL14"</span>, <span class="st">"IGHG3"</span>)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">|&gt;</span> </span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value_centered =</span> value <span class="sc">-</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span> <span class="co"># Note that the values have been centered</span></span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value_centered, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>If we map the expression of these genes spatially, it is quite clear that these genes are expressed in different niches of the microenvironment. In fact, two of these “niches” are mostly composed of tumor cells.</p>
-<p>Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in <code>STUtility2</code> are easy to adapt to many different scenarios.</p>
-<div class="cell" data-fig.asp="0.4">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">3</span>,</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>, <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">9</span>),</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>However, the trend varies substantially depending on direction for other genes. Below we can see the expression along the radial axis for three genes. Depending on the direction, these genes have very distinct expression profiles.</p>
+<div class="cell" data-fig.asp="0.5">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>sel_genes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PGM5-AS1"</span>, <span class="st">"CXCL14"</span>, <span class="st">"IGHG3"</span>)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>se[[]] <span class="sc">|&gt;</span> </span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">FetchData</span>(se, <span class="at">vars =</span> sel_genes)) <span class="sc">|&gt;</span> </span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(r_dist_3 <span class="sc">&lt;</span> <span class="fl">1e3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(sel_genes), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(variable) <span class="sc">|&gt;</span> </span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value_centered =</span> value <span class="sc">-</span> <span class="fu">mean</span>(value)) <span class="sc">|&gt;</span> <span class="co"># Note that the values have been centered</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(r_dist_3, value_centered, <span class="at">color =</span> variable)) <span class="sc">+</span></span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"gam"</span>, <span class="at">formula =</span> y <span class="sc">~</span> <span class="fu">s</span>(x, <span class="at">bs =</span> <span class="st">"cs"</span>)) <span class="sc">+</span></span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"border"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> intervals_3, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>If we map the expression of these genes spatially, it is quite clear that these genes are expressed in different niches of the microenvironment. In fact, two of these “niches” are mostly composed of tumor cells.</p>
+<p>Hopefully, this demonstration will serve as a motivation to carefully think through how radial distances should be used for specific biological questions. The tools provided in <code>semla</code> are easy to adapt to many different scenarios.</p>
+<div class="cell" data-fig.asp="0.4">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span>),</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> sel_genes, <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>, <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">9</span>),</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>, <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="radial_distances_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><br></p>
+<hr>
+<details open="">
+<summary>
+<strong>Package version</strong>
+</summary>
+<ul>
+<li><code>semla</code>: 0.1.0</li>
+</ul>
+</details>
+<details>
+<summary>
+<strong>Session info</strong>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.2.1 (2022-06-23)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: macOS Big Sur ... 10.16
+
+Matrix products: default
+BLAS/LAPACK: /Users/ludviglarsson/miniconda3/envs/R4.2/lib/libopenblasp-r0.3.21.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] tidyr_1.2.0        scico_1.3.1        patchwork_1.1.2    tibble_3.1.8      
+[5] semla_0.1.0        ggplot2_3.3.6      dplyr_1.0.9        SeuratObject_4.1.3
+[9] Seurat_4.3.0      
+
+loaded via a namespace (and not attached):
+  [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          
+  [4] ellipsis_0.3.2         ggridges_0.5.3         rstudioapi_0.14       
+  [7] spatstat.data_3.0-0    farver_2.1.1           leiden_0.4.2          
+ [10] listenv_0.8.0          bit64_4.0.5            ggrepel_0.9.1         
+ [13] fansi_1.0.3            codetools_0.2-18       splines_4.2.1         
+ [16] knitr_1.39             zeallot_0.1.0          polyclip_1.10-0       
+ [19] jsonlite_1.8.3         ica_1.0-3              cluster_2.1.4         
+ [22] png_0.1-7              uwot_0.1.14            shiny_1.7.4           
+ [25] sctransform_0.3.5      spatstat.sparse_3.0-0  compiler_4.2.1        
+ [28] httr_1.4.4             assertthat_0.2.1       Matrix_1.5-3          
+ [31] fastmap_1.1.0          lazyeval_0.2.2         cli_3.4.1             
+ [34] later_1.3.0            htmltools_0.5.4        tools_4.2.1           
+ [37] igraph_1.3.4           gtable_0.3.0           glue_1.6.2            
+ [40] RANN_2.6.1             reshape2_1.4.4         Rcpp_1.0.9            
+ [43] scattermore_0.8        vctrs_0.5.1            nlme_3.1-159          
+ [46] spatstat.explore_3.0-5 progressr_0.10.1       lmtest_0.9-40         
+ [49] spatstat.random_3.0-1  xfun_0.32              stringr_1.4.1         
+ [52] globals_0.16.0         mime_0.12              miniUI_0.1.1.1        
+ [55] lifecycle_1.0.3        irlba_2.3.5            goftest_1.2-3         
+ [58] future_1.27.0          MASS_7.3-58.1          zoo_1.8-10            
+ [61] scales_1.2.1           tidygraph_1.2.2        promises_1.2.0.1      
+ [64] spatstat.utils_3.0-1   parallel_4.2.1         RColorBrewer_1.1-3    
+ [67] yaml_2.3.5             reticulate_1.26        pbapply_1.5-0         
+ [70] gridExtra_2.3          stringi_1.7.8          rlang_1.0.6           
+ [73] pkgconfig_2.0.3        matrixStats_0.62.0     evaluate_0.16         
+ [76] lattice_0.20-45        ROCR_1.0-11            purrr_0.3.4           
+ [79] tensor_1.5             labeling_0.4.2         htmlwidgets_1.5.4     
+ [82] bit_4.0.4              cowplot_1.1.1          tidyselect_1.1.2      
+ [85] parallelly_1.32.1      RcppAnnoy_0.0.19       plyr_1.8.7            
+ [88] magrittr_2.0.3         R6_2.5.1               magick_2.7.3          
+ [91] generics_0.1.3         DBI_1.1.3              mgcv_1.8-40           
+ [94] withr_2.5.0            pillar_1.8.1           fitdistrplus_1.1-8    
+ [97] survival_3.4-0         abind_1.4-5            sp_1.5-1              
+[100] future.apply_1.9.0     crayon_1.5.1           hdf5r_1.3.5           
+[103] KernSmooth_2.23-20     utf8_1.2.2             spatstat.geom_3.0-3   
+[106] plotly_4.10.0          rmarkdown_2.15         viridis_0.6.2         
+[109] grid_4.2.1             data.table_1.14.2      forcats_0.5.2         
+[112] digest_0.6.29          xtable_1.8-4           dbscan_1.1-10         
+[115] httpuv_1.6.5           munsell_0.5.0          viridisLite_0.4.1     
+[118] shinyjs_2.1.0         </code></pre>
+</div>
+</div>
+</details>
+<p><br></p>
 </section>
 </section>
 </section>
