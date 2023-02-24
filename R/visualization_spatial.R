@@ -1076,7 +1076,7 @@ MapLabels.Seurat <- function (
   return(p)
 }
 
-
+# TODO: fix colors
 #' Plot labels in 2D
 #'
 #' @param gg tibble with spatial coordinates and a label column
