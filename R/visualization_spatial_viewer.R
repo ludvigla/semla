@@ -30,8 +30,6 @@ NULL
 #' each character vector should correspond to a categorical variable in the meta.data slot of the
 #' \code{Seurat} object. Each character vector should be named where each name corresponds to a
 #' label of the category.
-#' @param save_colors_to A string specifying a variable name to save the colors from the
-#' viewer to. The variable name should not exist in globalenv().
 #' @param container_width,container_height Set height and width of container
 #' @param verbose Print messages
 #'
@@ -64,7 +62,6 @@ FeatureViewer <- function (
     port = 8080L,
     custom_color_palettes = NULL,
     categorical_colors = NULL,
-    save_colors_to = NULL,
     container_width = 800,
     container_height = 800,
     verbose = TRUE
@@ -83,16 +80,6 @@ FeatureViewer <- function (
 
   # Check Seurat object
   .check_seurat_object(object)
-
-  # Check save_colors_to
-  if (!is.null(save_colors_to)) {
-    stopifnot(inherits(save_colors_to, what = "character"),
-              length(save_colors_to) == 1)
-    if (exists(save_colors_to, envir = globalenv())) {
-      abort(glue("Invalid save_colors_to {col_br_magenta(save_colors_to)}. Variable already exists in globalenv().",
-                 " Remove {col_br_magenta(save_colors_to)} or use a different variable name."))
-    }
-  }
 
   # Check custom_color_palettes
   .color_palettes <- sapply(.color_scales(info = TRUE), function(nm) {
@@ -664,11 +651,6 @@ FeatureViewer <- function (
   if (clean_after_close) {
     if (verbose) cli_alert_info("Removing temporary directory")
     unlink(x = datapath, recursive = TRUE)
-  }
-
-  # Save colors to save_colors_to variable, only if it doesn't already exist in globalenv()
-  if (!is.null(save_colors_to)) {
-    assign(x = save_colors_to, value = .feature_viewer_colors, envir = globalenv())
   }
 
   return(object)

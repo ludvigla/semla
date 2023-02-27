@@ -14,7 +14,6 @@ FeatureViewer(
   port = 8080L,
   custom_color_palettes = NULL,
   categorical_colors = NULL,
-  save_colors_to = NULL,
   container_width = 800,
   container_height = 800,
   verbose = TRUE
@@ -43,9 +42,6 @@ Defaults to localhost "127.0.0.1"}
 each character vector should correspond to a categorical variable in the meta.data slot of the
 \code{Seurat} object. Each character vector should be named where each name corresponds to a
 label of the category.}
-
-\item{save_colors_to}{A string specifying a variable name to save the colors from the
-viewer to. The variable name should not exist in globalenv().}
 
 \item{container_width, container_height}{Set height and width of container}
 
