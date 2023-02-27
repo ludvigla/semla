@@ -56,7 +56,7 @@ MapMultipleFeatures(object, ...)
 
 \item{scale}{A string specifying a scaling mode. See details below}
 
-\item{crop_area}{a numeric vector of length 4 specifying a rectangular area to crop
+\item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
@@ -65,38 +65,38 @@ using crop areas of different sizes on different sections can lead to unwanted s
 effects as the point sizes will remain constant. In this case it is better to generate
 separate plots for different tissue sections.}
 
-\item{pt_size}{numeric value specifying the point size passed to \code{geom_point}}
+\item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
 
-\item{pt_stroke}{numeric specifying the point stroke width}
+\item{pt_stroke}{Numeric specifying the point stroke width}
 
 \item{section_number}{an integer select a tissue section number to subset data by}
 
-\item{label_by}{character of length 1 providing a column name in \code{object} with
+\item{label_by}{Character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.}
 
-\item{ncol}{integer value specifying the number of columns in the output patchwork.
+\item{ncol}{Integer value specifying the number of columns in the output patchwork.
 This parameter will only have an effect when the number of features provided is 1.
 Otherwise, the patchwork will be arranged based on the \code{arrange_features} parameter.}
 
-\item{colors}{a character vector of colors to use for the color scale. The colors should
+\item{colors}{A character vector of colors to use for the color scale. The colors should
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 \code{scico} R packages.}
 
-\item{dims}{a tibble with information about the tissue sections. This information is used to
+\item{dims}{A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 computed directly from the spatial coordinates provided in \code{object}.}
 
 \item{coords_columns}{a character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
 
-\item{return_plot_list}{logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
+\item{return_plot_list}{A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
 By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
 if you want to manipulate each sub plot independently.}
 
-\item{drop_na}{a logical specifying if NA values should be dropped}
+\item{drop_na}{A logical specifying if NA values should be dropped}
 
 \item{add_colorscale_text}{A Logical specifying if labels should be added to
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and

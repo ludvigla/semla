@@ -48,7 +48,7 @@ fetchable with \code{link{FetchData}}}
 
 \item{coords_use}{string specifying coordinate type to use}
 
-\item{crop_area}{a numeric vector of length 4 specifying a rectangular area to crop
+\item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
@@ -57,37 +57,37 @@ using crop areas of different sizes on different sections can lead to unwanted s
 effects as the point sizes will remain constant. In this case it is better to generate
 separate plots for different tissue sections.}
 
-\item{pt_size}{numeric value specifying the point size passed to \code{geom_point}}
+\item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
 
-\item{pt_alpha}{numeric value between 0 and 1 specifying the point opacity passed
+\item{pt_alpha}{A numeric value between 0 and 1 specifying the point opacity passed
 to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
-\item{pt_stroke}{numeric specifying the point stroke width}
+\item{pt_stroke}{Numeric specifying the point stroke width}
 
-\item{scale_alpha}{logical specifying if the spot colors should be scaled together with
+\item{scale_alpha}{Logical specifying if the spot colors should be scaled together with
 the feature values. This can be useful when you want to highlight regions with higher
 feature values while making the background tissue visible.}
 
 \item{section_number}{an integer select a tissue section number to subset data by}
 
-\item{label_by}{character of length 1 providing a column name in \code{object} with
+\item{label_by}{Character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.}
 
-\item{ncol}{integer value specifying the number of columns in the output patchwork.
+\item{ncol}{Integer value specifying the number of columns in the output patchwork.
 This parameter will only have an effect when the number of features provided is 1.
 Otherwise, the patchwork will be arranged based on the \code{arrange_features} parameter.}
 
-\item{colors}{a character vector of colors to use for the color scale. The colors should
+\item{colors}{A character vector of colors to use for the color scale. The colors should
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 \code{scico} R packages.}
 
 \item{fill_color}{Fill color for summary plot}
 
-\item{scale}{a character vector of length 1 specifying one of "shared" or "free" which will
+\item{scale}{A character vector of length 1 specifying one of "shared" or "free" which will
 determine how the color bars are structured. If scale is set to "shared", the color bars for
 feature values will be shared across samples. If scale is set to "free", the color bars
 will be independent.}

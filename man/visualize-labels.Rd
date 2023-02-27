@@ -23,6 +23,10 @@ MapLabels(object, ...)
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
   drop_na = FALSE,
+  add_scalebar = FALSE,
+  scalebar_gg = NULL,
+  scalebar_height = 0.05,
+  scalebar_position = c(0.8, 0.8),
   ...
 )
 
@@ -43,6 +47,10 @@ MapLabels(object, ...)
   override_plot_dims = FALSE,
   return_plot_list = FALSE,
   drop_na = FALSE,
+  add_scalebar = FALSE,
+  scalebar_height = 0.05,
+  scalebar_gg = scalebar(x = 500, text_height = 5),
+  scalebar_position = c(0.8, 0.7),
   ...
 )
 }
@@ -94,6 +102,20 @@ computed directly from the spatial coordinates provided in \code{object}.}
 into a `patchwork`}
 
 \item{drop_na}{a logical specifying if NA values should be dropped}
+
+\item{add_scalebar}{A logical specifying if a scale bar should be added to the plots}
+
+\item{scalebar_gg}{A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+bar is styled by passing parameters to \code{\link{scalebar}}.}
+
+\item{scalebar_height}{A numeric value specifying the height of the scale bar relative to the
+height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
+scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
+the height of the scale bar can sometimes be useful to increase the text size to make it more
+visible in small plots.}
+
+\item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
+relative to the plot area. Default is to place it in the top right corner.}
 
 \item{column_name}{a string specifying a meta data column holding the categorical
 feature vector}
