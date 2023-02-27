@@ -6,7 +6,7 @@ NULL
 # Plot functions
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' @param crop_area a numeric vector of length 4 specifying a rectangular area to crop
+#' @param crop_area A numeric vector of length 4 specifying a rectangular area to crop
 #' the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 #' right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 #' specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
@@ -14,53 +14,54 @@ NULL
 #' using crop areas of different sizes on different sections can lead to unwanted side
 #' effects as the point sizes will remain constant. In this case it is better to generate
 #' separate plots for different tissue sections.
-#' @param pt_size numeric value specifying the point size passed to \code{geom_point}
-#' @param pt_alpha numeric value between 0 and 1 specifying the point opacity passed
+#' @param pt_size A numeric value specifying the point size passed to \code{geom_point}
+#' @param pt_alpha A numeric value between 0 and 1 specifying the point opacity passed
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
-#' @param pt_stroke numeric specifying the point stroke width
-#' @param scale_alpha logical specifying if the spot colors should be scaled together with
+#' @param pt_stroke Numeric specifying the point stroke width
+#' @param scale_alpha Logical specifying if the spot colors should be scaled together with
 #' the feature values. This can be useful when you want to highlight regions with higher
 #' feature values while making the background tissue visible.
-#' @param label_by character of length 1 providing a column name in \code{object} with
+#' @param label_by Character of length 1 providing a column name in \code{object} with
 #' labels that can be used to provide a title for each subplot. This column should have
 #' 1 label per tissue section. This can be useful when you need to provide more detailed
 #' information about your tissue sections.
-#' @param ncol integer value specifying the number of columns in the output patchwork.
+#' @param ncol Integer value specifying the number of columns in the output patchwork.
 #' This parameter will only have an effect when the number of features provided is 1.
 #' Otherwise, the patchwork will be arranged based on the \code{arrange_features} parameter.
-#' @param colors a character vector of colors to use for the color scale. The colors should
+#' @param colors A character vector of colors to use for the color scale. The colors should
 #' preferably consist of a set of colors from a scientific color palette designed for sequential
 #' data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 #' \code{scico} R packages.
-#' @param scale a character vector of length 1 specifying one of "shared" or "free" which will
+#' @param scale A character vector of length 1 specifying one of "shared" or "free" which will
 #' determine how the color bars are structured. If scale is set to "shared", the color bars for
 #' feature values will be shared across samples. If scale is set to "free", the color bars
 #' will be independent.
-#' @param arrange_features one of "row" or "col". "col" will put the features in columns
+#' @param arrange_features One of "row" or "col". "col" will put the features in columns
 #' and samples in rows and "row" will transpose the arrangement
-#' @param dims a tibble with information about the tissue sections. This information is used to
+#' @param dims A tibble with information about the tissue sections. This information is used to
 #' determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 #' computed directly from the spatial coordinates provided in \code{object}.
 #' @param coords_columns a character vector of length 2 specifying the names of the columns in
 #' \code{object} holding the spatial coordinates
-#' @param return_plot_list logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
+#' @param return_plot_list A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
 #' By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
 #' if you want to manipulate each sub plot independently.
-#' @param blend a logical specifying whether blending should be used. See color blending for more information.
-#' @param blend_order an integer vector of length 2-3 specifying the order to blend features by. Only
+#' @param blend a logical specifying whether blending should be used. See the section about color 
+#' blending below for more information.
+#' @param blend_order An integer vector of length 2-3 specifying the order to blend features by. Only
 #' active when \code{blend = TRUE}. See color blending for more information.
-#' @param drop_na a logical specifying if NA values should be dropped
-#' @param center_zero a logical specifying whether the color scale should be centered at 0
-#' @param add_scalebar a logical specifying if a scale bar should be added to the plots
-#' @param scalebar_gg a 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+#' @param drop_na A logical specifying if NA values should be dropped
+#' @param center_zero A logical specifying whether the color scale should be centered at 0
+#' @param add_scalebar A logical specifying if a scale bar should be added to the plots
+#' @param scalebar_gg A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
 #' bar is styled by passing parameters to \code{\link{scalebar}}.
-#' @param scalebar_height a numeric value specifying the height of the scale bar relative to the
+#' @param scalebar_height A numeric value specifying the height of the scale bar relative to the
 #' height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
 #' scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
 #' the height of the scale bar can sometimes be useful to increase the text size to make it more
 #' visible in small plots.
-#' @param scalebar_position a numeric vector of length 2 specifying the position of the scale bar
+#' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
 #' relative to the plot area. Default is to place it in the top right corner.
 #'
 #' @importFrom patchwork wrap_plots
@@ -221,6 +222,7 @@ MapFeatures.default <- function (
     return(p)
   }), nm = names(data))
 
+  # Add scalebar
   if (add_scalebar) {
     if (!requireNamespace("dbscan")) {
       install.packages("dbscan")
@@ -565,6 +567,16 @@ MapFeatures.Seurat <- function (
 #' `ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
 #' into a `patchwork`
 #' @param drop_na a logical specifying if NA values should be dropped
+#' @param add_scalebar A logical specifying if a scale bar should be added to the plots
+#' @param scalebar_gg A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+#' bar is styled by passing parameters to \code{\link{scalebar}}.
+#' @param scalebar_height A numeric value specifying the height of the scale bar relative to the
+#' height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
+#' scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
+#' the height of the scale bar can sometimes be useful to increase the text size to make it more
+#' visible in small plots.
+#' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
+#' relative to the plot area. Default is to place it in the top right corner.
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -579,21 +591,25 @@ MapFeatures.Seurat <- function (
 #' @export
 #'
 MapLabels.default <- function (
-    object,
-    crop_area = NULL,
-    pt_size = 1,
-    pt_alpha = 1,
-    pt_stroke = 0,
-    section_number = NULL,
-    label_by = NULL,
-    split_labels = FALSE,
-    ncol = NULL,
-    colors = NULL,
-    dims = NULL,
-    coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
-    return_plot_list = FALSE,
-    drop_na = FALSE,
-    ...
+  object,
+  crop_area = NULL,
+  pt_size = 1,
+  pt_alpha = 1,
+  pt_stroke = 0,
+  section_number = NULL,
+  label_by = NULL,
+  split_labels = FALSE,
+  ncol = NULL,
+  colors = NULL,
+  dims = NULL,
+  coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
+  return_plot_list = FALSE,
+  drop_na = FALSE,
+  add_scalebar = FALSE,
+  scalebar_gg = NULL,
+  scalebar_height = 0.05,
+  scalebar_position = c(0.8, 0.8),
+  ...
 ) {
 
   # Set global variables to NULL
@@ -630,7 +646,7 @@ MapLabels.default <- function (
   if (split_labels) {
     section_number <- section_number %||% {
       warn("No section_number selected. Selecting section 1.")
-      1
+      1L
     }
     data <- data[section_number]
     c(data, dims, colors) %<-% .split_data_by_label(data, dims[dims$sampleID == section_number, ], label, colors, drop_na)
@@ -684,6 +700,28 @@ MapLabels.default <- function (
 
     return(p)
   }), nm = names(data))
+  
+  # Add scalebar
+  if (add_scalebar) {
+    if (!requireNamespace("dbscan")) {
+      install.packages("dbscan")
+    }
+    scalebar_width <- scalebar_gg$labels$scalebar_width
+    sample_plots <- lapply(names(sample_plots), function(nm) {
+      gg <- data[[nm]]
+      nn_dist <- dbscan::kNN(gg |> select(all_of(coords_columns)), k = 1)$dist[, 1] |> min()
+      plots <- sample_plots[[nm]]
+      d <- dims |> filter(sampleID == nm)
+      sf <- scalebar_width/100
+      prop_width <- (nn_dist*sf)/(d$full_width - d$x_start)
+      scalebar_pos <- scalebar_position %||% c(0.8, 0.8)
+      scalebar_pos[1] <- ifelse((1 - prop_width) > scalebar_pos[1], scalebar_pos[1], (1 - prop_width))
+      scalebar_pos[2] <- ifelse((1 - scalebar_height) > scalebar_pos[2], scalebar_pos[2], (1 - scalebar_height))
+      plots <- plots +
+        inset_element(p = scalebar_gg, left = scalebar_pos[1], bottom = scalebar_pos[2], align_to = "full",
+                      right = scalebar_pos[1] + prop_width, top = scalebar_pos[2] + scalebar_height, on_top = TRUE)
+    }) |> setNames(nm = names(sample_plots))
+  }
 
   if (!return_plot_list) {
     # Create final patchwork
@@ -774,23 +812,27 @@ MapLabels.default <- function (
 #' @export
 #'
 MapLabels.Seurat <- function (
-    object,
-    column_name,
-    image_use = NULL,
-    coords_use = "raw",
-    crop_area = NULL,
-    pt_size = 1,
-    pt_alpha = 1,
-    pt_stroke = 0,
-    section_number = NULL,
-    label_by = NULL,
-    split_labels = FALSE,
-    ncol = NULL,
-    colors = NULL,
-    override_plot_dims = FALSE,
-    return_plot_list = FALSE,
-    drop_na = FALSE,
-    ...
+  object,
+  column_name,
+  image_use = NULL,
+  coords_use = "raw",
+  crop_area = NULL,
+  pt_size = 1,
+  pt_alpha = 1,
+  pt_stroke = 0,
+  section_number = NULL,
+  label_by = NULL,
+  split_labels = FALSE,
+  ncol = NULL,
+  colors = NULL,
+  override_plot_dims = FALSE,
+  return_plot_list = FALSE,
+  drop_na = FALSE,
+  add_scalebar = FALSE,
+  scalebar_height = 0.05,
+  scalebar_gg = scalebar(x = 500, text_height = 5),
+  scalebar_position = c(0.8, 0.7),
+  ...
 ) {
 
   # Match args
@@ -809,6 +851,9 @@ MapLabels.Seurat <- function (
 
   # Add label_by column if present
   if (!is.null(label_by)) {
+    if (label_by == column_name) {
+      abort(glue("{col_br_magenta('column_name')} should not be the same as {col_br_magenta('label_by')}"))
+    }
     data_use <- data_use |>
       bind_cols(FetchData(object, vars = label_by))
   }
@@ -852,6 +897,26 @@ MapLabels.Seurat <- function (
 
   # Set dims
   dims <- GetStaffli(object)@image_info
+  
+  if (add_scalebar) {
+    # Check input param
+    if (!inherits(scalebar_gg, what = "gg")) {
+      abort(glue("Invalid {col_br_magenta('scalebar_gg')}. Expected a 'ggplot' object"))
+    }
+    if (!between(x = scalebar_height, left = 0, right = 1)) {
+      abort(glue("Invalid {col_br_magenta('scalebar_height')}. Expected a numeric of length 1 between 0 and 1"))
+    }
+    if (length(scalebar_position) != 2) {
+      abort(glue("Invalid {col_br_magenta('scalebar_position')}. Expected a numeric of length 2"))
+    }
+    if (!all(between(x = scalebar_position, left = 0, right = 1))) {
+      abort(glue("Invalid {col_br_magenta('scalebar_position')}. Expected values between 0 and 1"))
+    }
+  } else {
+    scalebar_height <- NULL
+    scalebar_gg <- NULL
+    scalebar_position <- NULL
+  }
 
   # generate plots
   wrapped_plots <- MapLabels(
@@ -868,7 +933,11 @@ MapLabels.Seurat <- function (
     dims = dims,
     coords_columns = coords_columns,
     return_plot_list = (!is.null(image_use)) | return_plot_list,
-    drop_na = drop_na
+    drop_na = drop_na,
+    add_scalebar = add_scalebar,
+    scalebar_height = scalebar_height,
+    scalebar_gg = scalebar_gg,
+    scalebar_position = scalebar_position
   )
 
   # Inject images if image_use is provided
@@ -1138,9 +1207,13 @@ MapLabels.Seurat <- function (
   }
 
   # Check colors
-  if (length(colors) != length(levels(gg$variable))) abort(glue("The number of colors ({length(colors)})",
-                                                           " does not match the number of labels ({length(levels(gg$variable))})."))
-
+  if (length(colors) < length(levels(gg$variable))) {
+    abort(glue("The number of colors ({length(colors)})",
+               " does not match the number of labels ({length(levels(gg$variable))})."))
+  } else {
+    colors <- colors[levels(gg$variable)]
+  }
+  
   # Draw plot
   p <-
     ggplot(
@@ -1234,7 +1307,7 @@ MapLabels.Seurat <- function (
     if (!label_by %in% colnames(object)) abort("'label_by' could not be found in the input data.")
     check_labels <- object |>
       unite(col = "merged_cols", all_of(c("sampleID", label_by))) |>
-      count(merged_cols)
+      dplyr::count(merged_cols)
     if (nrow(check_labels) > length(unique(object$sampleID))) abort("The 'label_by' column does not match the samples.")
   }
 
@@ -1353,6 +1426,10 @@ MapLabels.Seurat <- function (
   # restructure data so that each level in the selected factor
   # gets its own tibble and this way we can arrange 1 plot per level
   lvls <- data[[1]] |> pull(all_of(label)) |> levels()
+  if (length(lvls) == 0) {
+    abort(glue("Only NA values found for selected column variable"))
+  }
+  bg_name <- ifelse("background" %in% (data[[1]] |> pull(all_of(label))), "background__", "background")
   if (length(lvls) == 1) abort(glue("Only 1 group '{lvls}' present in '{label}'. Cannot split data."))
   data <- lapply(lvls, function(lvl) {
     # mutate data: if select factor values match lbl (current group)
@@ -1360,10 +1437,10 @@ MapLabels.Seurat <- function (
     # to NA or background
     data[[1]] |> mutate(across(all_of(label), ~ case_when(
       .x == lvl ~ lvl,
-      TRUE ~ ifelse(drop_na, NA_character_, "background")
+      TRUE ~ ifelse(drop_na, NA_character_, bg_name)
     ))) |>
       mutate(across(all_of(label), ~ factor(.x, levels = c(
-        lvls, ifelse(drop_na, NA_character_, "background")
+        lvls, ifelse(drop_na, NA_character_, bg_name)
       ))))
   }) |>
     setNames(nm = lvls)
@@ -1376,15 +1453,15 @@ MapLabels.Seurat <- function (
   # If colors is NULL, we create as many colors as the
   # number of levels + lightgrey for the background
   colors <- colors %||% setNames(c(.gg_color_hue(length(lvls)), "lightgray"),
-                                 nm = c(lvls, ifelse(drop_na, NA_character_, "background")))
+                                 nm = c(lvls, ifelse(drop_na, NA_character_, bg_name)))
   # If colors are provided, add another color for background
   if (length(colors) == length(lvls)) {
     if (!is.null(names(colors))) {
       colors <- setNames(c(colors, "lightgray"),
-                         nm = c(names(colors), ifelse(drop_na, NA_character_, "background")))
+                         nm = c(names(colors), ifelse(drop_na, NA_character_, bg_name)))
     } else {
       colors <- setNames(c(colors, "lightgray"),
-                         nm = c(lvls, ifelse(drop_na, NA_character_, "background")))
+                         nm = c(lvls, ifelse(drop_na, NA_character_, bg_name)))
     }
   }
 
