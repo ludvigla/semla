@@ -167,8 +167,11 @@ ImagePlot <- function (
     }
   } else {
     plots <- lapply(seq_along(images), function(i) {
-      ggplot() +
-        ggtitle(label = label_by_vec[i]) +
+      p <- ggplot()
+      if (!is.null(label_by)) {
+        p <- p + ggtitle(label = label_by_vec[i])
+      }
+      p <- p +
         theme(plot.margin = margin(t = mar[1], r = mar[2], b = mar[3], l = mar[4])) +
         inset_element(p = images[[i]], left = 0, bottom = 0, right = 1, top = 1)
     })
