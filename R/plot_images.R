@@ -4,7 +4,7 @@ NULL
 
 #' Plot H&E images
 #'
-#' If images are loaded into the `Seurat` object with \code{LoadImages},
+#' If images are loaded into the \code{Seurat} object with \code{LoadImages},
 #' this function can be used to quickly plot the images in a grid. If
 #' you have applied transformations to the images, e.g. with
 #' \code{RigidTransformImages}, you can specify \code{image_use = "transformed"}
@@ -12,7 +12,7 @@ NULL
 #'
 #' @param object A Seurat object
 #' @param label_by A string specifying a meta data column to label plots by.
-#' This needs to be a `character` or `factor` and multiple labels for each section
+#' This needs to be a \code{character} or \code{factor} and multiple labels for each section
 #' are not allowed.
 #' @param image_use String specifying image type to use, either 'raw' or
 #' 'transformed'
@@ -24,10 +24,11 @@ NULL
 #' using crop areas of different sizes on different sections can lead to unwanted side
 #' effects as the point sizes will remain constant. In this case it is better to generate
 #' separate plots for different tissue sections.
-#' @param section_numbers An integer vector with section numbers to plot
+#' @param sampleIDs An integer vector with section numbers to plot
 #' @param ncol An integer value specifying the number of columns in the plot
 #' grid
 #' @param mar Margins around each plot. See \code{\link{par}} for details
+#' @param return_as_gg Should the plot be returned as a \code{ggplot} object?
 #'
 #' @importFrom rlang abort %||%
 #' @importFrom graphics layout
@@ -59,10 +60,10 @@ NULL
 #' ImagePlot(se_merged)
 #'
 #' # Plot only selected tissue sections
-#' ImagePlot(se_merged, section_numbers = 1)
+#' ImagePlot(se_merged, sampleIDs = 1)
 #'
 #' # Change order of plot
-#' ImagePlot(se_merged, section_numbers = 2:1)
+#' ImagePlot(se_merged, sampleIDs = 2:1)
 #'
 #' # Add a sample_id column and label plots
 #' se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == 1, "brain", "colon")
@@ -71,8 +72,8 @@ NULL
 #' # Reload images in higher resolution, crop image and remove margins
 #' se_merged <- LoadImages(se_merged, image_height = 1e3)
 #' se_merged <- LoadImages(se_merged, image_height = 1.5e3)
-#' ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), section_numbers = 1, mar = c(0, 0, 0, 0))
-#' ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), section_numbers = 2, mar = c(0, 0, 0, 0))
+#' ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), sampleIDs = 1, mar = c(0, 0, 0, 0))
+#' ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), sampleIDs = 2, mar = c(0, 0, 0, 0))
 #'
 #' @export
 #'
@@ -81,9 +82,10 @@ ImagePlot <- function (
     label_by = NULL,
     image_use = c("raw", "transformed"),
     crop_area = NULL,
-    section_numbers = NULL,
+    sampleIDs = NULL,
     ncol = NULL,
-    mar = c(1, 1, 1, 1)
+    mar = c(1, 1, 1, 1),
+    return_as_gg = FALSE
 ) {
 
   # Run checks
@@ -116,18 +118,18 @@ ImagePlot <- function (
   images <- st_object@rasterlists[[image_use]]
 
   # Use all images if indices are not specified
-  section_numbers <- section_numbers %||% {
+  sampleIDs <- sampleIDs %||% {
     seq_along(images)
   }
 
   # Check if indices are OK
-  if (any(!section_numbers %in% seq_along(images))) abort(glue("'section_numbers' is out of range. Section numbers ",
+  if (any(!sampleIDs %in% seq_along(images))) abort(glue("'sampleIDs' is out of range. Section numbers ",
                                                                "{paste(seq_along(images), collapse = ', ')} are available."))
 
   # Select sections
-  images <- images[section_numbers]
+  images <- images[sampleIDs]
   if (!is.null(label_by)) {
-    label_by_vec <- label_by_vec[section_numbers]
+    label_by_vec <- label_by_vec[sampleIDs]
   }
 
   # Validate crop_area
@@ -149,17 +151,28 @@ ImagePlot <- function (
   ncols <- ncol %||% ceiling(sqrt(length(x = images)))
   nrows <- ceiling(length(x = images)/ncols)
 
-  # Create a plot layout
-  layout.matrix <- t(matrix(c(1:length(images), rep(0, nrows*ncols - length(images))), nrow = ncols, ncol = nrows))
-  layout(mat = layout.matrix)
-
-  # plot images
-  for (i in seq_along(images)) {
-    rst <- images[[i]]
-    par(mar = mar)
-    plot(rst)
-    if (!is.null(label_by)) {
-      title(main = label_by_vec[i])
+  if (!return_as_gg) {
+    # Create a plot layout
+    layout.matrix <- t(matrix(c(1:length(images), rep(0, nrows*ncols - length(images))), nrow = ncols, ncol = nrows))
+    layout(mat = layout.matrix)
+    
+    # plot images
+    for (i in seq_along(images)) {
+      rst <- images[[i]]
+      par(mar = mar)
+      plot(rst)
+      if (!is.null(label_by)) {
+        title(main = label_by_vec[i])
+      }
     }
+  } else {
+    plots <- lapply(seq_along(images), function(i) {
+      ggplot() +
+        ggtitle(label = label_by_vec[i]) +
+        theme(plot.margin = margin(t = mar[1], r = mar[2], b = mar[3], l = mar[4])) +
+        inset_element(p = images[[i]], left = 0, bottom = 0, right = 1, top = 1)
+    })
+    p <- wrap_plots(plots, ncol = ncols)
+    return(p)
   }
 }
