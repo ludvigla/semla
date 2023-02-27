@@ -232,7 +232,7 @@ CorSpatialFeatures.default <- function (
 }
 
 
-#' @param features A character vector with features present in `Seurat` object. These
+#' @param features A character vector with features present in \code{Seurat} object. These
 #' features need to be accessible with \code{\link{FetchData}}
 #' @param assay_use Select assay to use for computation. If not specified, the default
 #' assay will be used.

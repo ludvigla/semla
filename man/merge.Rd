@@ -13,9 +13,9 @@ MergeSTData(
 )
 }
 \arguments{
-\item{x}{A `Seurat` object}
+\item{x}{A \code{Seurat} object}
 
-\item{y}{A `Seurat` object or a list of `Seurat` objects}
+\item{y}{A \code{Seurat} object or a list of \code{Seurat} objects}
 
 \item{merge_data}{Merge the data slots instead of just merging the counts
 (which requires re-normalization); this is recommended if the same normalization
@@ -25,10 +25,10 @@ approach was applied to all objects. See \code{\link{merge}} for details.}
 only merge the embeddings slots for the first N dimensions that are shared across
 all objects. See \code{\link{merge}} for details.}
 
-\item{project}{\code{\link{Project}} name for the `Seurat` object}
+\item{project}{\code{\link{Project}} name for the \code{Seurat} object}
 }
 \value{
-A merged `Seurat` object
+A merged \code{Seurat} object
 }
 \description{
 Merges two or more Seurat objects containing SRT data while making sure that the
@@ -36,8 +36,8 @@ spatial data (images and spot coordinates) are handled correctly.
 }
 \details{
 NB: If you use the generic \code{\link{merge}} function you will not be able
-to use any of the `semla` visualization methods on the output object as
-the `Staffli` object will be broken.
+to use any of the \code{semla} visualization methods on the output object as
+the \code{Staffli} object will be broken.
 }
 \examples{
 se_mbrain <- readRDS(system.file("extdata",

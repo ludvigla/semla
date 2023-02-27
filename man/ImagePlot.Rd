@@ -9,16 +9,17 @@ ImagePlot(
   label_by = NULL,
   image_use = c("raw", "transformed"),
   crop_area = NULL,
-  section_numbers = NULL,
+  sampleIDs = NULL,
   ncol = NULL,
-  mar = c(1, 1, 1, 1)
+  mar = c(1, 1, 1, 1),
+  return_as_gg = FALSE
 )
 }
 \arguments{
 \item{object}{A Seurat object}
 
 \item{label_by}{A string specifying a meta data column to label plots by.
-This needs to be a `character` or `factor` and multiple labels for each section
+This needs to be a \code{character} or \code{factor} and multiple labels for each section
 are not allowed.}
 
 \item{image_use}{String specifying image type to use, either 'raw' or
@@ -33,18 +34,20 @@ using crop areas of different sizes on different sections can lead to unwanted s
 effects as the point sizes will remain constant. In this case it is better to generate
 separate plots for different tissue sections.}
 
-\item{section_numbers}{An integer vector with section numbers to plot}
+\item{sampleIDs}{An integer vector with section numbers to plot}
 
 \item{ncol}{An integer value specifying the number of columns in the plot
 grid}
 
 \item{mar}{Margins around each plot. See \code{\link{par}} for details}
+
+\item{return_as_gg}{Should the plot be returned as a \code{ggplot} object?}
 }
 \value{
 draws a plot of the H&E images
 }
 \description{
-If images are loaded into the `Seurat` object with \code{LoadImages},
+If images are loaded into the \code{Seurat} object with \code{LoadImages},
 this function can be used to quickly plot the images in a grid. If
 you have applied transformations to the images, e.g. with
 \code{RigidTransformImages}, you can specify \code{image_use = "transformed"}
@@ -69,10 +72,10 @@ se_merged <- LoadImages(se_merged)
 ImagePlot(se_merged)
 
 # Plot only selected tissue sections
-ImagePlot(se_merged, section_numbers = 1)
+ImagePlot(se_merged, sampleIDs = 1)
 
 # Change order of plot
-ImagePlot(se_merged, section_numbers = 2:1)
+ImagePlot(se_merged, sampleIDs = 2:1)
 
 # Add a sample_id column and label plots
 se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == 1, "brain", "colon")
@@ -81,8 +84,8 @@ ImagePlot(se_merged, label_by = "sample_id")
 # Reload images in higher resolution, crop image and remove margins
 se_merged <- LoadImages(se_merged, image_height = 1e3)
 se_merged <- LoadImages(se_merged, image_height = 1.5e3)
-ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), section_numbers = 1, mar = c(0, 0, 0, 0))
-ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), section_numbers = 2, mar = c(0, 0, 0, 0))
+ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), sampleIDs = 1, mar = c(0, 0, 0, 0))
+ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), sampleIDs = 2, mar = c(0, 0, 0, 0))
 
 }
 \seealso{

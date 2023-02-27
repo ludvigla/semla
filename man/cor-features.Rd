@@ -42,7 +42,7 @@ networks should match the spots in the feature matrix.}
 
 \item{verbose}{Print messages}
 
-\item{features}{A character vector with features present in `Seurat` object. These
+\item{features}{A character vector with features present in \code{Seurat} object. These
 features need to be accessible with \code{\link{FetchData}}}
 
 \item{assay_use}{Select assay to use for computation. If not specified, the default

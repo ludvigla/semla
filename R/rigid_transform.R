@@ -44,7 +44,7 @@ generate_rigid_transform <- function (
   return(transforms)
 }
 
-#' @param image an image of class `magick-image`, `raster`, `StoredSpatialImage`
+#' @param image an image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
 #' or a path to an image in PNG or JPEG format
 #' @param xy_coords spot coordinates that can be mapped to \code{image}
 #' @param verbose print messages
@@ -88,8 +88,8 @@ generate_rigid_transform <- function (
 #'
 #' @return A list with two elements:
 #' \itemize{
-#'   \item{"im_transf": An object of class `magick-image` representing the transformed image}
-#'   \item{"xy_transf": An object of class `tble` representing the transformed coordinates}
+#'   \item{"im_transf": An object of class \code{magick-image} representing the transformed image}
+#'   \item{"xy_transf": An object of class \code{tbl} representing the transformed coordinates}
 #' }
 #'
 #' @examples

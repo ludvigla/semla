@@ -6,9 +6,9 @@ NULL
 #' @param object A matrix-like object with 10x Visium data
 #' @param singlecell_matrix A matrix-like object with scRNA-seq data
 #' @param groups A character vector of length \code{ncol(singlecell_matrix)}
-#' with cell type labels. For `Seurat` objects, one can omit groups in which case
+#' with cell type labels. For \code{Seurat} objects, one can omit groups in which case
 #' the current identity is used instead. Alternatively, a string can be provided
-#' specifying a column to use from the `singlecell_object` meta.data slot.
+#' specifying a column to use from the \code{singlecell_object} meta.data slot.
 #' @param nCells_per_group Each cell type is down sampled to this number before
 #' computing cell type expression profiles. This is mainly used to speed up
 #' computation. Note that if a cell type has fewer than \code{nCells_per_group}
@@ -30,7 +30,7 @@ NULL
 #' @rdname celltype-prediction
 #'
 #' @section default method:
-#' Input `object` is a matrix-like object with 10x Visium data. The function returns
+#' Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 #' a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 #' where nCellTypes is the number of cell types and nSpots is the number of spots.
 #' If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
@@ -116,24 +116,24 @@ RunNNLS.default <- function (
 #' will be used. Note that the intersect can be quite small, in which case you can
 #' increase the number of variable features by rerunning \code{FindVariableFeatures}
 #' and increase the number with the `nfeatures` argument.
-#' @param singlecell_object A `Seurat` object with single-cell gene expression data
+#' @param singlecell_object A \code{Seurat} object with single-cell gene expression data
 #' @param singlecell_assay Assay in single cell data object to use for deconvolution
 #' @param spatial_assay Assay in Visium data object to use for deconvolution
 #' @param slot Name of slot in `singlecell_assay` and `spatial_assay` to use for
 #' deconvolution
-#' @param assay_name Sets the name of the returned `Assay` object. Only active
+#' @param assay_name Sets the name of the returned \code{Assay} object. Only active
 #' if return.as.dimred = FALSE.
-#' @param dimred_name Sets the name of  the returned `DimReduc` object. Only
+#' @param dimred_name Sets the name of  the returned \code{DimReduc} object. Only
 #' active if return.as.dimred = TRUE.
-#' @param return_as_dimred By default, the results are returned as an `Assay`
+#' @param return_as_dimred By default, the results are returned as an \code{Assay}
 #' named "celltypeprops", where each feature is named after the cell type IDs.
-#' Alternatively, you can return the results as a `DimReduc` object. This will
+#' Alternatively, you can return the results as a \code{DimReduc} object. This will
 #' also provide the cell gene loadings for each cell type. However, the proportions
 #' will instead be named "factor_1", "factor_2", ...
 #'
 #' @section Seurat method:
-#' Input `object` is a `Seurat` object with 10x Visium data. The function returns
-#' the `Seurat` object with either a new `Assay` or `DimReduc` object containing
+#' Input \code{object} is a \code{Seurat} object with 10x Visium data. The function returns
+#' the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated cell type proportions.
 #'
 #' @importFrom Seurat GetAssayData CreateAssayObject CreateDimReducObject
@@ -218,15 +218,15 @@ RunNNLS.Seurat <- function (
 
 #' Utility function to format returned data
 #'
-#' @param st_object A `Seurat` object woth Visium data
+#' @param st_object A \code{Seurat} object woth Visium data
 #' @param prop A matrix with cell type proportion estimates
 #' @param W A matrix with cell type expression profiles
 #' @param return_as_dimred Logical specifying if the data should be returned
-#' as a `DimReduc` object or an `Assay` object
+#' as a \code{DimReduc} object or an \code{Assay} object
 #' @param st_assay Assay used for spatial data
 #' @param assay_name Assay name for returned data. Only used if `return_as_dimred=FALSE`
-#' @param dimred_name Name for `DimReduc` object. Only used if `return_as_dimred=TRUE`
-#' @param dimred_prefix Prefix for `DimReduc` object vectors.
+#' @param dimred_name Name for \code{DimReduc} object. Only used if `return_as_dimred=TRUE`
+#' @param dimred_prefix Prefix for \code{DimReduc} object vectors.
 #' @param verbose Print messages
 #'
 #' @import glue
@@ -300,7 +300,7 @@ RunNNLS.Seurat <- function (
 }
 
 
-#' @param sc_object A `Seurat` object with single-cell data
+#' @param sc_object A \code{Seurat} object with single-cell data
 #' @param groups A character vector with group labels
 #' @param verbose Print messages
 #'

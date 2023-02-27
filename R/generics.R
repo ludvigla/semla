@@ -118,6 +118,8 @@ MapLabels <- function(object, ...) {
 
 
 #' Load images
+#' 
+#' Load H&E images (or any other custom images) required for visualization methods in \code{semla}.
 #'
 #' @param object An object
 #' @param ... Arguments passed to other methods

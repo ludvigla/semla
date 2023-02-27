@@ -8,18 +8,18 @@ NULL
 #' spatial data (images and spot coordinates) are handled correctly.
 #'
 #' NB: If you use the generic \code{\link{merge}} function you will not be able
-#' to use any of the `semla` visualization methods on the output object as
-#' the `Staffli` object will be broken.
+#' to use any of the \code{semla} visualization methods on the output object as
+#' the \code{Staffli} object will be broken.
 #'
-#' @param x A `Seurat` object
-#' @param y A `Seurat` object or a list of `Seurat` objects
+#' @param x A \code{Seurat} object
+#' @param y A \code{Seurat} object or a list of \code{Seurat} objects
 #' @param merge_data Merge the data slots instead of just merging the counts
 #' (which requires re-normalization); this is recommended if the same normalization
 #' approach was applied to all objects. See \code{\link{merge}} for details.
 #' @param merge_dr Merge specified DimReducs that are present in all objects; will
 #' only merge the embeddings slots for the first N dimensions that are shared across
 #' all objects. See \code{\link{merge}} for details.
-#' @param project \code{\link{Project}} name for the `Seurat` object
+#' @param project \code{\link{Project}} name for the \code{Seurat} object
 #'
 #' @importFrom dplyr select mutate group_split ungroup cur_group_id group_by bind_rows
 #' @importFrom tibble as_tibble
@@ -27,7 +27,7 @@ NULL
 #' @importFrom Seurat RenameCells
 #' @importFrom rlang warn
 #'
-#' @return A merged `Seurat` object
+#' @return A merged \code{Seurat} object
 #'
 #' @family subset-and-merge
 #' @rdname merge
@@ -199,12 +199,12 @@ MergeSTData <- function (
 
 #' Subset 10x Visium data
 #'
-#' Subset a `Seurat` object while making sure that the spatial data
+#' Subset a \code{Seurat} object while making sure that the spatial data
 #' (images and spot coordinates) are handled correctly.
 #'
 #' If you use the default \code{\link{subset}} function you will most likely not be able
-#' to use any of the `semla` visualization methods on the output object as
-#' the `Staffli` object will be broken. The exception is when filtering is only
+#' to use any of the \code{semla} visualization methods on the output object as
+#' the \code{Staffli} object will be broken. The exception is when filtering is only
 #' done at the feature level.
 #'
 #' @param object A Seurat object

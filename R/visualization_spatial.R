@@ -18,7 +18,7 @@ NULL
 #' @param pt_alpha A numeric value between 0 and 1 specifying the point opacity passed
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
-#' @param pt_stroke Numeric specifying the point stroke width
+#' @param pt_stroke A numeric specifying the point stroke width
 #' @param scale_alpha Logical specifying if the spot colors should be scaled together with
 #' the feature values. This can be useful when you want to highlight regions with higher
 #' feature values while making the background tissue visible.
@@ -264,17 +264,17 @@ MapFeatures.default <- function (
 }
 
 
-#' @param features a character vector of features to plot. These features need to be
+#' @param features A character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
-#' @param slot slot to pull features values from
-#' @param image_use string specifying image type to use
-#' @param coords_use string specifying coordinate type to use
-#' @param section_number an integer select a tissue section number to subset data by
-#' @param override_plot_dims a logical specifying whether the image dimensions should
+#' @param slot Slot to pull features values from
+#' @param image_use A character specifying image type to use
+#' @param coords_use A character specifying coordinate type to use
+#' @param section_number An integer select a tissue section number to subset data by
+#' @param override_plot_dims A logical specifying whether the image dimensions should
 #' be used to define the plot area. Setting \code{override_plot_dims} can be useful
 #' in situations where the tissue section only covers a small fraction of the capture
 #' area, which will create a lot of white space in the plots.
-#' @param min_cutoff,max_cutoff a numeric value between 0-1 specifying either a lower
+#' @param min_cutoff,max_cutoff A numeric value between 0-1 specifying either a lower
 #' (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 #' These arguments can be useful to make sure that the color map doesn't get dominated by outliers.
 #'
@@ -537,7 +537,7 @@ MapFeatures.Seurat <- function (
 }
 
 
-#' @param crop_area a numeric vector of length 4 specifying a rectangular area to crop
+#' @param crop_area A numeric vector of length 4 specifying a rectangular area to crop
 #' the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 #' right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 #' specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
@@ -545,28 +545,28 @@ MapFeatures.Seurat <- function (
 #' using crop areas of different sizes on different sections can lead to unwanted side
 #' effects as the point sizes will remain constant. In this case it is better to generate
 #' separate plots for different tissue sections.
-#' @param pt_size numeric value specifying the point size passed to \code{geom_point}
-#' @param pt_alpha numeric value between 0 and 1 specifying the point opacity passed
+#' @param pt_size A numeric value specifying the point size passed to \code{geom_point}
+#' @param pt_alpha A numeric value between 0 and 1 specifying the point opacity passed
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
-#' @param pt_stroke numeric specifying the point stroke width
-#' @param section_number an integer select a tissue section number to subset data by
-#' @param label_by character of length 1 providing a column name in \code{object} with
+#' @param pt_stroke A numeric specifying the point stroke width
+#' @param section_number An integer select a tissue section number to subset data by
+#' @param label_by A character specifying a column name in \code{object} with
 #' labels that can be used to provide a title for each subplot. This column should have
 #' 1 label per tissue section. This can be useful when you need to provide more detailed
 #' information about your tissue sections.
-#' @param ncol integer value specifying the number of columns in the output patchwork.
-#' @param colors a character vector of colors to use for the color scale. The number of
+#' @param ncol An integer value specifying the number of columns in the output patchwork.
+#' @param colors A character vector of colors to use for the color scale. The number of
 #' colors should match the number of labels present.
-#' @param dims a tibble with information about the tissue sections. This information is used to
+#' @param dims A tibble with information about the tissue sections. This information is used to
 #' determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 #' computed directly from the spatial coordinates provided in \code{object}.
-#' @param coords_columns a character vector of length 2 specifying the names of the columns in
+#' @param coords_columns A character vector of length 2 specifying the names of the columns in
 #' \code{object} holding the spatial coordinates
 #' @param return_plot_list logical specifying whether the plots should be return as a list of
 #' `ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
 #' into a `patchwork`
-#' @param drop_na a logical specifying if NA values should be dropped
+#' @param drop_na A logical specifying if NA values should be dropped
 #' @param add_scalebar A logical specifying if a scale bar should be added to the plots
 #' @param scalebar_gg A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
 #' bar is styled by passing parameters to \code{\link{scalebar}}.
@@ -734,12 +734,12 @@ MapLabels.default <- function (
   }
 }
 
-#' @param column_name a string specifying a meta data column holding the categorical
-#' feature vector
-#' @param image_use string specifying image type to use
-#' @param coords_use string specifying coordinate type to use
-#' @param split_labels logical specifying if labels should be split
-#' @param override_plot_dims a logical specifying whether the image dimensions should
+#' @param column_name A character specifying a meta data column holding the categorical
+#' feature vector.
+#' @param image_use A character specifying image type to use.
+#' @param coords_use A character specifying coordinate type to use.
+#' @param split_labels A logical specifying if labels should be split.
+#' @param override_plot_dims A logical specifying whether the image dimensions should
 #' be used to define the plot area. Setting \code{override_plot_dims} can be useful
 #' in situations where the tissue section only covers a small fraction of the capture
 #' area, which will create a lot of white space in the plots. The same effect can be
@@ -970,28 +970,28 @@ MapLabels.Seurat <- function (
 
 #' Plot numeric features in 2D
 #'
-#' @param gg tibble with spatial coordinates and feature values
-#' @param nm sample ID
-#' @param ftr feature name
-#' @param feature_limits list of tibbles containing information about
+#' @param gg A tibble with spatial coordinates and feature values
+#' @param nm A sample ID
+#' @param ftr A feature name
+#' @param feature_limits A list of tibbles containing information about
 #' the feature value range
-#' @param colors a character vector of colors to use for scale bar
-#' @param dims tibble containing information about the dimensions
+#' @param colors A character vector of colors to use for scale bar
+#' @param dims A tibble containing information about the dimensions
 #' of the plotting area
-#' @param all_features a character vector with all features, only used
+#' @param all_features A character vector with all features, only used
 #' for blending features
-#' @param extreme_colors a character vector with the hex colors, only
+#' @param extreme_colors A character vector with the hex colors, only
 #' used for blending features
-#' @param pt_size point size passed to geom_point
-#' @param pt_alpha point opacity ranging from 0 to 1 passed to geom_point.
+#' @param pt_size Point size passed to geom_point
+#' @param pt_alpha Point opacity ranging from 0 to 1 passed to geom_point.
 #' 0 = fully transparent, 1 = fully opaque
-#' @param pt_stroke point stroke width
-#' @param scale_alpha should the spot opacity be scaled along with the feature values?
-#' @param cur_label string to use as title
-#' @param coords_columns a character vector of length 2 specifying names of
+#' @param pt_stroke Point stroke width
+#' @param scale_alpha Should the spot opacity be scaled along with the feature values?
+#' @param cur_label A string to use as title
+#' @param coords_columns A character vector of length 2 specifying names of
 #' columns in which spatial coordinates are located
-#' @param drop_na should NA values be dropped from the data?
-#' @param center_zero a logical specifying whether color scale should be centered at 0
+#' @param drop_na Should NA values be dropped from the data?
+#' @param center_zero A logical specifying whether color scale should be centered at 0
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -1145,7 +1145,6 @@ MapLabels.Seurat <- function (
   return(p)
 }
 
-# TODO: fix colors
 #' Plot labels in 2D
 #'
 #' @param gg tibble with spatial coordinates and a label column
@@ -1259,7 +1258,7 @@ MapLabels.Seurat <- function (
 
 #' Check input for compatibility
 #'
-#' This function is used internally by `MapLabels` and `MapFeatures` to validate
+#' This function is used internally by \code{MapLabels} and \code{MapFeatures} to validate
 #' input parameters.
 #'
 #' @param object a tibble with spatial coordinates and feature values
@@ -1636,8 +1635,8 @@ MapLabels.Seurat <- function (
 
 #' Validate and get images for plotting
 #'
-#' @param object a `Seurat` object
-#' @param st_object a `Staffli` object
+#' @param object a \code{Seurat} object
+#' @param st_object a \code{Staffli} object
 #' @param image_use string specifying images to use
 #' @param section_number an integer value specifying a section number to subset
 #' images by

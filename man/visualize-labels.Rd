@@ -59,7 +59,7 @@ MapLabels(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{crop_area}{a numeric vector of length 4 specifying a rectangular area to crop
+\item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: \code{crop_area = c(left, top, right, bottom)}. The crop area
@@ -68,40 +68,40 @@ using crop areas of different sizes on different sections can lead to unwanted s
 effects as the point sizes will remain constant. In this case it is better to generate
 separate plots for different tissue sections.}
 
-\item{pt_size}{numeric value specifying the point size passed to \code{geom_point}}
+\item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
 
-\item{pt_alpha}{numeric value between 0 and 1 specifying the point opacity passed
+\item{pt_alpha}{A numeric value between 0 and 1 specifying the point opacity passed
 to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
-\item{pt_stroke}{numeric specifying the point stroke width}
+\item{pt_stroke}{A numeric specifying the point stroke width}
 
-\item{section_number}{an integer select a tissue section number to subset data by}
+\item{section_number}{An integer select a tissue section number to subset data by}
 
-\item{label_by}{character of length 1 providing a column name in \code{object} with
+\item{label_by}{A character specifying a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.}
 
-\item{split_labels}{logical specifying if labels should be split}
+\item{split_labels}{A logical specifying if labels should be split.}
 
-\item{ncol}{integer value specifying the number of columns in the output patchwork.}
+\item{ncol}{An integer value specifying the number of columns in the output patchwork.}
 
-\item{colors}{a character vector of colors to use for the color scale. The number of
+\item{colors}{A character vector of colors to use for the color scale. The number of
 colors should match the number of labels present.}
 
-\item{dims}{a tibble with information about the tissue sections. This information is used to
+\item{dims}{A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 computed directly from the spatial coordinates provided in \code{object}.}
 
-\item{coords_columns}{a character vector of length 2 specifying the names of the columns in
+\item{coords_columns}{A character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
 
 \item{return_plot_list}{logical specifying whether the plots should be return as a list of
 `ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
 into a `patchwork`}
 
-\item{drop_na}{a logical specifying if NA values should be dropped}
+\item{drop_na}{A logical specifying if NA values should be dropped}
 
 \item{add_scalebar}{A logical specifying if a scale bar should be added to the plots}
 
@@ -117,14 +117,14 @@ visible in small plots.}
 \item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.}
 
-\item{column_name}{a string specifying a meta data column holding the categorical
-feature vector}
+\item{column_name}{A character specifying a meta data column holding the categorical
+feature vector.}
 
-\item{image_use}{string specifying image type to use}
+\item{image_use}{A character specifying image type to use.}
 
-\item{coords_use}{string specifying coordinate type to use}
+\item{coords_use}{A character specifying coordinate type to use.}
 
-\item{override_plot_dims}{a logical specifying whether the image dimensions should
+\item{override_plot_dims}{A logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots. The same effect can be

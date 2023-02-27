@@ -17,7 +17,7 @@ RigidTransformImages(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{image}{an image of class `magick-image`, `raster`, `StoredSpatialImage`
+\item{image}{an image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
 or a path to an image in PNG or JPEG format}
 
 \item{xy_coords}{spot coordinates that can be mapped to \code{image}}
@@ -30,8 +30,8 @@ to apply to the images (see Seurat section)}
 \value{
 A list with two elements:
 \itemize{
-  \item{"im_transf": An object of class `magick-image` representing the transformed image}
-  \item{"xy_transf": An object of class `tble` representing the transformed coordinates}
+  \item{"im_transf": An object of class \code{magick-image} representing the transformed image}
+  \item{"xy_transf": An object of class \code{tbl} representing the transformed coordinates}
 }
 }
 \description{

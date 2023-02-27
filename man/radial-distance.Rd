@@ -36,7 +36,7 @@ RadialDistance(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{spots}{A character vector with spot IDs present `object`. These spots typically
+\item{spots}{A character vector with spot IDs present \code{object}. These spots typically
 represent one particular tissue structure identified either by data-driven clustering
 or by the tissue histology.}
 
@@ -58,7 +58,7 @@ not detected as disconnected components. Single spots will most likely not inter
 the centroid of the region of interest and can therefore be kept.}
 
 \item{convert_to_microns}{Logical specifying if pixel distances should be converted to microns. 
-This requires the `dbscan` R package to be installed. When this option sis set to TRUE, the method
+This requires the \code{dbscan} R package to be installed. When this option sis set to TRUE, the method
 will first attempt to estimate the center to center distance between adjacent spots which 
 corresponds to 100 microns in Visium. The center to center distance will then be used to 
 convert the radial distances. Note that if no spots are adjacent in the dataset or if any other data 
@@ -109,8 +109,8 @@ spots located outside of the selected region will have positive distances.
 
 The microenvironment of the region of interest might be extremely heterogeneous
 depending on the direction from its center. For this reason, it can be useful to narrow
-down the search area by defining a smaller angle interval with `angles`. Alternativley,
-you can split the radial distances into an even number of slices with `angles_nbreaks`.
+down the search area by defining a smaller angle interval with \code{angles}. Alternativley,
+you can split the radial distances into an even number of slices with \code{angles_nbreaks}.
 When using a predefined search interval, the region of interest (e.g. manual annotation)
 should not contain multiple spatially disconnected regions. Angles are calculated from
 center of the region of interest so it only makes sense to investigate one region at the time.
@@ -120,7 +120,7 @@ multiple spatially disconnected regions.
 
 \section{default method}{
 
-`object` should be a tibble with four columns:
+\code{object} should be a tibble with four columns:
 
 \itemize{
  \item{'barcode' : character vector with spot IDs}
@@ -128,12 +128,12 @@ multiple spatially disconnected regions.
  \item{'sampleID' : numeric vector with sample IDs}
 }
 
-If `angles` and/or `angles_nbreaks` are set, the function will return a
+If \code{angles} and/or \code{angles_nbreaks} are set, the function will return a
 tibble with spot IDS, sampleIDs, the angle between the region center and
-spots and the radial distances. If  `angles_nbreaks` is provided, a
+spots and the radial distances. If  \code{angles_nbreaks} is provided, a
 fifth column will be provided that groups spots into even intervals based on angles.
 Otherwise, the default is to return numeric vector with radial distances
-for all spots in `object`.
+for all spots in \code{object}.
 }
 
 \examples{

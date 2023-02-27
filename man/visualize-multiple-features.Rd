@@ -67,9 +67,9 @@ separate plots for different tissue sections.}
 
 \item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
 
-\item{pt_stroke}{Numeric specifying the point stroke width}
+\item{pt_stroke}{A numeric specifying the point stroke width}
 
-\item{section_number}{an integer select a tissue section number to subset data by}
+\item{section_number}{An integer select a tissue section number to subset data by}
 
 \item{label_by}{Character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
@@ -102,21 +102,21 @@ if you want to manipulate each sub plot independently.}
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and
 the meaning of these values depend on the choice of \code{scale}}
 
-\item{features}{a character vector of features to plot. These features need to be
+\item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
 
-\item{slot}{slot to pull features values from}
+\item{slot}{Slot to pull features values from}
 
-\item{image_use}{string specifying image type to use}
+\item{image_use}{A character specifying image type to use}
 
-\item{coords_use}{string specifying coordinate type to use}
+\item{coords_use}{A character specifying coordinate type to use}
 
-\item{override_plot_dims}{a logical specifying whether the image dimensions should
+\item{override_plot_dims}{A logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots.}
 
-\item{min_cutoff, max_cutoff}{a numeric value between 0-1 specifying either a lower
+\item{min_cutoff, max_cutoff}{A numeric value between 0-1 specifying either a lower
 (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.}
 }

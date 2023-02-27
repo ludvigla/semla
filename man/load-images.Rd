@@ -24,7 +24,7 @@ LoadImages(object, ...)
 \item{verbose}{print messages}
 }
 \description{
-Load images
+Load H&E images (or any other custom images) required for visualization methods in \code{semla}.
 }
 \section{Seurat}{
 

@@ -87,13 +87,13 @@ separate plots for different tissue sections.}
 to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
-\item{pt_stroke}{Numeric specifying the point stroke width}
+\item{pt_stroke}{A numeric specifying the point stroke width}
 
 \item{scale_alpha}{Logical specifying if the spot colors should be scaled together with
 the feature values. This can be useful when you want to highlight regions with higher
 feature values while making the background tissue visible.}
 
-\item{section_number}{an integer select a tissue section number to subset data by}
+\item{section_number}{An integer select a tissue section number to subset data by}
 
 \item{label_by}{Character of length 1 providing a column name in \code{object} with
 labels that can be used to provide a title for each subplot. This column should have
@@ -152,21 +152,21 @@ visible in small plots.}
 \item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.}
 
-\item{features}{a character vector of features to plot. These features need to be
+\item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
 
-\item{slot}{slot to pull features values from}
+\item{slot}{Slot to pull features values from}
 
-\item{image_use}{string specifying image type to use}
+\item{image_use}{A character specifying image type to use}
 
-\item{coords_use}{string specifying coordinate type to use}
+\item{coords_use}{A character specifying coordinate type to use}
 
-\item{override_plot_dims}{a logical specifying whether the image dimensions should
+\item{override_plot_dims}{A logical specifying whether the image dimensions should
 be used to define the plot area. Setting \code{override_plot_dims} can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots.}
 
-\item{min_cutoff, max_cutoff}{a numeric value between 0-1 specifying either a lower
+\item{min_cutoff, max_cutoff}{A numeric value between 0-1 specifying either a lower
 (\code{min_cutoff}) or upper (\code{max_cutoff}) limit for the data using \code{\link{quantile}}.
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.}
 }

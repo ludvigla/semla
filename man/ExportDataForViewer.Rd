@@ -15,9 +15,11 @@ ExportDataForViewer(
 \arguments{
 \item{object}{A `Seurat` object created with semla}
 
-\item{sampleIDs}{An integer vector specifying}
+\item{sampleIDs}{An integer vector specifying the sampleIDs for the datasets to export. By default,
+all samples are exported.}
 
-\item{outdir}{A character vector specifying the path to an existing directory}
+\item{outdir}{A character vector specifying the path to an existing directory with permission to read
+and write files.}
 
 \item{overwrite}{Overwrite files if they already exists}
 
@@ -27,7 +29,12 @@ ExportDataForViewer(
 A path to the directory where the data is saved
 }
 \description{
-Export data for FeatureViewer
+This is a utility function used to export data required for \code{\link{FeatureViewer}}.
+}
+\details{
+\code{\link{FeatureViewer}} will automatically attempt to export these files every time it's run.
+With `ExportDataForViewer`, you only have to export the files once and you can provide the output
+data path for \code{\link{FeatureViewer}} to look for the required files in that directory.
 }
 \examples{
 \dontrun{
@@ -37,13 +44,13 @@ se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
 
-# Export files to current working directory
+# Export viewer files to current working directory
 ExportDataForViewer(se_mbrain, outdir = "./")
 }
 
 }
 \seealso{
-Other feature-viewer: 
+Other feature-viewer-methods: 
 \code{\link{FeatureViewer}()}
 }
-\concept{feature-viewer}
+\concept{feature-viewer-methods}

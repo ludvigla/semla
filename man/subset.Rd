@@ -21,13 +21,13 @@ SubsetSTData(object, expression, spots = NULL, features = NULL, idents = NULL)
 A filtered Seurat object
 }
 \description{
-Subset a `Seurat` object while making sure that the spatial data
+Subset a \code{Seurat} object while making sure that the spatial data
 (images and spot coordinates) are handled correctly.
 }
 \details{
 If you use the default \code{\link{subset}} function you will most likely not be able
-to use any of the `semla` visualization methods on the output object as
-the `Staffli` object will be broken. The exception is when filtering is only
+to use any of the \code{semla} visualization methods on the output object as
+the \code{Staffli} object will be broken. The exception is when filtering is only
 done at the feature level.
 }
 \examples{

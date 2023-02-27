@@ -50,9 +50,9 @@ RunNNLS(object, ...)
 \item{singlecell_matrix}{A matrix-like object with scRNA-seq data}
 
 \item{groups}{A character vector of length \code{ncol(singlecell_matrix)}
-with cell type labels. For `Seurat` objects, one can omit groups in which case
+with cell type labels. For \code{Seurat} objects, one can omit groups in which case
 the current identity is used instead. Alternatively, a string can be provided
-specifying a column to use from the `singlecell_object` meta.data slot.}
+specifying a column to use from the \code{singlecell_object} meta.data slot.}
 
 \item{nCells_per_group}{Each cell type is down sampled to this number before
 computing cell type expression profiles. This is mainly used to speed up
@@ -134,7 +134,7 @@ from the \code{RcppML} R package developed by Zachary DeBruine.
 }
 \section{default method}{
 
-Input `object` is a matrix-like object with 10x Visium data. The function returns
+Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 where nCellTypes is the number of cell types and nSpots is the number of spots.
 If `return_expression_profiles=TRUE`, the returned object will be a list with estimated

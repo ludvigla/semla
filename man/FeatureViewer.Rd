@@ -21,7 +21,7 @@ FeatureViewer(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object}
+\item{object}{A \code{Seurat} object}
 
 \item{slot}{A slot to use for Assay data}
 
@@ -41,7 +41,7 @@ Defaults to localhost "127.0.0.1"}
 
 \item{categorical_colors}{A named list of character vectors with color names. The name of
 each character vector should correspond to a categorical variable in the meta.data slot of the
-`Seurat` object. Each character vector should be named where each name corresponds to a
+\code{Seurat} object. Each character vector should be named where each name corresponds to a
 label of the category.}
 
 \item{save_colors_to}{A string specifying a variable name to save the colors from the
@@ -52,10 +52,10 @@ viewer to. The variable name should not exist in globalenv().}
 \item{verbose}{Print messages}
 }
 \value{
-A `Seurat` object
+A \code{Seurat} object
 }
 \description{
-`FeatureViewer` opens up an interactive shiny application where
+\code{FeatureViewer} opens up an interactive shiny application where
 one can zoom and pan the H&E image while overlaying and color selected features.
 It is also possible to add new categorical features or modify existing
 categorical features with a lasso tool.
@@ -64,15 +64,15 @@ categorical features with a lasso tool.
 The viewer requires a tiled H&E image along with some additional image data to work. By default,
 the function will try to create these files and export them to a temporary directory, but it
 is also possible to export the files before running the app and provide the path to the
-data directory with `datadir` (see \code{\link{ExportDataForViewer}}).
+data directory with \code{datadir} (see \code{\link{ExportDataForViewer}}).
 
-A more detailed tutorial can be found on the `semla` website. You can also
+A more detailed tutorial can be found on the \code{semla} website. You can also
 get more detailed instructions by pressing the help icon in the app.
 }
 \seealso{
 \code{\link{TileImage}},\code{\link{export_coordinates}}
 
-Other feature-viewer: 
+Other feature-viewer-methods: 
 \code{\link{ExportDataForViewer}()}
 
 Other spatial-visualization-methods: 
@@ -87,5 +87,5 @@ Other spatial-visualization-methods:
 \author{
 Ludvig Larsson
 }
-\concept{feature-viewer}
+\concept{feature-viewer-methods}
 \concept{spatial-visualization-methods}
