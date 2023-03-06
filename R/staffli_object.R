@@ -232,7 +232,7 @@ setMethod (
     cat(
       nrow(object@meta_data),
       'spots across',
-      length(unique(object@meta_data[, "sampleID"])),
+      length(unique(object@meta_data[, "sampleID", drop = TRUE])),
       'samples. \n'
     )
     if (length(object@rasterlists) > 0) {
