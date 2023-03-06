@@ -263,7 +263,7 @@ MapFeatures.default <- function (
   return(wrapped_plots)
 }
 
-
+# TODO: label.by broken, e.g. orig.ident
 #' @param features A character vector of features to plot. These features need to be
 #' fetchable with \code{link{FetchData}}
 #' @param slot Slot to pull features values from
