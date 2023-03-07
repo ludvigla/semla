@@ -1,0 +1,132 @@
+---
+title: "Cell type mapping with NNLS - comparison"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(semla)
+library(tibble)
+library(dplyr)
+if (!requireNamespace('TabulaMurisSenisData', quietly = TRUE)) {
+  BiocManager::install("TabulaMurisSenisData")
+}
+
+library(TabulaMurisSenisData)
+library(SingleCellExperiment)
+library(tidyr)
+library(patchwork)
+library(ggplot2)
+```
+
+```{r include=FALSE}
+
+se_allen <- readRDS("~/10x_data/R_objects/allen_brain")
+se_brain_spatial <- readRDS("~/10x_data/R_objects/se_brain_spatial")
+se_kidney_singlecell <- readRDS("~/10x_data/R_objects/se_kidney_singlecell")
+se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
+
+```
+
+```{r include=FALSE, eval=FALSE}
+
+var_genes <- FindVariableFeatures(se_kidney_spatial, nfeatures = 5000) |> VariableFeatures()
+writeLines(text = var_genes, con = "../stereoscope/mKidney/variable_genes.txt")
+
+umis_spatial <- GetAssayData(se_kidney_spatial, slot = "counts")
+umis_spatial <- umis_spatial[rowSums(umis_spatial) > 0, ]
+
+data.table::fwrite(umis_spatial |> t() |> data.frame(), file = "../stereoscope/mKidney/ST_section_1.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+
+set.seed(123)
+mData <- se_kidney_singlecell@meta.data |> 
+  rownames_to_column(var = "barcode") |> 
+  group_by(free_annotation) |> 
+  filter(row_number() %in% sample(x = 1:n(), size = ifelse(n() > 250, 250, n()))) |> 
+  filter(n() >= 10)
+
+umis_sc <- GetAssayData(se_kidney_singlecell, slot = "counts")[, mData$barcode]
+umis_sc <- umis_sc[rowSums(umis_sc) > 0, ]
+
+data.table::fwrite(umis_sc |> t() |> data.frame(), file = "../stereoscope/mKidney/exprMat.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+
+write.table(mData |> dplyr::select(barcode, free_annotation) |> 
+              dplyr::rename(celltype = free_annotation) |> 
+              mutate(celltype = gsub(pattern = "Epcam +|CD45 +|Pecam +|Stroma +", 
+                                     replacement = "", x = celltype)) |> 
+              mutate(celltype = gsub(pattern = " ", replacement = "_", x = celltype)) |> 
+              data.frame(row.names = 1), 
+            file = "../stereoscope/mKidney/mData.tsv", row.names = TRUE, quote = FALSE)
+
+```
+
+### Comparison with stereoscope
+
+If we compare the results from the NNLS cell type mapping method with the results from stereoscope, we can see that there is a high concordance between the results.
+
+```{r include=FALSE}
+se_brain_spatial[["celltypeprops"]] <- readRDS(file = "../vignettes/mousebrain/comparison/celltypeprops")
+se_brain_spatial[["stereoscope"]] <- readRDS(file = "../vignettes/mousebrain/comparison/stereoscope")
+```
+
+```{r fig.asp=0.9, fig.width=4}
+corMat <- cor(t(GetAssayData(se_brain_spatial, assay = "celltypeprops")) |> as.matrix(), 
+              t(GetAssayData(se_brain_spatial, assay = "stereoscope")) |> as.matrix())
+corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), intersect(rownames(corMat), colnames(corMat))]
+
+gg <- corMat |> 
+  data.frame(check.names = FALSE) |> 
+  rownames_to_column(var = "CellType_NNLS") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(rownames(corMat)), names_to = "CellType_stereoscope", 
+                      values_to = "correlation")
+
+ggplot(gg, aes(CellType_NNLS, CellType_stereoscope, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(), limits = c(-1, 1)) +
+  scale_y_discrete(limits = rev) +
+  scale_x_discrete(position = "top") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 0))
+```
+
+Let's map the proportions on the H&E image and compare them side by side:
+
+```{r}
+plots <- lapply(seq_along(selected_celltypes), function(i) {
+  DefaultAssay(se_brain_spatial) <- "celltypeprops"
+  p1 <- MapFeatures(se_brain_spatial, pt_size = 1.3, ncol = 2,
+            features = selected_celltypes[i], image_use = "raw",
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(), 
+            scale_alpha = TRUE) +
+    plot_layout(guides = "collect") &
+    labs(fill = "NNLS\nprop")
+  DefaultAssay(se_brain_spatial) <- "stereoscope"
+  p2 <- MapFeatures(se_brain_spatial, pt_size = 1.3, ncol = 2,
+            features = selected_celltypes[i], image_use = "raw",
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(), 
+            scale_alpha = TRUE) +
+    plot_layout(guides = "collect") &
+    labs(fill = "stereoscope\nprop")
+  p <- p1 / p2  &
+  theme(legend.position = "right", legend.margin = margin(b = 50),
+        legend.text = element_text(angle = 0), plot.title = element_text())
+  return(p)
+}) |> setNames(nm = selected_celltypes)
+```
+
+### NNLS vs stereoscope {.tabset}
+
+```{r results='asis', echo=FALSE, fig.asp=1, fig.width=4}
+for(i in 1:length(selected_celltypes)){
+  cat("#### ", selected_celltypes[i],"\n")
+  print(plots[[i]])
+  cat("\n\n")
+}
+```
