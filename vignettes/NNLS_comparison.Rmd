@@ -59,7 +59,7 @@ write.table(mData |> dplyr::select(barcode, free_annotation) |>
                                      replacement = "", x = celltype)) |> 
               mutate(celltype = gsub(pattern = " ", replacement = "_", x = celltype)) |> 
               data.frame(row.names = 1), 
-            file = "../stereoscope/mKidney/mData.tsv", row.names = TRUE, quote = FALSE)
+            file = "../stereoscope/mKidney/mData.tsv", sep = "\t", row.names = TRUE, quote = FALSE)
 
 ```
 
@@ -126,6 +126,107 @@ plots <- lapply(seq_along(selected_celltypes), function(i) {
 ```{r results='asis', echo=FALSE, fig.asp=1, fig.width=4}
 for(i in 1:length(selected_celltypes)){
   cat("#### ", selected_celltypes[i],"\n")
+  print(plots[[i]])
+  cat("\n\n")
+}
+```
+
+# Load kidney results
+
+```{r}
+propMat <- read.table("../stereoscope/mKidney/ST_section_1/W.2023-03-07105412.956337.tsv") |> t()
+
+
+eMat <- matrix(ncol = ncol(se_kidney_spatial), nrow = nrow(propMat), 
+               dimnames = list(rownames(propMat), colnames(se_kidney_spatial)))
+shared_spots <- intersect(colnames(propMat), colnames(se_kidney_spatial))
+eMat[, shared_spots] <- propMat[, shared_spots]
+rownames(eMat) <- gsub(pattern = "_", replacement = " ", x = rownames(eMat))
+se_kidney_spatial[["stereoscope"]] <- CreateAssayObject(data = eMat)
+
+```
+
+```{r}
+
+se_kidney_singlecell$celltype <- se_kidney_singlecell@meta.data |> 
+  mutate(celltype = gsub(pattern = "Epcam +|CD45 +|Pecam +|Stroma +", 
+                                     replacement = "", x = free_annotation)) |> 
+  pull(celltype)
+
+DefaultAssay(se_kidney_spatial) <- "Spatial"
+se_kidney_spatial <- RunNNLS(object = se_kidney_spatial, 
+                      singlecell_object = se_kidney_singlecell, 
+                      groups = "celltype")
+
+# Check available cell types
+rownames(se_kidney_spatial)
+```
+
+
+```{r include=FALSE}
+se_kidney_spatial[["celltypeprops"]] <- 
+  readRDS(file = "../vignettes/comparison/mousekidney/celltypeprops")
+se_kidney_spatial[["stereoscope"]] <- 
+  readRDS(file = "../vignettes/comparison/mousekidney/stereoscope")
+```
+
+```{r fig.asp=0.9, fig.width=4}
+corMat <- cor(t(GetAssayData(se_kidney_spatial, assay = "celltypeprops")) |> as.matrix(), 
+              t(GetAssayData(se_kidney_spatial, assay = "stereoscope")) |> as.matrix())
+corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), intersect(rownames(corMat), colnames(corMat))]
+
+gg <- corMat |> 
+  data.frame(check.names = FALSE) |> 
+  rownames_to_column(var = "CellType_NNLS") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(rownames(corMat)), names_to = "CellType_stereoscope", 
+                      values_to = "correlation")
+
+ggplot(gg, aes(CellType_NNLS, CellType_stereoscope, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(), limits = c(-1, 1)) +
+  scale_y_discrete(limits = rev) +
+  scale_x_discrete(position = "top") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 0))
+```
+
+Let's map the proportions on the H&E image and compare them side by side:
+
+```{r}
+
+se_kidney_spatial <- LoadImages(se_kidney_spatial)
+plots <- lapply(1:nrow(se_kidney_spatial), function(i) {
+  celltype <- rownames(se_kidney_spatial)[i]
+  DefaultAssay(se_kidney_spatial) <- "celltypeprops"
+  p1 <- MapFeatures(se_kidney_spatial, pt_size = 1.3, ncol = 1,
+            features = celltype, image_use = "raw",
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(), 
+            scale_alpha = TRUE) +
+    plot_layout(guides = "collect") &
+    labs(fill = "NNLS\nprop")
+  DefaultAssay(se_kidney_spatial) <- "stereoscope"
+  p2 <- MapFeatures(se_kidney_spatial, pt_size = 1.3, ncol = 1,
+            features = celltype, image_use = "raw",
+            arrange_features = "row", scale = "shared", 
+            override_plot_dims = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(), 
+            scale_alpha = TRUE) +
+    plot_layout(guides = "collect") &
+    labs(fill = "stereoscope\nprop")
+  p <- p1 - p2  &
+  theme(legend.position = "right", legend.margin = margin(b = 50),
+        legend.text = element_text(angle = 0), plot.title = element_text())
+  return(p)
+}) |> setNames(nm = rownames(se_kidney_spatial))
+```
+
+### NNLS vs stereoscope mouse kidney {.tabset}
+
+```{r results='asis', echo=FALSE, fig.width=4}
+for(i in 1:nrow(se_kidney_spatial)){
+  cat("#### ", rownames(se_kidney_spatial)[i],"\n")
   print(plots[[i]])
   cat("\n\n")
 }
