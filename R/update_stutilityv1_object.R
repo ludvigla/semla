@@ -46,7 +46,7 @@ UpdateSTUtilityV1Object <- function (
   image_data <- tibble()
   for (i in seq_along(imgs)) {
     if (!file.exists(imgs[i])) {
-      abort(glue("Invalid path {im}. The file does not exist. Make sure ",
+      abort(glue("Invalid path {imgs[i]}. The file does not exist. Make sure ",
                  "to have valide image paths before running {col_br_magenta('UpdateSTUtilityV1Object')}"))
     }
     image_data_sample <- image_read(imgs[i]) |>
