@@ -55,11 +55,11 @@ NULL
 #' @export
 #'
 MergeSTData <- function (
-    x,
-    y,
-    merge_data = TRUE,
-    merge_dr = NULL,
-    project = "SeuratProject"
+  x,
+  y,
+  merge_data = TRUE,
+  merge_dr = NULL,
+  project = "SeuratProject"
 ) {
 
   # Set global variables to NULL
@@ -173,8 +173,11 @@ MergeSTData <- function (
   # Merge scalefactors
   scalefactors <- do.call(bind_rows, lapply(st_objects, function(st_obj) {
     st_obj@scalefactors
-  })) |>
-    mutate(sampleID = paste0(unique(mergedMetaData$new_sampleID)))
+  }))
+  if (length(scalefactors) > 0) {
+    scalefactors <- scalefactors |>
+      mutate(sampleID = paste0(unique(mergedMetaData$new_sampleID)))
+  }
 
   # Create Staffli object
   st_object_merged <-
@@ -292,7 +295,7 @@ SubsetSTData <- function (
   if (length(all_sampleIDs) > length(remaining_samples)) {
     st_meta_data <- st_meta_data |>
       group_by(sampleID) |>
-      mutate(sampleID = cur_group_id()) |>
+      mutate(sampleID = cur_group_id() |> as.character()) |>
       separate(barcode, sep = "-", into = c("barcode", NA)) |>
       unite(col = "barcode", barcode, sampleID, sep = "-", remove = FALSE) |>
       ungroup()
@@ -323,7 +326,7 @@ SubsetSTData <- function (
   # Subset scalefactors
   st_object@scalefactors <- st_object@scalefactors |>
     filter(sampleID %in% remaining_samples) |>
-    mutate(sampleID = new_sampleIDs[sampleID])
+    mutate(sampleID = new_sampleIDs[sampleID] |> as.character())
 
   object@tools$Staffli <- st_object
   return(object)
