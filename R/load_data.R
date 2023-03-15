@@ -475,12 +475,12 @@ ReadVisiumData <- function (
     } else {
       # Adjust width and height to match missing data
       spot_ranges <- coordinates |>
-        mutate(sampleID = paste0(sampleID)) |>
         group_by(sampleID) |>
         summarize(min_x = min(pxl_col_in_fullres),
                   max_x = max(pxl_col_in_fullres),
                   min_y = min(pxl_row_in_fullres),
                   max_y = max(pxl_row_in_fullres)) |>
+        mutate(sampleID = paste0(sampleID)) |>
         left_join(y = image_info |>
                     select(sampleID, full_width, full_height) |>
                     mutate(sampleID = paste0(sampleID)), by = "sampleID")
@@ -496,14 +496,17 @@ ReadVisiumData <- function (
       image_info$pad <- image_pad |>
         tidyr::unite("pad", pad_before_x:pad_after_y, sep = "x") |>
         pull(pad)
-      coordinates$pxl_col_in_fullres <- coordinates$pxl_col_in_fullres + image_pad$pad_before_x
-      coordinates$pxl_row_in_fullres <- coordinates$pxl_row_in_fullres + image_pad$pad_before_y
+      coordinates <- coordinates |> 
+        group_by(sampleID) |> 
+        mutate(pxl_col_in_fullres = pxl_col_in_fullres + image_pad[cur_group_id(), ]$pad_before_x,
+               pxl_row_in_fullres = pxl_row_in_fullres + image_pad[cur_group_id(), ]$pad_before_y)
       sfx <- image_pad$full_width_new/image_info$full_width
       sfy <- image_pad$full_height_new/image_info$full_height
       image_info$width <- ceiling(sfx*image_info$width)
       image_info$height <- ceiling(sfy*image_info$height)
       image_info$full_width <- ceiling(image_pad$full_width_new)
       image_info$full_height <- ceiling(image_pad$full_height_new)
+      coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
     }
   }
 
@@ -517,6 +520,7 @@ ReadVisiumData <- function (
   # Create a Staffli object
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
                                         meta_data = coordinates |>
+                                          ungroup() |> 
                                           select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID),
                                         image_info = image_info,
                                         scalefactors = scalefactors)
