@@ -1,0 +1,111 @@
+---
+title: "Advanced visualization"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+Here we'll have a quick look at how to add scalebars to plots. This feature is currently only available in `MapFeatures` and `MapLabels`.
+
+```{r message=FALSE, warning=FALSE}
+library(semla)
+```
+
+First, we'll load some data to work with.
+
+```{r message=FALSE, warning=FALSE}
+# Load data
+se_mbrain <- readRDS(file = system.file("extdata", 
+                                        "mousebrain/se_mbrain", 
+                                        package = "semla"))
+se_mbrain <- LoadImages(se_mbrain)
+```
+
+To add a scalebar, simply set `add_scalebar = TRUE` and the scalebar should appear in the top right corner.
+
+```{r fig.asp=1, fig.width=5}
+MapFeatures(se_mbrain, features = "nFeature_Spatial", pt_size = 1,
+            override_plot_dims = TRUE, image_use = "raw", 
+            add_scalebar = TRUE)
+```
+
+And with `mapLabels`:
+
+```{r fig.asp=1, fig.width=5}
+MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
+          override_plot_dims = TRUE, image_use = "raw", 
+          add_scalebar = TRUE)
+```
+
+You can also tweak the appearance and position of the scalebar with `scalebar_gg`, `scalebar_position` and `scalebar_height`.
+
+* `scalebar_gg` allows you to modify the width and breaks of the scalebar. The title of the scalebar will be adjusted from micrometers to millimeters if x > 1000.
+* `scalebar_position` sets the position of the scalebar relative to the entire plot. 
+* `scalebar_height` can be useful to adjust the height of the scalebar to make the text fit. If the scalebar is too small, for instance when plotting many sections at once, increasing the height will make the text appear.
+
+```{r fig.asp=1, fig.width=5}
+MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
+          image_use = "raw", 
+          add_scalebar = TRUE, 
+          scalebar_gg = scalebar(x = 2000, breaks = 11, highlight_breaks = c(1, 6, 11)),
+          scalebar_position = c(0.55, 0.7), 
+          scalebar_height = 0.07)
+```
+
+Here's another example with image masking:
+
+```{r fig.asp=0.6, fig.width=8, message=FALSE, warning=FALSE}
+
+# Mask image
+se_mbrain <- MaskImages(se_mbrain)
+
+MapFeatures(se_mbrain, features = VariableFeatures(se_mbrain)[1:6],
+          image_use = "raw", 
+          add_scalebar = TRUE, 
+          scale_alpha = TRUE,
+          override_plot_dims = TRUE,
+          scalebar_gg = scalebar(x = 1000),
+          scalebar_position = c(0.55, 0.88),
+          scalebar_height = 0.14) &
+  theme(plot.title = element_blank(), 
+        legend.position = "right", legend.text = element_text(angle = 0))
+```
+
+If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length:
+
+```{r message=FALSE, warning=FALSE}
+se_mbrain <- LoadImages(se_mbrain, image_height = 1.5e3)
+MapFeatures(se_mbrain, features = "Th", pt_size = 5,
+            image_use = "raw", scale_alpha = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 11, name = "Spectral") |> rev(),
+            crop_area = c(0.2, 0.6, 0.4, 0.75),
+            scalebar_position = c(0.7, 0.8), scalebar_height = 0.08,
+            add_scalebar = TRUE, scalebar_gg = scalebar(x = 400))
+```
+
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

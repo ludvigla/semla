@@ -68,8 +68,10 @@ write.table(mData |> dplyr::select(barcode, free_annotation) |>
 If we compare the results from the NNLS cell type mapping method with the results from stereoscope, we can see that there is a high concordance between the results.
 
 ```{r include=FALSE}
-se_brain_spatial[["celltypeprops"]] <- readRDS(file = "../vignettes/mousebrain/comparison/celltypeprops")
-se_brain_spatial[["stereoscope"]] <- readRDS(file = "../vignettes/mousebrain/comparison/stereoscope")
+se_brain_spatial[["celltypeprops"]] <- 
+  readRDS(file = "../vignettes/comparison/mousebrain/celltypeprops")
+se_brain_spatial[["stereoscope"]] <- 
+  readRDS(file = "../vignettes/comparison/mousebrain/stereoscope")
 ```
 
 ```{r fig.asp=0.9, fig.width=4}
@@ -91,6 +93,62 @@ ggplot(gg, aes(CellType_NNLS, CellType_stereoscope, fill = correlation)) +
   scale_x_discrete(position = "top") +
   theme(axis.text.x = element_text(angle = 60, hjust = 0))
 ```
+
+## Suggestion
+
+If we obtain results with cell2location, maybe we can summarize the results like this:
+
+```{r}
+
+corMat <- cor(t(GetAssayData(se_brain_spatial, assay = "celltypeprops")) |> as.matrix(), 
+              t(GetAssayData(se_brain_spatial, assay = "stereoscope")) |> as.matrix())
+corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), intersect(rownames(corMat), colnames(corMat))]
+
+# Let's pretend that corMat2 holds the correlation scores for NNLS vs cell2location
+corMat2 <- corMat
+
+corMat[upper.tri(corMat, diag = F)] <- NA
+corMat2[lower.tri(corMat2, diag = F)] <- NA
+
+gg1 <- corMat |> 
+  data.frame(check.names = FALSE) |> 
+  rownames_to_column(var = "CellType_NNLS") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(rownames(corMat)), names_to = "CellType_stereoscope", 
+                      values_to = "correlation") |> 
+  na.omit()
+
+p1 <- ggplot(gg1, aes(CellType_NNLS, CellType_stereoscope, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(), limits = c(-1, 1)) +
+  scale_y_discrete(limits = rev, position = "right") +
+  scale_x_discrete(position = "top") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 0), 
+        panel.background = element_blank(), panel.grid = element_blank(),
+        plot.background = element_blank())
+
+gg2 <- corMat2 |> 
+  data.frame(check.names = FALSE) |> 
+  rownames_to_column(var = "CellType_NNLS") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(rownames(corMat)), names_to = "CellType_cell2location", 
+                      values_to = "correlation") |> 
+  na.omit()
+
+p2 <- ggplot(gg2, aes(CellType_NNLS, CellType_cell2location, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(), limits = c(-1, 1)) +
+  scale_y_discrete(limits = rev) +
+  scale_x_discrete(position = "bottom") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
+        panel.background = element_blank(), 
+        panel.grid = element_blank(), plot.background = element_blank(), 
+        legend.position = "none")
+
+p2 + p1
+
+```
+
 
 Let's map the proportions on the H&E image and compare them side by side:
 
@@ -230,4 +288,37 @@ for(i in 1:nrow(se_kidney_spatial)){
   print(plots[[i]])
   cat("\n\n")
 }
+```
+
+
+
+```{r}
+DefaultAssay(se_kidney_spatial) <- "Spatial"
+# se_kidney_spatial <- SCTransform(se_kidney_spatial, assay = "Spatial", variable.features.n = 1e4)
+# se_kidney_singlecell <- SCTransform(se_kidney_singlecell, variable.features.n = 1e4)
+se_kidney_spatial <- RunNNLS(object = se_kidney_spatial, 
+                      singlecell_object = se_kidney_singlecell, 
+                      singlecell_assay = "SCT", 
+                      spatial_assay = "SCT",
+                      groups = "celltype")
+```
+
+```{r fig.asp=0.9, fig.width=4}
+corMat <- cor(t(GetAssayData(se_kidney_spatial, assay = "celltypeprops")) |> as.matrix(), 
+              t(GetAssayData(se_kidney_spatial, assay = "stereoscope")) |> as.matrix())
+corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), intersect(rownames(corMat), colnames(corMat))]
+
+gg <- corMat |> 
+  data.frame(check.names = FALSE) |> 
+  rownames_to_column(var = "CellType_NNLS") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(rownames(corMat)), names_to = "CellType_stereoscope", 
+                      values_to = "correlation")
+
+ggplot(gg, aes(CellType_NNLS, CellType_stereoscope, fill = correlation)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(), limits = c(-1, 1)) +
+  scale_y_discrete(limits = rev) +
+  scale_x_discrete(position = "top") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 0))
 ```
