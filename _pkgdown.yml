@@ -55,6 +55,8 @@ navbar:
         href: articles/categorical_features.html
       - text: Advanced visualization
         href: articles/advanced_visualization.html
+      - text: Scalebar
+        href: articles/scalebar.html
       - text: '-------'
       - text: Spatial methods
       - text: Radial distances
