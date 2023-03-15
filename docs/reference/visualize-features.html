@@ -42,6 +42,7 @@ will be plotted individually and arranged into a grid of subplots."><meta proper
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -164,7 +165,7 @@ will be plotted individually and arranged into a grid of subplots.</p>
 
 
 <dt>crop_area</dt>
-<dd><p>a numeric vector of length 4 specifying a rectangular area to crop
+<dd><p>A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: <code>crop_area = c(left, top, right, bottom)</code>. The crop area
@@ -175,67 +176,67 @@ separate plots for different tissue sections.</p></dd>
 
 
 <dt>pt_size</dt>
-<dd><p>numeric value specifying the point size passed to <code>geom_point</code></p></dd>
+<dd><p>A numeric value specifying the point size passed to <code>geom_point</code></p></dd>
 
 
 <dt>pt_alpha</dt>
-<dd><p>numeric value between 0 and 1 specifying the point opacity passed
+<dd><p>A numeric value between 0 and 1 specifying the point opacity passed
 to <code>geom_point</code>. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.</p></dd>
 
 
 <dt>pt_stroke</dt>
-<dd><p>numeric specifying the point stroke width</p></dd>
+<dd><p>A numeric specifying the point stroke width</p></dd>
 
 
 <dt>scale_alpha</dt>
-<dd><p>logical specifying if the spot colors should be scaled together with
+<dd><p>Logical specifying if the spot colors should be scaled together with
 the feature values. This can be useful when you want to highlight regions with higher
 feature values while making the background tissue visible.</p></dd>
 
 
 <dt>section_number</dt>
-<dd><p>an integer select a tissue section number to subset data by</p></dd>
+<dd><p>An integer select a tissue section number to subset data by</p></dd>
 
 
 <dt>label_by</dt>
-<dd><p>character of length 1 providing a column name in <code>object</code> with
+<dd><p>Character of length 1 providing a column name in <code>object</code> with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.</p></dd>
 
 
 <dt>ncol</dt>
-<dd><p>integer value specifying the number of columns in the output patchwork.
+<dd><p>Integer value specifying the number of columns in the output patchwork.
 This parameter will only have an effect when the number of features provided is 1.
 Otherwise, the patchwork will be arranged based on the <code>arrange_features</code> parameter.</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>a character vector of colors to use for the color scale. The colors should
+<dd><p>A character vector of colors to use for the color scale. The colors should
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the <code>RColorBrewer</code>, <code>viridis</code> and
 <code>scico</code> R packages.</p></dd>
 
 
 <dt>center_zero</dt>
-<dd><p>a logical specifying whether the color scale should be centered at 0</p></dd>
+<dd><p>A logical specifying whether the color scale should be centered at 0</p></dd>
 
 
 <dt>scale</dt>
-<dd><p>a character vector of length 1 specifying one of "shared" or "free" which will
+<dd><p>A character vector of length 1 specifying one of "shared" or "free" which will
 determine how the color bars are structured. If scale is set to "shared", the color bars for
 feature values will be shared across samples. If scale is set to "free", the color bars
 will be independent.</p></dd>
 
 
 <dt>arrange_features</dt>
-<dd><p>one of "row" or "col". "col" will put the features in columns
+<dd><p>One of "row" or "col". "col" will put the features in columns
 and samples in rows and "row" will transpose the arrangement</p></dd>
 
 
 <dt>dims</dt>
-<dd><p>a tibble with information about the tissue sections. This information is used to
+<dd><p>A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If <code>dims</code> is not provided, the limits will be
 computed directly from the spatial coordinates provided in <code>object</code>.</p></dd>
 
@@ -246,35 +247,36 @@ computed directly from the spatial coordinates provided in <code>object</code>.<
 
 
 <dt>return_plot_list</dt>
-<dd><p>logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
+<dd><p>A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
 By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
 if you want to manipulate each sub plot independently.</p></dd>
 
 
 <dt>drop_na</dt>
-<dd><p>a logical specifying if NA values should be dropped</p></dd>
+<dd><p>A logical specifying if NA values should be dropped</p></dd>
 
 
 <dt>blend</dt>
-<dd><p>a logical specifying whether blending should be used. See color blending for more information.</p></dd>
+<dd><p>a logical specifying whether blending should be used. See the section about color 
+blending below for more information.</p></dd>
 
 
 <dt>blend_order</dt>
-<dd><p>an integer vector of length 2-3 specifying the order to blend features by. Only
+<dd><p>An integer vector of length 2-3 specifying the order to blend features by. Only
 active when <code>blend = TRUE</code>. See color blending for more information.</p></dd>
 
 
 <dt>add_scalebar</dt>
-<dd><p>a logical specifying if a scale bar should be added to the plots</p></dd>
+<dd><p>A logical specifying if a scale bar should be added to the plots</p></dd>
 
 
 <dt>scalebar_gg</dt>
-<dd><p>a 'ggplot' object generated with <code><a href="scalebar.html">scalebar</a></code>. The appearance of the scale
+<dd><p>A 'ggplot' object generated with <code><a href="scalebar.html">scalebar</a></code>. The appearance of the scale
 bar is styled by passing parameters to <code><a href="scalebar.html">scalebar</a></code>.</p></dd>
 
 
 <dt>scalebar_height</dt>
-<dd><p>a numeric value specifying the height of the scale bar relative to the
+<dd><p>A numeric value specifying the height of the scale bar relative to the
 height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
 scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
 the height of the scale bar can sometimes be useful to increase the text size to make it more
@@ -282,36 +284,36 @@ visible in small plots.</p></dd>
 
 
 <dt>scalebar_position</dt>
-<dd><p>a numeric vector of length 2 specifying the position of the scale bar
+<dd><p>A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.</p></dd>
 
 
 <dt>features</dt>
-<dd><p>a character vector of features to plot. These features need to be
+<dd><p>A character vector of features to plot. These features need to be
 fetchable with <code>link{FetchData}</code></p></dd>
 
 
 <dt>slot</dt>
-<dd><p>slot to pull features values from</p></dd>
+<dd><p>Slot to pull features values from</p></dd>
 
 
 <dt>image_use</dt>
-<dd><p>string specifying image type to use</p></dd>
+<dd><p>A character specifying image type to use</p></dd>
 
 
 <dt>coords_use</dt>
-<dd><p>string specifying coordinate type to use</p></dd>
+<dd><p>A character specifying coordinate type to use</p></dd>
 
 
 <dt>override_plot_dims</dt>
-<dd><p>a logical specifying whether the image dimensions should
+<dd><p>A logical specifying whether the image dimensions should
 be used to define the plot area. Setting <code>override_plot_dims</code> can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots.</p></dd>
 
 
 <dt>min_cutoff, max_cutoff</dt>
-<dd><p>a numeric value between 0-1 specifying either a lower
+<dd><p>A numeric value between 0-1 specifying either a lower
 (<code>min_cutoff</code>) or upper (<code>max_cutoff</code>) limit for the data using <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>.
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.</p></dd>
 

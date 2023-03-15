@@ -46,6 +46,7 @@ dispersed across a tissue section.'><meta property="og:image" content="https://l
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -104,7 +105,7 @@ dispersed across a tissue section.</p>
 <span><span class="fu">DisconnectRegions</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  <span class="va">column_name</span>,</span>
-<span>  select_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selected_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -121,7 +122,7 @@ dispersed across a tissue section.</p>
 
 
 <dt>spots</dt>
-<dd><p>A character vector with spot IDs present 'object'</p></dd>
+<dd><p>A character vector with spot IDs present `object`</p></dd>
 
 
 <dt>verbose</dt>
@@ -129,11 +130,11 @@ dispersed across a tissue section.</p>
 
 
 <dt>column_name</dt>
-<dd><p>A character specifying the name of a column in your meta data that contains
-categorical data, e.g. clusters or manual selections</p></dd>
+<dd><p>A character specifying the name of a column in the meta data slot of a `Seurat` 
+object that contains categorical data, e.g. clusters or manual selections</p></dd>
 
 
-<dt>select_groups</dt>
+<dt>selected_groups</dt>
 <dd><p>A character vector to select specific groups in <code>column_name</code> with.
 All groups are selected by default, but the common use case is to select a region of interest.</p></dd>
 
@@ -142,7 +143,7 @@ All groups are selected by default, but the common use case is to select a regio
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
     
 
-<p>Takes a set of spot IDs and returns a named character vector with new labels.
+<p>Takes a `tibble` and set of spot IDs and returns a named character vector with new labels.
 The names of this vector corresponds to the input spot IDs.</p>
     </div>
     <div class="section level2">
@@ -151,11 +152,11 @@ The names of this vector corresponds to the input spot IDs.</p>
 
 <p>A categorical variable is selected from the <code>Seurat</code> object meta data
 slot using <code>column_name</code>. From this column, one can specify what groups
-to disconnect with <code>select_groups</code>. If <code>select_groups</code> isn't specified,
-all groups in <code>select_groups</code> will be disconnected separately.
-The function returns a Seurat object with additional columns in the meta data
-slot, one for each group in <code>select_groups</code>. The suffix to these columns is
-"_split", so a group in <code>select_groups</code> called "tissue" will get a column
+to disconnect with <code>selected_groups</code>. If <code>selected_groups</code> isn't specified,
+all groups in <code>selected_groups</code> will be disconnected separately.
+The function returns a `Seurat` object with additional columns in the meta data
+slot, one for each group in <code>selected_groups</code>. The suffix to these columns is
+"_split", so a group in <code>selected_groups</code> called "tissue" will get a column
 called "tissue_split" with new labels for each spatially disconnected region.</p>
     </div>
     <div class="section level2">
@@ -197,7 +198,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">V2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">V1</span>, <span class="va">V6</span>, <span class="va">V5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select spots</span></span></span>
@@ -242,7 +243,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-plt img"><img src="disconnect-regions-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disconnect regions</span></span></span>
-<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, selected_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'GALT'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 106 spots</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 8 disconnected graph(s) in data</span>
@@ -267,7 +268,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-plt img"><img src="disconnect-regions-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disconnect regions</span></span></span>
-<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_merged</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_merged</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, selected_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'GALT'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 212 spots</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 16 disconnected graph(s) in data</span>

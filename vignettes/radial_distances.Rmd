@@ -114,7 +114,7 @@ MapLabels(se, column_name = "cluster_9", override_plot_dims = TRUE,
 Cluster 9 is concentrated to a region rich with cancer cells but there are also a few spots in other parts of the tissue. At this point we might only be interested in one of these regions in which case we can split cluster_9 into spatially disconnected compartments. For this purpose, we can use `DisconnectRegions`:
 
 ```{r fig.asp=1}
-se <- DisconnectRegions(se, column_name = "seurat_clusters", select_groups = "9")
+se <- DisconnectRegions(se, column_name = "seurat_clusters", selected_groups = "9")
 
 MapLabels(se, column_name = "9_split", override_plot_dims = TRUE, 
           image_use = "raw", drop_na = TRUE, pt_size = 2) +
@@ -138,7 +138,7 @@ MapLabels(se, column_name = "cluster_3", override_plot_dims = TRUE,
 ```
 
 ```{r}
-se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3")
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3")
 ```
 
 We can illustrate the results by coloring the spots based on the radial distances from cluster "3":
@@ -165,7 +165,7 @@ Alternatively, you can set `convert_to_microns = TRUE` to make `RadialDistance` 
 
 ```{r}
 se <- RadialDistance(se, column_name = "seurat_clusters", 
-                     select_groups = "3", convert_to_microns = TRUE)
+                     selected_groups = "3", convert_to_microns = TRUE)
 ```
 
 ### Convert radial distances
@@ -226,7 +226,7 @@ Before you proceed, note that it is important that the ROI is spatially connecte
 Now that we have an idea about how the angles are defined, we can provide an interval of angles to narrow down the search area and calculate radial distances. The color scale in the plot below represents the radial distances from the tumor (cluster 3) center.
 
 ```{r fig.asp=1}
-se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3", 
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3", 
                      angles = c(200, 240))
 
 MapFeatures(se, features = "r_dist_3", pt_size = 2)
@@ -235,7 +235,7 @@ MapFeatures(se, features = "r_dist_3", pt_size = 2)
 If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_nbreaks`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
 
 ```{r fig.asp=1}
-se <- RadialDistance(se, column_name = "seurat_clusters", select_groups = "3", 
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3", 
                     angles = c(120, 320), angles_nbreaks = 6)
 MapLabels(se, column_name = "intervals_3", pt_size = 2, drop_na = TRUE,
           colors = RColorBrewer::brewer.pal(n = 6, name = "Spectral")) &

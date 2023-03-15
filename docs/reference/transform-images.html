@@ -38,6 +38,7 @@
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -103,7 +104,7 @@
 
 
 <dt>image</dt>
-<dd><p>an image of class `magick-image`, `raster`, `StoredSpatialImage`
+<dd><p>an image of class <code>magick-image</code>, <code>raster</code>, <code>StoredSpatialImage</code>
 or a path to an image in PNG or JPEG format</p></dd>
 
 
@@ -124,8 +125,8 @@ to apply to the images (see Seurat section)</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list with two elements:</p><ul><li><p>"im_transf": An object of class `magick-image` representing the transformed image</p></li>
-<li><p>"xy_transf": An object of class `tble` representing the transformed coordinates</p></li>
+<p>A list with two elements:</p><ul><li><p>"im_transf": An object of class <code>magick-image</code> representing the transformed image</p></li>
+<li><p>"xy_transf": An object of class <code>tbl</code> representing the transformed coordinates</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
@@ -186,7 +187,7 @@ correctly on the H&amp;E image regardless of its size.</p>
 <span class="r-in"><span><span class="co"># These are the dimensions of the H&amp;E image used as input for</span></span></span>
 <span class="r-in"><span><span class="co"># spaceranger count.</span></span></span>
 <span class="r-in"><span><span class="va">transforms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="fl">18107</span>, full_height <span class="op">=</span> <span class="fl">19242</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">transforms</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">transforms</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">transforms</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   full_width full_height sampleID mirror_x mirror_y angle  tr_x  tr_y scalefac…¹</span>
@@ -263,7 +264,7 @@ correctly on the H&amp;E image regardless of its size.</p>
 <span class="r-in"><span>                left <span class="op">=</span> <span class="fl">0</span>, bottom <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>                right <span class="op">=</span> <span class="fl">1</span>, top <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                on_top <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 27 rows containing missing values (geom_point).</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 27 rows containing missing values (`geom_point()`).</span>
 <span class="r-plt img"><img src="transform-images-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
@@ -276,9 +277,9 @@ correctly on the H&amp;E image regardless of its size.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 400x443 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span></span></span>
@@ -308,7 +309,7 @@ correctly on the H&amp;E image regardless of its size.</p>
 <span class="r-plt img"><img src="transform-images-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Define rigid tranformations for all sections</span></span></span>
-<span class="r-in"><span><span class="va">transforms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="generate_rigid_transform.html">generate_rigid_transform</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span>, angle <span class="op">=</span> <span class="fl">30</span>, mirror_x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">transforms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="fu"><a href="generate_rigid_transform.html">generate_rigid_transform</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span>, angle <span class="op">=</span> <span class="fl">30</span>, mirror_x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                        <span class="fu"><a href="generate_rigid_transform.html">generate_rigid_transform</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">2</span>, angle <span class="op">=</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Apply transformations</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu">RigidTransformImages</span><span class="op">(</span><span class="va">se_merged</span>, transforms <span class="op">=</span> <span class="va">transforms</span><span class="op">)</span></span></span>

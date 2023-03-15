@@ -348,7 +348,7 @@ RadialDistance.default <- function (
 
 #' @param column_name A character specifying the name of a column in your meta data that contains
 #'  categorical data, e.g. clusters or manual selections
-#' @param select_groups A character vector to select specific groups in \code{column_name} with.
+#' @param selected_groups A character vector to select specific groups in \code{column_name} with.
 #' All groups are selected by default, but the common use case is to select a region of interest.
 #' @param verbose Print messages
 #'
@@ -371,7 +371,7 @@ RadialDistance.default <- function (
 #' library(RColorBrewer)
 #'
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-#' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", select_groups = "GALT")
+#' se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", selected_groups = "GALT")
 #'
 #' # Plot results
 #' p1 <- MapLabels(se_mcolon, column_name = "selection")
@@ -405,7 +405,7 @@ RadialDistance.default <- function (
 RadialDistance.Seurat <- function (
     object,
     column_name,
-    select_groups = NULL,
+    selected_groups = NULL,
     angles = NULL,
     angles_nbreaks = NULL,
     remove_singletons = TRUE,
@@ -420,10 +420,10 @@ RadialDistance.Seurat <- function (
   # validate input
   .check_seurat_object(object)
   .validate_column_name(object, column_name)
-  select_groups <- .validate_selected_labels(object, select_groups, column_name)
+  selected_groups <- .validate_selected_labels(object, selected_groups, column_name)
 
   # Select spots
-  spots_list <- .get_spots_list(object, select_groups, column_name)
+  spots_list <- .get_spots_list(object, selected_groups, column_name)
 
   # Get coordinates
   coords_list <- .get_coords_list(object)

@@ -23,7 +23,7 @@
 #' validate selected labels
 #'
 #' @param object A Seurat object
-#' @param select_groups A character vector with selected labels in \code{column_name}
+#' @param selected_groups A character vector with selected labels in \code{column_name}
 #' @param column_name A character vector specifying the name of a column in \code{object}
 #' meta data slot
 #'
@@ -37,19 +37,19 @@
 #' @noRd
 .validate_selected_labels <- function (
     object,
-    select_groups,
+    selected_groups,
     column_name
 ) {
-  select_groups <- select_groups %||% {
-    cli_alert_info("No 'select_groups' provided. Using all groups in '{column_name}' column")
-    select_groups <- unique(object[[]] |> pull(all_of(column_name)))
+  selected_groups <- selected_groups %||% {
+    cli_alert_info("No 'selected_groups' provided. Using all groups in '{column_name}' column")
+    selected_groups <- unique(object[[]] |> pull(all_of(column_name)))
   }
-  if (!inherits(select_groups, what = c("factor", "character")))
-    abort(glue("Invalid class '{class(select_groups)}', expected a 'character'"))
-  if (!all(select_groups %in% (object[[]] |> pull(all_of(column_name)))))
-    abort(glue("Some 'select_groups' are not present in '{column_name}'"))
+  if (!inherits(selected_groups, what = c("factor", "character")))
+    abort(glue("Invalid class '{class(selected_groups)}', expected a 'character'"))
+  if (!all(selected_groups %in% (object[[]] |> pull(all_of(column_name)))))
+    abort(glue("Some 'selected_groups' are not present in '{column_name}'"))
 
-  return(select_groups)
+  return(selected_groups)
 }
 
 
@@ -67,7 +67,7 @@
 #' @noRd
 .get_spots_list <- function (
   object,
-  select_groups,
+  selected_groups,
   column_name,
   split_by_sample = TRUE
 ) {
@@ -75,7 +75,7 @@
   # Set global variables to NULL
   sampleID <- barcode <- NULL
 
-  spots_list <- lapply(select_groups, function(lbl) {
+  spots_list <- lapply(selected_groups, function(lbl) {
     spots <- GetStaffli(object)@meta_data |>
       bind_cols(object[[]] |> select(all_of(column_name))) |>
       filter(!! sym(column_name) == lbl)
@@ -91,7 +91,7 @@
     }
     return(spots)
   }) |>
-    setNames(select_groups)
+    setNames(selected_groups)
 
   return(spots_list)
 

@@ -38,6 +38,7 @@
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -101,6 +102,10 @@
 <span>  coords_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span><span class="op">)</span>,</span>
 <span>  return_plot_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  drop_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add_scalebar <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scalebar_gg <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scalebar_height <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  scalebar_position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.8</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -122,6 +127,10 @@
 <span>  override_plot_dims <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  return_plot_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  drop_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add_scalebar <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scalebar_height <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  scalebar_gg <span class="op">=</span> <span class="fu"><a href="scalebar.html">scalebar</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">500</span>, text_height <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  scalebar_position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">0.7</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -137,7 +146,7 @@
 
 
 <dt>crop_area</dt>
-<dd><p>a numeric vector of length 4 specifying a rectangular area to crop
+<dd><p>A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: <code>crop_area = c(left, top, right, bottom)</code>. The crop area
@@ -148,51 +157,51 @@ separate plots for different tissue sections.</p></dd>
 
 
 <dt>pt_size</dt>
-<dd><p>numeric value specifying the point size passed to <code>geom_point</code></p></dd>
+<dd><p>A numeric value specifying the point size passed to <code>geom_point</code></p></dd>
 
 
 <dt>pt_alpha</dt>
-<dd><p>numeric value between 0 and 1 specifying the point opacity passed
+<dd><p>A numeric value between 0 and 1 specifying the point opacity passed
 to <code>geom_point</code>. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.</p></dd>
 
 
 <dt>pt_stroke</dt>
-<dd><p>numeric specifying the point stroke width</p></dd>
+<dd><p>A numeric specifying the point stroke width</p></dd>
 
 
 <dt>section_number</dt>
-<dd><p>an integer select a tissue section number to subset data by</p></dd>
+<dd><p>An integer select a tissue section number to subset data by</p></dd>
 
 
 <dt>label_by</dt>
-<dd><p>character of length 1 providing a column name in <code>object</code> with
+<dd><p>A character specifying a column name in <code>object</code> with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.</p></dd>
 
 
 <dt>split_labels</dt>
-<dd><p>logical specifying if labels should be split</p></dd>
+<dd><p>A logical specifying if labels should be split.</p></dd>
 
 
 <dt>ncol</dt>
-<dd><p>integer value specifying the number of columns in the output patchwork.</p></dd>
+<dd><p>An integer value specifying the number of columns in the output patchwork.</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>a character vector of colors to use for the color scale. The number of
+<dd><p>A character vector of colors to use for the color scale. The number of
 colors should match the number of labels present.</p></dd>
 
 
 <dt>dims</dt>
-<dd><p>a tibble with information about the tissue sections. This information is used to
+<dd><p>A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If <code>dims</code> is not provided, the limits will be
 computed directly from the spatial coordinates provided in <code>object</code>.</p></dd>
 
 
 <dt>coords_columns</dt>
-<dd><p>a character vector of length 2 specifying the names of the columns in
+<dd><p>A character vector of length 2 specifying the names of the columns in
 <code>object</code> holding the spatial coordinates</p></dd>
 
 
@@ -203,24 +212,46 @@ into a `patchwork`</p></dd>
 
 
 <dt>drop_na</dt>
-<dd><p>a logical specifying if NA values should be dropped</p></dd>
+<dd><p>A logical specifying if NA values should be dropped</p></dd>
+
+
+<dt>add_scalebar</dt>
+<dd><p>A logical specifying if a scale bar should be added to the plots</p></dd>
+
+
+<dt>scalebar_gg</dt>
+<dd><p>A 'ggplot' object generated with <code><a href="scalebar.html">scalebar</a></code>. The appearance of the scale
+bar is styled by passing parameters to <code><a href="scalebar.html">scalebar</a></code>.</p></dd>
+
+
+<dt>scalebar_height</dt>
+<dd><p>A numeric value specifying the height of the scale bar relative to the
+height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
+scaled with the plot and might disappear if the down-scaled text size is too small. Increasing
+the height of the scale bar can sometimes be useful to increase the text size to make it more
+visible in small plots.</p></dd>
+
+
+<dt>scalebar_position</dt>
+<dd><p>A numeric vector of length 2 specifying the position of the scale bar
+relative to the plot area. Default is to place it in the top right corner.</p></dd>
 
 
 <dt>column_name</dt>
-<dd><p>a string specifying a meta data column holding the categorical
-feature vector</p></dd>
+<dd><p>A character specifying a meta data column holding the categorical
+feature vector.</p></dd>
 
 
 <dt>image_use</dt>
-<dd><p>string specifying image type to use</p></dd>
+<dd><p>A character specifying image type to use.</p></dd>
 
 
 <dt>coords_use</dt>
-<dd><p>string specifying coordinate type to use</p></dd>
+<dd><p>A character specifying coordinate type to use.</p></dd>
 
 
 <dt>override_plot_dims</dt>
-<dd><p>a logical specifying whether the image dimensions should
+<dd><p>A logical specifying whether the image dimensions should
 be used to define the plot area. Setting <code>override_plot_dims</code> can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots. The same effect can be

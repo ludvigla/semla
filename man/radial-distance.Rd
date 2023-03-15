@@ -22,7 +22,7 @@ RadialDistance(object, ...)
 \method{RadialDistance}{Seurat}(
   object,
   column_name,
-  select_groups = NULL,
+  selected_groups = NULL,
   angles = NULL,
   angles_nbreaks = NULL,
   remove_singletons = TRUE,
@@ -69,7 +69,7 @@ type than Visium is used, the distances will not correspond to micrometers.}
 \item{column_name}{A character specifying the name of a column in your meta data that contains
 categorical data, e.g. clusters or manual selections}
 
-\item{select_groups}{A character vector to select specific groups in \code{column_name} with.
+\item{selected_groups}{A character vector to select specific groups in \code{column_name} with.
 All groups are selected by default, but the common use case is to select a region of interest.}
 }
 \value{
@@ -250,7 +250,7 @@ library(tidyr)
 library(RColorBrewer)
 
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", select_groups = "GALT")
+se_mcolon <- RadialDistance(se_mcolon, column_name = "selection", selected_groups = "GALT")
 
 # Plot results
 p1 <- MapLabels(se_mcolon, column_name = "selection")

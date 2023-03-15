@@ -40,6 +40,7 @@ defining angle intervals for computing radial distances with RadialDistance."><m
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -116,8 +117,8 @@ defining angle intervals for computing radial distances with <code><a href="radi
 
 
 <dt>column_name</dt>
-<dd><p>a string specifying a meta data column holding the categorical
-feature vector</p></dd>
+<dd><p>A character specifying a meta data column holding the categorical
+feature vector.</p></dd>
 
 
 <dt>selected_group</dt>
@@ -139,15 +140,15 @@ the meta data slot specified by <code>column_name</code></p></dd>
 
 
 <dt>image_use</dt>
-<dd><p>string specifying image type to use</p></dd>
+<dd><p>A character specifying image type to use.</p></dd>
 
 
 <dt>coords_use</dt>
-<dd><p>string specifying coordinate type to use</p></dd>
+<dd><p>A character specifying coordinate type to use.</p></dd>
 
 
 <dt>crop_area</dt>
-<dd><p>a numeric vector of length 4 specifying a rectangular area to crop
+<dd><p>A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: <code>crop_area = c(left, top, right, bottom)</code>. The crop area
@@ -158,41 +159,41 @@ separate plots for different tissue sections.</p></dd>
 
 
 <dt>pt_size</dt>
-<dd><p>numeric value specifying the point size passed to <code>geom_point</code></p></dd>
+<dd><p>A numeric value specifying the point size passed to <code>geom_point</code></p></dd>
 
 
 <dt>pt_alpha</dt>
-<dd><p>numeric value between 0 and 1 specifying the point opacity passed
+<dd><p>A numeric value between 0 and 1 specifying the point opacity passed
 to <code>geom_point</code>. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.</p></dd>
 
 
 <dt>pt_stroke</dt>
-<dd><p>numeric specifying the point stroke width</p></dd>
+<dd><p>A numeric specifying the point stroke width</p></dd>
 
 
 <dt>section_number</dt>
-<dd><p>an integer select a tissue section number to subset data by</p></dd>
+<dd><p>An integer select a tissue section number to subset data by</p></dd>
 
 
 <dt>label_by</dt>
-<dd><p>character of length 1 providing a column name in <code>object</code> with
+<dd><p>A character specifying a column name in <code>object</code> with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.</p></dd>
 
 
 <dt>ncol</dt>
-<dd><p>integer value specifying the number of columns in the output patchwork.</p></dd>
+<dd><p>An integer value specifying the number of columns in the output patchwork.</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>a character vector of colors to use for the color scale. The number of
+<dd><p>A character vector of colors to use for the color scale. The number of
 colors should match the number of labels present.</p></dd>
 
 
 <dt>override_plot_dims</dt>
-<dd><p>a logical specifying whether the image dimensions should
+<dd><p>A logical specifying whether the image dimensions should
 be used to define the plot area. Setting <code>override_plot_dims</code> can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots. The same effect can be
@@ -201,7 +202,7 @@ from the data.</p></dd>
 
 
 <dt>drop_na</dt>
-<dd><p>a logical specifying if NA values should be dropped</p></dd>
+<dd><p>A logical specifying if NA values should be dropped</p></dd>
 
 
 <dt>...</dt>
@@ -242,23 +243,21 @@ meta data of the input Seurat object. The selected region has to be spatially co
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="disconnect-regions.html">DisconnectRegions</a></span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'GALT'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 106 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> No 'selected_groups' provided. Using all groups in 'selection' column</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'background'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 2498 spots</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: tidygraph</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 8 disconnected graph(s) in data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Sorting disconnected regions by decreasing size</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 12 singletons in data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> →   These will be labeled as 'singletons'</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in DisconnectRegions(coords, spots = spots_list[[lbl]], verbose = verbose,     ...):</span> Found no disconnected components.</span>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mcolon</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 400x443 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">AnglePlot</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"GALT_split"</span>, selected_group <span class="op">=</span> <span class="st">"S1_region1"</span>, pt_size <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>        image_use <span class="op">=</span> <span class="st">"raw"</span>, crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">0.4</span>, nbreaks <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="AnglePlot-1.png" alt="" width="700" height="433"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .validate_column_name(object, column_name):</span> 'column_name' is not present in the Seurat object meta data</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

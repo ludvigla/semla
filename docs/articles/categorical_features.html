@@ -63,6 +63,7 @@
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -107,7 +108,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Visualization of categorical features</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 23 February
+            <h4 data-toc-skip class="date">Last compiled: 15 March
 2023</h4>
       
       
@@ -298,52 +299,52 @@ the zoom in of the GALT:</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] patchwork_1.1.2    tibble_3.1.8       semla_0.1.0        ggplot2_3.3.6     </span></span>
-<span><span class="co">## [5] dplyr_1.0.9        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
+<span><span class="co">## [1] patchwork_1.1.2    tibble_3.1.8       semla_0.1.0        ggplot2_3.4.1     </span></span>
+<span><span class="co">## [5] dplyr_1.1.0        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          </span></span>
 <span><span class="co">##   [4] ellipsis_0.3.2         ggridges_0.5.3         rprojroot_2.0.3       </span></span>
 <span><span class="co">##   [7] fs_1.5.2               spatstat.data_3.0-0    rstudioapi_0.14       </span></span>
 <span><span class="co">##  [10] farver_2.1.1           leiden_0.4.2           listenv_0.8.0         </span></span>
-<span><span class="co">##  [13] ggrepel_0.9.1          fansi_1.0.3            codetools_0.2-18      </span></span>
+<span><span class="co">##  [13] ggrepel_0.9.3          fansi_1.0.3            codetools_0.2-18      </span></span>
 <span><span class="co">##  [16] splines_4.2.1          cachem_1.0.6           knitr_1.39            </span></span>
 <span><span class="co">##  [19] zeallot_0.1.0          polyclip_1.10-0        jsonlite_1.8.3        </span></span>
 <span><span class="co">##  [22] ica_1.0-3              cluster_2.1.4          png_0.1-7             </span></span>
 <span><span class="co">##  [25] uwot_0.1.14            spatstat.sparse_3.0-0  shiny_1.7.4           </span></span>
 <span><span class="co">##  [28] sctransform_0.3.5      compiler_4.2.1         httr_1.4.4            </span></span>
-<span><span class="co">##  [31] assertthat_0.2.1       Matrix_1.5-3           fastmap_1.1.0         </span></span>
-<span><span class="co">##  [34] lazyeval_0.2.2         cli_3.4.1              later_1.3.0           </span></span>
-<span><span class="co">##  [37] htmltools_0.5.4        tools_4.2.1            igraph_1.3.4          </span></span>
-<span><span class="co">##  [40] gtable_0.3.0           glue_1.6.2             RANN_2.6.1            </span></span>
-<span><span class="co">##  [43] reshape2_1.4.4         Rcpp_1.0.9             scattermore_0.8       </span></span>
-<span><span class="co">##  [46] jquerylib_0.1.4        pkgdown_2.0.6          vctrs_0.5.1           </span></span>
-<span><span class="co">##  [49] nlme_3.1-159           spatstat.explore_3.0-5 progressr_0.10.1      </span></span>
-<span><span class="co">##  [52] lmtest_0.9-40          spatstat.random_3.0-1  xfun_0.32             </span></span>
-<span><span class="co">##  [55] stringr_1.4.1          globals_0.16.0         mime_0.12             </span></span>
-<span><span class="co">##  [58] miniUI_0.1.1.1         lifecycle_1.0.3        irlba_2.3.5           </span></span>
-<span><span class="co">##  [61] goftest_1.2-3          future_1.27.0          MASS_7.3-58.1         </span></span>
-<span><span class="co">##  [64] zoo_1.8-10             scales_1.2.1           spatstat.utils_3.0-1  </span></span>
-<span><span class="co">##  [67] ragg_1.2.2             promises_1.2.0.1       parallel_4.2.1        </span></span>
-<span><span class="co">##  [70] RColorBrewer_1.1-3     yaml_2.3.5             memoise_2.0.1         </span></span>
-<span><span class="co">##  [73] reticulate_1.26        pbapply_1.5-0          gridExtra_2.3         </span></span>
-<span><span class="co">##  [76] sass_0.4.2             stringi_1.7.8          highr_0.9             </span></span>
-<span><span class="co">##  [79] desc_1.4.1             rlang_1.0.6            pkgconfig_2.0.3       </span></span>
-<span><span class="co">##  [82] systemfonts_1.0.4      matrixStats_0.62.0     evaluate_0.16         </span></span>
-<span><span class="co">##  [85] lattice_0.20-45        tensor_1.5             ROCR_1.0-11           </span></span>
-<span><span class="co">##  [88] purrr_0.3.4            labeling_0.4.2         htmlwidgets_1.5.4     </span></span>
-<span><span class="co">##  [91] cowplot_1.1.1          tidyselect_1.1.2       parallelly_1.32.1     </span></span>
-<span><span class="co">##  [94] RcppAnnoy_0.0.19       plyr_1.8.7             magrittr_2.0.3        </span></span>
-<span><span class="co">##  [97] R6_2.5.1               magick_2.7.3           generics_0.1.3        </span></span>
-<span><span class="co">## [100] DBI_1.1.3              withr_2.5.0            pillar_1.8.1          </span></span>
-<span><span class="co">## [103] fitdistrplus_1.1-8     abind_1.4-5            survival_3.4-0        </span></span>
-<span><span class="co">## [106] sp_1.5-1               future.apply_1.9.0     KernSmooth_2.23-20    </span></span>
-<span><span class="co">## [109] utf8_1.2.2             spatstat.geom_3.0-3    plotly_4.10.0         </span></span>
-<span><span class="co">## [112] rmarkdown_2.15         grid_4.2.1             data.table_1.14.2     </span></span>
-<span><span class="co">## [115] forcats_0.5.2          digest_0.6.29          xtable_1.8-4          </span></span>
-<span><span class="co">## [118] dbscan_1.1-10          tidyr_1.2.0            httpuv_1.6.5          </span></span>
-<span><span class="co">## [121] textshaping_0.3.6      munsell_0.5.0          viridisLite_0.4.1     </span></span>
-<span><span class="co">## [124] bslib_0.4.0            shinyjs_2.1.0</span></span></code></pre>
+<span><span class="co">##  [31] Matrix_1.5-3           fastmap_1.1.0          lazyeval_0.2.2        </span></span>
+<span><span class="co">##  [34] cli_3.4.1              later_1.3.0            htmltools_0.5.4       </span></span>
+<span><span class="co">##  [37] tools_4.2.1            igraph_1.3.4           gtable_0.3.0          </span></span>
+<span><span class="co">##  [40] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        </span></span>
+<span><span class="co">##  [43] Rcpp_1.0.9             scattermore_0.8        jquerylib_0.1.4       </span></span>
+<span><span class="co">##  [46] pkgdown_2.0.6          vctrs_0.5.2            nlme_3.1-159          </span></span>
+<span><span class="co">##  [49] spatstat.explore_3.0-5 progressr_0.10.1       lmtest_0.9-40         </span></span>
+<span><span class="co">##  [52] spatstat.random_3.0-1  xfun_0.32              stringr_1.5.0         </span></span>
+<span><span class="co">##  [55] globals_0.16.0         mime_0.12              miniUI_0.1.1.1        </span></span>
+<span><span class="co">##  [58] lifecycle_1.0.3        irlba_2.3.5            goftest_1.2-3         </span></span>
+<span><span class="co">##  [61] future_1.27.0          MASS_7.3-58.1          zoo_1.8-10            </span></span>
+<span><span class="co">##  [64] scales_1.2.1           ragg_1.2.2             promises_1.2.0.1      </span></span>
+<span><span class="co">##  [67] spatstat.utils_3.0-1   parallel_4.2.1         RColorBrewer_1.1-3    </span></span>
+<span><span class="co">##  [70] yaml_2.3.5             memoise_2.0.1          reticulate_1.26       </span></span>
+<span><span class="co">##  [73] pbapply_1.5-0          gridExtra_2.3          sass_0.4.2            </span></span>
+<span><span class="co">##  [76] stringi_1.7.8          highr_0.9              desc_1.4.1            </span></span>
+<span><span class="co">##  [79] rlang_1.0.6            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
+<span><span class="co">##  [82] matrixStats_0.62.0     evaluate_0.16          lattice_0.20-45       </span></span>
+<span><span class="co">##  [85] tensor_1.5             ROCR_1.0-11            purrr_1.0.1           </span></span>
+<span><span class="co">##  [88] labeling_0.4.2         htmlwidgets_1.5.4      cowplot_1.1.1         </span></span>
+<span><span class="co">##  [91] tidyselect_1.2.0       parallelly_1.32.1      RcppAnnoy_0.0.19      </span></span>
+<span><span class="co">##  [94] plyr_1.8.7             magrittr_2.0.3         R6_2.5.1              </span></span>
+<span><span class="co">##  [97] magick_2.7.3           generics_0.1.3         DBI_1.1.3             </span></span>
+<span><span class="co">## [100] withr_2.5.0            pillar_1.8.1           fitdistrplus_1.1-8    </span></span>
+<span><span class="co">## [103] abind_1.4-5            survival_3.4-0         sp_1.5-1              </span></span>
+<span><span class="co">## [106] future.apply_1.9.0     KernSmooth_2.23-20     utf8_1.2.2            </span></span>
+<span><span class="co">## [109] spatstat.geom_3.0-3    plotly_4.10.0          rmarkdown_2.15        </span></span>
+<span><span class="co">## [112] grid_4.2.1             data.table_1.14.2      forcats_0.5.2         </span></span>
+<span><span class="co">## [115] digest_0.6.29          xtable_1.8-4           dbscan_1.1-10         </span></span>
+<span><span class="co">## [118] tidyr_1.3.0            httpuv_1.6.5           textshaping_0.3.6     </span></span>
+<span><span class="co">## [121] munsell_0.5.0          viridisLite_0.4.1      bslib_0.4.0           </span></span>
+<span><span class="co">## [124] shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
