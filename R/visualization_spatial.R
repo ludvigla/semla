@@ -1548,16 +1548,17 @@ MapLabels.Seurat <- function (
 
   if (scale == "free") {
     feature_limits <- lapply(data, function(x) {
-      x |>
-        select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |>
-        summarize(across(everything(), ~ range(.x, na.rm = TRUE)))
+      y <- x |>
+        select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID)
+      y <- sapply(y, range) |> as_tibble()
+      return(y)
     })
   } else if (scale == "shared") {
-    feature_limits <- do.call(bind_rows, data) |>
-      select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |>
-      summarize(across(everything(), ~ range(.x, na.rm = TRUE)))
+    y <- do.call(bind_rows, data) |>
+      select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID)
+    y <- sapply(y, range) |> as_tibble()
     feature_limits <- setNames(lapply(names(data), function(nm) {
-      feature_limits
+      y
     }), nm = names(data))
   }
 
