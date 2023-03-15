@@ -44,6 +44,7 @@ more than 3 features. See details below for more information."><meta property="o
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -152,7 +153,7 @@ more than 3 features. See details below for more information.</p>
 
 
 <dt>crop_area</dt>
-<dd><p>a numeric vector of length 4 specifying a rectangular area to crop
+<dd><p>A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
 right=1 and the y axis is goes from top=0 to bottom=1. The order of the values are
 specified as follows: <code>crop_area = c(left, top, right, bottom)</code>. The crop area
@@ -163,39 +164,39 @@ separate plots for different tissue sections.</p></dd>
 
 
 <dt>pt_size</dt>
-<dd><p>numeric value specifying the point size passed to <code>geom_point</code></p></dd>
+<dd><p>A numeric value specifying the point size passed to <code>geom_point</code></p></dd>
 
 
 <dt>pt_stroke</dt>
-<dd><p>numeric specifying the point stroke width</p></dd>
+<dd><p>A numeric specifying the point stroke width</p></dd>
 
 
 <dt>section_number</dt>
-<dd><p>an integer select a tissue section number to subset data by</p></dd>
+<dd><p>An integer select a tissue section number to subset data by</p></dd>
 
 
 <dt>label_by</dt>
-<dd><p>character of length 1 providing a column name in <code>object</code> with
+<dd><p>Character of length 1 providing a column name in <code>object</code> with
 labels that can be used to provide a title for each subplot. This column should have
 1 label per tissue section. This can be useful when you need to provide more detailed
 information about your tissue sections.</p></dd>
 
 
 <dt>ncol</dt>
-<dd><p>integer value specifying the number of columns in the output patchwork.
+<dd><p>Integer value specifying the number of columns in the output patchwork.
 This parameter will only have an effect when the number of features provided is 1.
 Otherwise, the patchwork will be arranged based on the <code>arrange_features</code> parameter.</p></dd>
 
 
 <dt>colors</dt>
-<dd><p>a character vector of colors to use for the color scale. The colors should
+<dd><p>A character vector of colors to use for the color scale. The colors should
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the <code>RColorBrewer</code>, <code>viridis</code> and
 <code>scico</code> R packages.</p></dd>
 
 
 <dt>dims</dt>
-<dd><p>a tibble with information about the tissue sections. This information is used to
+<dd><p>A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If <code>dims</code> is not provided, the limits will be
 computed directly from the spatial coordinates provided in <code>object</code>.</p></dd>
 
@@ -206,13 +207,13 @@ computed directly from the spatial coordinates provided in <code>object</code>.<
 
 
 <dt>return_plot_list</dt>
-<dd><p>logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
+<dd><p>A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
 By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
 if you want to manipulate each sub plot independently.</p></dd>
 
 
 <dt>drop_na</dt>
-<dd><p>a logical specifying if NA values should be dropped</p></dd>
+<dd><p>A logical specifying if NA values should be dropped</p></dd>
 
 
 <dt>add_colorscale_text</dt>
@@ -222,31 +223,31 @@ the meaning of these values depend on the choice of <code>scale</code></p></dd>
 
 
 <dt>features</dt>
-<dd><p>a character vector of features to plot. These features need to be
+<dd><p>A character vector of features to plot. These features need to be
 fetchable with <code>link{FetchData}</code></p></dd>
 
 
 <dt>slot</dt>
-<dd><p>slot to pull features values from</p></dd>
+<dd><p>Slot to pull features values from</p></dd>
 
 
 <dt>image_use</dt>
-<dd><p>string specifying image type to use</p></dd>
+<dd><p>A character specifying image type to use</p></dd>
 
 
 <dt>coords_use</dt>
-<dd><p>string specifying coordinate type to use</p></dd>
+<dd><p>A character specifying coordinate type to use</p></dd>
 
 
 <dt>override_plot_dims</dt>
-<dd><p>a logical specifying whether the image dimensions should
+<dd><p>A logical specifying whether the image dimensions should
 be used to define the plot area. Setting <code>override_plot_dims</code> can be useful
 in situations where the tissue section only covers a small fraction of the capture
 area, which will create a lot of white space in the plots.</p></dd>
 
 
 <dt>min_cutoff, max_cutoff</dt>
-<dd><p>a numeric value between 0-1 specifying either a lower
+<dd><p>A numeric value between 0-1 specifying either a lower
 (<code>min_cutoff</code>) or upper (<code>max_cutoff</code>) limit for the data using <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>.
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.</p></dd>
 
@@ -336,7 +337,7 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/ludviglarsson/miniconda3/envs/R4.2/lib/R/library/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span></span>

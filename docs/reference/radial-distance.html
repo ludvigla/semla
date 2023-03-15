@@ -40,6 +40,7 @@ a selected defined region."><meta property="og:image" content="https://ludvigla.
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -104,7 +105,7 @@ a selected defined region.</p>
 <span><span class="fu">RadialDistance</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  <span class="va">column_name</span>,</span>
-<span>  select_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selected_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  angles <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  angles_nbreaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove_singletons <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -125,7 +126,7 @@ a selected defined region.</p>
 
 
 <dt>spots</dt>
-<dd><p>A character vector with spot IDs present `object`. These spots typically
+<dd><p>A character vector with spot IDs present <code>object</code>. These spots typically
 represent one particular tissue structure identified either by data-driven clustering
 or by the tissue histology.</p></dd>
 
@@ -155,7 +156,7 @@ the centroid of the region of interest and can therefore be kept.</p></dd>
 
 <dt>convert_to_microns</dt>
 <dd><p>Logical specifying if pixel distances should be converted to microns. 
-This requires the `dbscan` R package to be installed. When this option sis set to TRUE, the method
+This requires the <code>dbscan</code> R package to be installed. When this option sis set to TRUE, the method
 will first attempt to estimate the center to center distance between adjacent spots which 
 corresponds to 100 microns in Visium. The center to center distance will then be used to 
 convert the radial distances. Note that if no spots are adjacent in the dataset or if any other data 
@@ -171,7 +172,7 @@ type than Visium is used, the distances will not correspond to micrometers.</p><
 categorical data, e.g. clusters or manual selections</p></dd>
 
 
-<dt>select_groups</dt>
+<dt>selected_groups</dt>
 <dd><p>A character vector to select specific groups in <code>column_name</code> with.
 All groups are selected by default, but the common use case is to select a region of interest.</p></dd>
 
@@ -213,8 +214,8 @@ spots located outside of the selected region will have positive distances.</p>
 
 <p>The microenvironment of the region of interest might be extremely heterogeneous
 depending on the direction from its center. For this reason, it can be useful to narrow
-down the search area by defining a smaller angle interval with `angles`. Alternativley,
-you can split the radial distances into an even number of slices with `angles_nbreaks`.
+down the search area by defining a smaller angle interval with <code>angles</code>. Alternativley,
+you can split the radial distances into an even number of slices with <code>angles_nbreaks</code>.
 When using a predefined search interval, the region of interest (e.g. manual annotation)
 should not contain multiple spatially disconnected regions. Angles are calculated from
 center of the region of interest so it only makes sense to investigate one region at the time.
@@ -225,16 +226,16 @@ multiple spatially disconnected regions.</p>
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
     
 
-<p>`object` should be a tibble with four columns:</p>
+<p><code>object</code> should be a tibble with four columns:</p>
 <ul><li><p>'barcode' : character vector with spot IDs</p></li>
 <li><p>'x', 'y' : numeric vectors with pixel coordinates</p></li>
 <li><p>'sampleID' : numeric vector with sample IDs</p></li>
-</ul><p>If `angles` and/or `angles_nbreaks` are set, the function will return a
+</ul><p>If <code>angles</code> and/or <code>angles_nbreaks</code> are set, the function will return a
 tibble with spot IDS, sampleIDs, the angle between the region center and
-spots and the radial distances. If  `angles_nbreaks` is provided, a
+spots and the radial distances. If  <code>angles_nbreaks</code> is provided, a
 fifth column will be provided that groups spots into even intervals based on angles.
 Otherwise, the default is to return numeric vector with radial distances
-for all spots in `object`.</p>
+for all spots in <code>object</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -275,7 +276,7 @@ for all spots in `object`.</p>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">V2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">V1</span>, <span class="va">V6</span>, <span class="va">V5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select spots</span></span></span>
@@ -284,7 +285,7 @@ for all spots in `object`.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances</span></span></span>
 <span class="r-in"><span><span class="va">radial_distances</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">coords</span>, r_dist <span class="op">=</span>  <span class="va">radial_distances</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">coords</span>, r_dist <span class="op">=</span>  <span class="va">radial_distances</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">galt_spots</span>, by <span class="op">=</span> <span class="st">"barcode"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Convert to sqrt scale</span></span></span>
@@ -368,7 +369,7 @@ for all spots in `object`.</p>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, selected_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Calculating radial distances for group 'GALT'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Removing 23 spots with 0 neighbors.</span>

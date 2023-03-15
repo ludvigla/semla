@@ -42,6 +42,7 @@ cell type proportion estimates."><meta property="og:image" content="https://ludv
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -144,9 +145,9 @@ cell type proportion estimates.</p>
 
 <dt>groups</dt>
 <dd><p>A character vector of length <code>ncol(singlecell_matrix)</code>
-with cell type labels. For `Seurat` objects, one can omit groups in which case
+with cell type labels. For <code>Seurat</code> objects, one can omit groups in which case
 the current identity is used instead. Alternatively, a string can be provided
-specifying a column to use from the `singlecell_object` meta.data slot.</p></dd>
+specifying a column to use from the <code>singlecell_object</code> meta.data slot.</p></dd>
 
 
 <dt>nCells_per_group</dt>
@@ -257,7 +258,7 @@ from the <code>RcppML</code> R package developed by Zachary DeBruine.</p>
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
     
 
-<p>Input `object` is a matrix-like object with 10x Visium data. The function returns
+<p>Input <code>object</code> is a matrix-like object with 10x Visium data. The function returns
 a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 where nCellTypes is the number of cell types and nSpots is the number of spots.
 If `return_expression_profiles=TRUE`, the returned object will be a list with estimated

@@ -15,11 +15,12 @@ articles:
   numeric_features: numeric_features.html
   radial_distances: radial_distances.html
   region_neighbors: region_neighbors.html
+  scalebar: scalebar.html
   semla: semla.html
   spatial_autocorrelation: spatial_autocorrelation.html
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
-last_built: 2023-02-23T15:19Z
+last_built: 2023-03-15T13:35Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles

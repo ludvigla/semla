@@ -48,6 +48,7 @@ NB: This function only calculates G, not G star."><meta property="og:image" cont
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -237,7 +238,7 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">V2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">V1</span>, <span class="va">V6</span>, <span class="va">V5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get spatial network</span></span></span>
@@ -280,7 +281,7 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bind results with coords for plotting</span></span></span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">coords</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log1p</a></span><span class="op">(</span><span class="va">featureMat</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log1p</a></span><span class="op">(</span><span class="va">featureMat</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">g_scores</span>, by <span class="op">=</span> <span class="st">"barcode"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot some results</span></span></span>
