@@ -46,10 +46,19 @@ certain spaceranger output file paths. The table should consist of four columns:
    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
-   \item{"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`}
+   \item{"json" : file paths to scale factor JSON files, e.g. `scalefactors_json.json`. 
+   It is also possible to provide custom scale factors (more info below).}
 }
 }
-\section{Load data outside tissue}{
+\section{Custom scale factors}{
+
+You can provide an additional column named 'scalefactor' with custom scale factor values.
+The values should be between 0 to 1, where a 1 would correspond to the original H&E image
+used as input for spaceranger. For instance, if your image was scaled from a height of 30,000
+pixels to a height of 3,000 pixels (with the same aspect ratio), the scalefactor would be 0.1.
+}
+
+\section{Load data outside tissue section}{
 
 Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you
 need to explore transcripts captured outside of the tissue. In this case, you can

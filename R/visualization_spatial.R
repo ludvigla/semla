@@ -423,7 +423,7 @@ MapFeatures.Seurat <- function (
     if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for 'section_number, expected an integer"))
     if (length(section_number) != 1) abort(glue("Invalid length {length(section_number)} for 'section_number, ",
                                                  "expected an integer vector of length 1"))
-    if (!section_number %in% unique(data_use$sampleID)) abort(glue("{section_number} out of range. ",
+    if (!section_number %in% unique(data_use$sampleID)) abort(glue("section_number = {section_number} out of range. ",
                                                                    "Select a number between {paste(range(data_use$sampleID), collapse = '-')}"))
     data_use <- data_use |>
       filter(sampleID == section_number)

@@ -269,10 +269,17 @@ LoadImageData <- function (
 #'    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
 #'    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
 #'    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
-#'    \item{"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`}
+#'    \item{"json" : file paths to scale factor JSON files, e.g. `scalefactors_json.json`. 
+#'    It is also possible to provide custom scale factors (more info below).}
 #' }
+#' 
+#' @section Custom scale factors:
+#' You can provide an additional column named 'scalefactor' with custom scale factor values.
+#' The values should be between 0 to 1, where a 1 would correspond to the original H&E image
+#' used as input for spaceranger. For instance, if your image was scaled from a height of 30,000
+#' pixels to a height of 3,000 pixels (with the same aspect ratio), the scalefactor would be 0.1.
 #'
-#' @section Load data outside tissue:
+#' @section Load data outside tissue section:
 #' Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you
 #' need to explore transcripts captured outside of the tissue. In this case, you can
 #' provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
@@ -349,11 +356,19 @@ ReadVisiumData <- function (
   if (verbose) cli_h2("Reading 10x Visium data")
 
   # Check infoTable
-  if (!all(c("samples", "imgs", "spotfiles", "json") %in% colnames(infoTable)))
-    abort("One or several of 'samples', 'imgs', 'spotfiles' and 'json' are missing from infoTable.")
+  if (!all(c("samples", "imgs", "spotfiles") %in% colnames(infoTable)))
+    abort("One or several of 'samples', 'imgs' and 'spotfiles' are missing from infoTable.")
+  if (!any(c("json", "scalefactor") %in% colnames(infoTable)))
+    abort("One os 'json' or 'scalefactor' columns needs to be provided")
   if (!any(class(infoTable) %in% c("tbl", "data.frame"))) abort(glue("Invalid class '{class(infoTable)}' of 'infoTable'."))
   if (nrow(infoTable) == 0) abort(glue("'infoTable' is empty."))
-  if (!all(sapply(infoTable, class) %in% "character")) abort(glue("Invalid column classes in 'infoTable'. Expecting 'character vectors.'"))
+  if (!all(sapply(infoTable[, c("samples", "imgs", "spotfiles")], class) %in% "character")) abort(glue("Invalid column classes in 'infoTable'. Expected 'character' vectors."))
+  if ("scalefactor" %in% colnames(infoTable)) {
+    if (!inherits(infoTable[, "scalefactor", drop = TRUE], what = c("numeric", "integer")))
+      abort(glue("Invalid column class for 'scalefactor'. Expected a 'numeric'."))
+    if (!all(between(x = infoTable[, "scalefactor", drop = TRUE], left = 0.001, right = 1)))
+      abort(glue("Scalefactors need to be in the range 0.001-1."))
+  }
   missing_files <- infoTable |>
     select(samples, imgs, spotfiles, json) |>
     mutate(across(samples:json, ~ file.exists(.x))) |>
@@ -424,18 +439,30 @@ ReadVisiumData <- function (
   })) |> as_tibble()
 
   # Read scale factors
-  scalefactors <- do.call(rbind, lapply(seq_along(infoTable$json), function(i) {
-    json_data <- data.frame(read_json(infoTable$json[i])) |> mutate(sampleID = paste0(i))
-    return(json_data)
-  })) |> as_tibble()
-
-  # Add full res image dimensions to image data
-  image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
-    mutate(full_width = case_when(type == "tissue_lowres" ~ width/tissue_lowres_scalef,
-                                  type == "tissue_hires" ~ width/tissue_hires_scalef),
-           full_height = case_when(type == "tissue_lowres" ~ height/tissue_lowres_scalef,
-                                   type == "tissue_hires" ~ height/tissue_hires_scalef)) |>
-    select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+  if ("scalefactor" %in% colnames(infoTable)) {
+    cli_alert_info("Using custom scalefactor(s) from infoTable")
+    scalefactors <- infoTable |> 
+      select(scalefactor) |> 
+      dplyr::rename(custom_scalef = scalefactor) |> 
+      mutate(sampleID = paste0(1:n()))
+    # Add full res image dimensions to image data
+    image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
+      mutate(full_width = width/custom_scalef,
+             full_height = height/custom_scalef) |>
+      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+  } else {
+    scalefactors <- do.call(rbind, lapply(seq_along(infoTable$json), function(i) {
+      json_data <- data.frame(read_json(infoTable$json[i])) |> mutate(sampleID = paste0(i))
+      return(json_data)
+    })) |> as_tibble()
+    # Add full res image dimensions to image data
+    image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
+      mutate(full_width = case_when(type == "tissue_lowres" ~ width/tissue_lowres_scalef,
+                                    type == "tissue_hires" ~ width/tissue_hires_scalef),
+             full_height = case_when(type == "tissue_lowres" ~ height/tissue_lowres_scalef,
+                                     type == "tissue_hires" ~ height/tissue_hires_scalef)) |>
+      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+  }
 
 
   # Sort coordinates
