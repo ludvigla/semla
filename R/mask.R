@@ -20,6 +20,8 @@ NULL
 #'
 #' @param xy_coords Optional tibble with spot coordinates matching the input image
 #' @param method Segmentation method to use. Choose one of "magentaSeg" or "blurSeg"
+#' @param custom_method A function that takes a "magick-image" object as input and returns a 
+#' segmented "magick-image" as output. See section "custom masking" below for more details.
 #' @param minPixels Minimum area for blobs used to remove small artefacts given in pixels.
 #' @param verbose Print messages
 #'
@@ -74,6 +76,7 @@ MaskImages.default <- function (
   object,
   xy_coords = NULL,
   method = c("magentaSeg", "blurSeg"),
+  custom_method = NULL,
   minPixels = 100,
   verbose = TRUE,
   ...
@@ -94,28 +97,38 @@ MaskImages.default <- function (
 
   # Apply image conversions
   if (verbose) cli_alert_info("Segmenting image using blob extraction")
-  if (verbose) cli_alert_info("Using method '{method}'")
   
-  if (method == "magentaSeg") {
-    im_blobs <- object |>
-      image_convert(colorspace = "cmyk") |>
-      image_channel(channel = "Magenta") |>
-      image_blur(sigma = 2) |>
-      image_normalize() |>
-      image_quantize(max = 5) |>
-      image_threshold(type = "black", threshold = "2%") |>
-      image_threshold(type = "white", threshold = "2%") |>
-      image_connect(connectivity = 1) |>
-      image_convert(colorspace = "gray")
-  }
-  if (method == "blurSeg") {
-    im_blobs <- object |>
-      image_convolve('Gaussian:3x3') |> 
-      image_negate() |> 
-      image_channel(channel = "gray") |> 
-      image_threshold(threshold = "30%") |> 
-      image_threshold(threshold = "30%", type = "white") |>
-      image_connect(connectivity = 1)
+  if (inherits(custom_method, what = "function")) {
+    if (verbose) cli_alert_info("Using custom method")
+    im_blobs <-  try({custom_method(object)}, silent = TRUE)
+    if (inherits(im_blobs, what = "try-error"))
+      abort("Invalid custom_method")
+    if (!inherits(im_blobs, what = "magick-image"))
+      abort(glue("Invalid class '{class(im_blobs)}' for object returned by custom_method function. ",
+                 "Make sure that the custom_method returns an object of class 'magick-image'"))
+  } else {
+    if (verbose) cli_alert_info("Using method '{method}'")
+    if (method == "magentaSeg") {
+      im_blobs <- object |>
+        image_convert(colorspace = "cmyk") |>
+        image_channel(channel = "Magenta") |>
+        image_blur(sigma = 2) |>
+        image_normalize() |>
+        image_quantize(max = 5) |>
+        image_threshold(type = "black", threshold = "2%") |>
+        image_threshold(type = "white", threshold = "2%") |>
+        image_connect(connectivity = 1) |>
+        image_convert(colorspace = "gray")
+    }
+    if (method == "blurSeg") {
+      im_blobs <- object |>
+        image_convolve('Gaussian:3x3') |> 
+        image_negate() |> 
+        image_channel(channel = "gray") |> 
+        image_threshold(threshold = "30%") |> 
+        image_threshold(threshold = "30%", type = "white") |>
+        image_connect(connectivity = 1)
+    }
   }
 
   # Convert image to bitmap array
@@ -194,6 +207,15 @@ MaskImages.default <- function (
 #'
 #' @section Seurat:
 #' Returns a Seurat object with masked images
+#' 
+#' @section Custom masking:
+#' If the masking fails, you can write your own masking function with magick. 
+#' This function needs to take an object of class "magick-image" as input and 
+#' return an object of the same class. The image needs to be segmented with 
+#' blob-extraction to work properly. Visit the magick R package 
+#' [website](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) for more
+#' information on how to apply magick methods for segmentation. You can find a basic 
+#' example below or visit the semla website for more detailed instructions.
 #'
 #' @examples
 #'
@@ -207,6 +229,21 @@ MaskImages.default <- function (
 #'
 #' # Plot masked images
 #' ImagePlot(se_merged)
+#' 
+#' # Using a custom method
+#' custom_fkn <- function(object) {
+#'   object |>
+#'     image_convert(colorspace = "cmyk") |> 
+#'     image_channel(channel = "Magenta") |> 
+#'     image_threshold(threshold = "7%") |> 
+#'     image_threshold(threshold = "7%", type = "white") |>
+#'     image_connect(connectivity = 1)
+#' }
+#' 
+#' se_mbrain <- se_mbrain |> LoadImages()
+#' se_mbrain <- MaskImages(se_mbrain, custom_method = custom_fkn)
+#' 
+#' ImagePlot(se_mbrain)
 #'
 #' @export
 #'
@@ -214,6 +251,7 @@ MaskImages.Seurat <- function (
     object,
     section_numbers = NULL,
     method = c("magentaSeg", "blurSeg"),
+    custom_method = NULL,
     minPixels = 100,
     verbose = TRUE,
     ...
@@ -265,6 +303,7 @@ MaskImages.Seurat <- function (
     im_masked <- MaskImages(raw_images[[i]] |> image_read(),
                             xy_coords = xy_coords_list[[i]],
                             method = method,
+                            custom_method = custom_method,
                             minPixels = minPixels,
                             verbose = verbose) |>
       as.raster()

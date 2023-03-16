@@ -12,6 +12,7 @@ MaskImages(object, ...)
   object,
   xy_coords = NULL,
   method = c("magentaSeg", "blurSeg"),
+  custom_method = NULL,
   minPixels = 100,
   verbose = TRUE,
   ...
@@ -21,6 +22,7 @@ MaskImages(object, ...)
   object,
   section_numbers = NULL,
   method = c("magentaSeg", "blurSeg"),
+  custom_method = NULL,
   minPixels = 100,
   verbose = TRUE,
   ...
@@ -34,6 +36,9 @@ MaskImages(object, ...)
 \item{xy_coords}{Optional tibble with spot coordinates matching the input image}
 
 \item{method}{Segmentation method to use. Choose one of "magentaSeg" or "blurSeg"}
+
+\item{custom_method}{A function that takes a "magick-image" object as input and returns a 
+segmented "magick-image" as output. See section "custom masking" below for more details.}
 
 \item{minPixels}{Minimum area for blobs used to remove small artefacts given in pixels.}
 
@@ -64,6 +69,17 @@ returns a masked 'magick-image' object
 \section{Seurat}{
 
 Returns a Seurat object with masked images
+}
+
+\section{Custom masking}{
+
+If the masking fails, you can write your own masking function with magick. 
+This function needs to take an object of class "magick-image" as input and 
+return an object of the same class. The image needs to be segmented with 
+blob-extraction to work properly. Visit the magick R package 
+[website](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) for more
+information on how to apply magick methods for segmentation. You can find a basic 
+example below or visit the semla website for more detailed instructions.
 }
 
 \examples{
@@ -111,6 +127,21 @@ se_merged <- se_merged |> MaskImages()
 
 # Plot masked images
 ImagePlot(se_merged)
+
+# Using a custom method
+custom_fkn <- function(object) {
+  object |>
+    image_convert(colorspace = "cmyk") |> 
+    image_channel(channel = "Magenta") |> 
+    image_threshold(threshold = "7\%") |> 
+    image_threshold(threshold = "7\%", type = "white") |>
+    image_connect(connectivity = 1)
+}
+
+se_mbrain <- se_mbrain |> LoadImages()
+se_mbrain <- MaskImages(se_mbrain, custom_method = custom_fkn)
+
+ImagePlot(se_mbrain)
 
 }
 \seealso{
