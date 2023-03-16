@@ -8,11 +8,19 @@
 \usage{
 MaskImages(object, ...)
 
-\method{MaskImages}{default}(object, xy_coords = NULL, minPixels = 100, verbose = TRUE, ...)
+\method{MaskImages}{default}(
+  object,
+  xy_coords = NULL,
+  method = c("magentaSeg", "blurSeg"),
+  minPixels = 100,
+  verbose = TRUE,
+  ...
+)
 
 \method{MaskImages}{Seurat}(
   object,
   section_numbers = NULL,
+  method = c("magentaSeg", "blurSeg"),
   minPixels = 100,
   verbose = TRUE,
   ...
@@ -24,6 +32,8 @@ MaskImages(object, ...)
 \item{...}{Arguments passed to other methods}
 
 \item{xy_coords}{Optional tibble with spot coordinates matching the input image}
+
+\item{method}{Segmentation method to use. Choose one of "magentaSeg" or "blurSeg"}
 
 \item{minPixels}{Minimum area for blobs used to remove small artefacts given in pixels.}
 
