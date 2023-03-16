@@ -19,6 +19,7 @@ NULL
 #' (e.g. immunofluorescence images) will most likely not work.
 #'
 #' @param xy_coords Optional tibble with spot coordinates matching the input image
+#' @param method Segmentation method to use. Choose one of "magentaSeg" or "blurSeg"
 #' @param minPixels Minimum area for blobs used to remove small artefacts given in pixels.
 #' @param verbose Print messages
 #'
@@ -72,11 +73,15 @@ NULL
 MaskImages.default <- function (
   object,
   xy_coords = NULL,
+  method = c("magentaSeg", "blurSeg"),
   minPixels = 100,
   verbose = TRUE,
   ...
 ) {
 
+  # Check method arg
+  method <- match.arg(arg = method, choices = c("magentaSeg", "blurSeg"))
+  
   # Input image must be of class 'magick-image'
   if (!inherits(object, what = "magick-image"))
     abort(glue("Invalid class '{class(object)}', expected a 'magick-image' object"))
@@ -89,17 +94,29 @@ MaskImages.default <- function (
 
   # Apply image conversions
   if (verbose) cli_alert_info("Segmenting image using blob extraction")
-
-  im_blobs <- object |>
-    image_convert(colorspace = "cmyk") |>
-    image_channel(channel = "Magenta") |>
-    image_blur(sigma = 2) |>
-    image_normalize() |>
-    image_quantize(max = 5) |>
-    image_threshold(type = "black", threshold = "2%") |>
-    image_threshold(type = "white", threshold = "2%") |>
-    image_connect(connectivity = 1) |>
-    image_convert(colorspace = "gray")
+  if (verbose) cli_alert_info("Using method '{method}'")
+  
+  if (method == "magentaSeg") {
+    im_blobs <- object |>
+      image_convert(colorspace = "cmyk") |>
+      image_channel(channel = "Magenta") |>
+      image_blur(sigma = 2) |>
+      image_normalize() |>
+      image_quantize(max = 5) |>
+      image_threshold(type = "black", threshold = "2%") |>
+      image_threshold(type = "white", threshold = "2%") |>
+      image_connect(connectivity = 1) |>
+      image_convert(colorspace = "gray")
+  }
+  if (method == "blurSeg") {
+    im_blobs <- object |>
+      image_convolve('Gaussian:3x3') |> 
+      image_negate() |> 
+      image_channel(channel = "gray") |> 
+      image_threshold(threshold = "30%") |> 
+      image_threshold(threshold = "30%", type = "white") |>
+      image_connect(connectivity = 1)
+  }
 
   # Convert image to bitmap array
   im_blobs_bm <- as.integer(im_blobs[[1]])
@@ -196,12 +213,16 @@ MaskImages.default <- function (
 MaskImages.Seurat <- function (
     object,
     section_numbers = NULL,
+    method = c("magentaSeg", "blurSeg"),
     minPixels = 100,
     verbose = TRUE,
     ...
 ) {
+  
+  # Check method arg
+  method <- match.arg(arg = method, choices = c("magentaSeg", "blurSeg"))
 
-  # Set global variables to NulL
+  # Set global variables to NULL
   sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
   if (verbose) cli_h2("Masking image(s)")
@@ -243,6 +264,7 @@ MaskImages.Seurat <- function (
     if (verbose) cli_alert_info("Processing sample {i}")
     im_masked <- MaskImages(raw_images[[i]] |> image_read(),
                             xy_coords = xy_coords_list[[i]],
+                            method = method,
                             minPixels = minPixels,
                             verbose = verbose) |>
       as.raster()
