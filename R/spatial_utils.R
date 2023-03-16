@@ -84,7 +84,7 @@
         group_by(sampleID) |>
         group_split() |>
         lapply(function(x) x |> pull(barcode)) |>
-        setNames(unique(GetStaffli(object)@image_info$sampleID))
+        setNames(unique(spots$sampleID))
     } else {
       spots <- spots |>
         pull(barcode)
