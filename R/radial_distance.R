@@ -433,14 +433,20 @@ RadialDistance.Seurat <- function (
     if (verbose) cli_alert_info("Running calculations for sample {nm}")
     sample_radial_distances <- lapply(names(spots_list), function(lbl) {
       if (verbose) cli_alert_info("Calculating radial distances for group '{lbl}'")
-      res <- RadialDistance(object = coords_list[[nm]],
-                            spots = spots_list[[lbl]][[nm]],
-                            verbose = verbose,
-                            angles = angles,
-                            angles_nbreaks = angles_nbreaks,
-                            remove_singletons = remove_singletons,
-                            convert_to_microns = convert_to_microns,
-                            ...)
+      if (is.null(spots_list[[lbl]][[nm]])) {
+        if (verbose) cli_alert_warning("Found no spots for groups '{lbl}' in section {nm}. Returning NA values for section {nm}")
+        res <- rep(NA_real_, nrow(coords_list[[nm]])) |> 
+          setNames(nm = coords_list[[nm]]$barcode)
+      } else {
+        res <- RadialDistance(object = coords_list[[nm]],
+                             spots = spots_list[[lbl]][[nm]],
+                             verbose = verbose,
+                             angles = angles,
+                             angles_nbreaks = angles_nbreaks,
+                             remove_singletons = remove_singletons,
+                             convert_to_microns = convert_to_microns,
+          ...)
+      }
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
           setNames(nm = c("barcode", paste0("r_dist_", lbl)))
