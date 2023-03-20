@@ -55,7 +55,7 @@ Suggests:
     igraph,
     leaflet,
     viridis,
-    testthat,
+    testthat (>= 3.0.0),
     data.table,
     BiocManager (>= 1.30.18),
     SpatialExperiment (>= 1.6.0),
@@ -119,3 +119,4 @@ Collate:
     'visualization_spatial_viewer.R'
     'zzz.R'
 URL: https://ludvigla.github.io/semla/
+Config/testthat/edition: 3
