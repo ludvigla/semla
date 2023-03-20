@@ -108,6 +108,7 @@ Collate:
     'spatial_network.R'
     'staffli_object.R'
     'subset_and_merge.R'
+    'themes.R'
     'tile_images.R'
     'transformations_coordinates.R'
     'transformations_image.R'
