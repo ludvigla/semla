@@ -5,6 +5,9 @@ NULL
 
 
 #' @param container_width,container_height Width and height of paper widget given in pixels.
+#' @param launch_browser Should the app be opened in the default browser? Default is TRUE.
+#' Set \code{launch_browser = getOption("shiny.launch.browser", interactive())} to use the RStudio 
+#' built-in browser.
 #'
 #' @section default method:
 #' Takes a list of images prepared with the \code{\link{prep_image}} function
@@ -59,6 +62,7 @@ RunAlignment.default <- function (
     object,
     container_width = '800px',
     container_height = '650px',
+    launch_browser = TRUE,
     ...
 ) {
 
@@ -142,7 +146,7 @@ RunAlignment.default <- function (
 
   }
 
-  transformations <- runApp(list(ui = ui, server = server))
+  transformations <- runApp(list(ui = ui, server = server), launch.browser = launch_browser)
 
   # Add image dimensions to results
   transformations <- transformations |>
@@ -163,6 +167,7 @@ RunAlignment.Seurat <- function (
   image_height = 400,
   container_width = '800px',
   container_height = '650px',
+  launch_browser = TRUE,
   verbose = TRUE,
   ...
 ) {
@@ -193,7 +198,11 @@ RunAlignment.Seurat <- function (
     setNames(nm = names(rstrs))
 
   # Run app
-  transforms <- RunAlignment(images, container_width = container_width, container_height = container_height, ...)
+  transforms <- RunAlignment(images, 
+                             container_width = container_width, 
+                             container_height = container_height, 
+                             launch_browser = launch_browser,
+                             ...)
   transforms$shift_x <- -transforms$shift_x
   transforms$shift_y <- -transforms$shift_y
 
