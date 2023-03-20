@@ -11,6 +11,7 @@ RunAlignment(object, ...)
   object,
   container_width = "800px",
   container_height = "650px",
+  launch_browser = TRUE,
   ...
 )
 }
@@ -20,6 +21,10 @@ RunAlignment(object, ...)
 \item{...}{Arguments passed to other methods}
 
 \item{container_width, container_height}{Width and height of paper widget given in pixels.}
+
+\item{launch_browser}{Should the app be opened in the default browser? Default is TRUE.
+Set \code{launch_browser = getOption("shiny.launch.browser", interactive())} to use the RStudio 
+built-in browser.}
 }
 \description{
 Opens an interactive viewer where images are interactive objects
