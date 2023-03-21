@@ -3,6 +3,7 @@
 \name{RunAlignment}
 \alias{RunAlignment}
 \alias{RunAlignment.default}
+\alias{RunAlignment.Seurat}
 \title{Manually apply rigid transformations to images}
 \usage{
 RunAlignment(object, ...)
@@ -12,6 +13,16 @@ RunAlignment(object, ...)
   container_width = "800px",
   container_height = "650px",
   launch_browser = TRUE,
+  ...
+)
+
+\method{RunAlignment}{Seurat}(
+  object,
+  image_height = 400,
+  container_width = "800px",
+  container_height = "650px",
+  launch_browser = TRUE,
+  verbose = TRUE,
   ...
 )
 }
@@ -25,6 +36,9 @@ RunAlignment(object, ...)
 \item{launch_browser}{Should the app be opened in the default browser? Default is TRUE.
 Set \code{launch_browser = getOption("shiny.launch.browser", interactive())} to use the RStudio 
 built-in browser.}
+}
+\value{
+An object with aligned images
 }
 \description{
 Opens an interactive viewer where images are interactive objects
@@ -43,12 +57,12 @@ the rigid transformations applied to the images.
 
 \section{Seurat method}{
 
-Takes a `Seurat` object with at least 2 tissue sections and opens an interactive
+Takes a \code{Seurat} object with at least 2 tissue sections and opens an interactive
 shiny application where rigid transformations can be applied to the images.
 When the application stops (after clicking "quit & save"), the transformations 
 are applied to the images using \code{\link{RigidTransformImages}} and a 
-`Seurat` object is returned. If no transformations are supplied, the function
-will return the input `Seurat` object unmodified.
+\code{Seurat} object is returned. If no transformations are supplied, the function
+will return the input \code{Seurat} object unmodified.
 }
 
 \examples{
@@ -71,6 +85,18 @@ img2 <- prep_image(im_mbrain |>
 
 transforms <- RunAlignment(object = list(img1, img2))
 
+}
+
+\dontrun{
+library(semla)
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
+  LoadImages()
+
+# Run alignment application
+se_merged <- RunAlignment(se_merged)
 }
 
 }

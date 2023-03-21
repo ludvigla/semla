@@ -158,3 +158,6 @@ estimated cell type proportions.
 \href{https://doi.org/10.1101/2021.09.01.458620}{RcppML}
 \href{https://github.com/zdebruine/RcppML}{RcppML GitHub page}
 }
+\author{
+Ludvig Larsson
+}

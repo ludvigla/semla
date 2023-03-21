@@ -6,8 +6,6 @@
 \alias{semla-package}
 \title{semla: Process, analyze and visualize Spatially Resolved Transcriptomics data}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
-
 semla collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 }
 \seealso{

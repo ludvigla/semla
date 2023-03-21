@@ -11,6 +11,9 @@ centroid_angles_plot(nbreaks = 9, centroid_size = 8)
 
 \item{centroid_size}{Size of the centroid spot}
 }
+\value{
+A \code{ggplot} object
+}
 \description{
 Draw a centroid angle plot
 }

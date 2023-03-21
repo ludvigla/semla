@@ -28,8 +28,17 @@ for counter-clockwise rotation. The value needs to be in the range (-360, 360)}
 \item{scalefactor}{A numeric value specifying a scaling factor between (0, 3)}
 }
 \value{
-a tibble with image transformations
+A tibble with image transformations
 }
 \description{
 Utility function to generate a tibble with image transformations
+}
+\examples{
+
+# Flip along x axis and rotate 45 degrees
+generate_rigid_transform(sampleID = 1, mirror_x = TRUE, angle = 45)
+
+# Move image 100 pixels along x and y axes
+generate_rigid_transform(sampleID = 1, tr_x = 100, tr_y = 100)
+
 }

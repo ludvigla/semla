@@ -17,12 +17,12 @@ RigidTransformImages(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{image}{an image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
+\item{image}{An image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
 or a path to an image in PNG or JPEG format}
 
-\item{xy_coords}{spot coordinates that can be mapped to \code{image}}
+\item{xy_coords}{Spot coordinates that can be mapped to \code{image}}
 
-\item{verbose}{print messages}
+\item{verbose}{Print messages}
 
 \item{transforms}{a tibble containing information about the transformations
 to apply to the images (see Seurat section)}

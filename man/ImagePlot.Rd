@@ -44,7 +44,8 @@ grid}
 \item{return_as_gg}{Should the plot be returned as a \code{ggplot} object?}
 }
 \value{
-draws a plot of the H&E images
+Draws a plot of the H&E images or alternatively, returns a \code{patchwork} 
+composed of \code{ggplot} objects
 }
 \description{
 If images are loaded into the \code{Seurat} object with \code{LoadImages},

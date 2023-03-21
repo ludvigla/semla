@@ -42,7 +42,7 @@ or by the tissue histology.}
 
 \item{angles}{A numeric vector of length 2 specifying a "search interval" of angles
 to compute the radial distances for. Values between 0 and 360 are accepted where
-`angles[1] < angles[2]`. The angles are defined in a clockwise manner, where right=0,
+\code{angles[1] < angles[2]}. The angles are defined in a clockwise manner, where right=0,
 down=90, left=180 and up=270. The angles are calculated relative to the region
 center and can therefore only be used when a single connected region is present. If
 there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
@@ -73,14 +73,13 @@ categorical data, e.g. clusters or manual selections}
 All groups are selected by default, but the common use case is to select a region of interest.}
 }
 \value{
-A numeric vector with radial distances. If the input object is of class
-`Seurat`, the radial distances will be returned in the meta data slot.
+An object with radial distances
 }
 \description{
 Calculates the radial distances to all spots from the borders of
 a selected defined region.
 }
-\section{scenario}{
+\section{Scenario}{
 
 The region of interest could for example be an isolated tumor in the tissue
 section surrounded by stroma. If we are interested in expressional changes
@@ -96,7 +95,7 @@ address certain question in this scenario:
 }
 }
 
-\section{algorithm}{
+\section{Algorithm}{
 
 First, the border spots of the selected region is identified based on the
 spatial network of nearest neighbors identified with \code{\link{GetSpatialNetwork}}.
@@ -105,7 +104,7 @@ Spots located inside the selected region will have negative distances and
 spots located outside of the selected region will have positive distances.
 }
 
-\section{search interval}{
+\section{Search interval}{
 
 The microenvironment of the region of interest might be extremely heterogeneous
 depending on the direction from its center. For this reason, it can be useful to narrow
@@ -134,6 +133,12 @@ spots and the radial distances. If  \code{angles_nbreaks} is provided, a
 fifth column will be provided that groups spots into even intervals based on angles.
 Otherwise, the default is to return numeric vector with radial distances
 for all spots in \code{object}.
+}
+
+\section{Seurat method}{
+
+If \code{object} is is a \code{Seurat} object created with \code{semla},
+the results are returned to the \code{meta.data} slot.
 }
 
 \examples{

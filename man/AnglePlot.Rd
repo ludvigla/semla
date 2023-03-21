@@ -27,7 +27,7 @@ AnglePlot(
 )
 }
 \arguments{
-\item{object}{An object of class `Seurat`}
+\item{object}{An object of class \code{Seurat}}
 
 \item{column_name}{A character specifying a meta data column holding the categorical
 feature vector.}
@@ -87,7 +87,7 @@ from the data.}
 \item{...}{Arguments passed to other methods}
 }
 \value{
-An object of class `patchwork`
+An object of class \code{patchwork}
 }
 \description{
 Draws on angle plot on top of a selected region. The plot is meant to help

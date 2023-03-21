@@ -17,5 +17,29 @@ paper(data, width = NULL, height = NULL, elementId = NULL)
 }
 \description{
 Provided a list of images, this function is used to open an interactive app
-built with react and paper JS.
+built with react and paper JS. The application is mean to be used in a shiny 
+application and is used for the \code{\link{RunAlignment}} function provided 
+in \code{semla}.
+}
+\examples{
+
+\dontrun{
+library(semla)
+library(magick)
+
+im_mbrain <- system.file("extdata/mousebrain/spatial",
+                         "tissue_hires_image.jpg",
+                         package = "semla")
+
+img1 <- prep_image(im_mbrain |>
+                     image_read(),
+                   height = 512)
+img2 <- prep_image(im_mbrain |>
+                     image_read() |>
+                     image_flip(),
+                   height = 512)
+
+paper(data = list(img1, img2), width = 600, height = 600)
+}
+
 }

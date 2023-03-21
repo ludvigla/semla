@@ -2,12 +2,12 @@
 % Please edit documentation in R/rigid_transform_manual.R
 \name{prep_image}
 \alias{prep_image}
-\title{Function used to prepare images for paper JS react app}
+\title{Prepare images for paper JS react app}
 \usage{
 prep_image(input, height = 256)
 }
 \arguments{
-\item{input}{An object of class 'magick-image' or a path
+\item{input}{An object of class \code{magick-image} or a path
 to an image in png or jpeg format}
 
 \item{height}{Height of image sent to react app}
@@ -17,5 +17,15 @@ a list with an array buffer, the image dimensions and
 the length of the array buffer
 }
 \description{
-Function used to prepare images for paper JS react app
+Prepare images for paper JS react app
+}
+\examples{
+library(semla)
+library(magick)
+
+im <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
+
+# Prep image
+im_prepped <- prep_image(im)
+
 }

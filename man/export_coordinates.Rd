@@ -13,7 +13,7 @@ export_coordinates(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object created with `semla`}
+\item{object}{A \code{Seurat} object created with \code{semla}}
 
 \item{sampleNumber}{An integer specifying a sample ID to export
 spatial network for}
@@ -23,6 +23,9 @@ spatial network for}
 \item{overwrite}{Should an existing coordinate file be overwritten?}
 
 \item{verbose}{Print messages}
+}
+\value{
+Writes coordinates to a file
 }
 \description{
 Utility function to prepare data for \code{\link{FeatureViewer}}.
