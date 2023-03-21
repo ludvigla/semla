@@ -13,7 +13,7 @@ ExportDataForViewer(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object created with semla}
+\item{object}{A \code{Seurat} object created with \code{semla}}
 
 \item{sampleIDs}{An integer vector specifying the sampleIDs for the datasets to export. By default,
 all samples are exported.}
@@ -33,7 +33,7 @@ This is a utility function used to export data required for \code{\link{FeatureV
 }
 \details{
 \code{\link{FeatureViewer}} will automatically attempt to export these files every time it's run.
-With `ExportDataForViewer`, you only have to export the files once and you can provide the output
+With \code{ExportDataForViewer}, you only have to export the files once and you can provide the output
 data path for \code{\link{FeatureViewer}} to look for the required files in that directory.
 }
 \examples{

@@ -3,10 +3,10 @@
 #' This is a utility function used to export data required for \code{\link{FeatureViewer}}.
 #' 
 #' \code{\link{FeatureViewer}} will automatically attempt to export these files every time it's run.
-#' With `ExportDataForViewer`, you only have to export the files once and you can provide the output
+#' With \code{ExportDataForViewer}, you only have to export the files once and you can provide the output
 #' data path for \code{\link{FeatureViewer}} to look for the required files in that directory.
 #'
-#' @param object A `Seurat` object created with semla
+#' @param object A \code{Seurat} object created with \code{semla}
 #' @param sampleIDs An integer vector specifying the sampleIDs for the datasets to export. By default,
 #' all samples are exported.
 #' @param outdir A character vector specifying the path to an existing directory with permission to read

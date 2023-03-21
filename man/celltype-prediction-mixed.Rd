@@ -4,7 +4,7 @@
 \alias{RunMixedNNLS}
 \alias{RunMixedNNLS.default}
 \alias{RunMixedNNLS.Seurat}
-\title{Mixed cell type prediction with NNLS}
+\title{Mixed cell type prediction with NNLS (experimental)}
 \usage{
 RunMixedNNLS(object, ...)
 
@@ -106,6 +106,8 @@ also provide the cell gene loadings for each cell type. However, the proportions
 will instead be named "factor_1", "factor_2", ...}
 }
 \value{
+An object with mixed cell type and factor proportion estimates
+
 An object with cell type proportion estimates
 }
 \description{

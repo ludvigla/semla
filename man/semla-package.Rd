@@ -4,7 +4,7 @@
 \name{semla-package}
 \alias{semla}
 \alias{semla-package}
-\title{semla: Process, analyze and visualize Spatially Resolved Transcriptomcis data}
+\title{semla: Process, analyze and visualize Spatially Resolved Transcriptomics data}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 

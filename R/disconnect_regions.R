@@ -6,7 +6,7 @@ NULL
 
 
 #' @section default method:
-#' Takes a `tibble` and set of spot IDs and returns a named character vector with new labels.
+#' Takes a \code{tibble} and set of spot IDs and returns a named character vector with new labels.
 #' The names of this vector corresponds to the input spot IDs.
 #'
 #' @section Seurat:
@@ -14,12 +14,12 @@ NULL
 #' slot using \code{column_name}. From this column, one can specify what groups
 #' to disconnect with \code{selected_groups}. If \code{selected_groups} isn't specified,
 #' all groups in \code{selected_groups} will be disconnected separately.
-#' The function returns a `Seurat` object with additional columns in the meta data
+#' The function returns a \code{Seurat} object with additional columns in the meta data
 #' slot, one for each group in \code{selected_groups}. The suffix to these columns is
 #' "_split", so a group in \code{selected_groups} called "tissue" will get a column
 #' called "tissue_split" with new labels for each spatially disconnected region.
 #'
-#' @param spots A character vector with spot IDs present `object`
+#' @param spots A character vector with spot IDs present \code{object}
 #'
 #' @import dplyr
 #' @import cli

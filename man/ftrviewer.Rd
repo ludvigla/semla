@@ -15,9 +15,9 @@ ftrviewer(
   scaleByOpacity = FALSE,
   isNumeric = TRUE,
   useLasso = FALSE,
-  levels,
+  levels = character(),
   categories = character(),
-  colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral"),
+  colors = rev(RColorBrewer::brewer.pal(n = 9, name = "Spectral")),
   container_width = 800,
   container_height = 800,
   elementId = NULL
@@ -39,17 +39,17 @@ ftrviewer(
 \item{range}{A numeric vector of length 2 specifying a range of values (color domain)}
 
 \item{scaleByOpacity}{A logical specifying if the opacity should be set by
-`opacities` or `opacity`}
+\code{opacities} or \code{opacity}}
 
 \item{isNumeric}{A logical specifying if the input is numeric or not}
 
 \item{useLasso}{A logical specifying if the lasso selection tool should be activated}
 
-\item{levels}{category levels for coloring of values}
+\item{levels}{Category levels for coloring of values}
 
-\item{categories}{not yet implemented}
+\item{categories}{A character vector with the categories available}
 
-\item{colors}{A vector of colors}
+\item{colors}{A character vector of colors}
 
 \item{container_width, container_height}{Container width/height in pixels}
 
@@ -58,5 +58,29 @@ ftrviewer(
 \description{
 This function will open a react application that listens can
 be used to interactively visualize categorical or numeric features
-as spatial maps.
+as spatial maps. For the application to run properly, relevant data needs
+to be available via a file server. This function is intended to be used
+within a shiny app
+}
+\examples{
+\dontrun{
+
+library(semla)
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mbrain <- LoadImages(se_mbrain)
+
+datapath <- ExportDataForViewer(se_mbrain, outdir = ".")
+
+# Start file server
+file_server(datapath)
+
+# Run feature viewer widget
+ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial), opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
+          range = range(se_mbrain$nFeature_Spatial))
+
+# Stop file server
+beakr::stopAllServers()
+
+}
+
 }

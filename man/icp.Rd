@@ -69,7 +69,7 @@ ggplot(xy_orig, aes(x, y, color = type)) +
 res <- icp(xy_ref = xy[, 1:2], xy_query = xy_diff[, 1:2])
 
 xy_aligned <- xy |>
-  bind_rows(bind_cols(setNames(res$y_transf|> as_tibble(),
+  bind_rows(bind_cols(setNames(res$y_transf|> as_tibble(.name_repair = "minimal"),
                                nm = c("x", "y")),
                       type = "set2_aligned"))
 

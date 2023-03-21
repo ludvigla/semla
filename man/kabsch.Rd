@@ -12,8 +12,8 @@ kabsch(pm, qm)
 \item{qm}{n x 2 matrix of reference points.}
 }
 \value{
-Matrix \code{pm} rotated and translated so that the ith point
-is aligned to the ith point of \code{qm} in the least-squares sense.
+A list with the rotation matrix "um", the aligned coordinates "qm"
+and the target coordinates "pm"
 }
 \description{
 Aligns two sets of points via rotations and translations.

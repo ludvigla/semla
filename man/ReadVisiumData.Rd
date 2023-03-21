@@ -14,7 +14,7 @@ ReadVisiumData(
 )
 }
 \arguments{
-\item{infoTable}{A `data.frame` or `tbl` with paths to spaceranger output files}
+\item{infoTable}{A \code{data.frame} or \code{tbl} with paths to spaceranger output files}
 
 \item{assay}{Assay name (default = "Spatial")}
 
@@ -29,24 +29,25 @@ entire tissue section.}
 \item{...}{Parameters passed to \code{\link{CreateSeuratObject}}}
 }
 \value{
-A \code{\link{Seurat}} object with additional spatial information
+A \code{\link{Seurat}} object with additional spatial information stored in
+a \code{Staffli} object
 }
 \description{
 This function serves as a wrapper for \code{\link{LoadAndMergeMatrices}} and
 \code{\link{LoadSpatialCoordinates}} to load spaceranger output files and create
 a Seurat object. The spatial information, i.e. images and spot coordinates, are
-stored inside the tools slot of the `Seurat` object in an object called `Staffli`.
+stored inside the tools slot of the \code{Seurat} object in \code{Staffli} object.
 }
 \details{
-\code{ReadVisiumData} takes a `data.frame` like table as input that should hold
+\code{ReadVisiumData} takes a \code{data.frame} like table as input that should hold
 certain spaceranger output file paths. The table should consist of four columns:
 "samples", "imgs", "spotfiles" and "json".
 
 \itemize{
-   \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
-   \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
-   \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
-   \item{"json" : file paths to scale factor JSON files, e.g. `scalefactors_json.json`. 
+   \item{"samples" : file paths to expression matrices, e.g. \code{filtered_bc_matrix.h5}}
+   \item{"imgs" : file paths to images, e.g. \code{tissue_hires_image.jpg}}
+   \item{"spotfiles" : file paths to spot coordinate CSV files \code{tissue_positions_list.csv}}
+   \item{"json" : file paths to scale factor JSON files, e.g. \code{scalefactors_json.json}. 
    It is also possible to provide custom scale factors (more info below).}
 }
 }
@@ -62,14 +63,14 @@ pixels to a height of 3,000 pixels (with the same aspect ratio), the scalefactor
 
 Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you
 need to explore transcripts captured outside of the tissue. In this case, you can
-provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
-and set `remove_spots_outside_tissue = FALSE`.
+provide paths to the \code{raw_feature_bc_matrix.h5} files in the spaceranger output folders
+and set \code{remove_spots_outside_tissue = FALSE}.
 }
 
 \section{Filter data}{
 
-If you want to filter out spots and features, you can pass the `min.cells` and
-`min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
+If you want to filter out spots and features, you can pass the \code{min.cells} and
+\code{min.features} parameters (see \code{\link{CreateSeuratObject}} for more details);
 however, it is recommended to use the \code{\link{SubsetSTData}} function for filtering
 after the object has been created.
 }

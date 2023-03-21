@@ -40,7 +40,7 @@ osddu <- function (
     component,
     width = width,
     height = height,
-    package = 'STUtiity2',
+    package = 'semla',
     elementId = elementId
   )
 }

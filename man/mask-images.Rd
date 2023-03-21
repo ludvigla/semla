@@ -46,6 +46,9 @@ segmented "magick-image" as output. See section "custom masking" below for more 
 
 \item{section_numbers}{An integer vector specifying samples to mask}
 }
+\value{
+An object with masked images
+}
 \description{
 Image masking can sometimes be useful when you want to remove background from
 an H&E image. This is usually only relevant when creating figures. This function

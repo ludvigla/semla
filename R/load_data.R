@@ -19,9 +19,9 @@ NULL
 #'
 #' @family pre-process
 #'
-#' @param samplefiles Character vector of file/directory paths. Paths should specify `.h5` or
-#' `.tsv`/`.tsv.gz` files. Alternatively, the paths could specify directories including `barcodes.tsv`,
-#' `features.tsv` and `matrix.mtx` files.
+#' @param samplefiles Character vector of file/directory paths. Paths should specify \code{.h5} or
+#' \code{.tsv}/\code{.tsv.gz} files. Alternatively, the paths could specify directories including \code{barcodes.tsv},
+#' \code{features.tsv} and \code{matrix.mtx} files.
 #' @param verbose Print messages
 #'
 #' @importFrom methods as
@@ -34,7 +34,7 @@ NULL
 #' @importFrom tibble tibble
 #' @importFrom tools file_ext
 #'
-#' @return A sparse matrix of class `dgCMatrix`
+#' @return A sparse matrix of class \code{dgCMatrix}
 #'
 #' @examples
 #'
@@ -120,7 +120,7 @@ LoadAndMergeMatrices <- function (
 
 #' Load and merge multiple coordinate tables
 #'
-#' Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a `tibble`.
+#' Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a \code{tibble}.
 #'
 #' @details The merging process makes sure that all genes detected are present in the merged output.
 #' This means that if a gene is missing in a certain dataset, the spots in that dataset will
@@ -128,7 +128,7 @@ LoadAndMergeMatrices <- function (
 #'
 #' @family pre-process
 #'
-#' @param coordinatefiles Character vector of file paths. Paths should specify `.csv` files output by spaceranger
+#' @param coordinatefiles Character vector of file paths. Paths should specify \code{.csv} files output by spaceranger
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
 #'
@@ -136,7 +136,7 @@ LoadAndMergeMatrices <- function (
 #' @import dplyr
 #' @importFrom utils read.csv
 #'
-#' @return An object of class `tbl` (`tibble`)
+#' @return An object of class \code{tbl}
 #'
 #' @examples
 #'
@@ -193,18 +193,18 @@ LoadSpatialCoordinates <- function (
   return(coordDF)
 }
 
-# TODO: not yet implemented, only to be used for SpatialExperiment class
+
 #' Read image data
 #'
-#' Load image related data from \strong{'tissue_hires_image.jpg'} files.
+#' Load image related data from \strong{tissue_hires_image.jpg} files.
 #'
 #' @family pre-process
 #'
-#' @param images An object of class `tibble` containing paths to images in PNG format, with
-#' one row per sample. Paths should specify `.png` files output by spaceranger such as
-#' `tissue_lowres_image.jpg` or `tissue_hires_image.jpg`. You do not have to load both
+#' @param images An object of class \code{tibble} containing paths to images in PNG format, with
+#' one row per sample. Paths should specify \code{.png} files output by spaceranger such as
+#' \code{tissue_lowres_image.jpg} or \code{tissue_hires_image.jpg}. You do not have to load both
 #' H&E images.
-#' @param jsonfiles A character vector with file paths. Paths should specify `.json` files containing
+#' @param jsonfiles A character vector with file paths. Paths should specify JSON files containing
 #' scalefactors output by spaceranger.
 #' @param verbose Print messages
 #'
@@ -214,7 +214,7 @@ LoadSpatialCoordinates <- function (
 #' @import dplyr
 #' @importFrom tools file_ext
 #'
-#' @return An object of class `DFrame`
+#' @return An object of class \code{DFrame}
 #'
 #' @noRd
 LoadImageData <- function (
@@ -260,18 +260,18 @@ LoadImageData <- function (
 #' This function serves as a wrapper for \code{\link{LoadAndMergeMatrices}} and
 #' \code{\link{LoadSpatialCoordinates}} to load spaceranger output files and create
 #' a Seurat object. The spatial information, i.e. images and spot coordinates, are
-#' stored inside the tools slot of the `Seurat` object in an object called `Staffli`.
+#' stored inside the tools slot of the \code{Seurat} object in \code{Staffli} object.
 #'
 #' @details
-#' \code{ReadVisiumData} takes a `data.frame` like table as input that should hold
+#' \code{ReadVisiumData} takes a \code{data.frame} like table as input that should hold
 #' certain spaceranger output file paths. The table should consist of four columns:
 #' "samples", "imgs", "spotfiles" and "json".
 #'
 #' \itemize{
-#'    \item{"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`}
-#'    \item{"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`}
-#'    \item{"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`}
-#'    \item{"json" : file paths to scale factor JSON files, e.g. `scalefactors_json.json`. 
+#'    \item{"samples" : file paths to expression matrices, e.g. \code{filtered_bc_matrix.h5}}
+#'    \item{"imgs" : file paths to images, e.g. \code{tissue_hires_image.jpg}}
+#'    \item{"spotfiles" : file paths to spot coordinate CSV files \code{tissue_positions_list.csv}}
+#'    \item{"json" : file paths to scale factor JSON files, e.g. \code{scalefactors_json.json}. 
 #'    It is also possible to provide custom scale factors (more info below).}
 #' }
 #' 
@@ -284,18 +284,18 @@ LoadImageData <- function (
 #' @section Load data outside tissue section:
 #' Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you
 #' need to explore transcripts captured outside of the tissue. In this case, you can
-#' provide paths to the `raw_feature_bc_matrix.h5` files in the spaceranger output folders
-#' and set `remove_spots_outside_tissue = FALSE`.
+#' provide paths to the \code{raw_feature_bc_matrix.h5} files in the spaceranger output folders
+#' and set \code{remove_spots_outside_tissue = FALSE}.
 #'
 #' @section Filter data:
-#' If you want to filter out spots and features, you can pass the `min.cells` and
-#' `min.features` parameters (see \code{\link{CreateSeuratObject}} for more details);
+#' If you want to filter out spots and features, you can pass the \code{min.cells} and
+#' \code{min.features} parameters (see \code{\link{CreateSeuratObject}} for more details);
 #' however, it is recommended to use the \code{\link{SubsetSTData}} function for filtering
 #' after the object has been created.
 #'
 #' @family pre-process
 #'
-#' @param infoTable A `data.frame` or `tbl` with paths to spaceranger output files
+#' @param infoTable A \code{data.frame} or \code{tbl} with paths to spaceranger output files
 #' @param assay Assay name (default = "Spatial")
 #' @param remove_spots_outside_HE Should spots outside the H&E be removed? This option
 #' can be useful for CytAssist data when the H&E image only cover a smaller part of the
@@ -314,7 +314,8 @@ LoadImageData <- function (
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr uncount
 #'
-#' @return A \code{\link{Seurat}} object with additional spatial information
+#' @return A \code{\link{Seurat}} object with additional spatial information stored in
+#' a \code{Staffli} object
 #'
 #' @examples
 #' # Assemble spaceranger output files
@@ -354,6 +355,7 @@ ReadVisiumData <- function (
   samples <- imgs <- spotfiles <- json <- barcode <- width <- height <- full_width <- full_height <- NULL
   colorspace <- density <- sampleID <- type <- pxl_col_in_fullres <- pxl_row_in_fullres <- filesize <- NULL
   check_x <- check_y <- min_x <- max_x <- min_y <- max_y <- pad_before_x <- pad_after_x <- pad_after_y <- pad_before_y <- pad <- NULL
+  scalefactor <- custom_scalef <- NULL
 
   if (verbose) cli_h2("Reading 10x Visium data")
 

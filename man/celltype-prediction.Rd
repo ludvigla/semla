@@ -132,13 +132,19 @@ stereoscope, cell2location or RCTD.
 The method uses the NNLS implementation
 from the \code{RcppML} R package developed by Zachary DeBruine.
 }
+\section{Examples}{
+
+A tutorial can be found on our \href{https://ludvigla.github.io/semla/}{package website}.
+Got to tutorials -> Cell type mapping
+}
+
 \section{default method}{
 
 Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 where nCellTypes is the number of cell types and nSpots is the number of spots.
-If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-proportions `prop` and the cell type expression profile matrix `W`.
+If \code{return_expression_profiles=TRUE}, the returned object will be a list with estimated
+proportions \code{prop} and the cell type expression profile matrix \code{W}.
 }
 
 \section{Seurat method}{

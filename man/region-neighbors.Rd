@@ -45,6 +45,9 @@ These labels need to be present in the meta data columns specified by \code{colu
 
 \item{column_key}{prefix to columns returned in the Seurat object}
 }
+\value{
+An object with labeled region neighbors
+}
 \description{
 This function allows you to automatically identify neighbors of a selected region.
 }

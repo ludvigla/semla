@@ -23,7 +23,7 @@ DisconnectRegions(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
-\item{spots}{A character vector with spot IDs present `object`}
+\item{spots}{A character vector with spot IDs present \code{object}}
 
 \item{verbose}{Print messages}
 
@@ -32,6 +32,9 @@ object that contains categorical data, e.g. clusters or manual selections}
 
 \item{selected_groups}{A character vector to select specific groups in \code{column_name} with.
 All groups are selected by default, but the common use case is to select a region of interest.}
+}
+\value{
+An object with disconnected regions
 }
 \description{
 This function allows you split spatially disconnected regions
@@ -42,7 +45,7 @@ dispersed across a tissue section.
 }
 \section{default method}{
 
-Takes a `tibble` and set of spot IDs and returns a named character vector with new labels.
+Takes a \code{tibble} and set of spot IDs and returns a named character vector with new labels.
 The names of this vector corresponds to the input spot IDs.
 }
 
@@ -52,7 +55,7 @@ A categorical variable is selected from the \code{Seurat} object meta data
 slot using \code{column_name}. From this column, one can specify what groups
 to disconnect with \code{selected_groups}. If \code{selected_groups} isn't specified,
 all groups in \code{selected_groups} will be disconnected separately.
-The function returns a `Seurat` object with additional columns in the meta data
+The function returns a \code{Seurat} object with additional columns in the meta data
 slot, one for each group in \code{selected_groups}. The suffix to these columns is
 "_split", so a group in \code{selected_groups} called "tissue" will get a column
 called "tissue_split" with new labels for each spatially disconnected region.

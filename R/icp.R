@@ -15,11 +15,12 @@
 #' @section Author:
 #' The original code was written by James Melville. See references for link to
 #' the GitHub gist where the code was taken from.
+#' 
+#' @returns A list with the rotation matrix "um", the aligned coordinates "qm"
+#' and the target coordinates "pm"
 #'
 #' @param pm n x 2 matrix of points to align to to \code{qm}.
 #' @param qm n x 2 matrix of reference points.
-#' @return Matrix \code{pm} rotated and translated so that the ith point
-#' is aligned to the ith point of \code{qm} in the least-squares sense.
 #'
 #' @references
 #' \url{https://gist.github.com/jlmelville/9b4e5d076e719a7541881e8cbf58a895}
@@ -47,7 +48,7 @@ kabsch <- function(pm, qm) {
   # rotation matrix
   um <- svd_res$v %*% tcrossprod(dm, svd_res$u)
 
-  return(list(um, qm, pm))
+  return(list("um" = um, "qm" = qm, "pm" = pm))
 }
 
 
@@ -75,22 +76,22 @@ kabsch <- function(pm, qm) {
 #' library(semla)
 #' library(dplyr)
 #' library(ggplot2)
-#'
+#' 
 #' # Load example mouse brain data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
 #'                                  package = "semla"))
-#'
+#' 
 #' # Get spatial network
 #' spatnet <- GetSpatialNetwork(se_mbrain)
-#'
+#' 
 #' # Keep tissue border points
 #' n1 <- spatnet[[1]] |>
 #'   filter(nn < 6)
 #' ggplot(n1, aes(x_start, y_start)) +
 #'   geom_point() +
 #'   scale_y_reverse()
-#'
+#' 
 #' # get spot coordinates points
 #' xy <- GetStaffli(se_mbrain)@meta_data |>
 #'   filter(barcode %in% unique(n1$from)) |>
@@ -104,31 +105,29 @@ kabsch <- function(pm, qm) {
 #'   setNames(nm = c("x", "y")) |>
 #'   bind_cols(type = "set2")
 #' xy_orig <- bind_rows(xy, xy_diff)
-#'
+#' 
 #' # Plot point sets
 #' ggplot(xy_orig, aes(x, y, color = type)) +
 #'   geom_point() +
 #'   scale_y_reverse() +
 #'   labs(title = "Original point sets")
-#'
+#' 
 #' res <- icp(xy_ref = xy[, 1:2], xy_query = xy_diff[, 1:2])
-#'
+#' 
 #' xy_aligned <- xy |>
-#'   bind_rows(bind_cols(setNames(res$y_transf|> as_tibble(),
+#'   bind_rows(bind_cols(setNames(res$y_transf|> as_tibble(.name_repair = "minimal"),
 #'                                nm = c("x", "y")),
 #'                       type = "set2_aligned"))
-#'
+#' 
 #' # Plot aligned point sets
 #' ggplot(xy_aligned, aes(x, y, color = type)) +
 #'   geom_point() +
 #'   scale_y_reverse() +
 #'   labs(title = "Aligned point sets")
-#'
+#' 
 #' # We can obtain the rotation angle in degrees from
 #' # the results
 #' atan2(res$rot_mat[2, 1], res$rot_mat[1, 1])*(180/pi)
-#'
-#' @export
 #'
 icp <- function (
   xy_ref,
@@ -162,82 +161,3 @@ icp <- function (
   rot_mat <- Reduce("%*%", tr_matrices)
   return(list(y_transf = as.matrix(xy_query), rot_mat = rot_mat))
 }
-
-
-
-
-# library(shiny)
-# library(ggplot2)
-#
-# se_mbrain <- readRDS(system.file("extdata/mousebrain",
-#                                  "se_mbrain",
-#                                  package = "semla"))
-#
-# se_mbrain <- LoadImages(se_mbrain)
-# im <- se_mbrain@tools$Staffli@rasterlists$raw[[1]]
-#
-# ui <- pageWithSidebar(
-#   headerPanel("Example"),
-#   sidebarPanel(
-#     radioButtons("color", "Pick Color", c("Pink", "Green", "Blue")),
-#     selectInput("shape", "Select Shape:", c("Circle", "Triangle"))
-#   ),
-#   mainPanel(
-#     fluidRow(column(width = 6,
-#                     h4("Click plot to add points"),
-#                     actionButton("rem_point", "Remove Last Point"),
-#                     plotOutput("plot1", click = "plot_click")),
-#              column(width = 6,
-#                     h4("Table of points on plot"),
-#                     tableOutput("table")))
-#   )
-# )
-#
-# server = function(input, output){
-#
-#   ## 1. set up reactive dataframe ##
-#   values <- reactiveValues()
-#   values$DT <- data.frame(x = numeric(),
-#                           y = numeric(),
-#                           color = factor(),
-#                           shape = factor())
-#
-#   ## 2. Create a plot ##
-#   output$plot1 = renderPlot({
-#     p <- ggplot(values$DT, aes(x = x, y = y)) +
-#       geom_point(aes(color = color), size = 5) +
-#       scale_x_continuous(limits = c(0, ncol(im))) +
-#       scale_y_continuous(limits = c(0, nrow(im))) +
-#       theme_void() +
-#       # include so that colors don't change as more color/shape chosen
-#       scale_color_discrete(drop = FALSE) +
-#       scale_shape_discrete(drop = FALSE)
-#     p <- p + inset_element(p = im, left = 0, bottom = 0, right = 1, top = 1, on_top = FALSE)
-#     return(p)
-#   })
-#
-#   ## 3. add new row to reactive dataframe upon clicking plot ##
-#   observeEvent(input$plot_click, {
-#     # each input is a factor so levels are consistent for plotting characteristics
-#     add_row <- data.frame(x = input$plot_click$x,
-#                           y = input$plot_click$y,
-#                           color = factor(input$color, levels = c("Pink", "Green", "Blue")),
-#                           shape = factor(input$shape, levels = c("Circle", "Triangle")))
-#     # add row to the data.frame
-#     values$DT <- rbind(values$DT, add_row)
-#   })
-#
-#   ## 4. remove row on actionButton click ##
-#   observeEvent(input$rem_point, {
-#     rem_row <- values$DT[-nrow(values$DT), ]
-#     values$DT <- rem_row
-#   })
-#
-#   ## 5. render a table of the growing dataframe ##
-#   output$table <- renderTable({
-#     values$DT
-#   })
-# }
-#
-# shinyApp(ui, server)
-#

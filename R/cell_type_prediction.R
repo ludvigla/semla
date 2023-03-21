@@ -33,8 +33,8 @@ NULL
 #' Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 #' a matrix with estimated cell type proportions of dimensions nCellTypes x nSpots,
 #' where nCellTypes is the number of cell types and nSpots is the number of spots.
-#' If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-#' proportions `prop` and the cell type expression profile matrix `W`.
+#' If \code{return_expression_profiles=TRUE}, the returned object will be a list with estimated
+#' proportions \code{prop} and the cell type expression profile matrix \code{W}.
 #'
 #' @export
 RunNNLS.default <- function (
@@ -115,11 +115,11 @@ RunNNLS.default <- function (
 #' provided, the intersection of variable features between sc_object and st_object
 #' will be used. Note that the intersect can be quite small, in which case you can
 #' increase the number of variable features by rerunning \code{FindVariableFeatures}
-#' and increase the number with the `nfeatures` argument.
+#' and increase the number with the \code{nfeatures} argument.
 #' @param singlecell_object A \code{Seurat} object with single-cell gene expression data
 #' @param singlecell_assay Assay in single cell data object to use for deconvolution
 #' @param spatial_assay Assay in Visium data object to use for deconvolution
-#' @param slot Name of slot in `singlecell_assay` and `spatial_assay` to use for
+#' @param slot Name of slot in \code{singlecell_assay} and \code{spatial_assay} to use for
 #' deconvolution
 #' @param assay_name Sets the name of the returned \code{Assay} object. Only active
 #' if return.as.dimred = FALSE.
@@ -140,8 +140,6 @@ RunNNLS.default <- function (
 #' @import cli
 #'
 #' @rdname celltype-prediction
-#'
-#' @return An object with cell type proportion estimates
 #'
 #' @export
 #'
@@ -224,8 +222,8 @@ RunNNLS.Seurat <- function (
 #' @param return_as_dimred Logical specifying if the data should be returned
 #' as a \code{DimReduc} object or an \code{Assay} object
 #' @param st_assay Assay used for spatial data
-#' @param assay_name Assay name for returned data. Only used if `return_as_dimred=FALSE`
-#' @param dimred_name Name for \code{DimReduc} object. Only used if `return_as_dimred=TRUE`
+#' @param assay_name Assay name for returned data. Only used if \code{return_as_dimred=FALSE}
+#' @param dimred_name Name for \code{DimReduc} object. Only used if \code{return_as_dimred=TRUE}
 #' @param dimred_prefix Prefix for \code{DimReduc} object vectors.
 #' @param verbose Print messages
 #'

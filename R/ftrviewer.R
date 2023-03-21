@@ -1,9 +1,10 @@
-# TODO: fix categories in src js
 #' Open a feature viewer react application
 #'
 #' This function will open a react application that listens can
 #' be used to interactively visualize categorical or numeric features
-#' as spatial maps.
+#' as spatial maps. For the application to run properly, relevant data needs
+#' to be available via a file server. This function is intended to be used
+#' within a shiny app 
 #'
 #' @param host The host address. Defaults to localhost "127.0.0.1"
 #' @param port A number for a valid port
@@ -13,14 +14,35 @@
 #' @param opacity An integer of length 1 specifying a fixed opacity value
 #' @param range A numeric vector of length 2 specifying a range of values (color domain)
 #' @param scaleByOpacity A logical specifying if the opacity should be set by
-#' `opacities` or `opacity`
+#' \code{opacities} or \code{opacity}
 #' @param isNumeric A logical specifying if the input is numeric or not
 #' @param useLasso A logical specifying if the lasso selection tool should be activated
-#' @param levels category levels for coloring of values
-#' @param categories not yet implemented
-#' @param colors A vector of colors
+#' @param levels Category levels for coloring of values
+#' @param categories A character vector with the categories available
+#' @param colors A character vector of colors
 #' @param container_width,container_height Container width/height in pixels
 #' @param elementId The id of the viewer element
+#' 
+#' @examples
+#' \dontrun{
+#' 
+#' library(semla)
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' se_mbrain <- LoadImages(se_mbrain)
+#' 
+#' datapath <- ExportDataForViewer(se_mbrain, outdir = ".")
+#' 
+#' # Start file server
+#' file_server(datapath)
+#' 
+#' # Run feature viewer widget
+#' ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial), opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
+#'           range = range(se_mbrain$nFeature_Spatial))
+#' 
+#' # Stop file server
+#' beakr::stopAllServers()
+#' 
+#' }
 #'
 #' @export
 ftrviewer <- function (
@@ -34,9 +56,9 @@ ftrviewer <- function (
     scaleByOpacity = FALSE,
     isNumeric = TRUE,
     useLasso = FALSE,
-    levels,
+    levels = character(),
     categories = character(),
-    colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral"),
+    colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(),
     container_width = 800,
     container_height = 800,
     elementId = NULL

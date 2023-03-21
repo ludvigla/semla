@@ -23,7 +23,7 @@ PlotFeatureLoadings(
 )
 }
 \arguments{
-\item{object}{An object of class `Seurat`}
+\item{object}{An object of class \code{Seurat}}
 
 \item{dims}{An integer vector of dimensions to plot feature loadings for}
 
@@ -50,16 +50,16 @@ PlotFeatureLoadings(
 
 \item{pt_stroke}{Width of border for points in dotplot}
 
-\item{linetype}{Select a linetype to be used for dotplot, e.g. "solid", "longdash" or "blank"}
+\item{linetype}{Select a line type to be used for dotplot, e.g. "solid", "longdash" or "blank"}
 
 \item{color_by_loadings}{Should the fill color of barplot or points reflect the feature loadings?}
 
-\item{gradient_colors}{Colors to use for gradient if `color_by_loadings=TRUE`}
+\item{gradient_colors}{Colors to use for gradient if \code{color_by_loadings=TRUE}}
 
 \item{ncols}{Number of columns used for final patchwork}
 }
 \value{
-An object of class `patchwork`
+An object of class \code{patchwork}
 }
 \description{
 This function can be used to visualize the relative contribution of features (e.g. genes)
@@ -71,14 +71,14 @@ bar plot, a dot plot or a heatmap.
 For centered dimensionality reduction vectors, such as principal components,
 it is best to select features with the highest and lowest loadings. For other types
 of dimensionality reduction results, it is likely better to only select the features with
-the highest loadings, in which case `type="positive"` is the appropriate choice.
+the highest loadings, in which case \code{type="positive"} is the appropriate choice.
 }
 
 \section{Select mode}{
 
 barplots or dotplots can be used to get detailed information about the loadings
 for individual factors whereas heatmap is useful to summarize the loadings for
-multiple factors. The heatmap option will override the `type` options and only
+multiple factors. The heatmap option will override the \code{type} options and only
 select the top features. With the heatmap mode, the values data will also be scaled
 within each dimensionality reduction vectors to range between 0 and 1.
 }

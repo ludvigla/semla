@@ -102,7 +102,7 @@ meta data of the input Seurat object. The selected region has to be spatially co
 library(semla)
 
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", select_groups = "GALT")
+se_mcolon <- DisconnectRegions(se_mcolon, column_name = "selection", selected_groups = "GALT")
 se_mcolon <- LoadImages(se_mcolon)
 AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", pt_size = 2,
         image_use = "raw", crop_area = c(0.4, 0.5, 0.7, 0.8), radius = 0.4, nbreaks = 12)

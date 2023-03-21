@@ -125,6 +125,8 @@ MapLabels <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname load-images
+#' 
+#' @returns An object with images in \code{raster} format
 #'
 #' @export
 #'
@@ -155,6 +157,8 @@ RigidTransformImages <- function(object, ...) {
 #' @family image transformations
 #' @rdname mask-images
 #'
+#' @returns An object with masked images
+#'
 #' @export
 #'
 MaskImages <- function(object, ...) {
@@ -168,6 +172,8 @@ MaskImages <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname region-neighbors
+#' 
+#' @returns An object with labeled region neighbors
 #'
 #' @export
 #'
@@ -202,6 +208,8 @@ RadialDistance <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname disconnect-regions
+#' 
+#' @returns An object with disconnected regions
 #'
 #' @export
 #'
@@ -237,7 +245,8 @@ DisconnectRegions <- function(object, ...) {
 #'    of spatial association. TEST, 27(3), 716–748 [DOI link](10.1007/s11749-018-0599-x)
 #'    }
 #' }
-#'
+#' 
+#' @returns An object with local G statistics
 #'
 #' @seealso
 #' [Emerging Hot Spot Analysis](https://sfdep.josiahparry.com/articles/understanding-emerging-hotspots.html)
@@ -302,6 +311,10 @@ RunAlignment <- function(object, ...) {
 #'
 #' The method uses the NNLS implementation
 #' from the `RcppML` R package developed by Zachary DeBruine.
+#' 
+#' @section Examples:
+#' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+#' Got to tutorials -> Cell type mapping
 #'
 #' @references
 #' [RcppML](https://doi.org/10.1101/2021.09.01.458620)
@@ -311,6 +324,8 @@ RunAlignment <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname celltype-prediction
+#' 
+#' @return An object with cell type proportion estimates
 #'
 #' @export
 #'
@@ -319,7 +334,7 @@ RunNNLS <- function(object, ...) {
   UseMethod(generic = "RunNNLS", object = object)
 }
 
-#' @title Mixed cell type prediction with NNLS
+#' @title Mixed cell type prediction with NNLS (experimental)
 #' 
 #' @description
 #'
@@ -336,6 +351,8 @@ RunNNLS <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname celltype-prediction-mixed
+#' 
+#' @return An object with mixed cell type and factor proportion estimates
 #'
 #' @export
 #'

@@ -27,7 +27,7 @@ NULL
 #'
 #' @importFrom magick image_convert image_channel image_blur image_normalize
 #' image_quantize image_threshold image_threshold image_connect image_convert
-#' image_read image_transparent image_composite image_negate
+#' image_read image_transparent image_composite image_negate image_convolve
 #' @importFrom rlang try_fetch abort
 #' @import cli
 #'

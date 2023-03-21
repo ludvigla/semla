@@ -11,17 +11,17 @@ LoadSpatialCoordinates(
 )
 }
 \arguments{
-\item{coordinatefiles}{Character vector of file paths. Paths should specify `.csv` files output by spaceranger}
+\item{coordinatefiles}{Character vector of file paths. Paths should specify \code{.csv} files output by spaceranger}
 
 \item{remove_spots_outside_tissue}{Should spots outside the tissue be removed?}
 
 \item{verbose}{Print messages}
 }
 \value{
-An object of class `tbl` (`tibble`)
+An object of class \code{tbl}
 }
 \description{
-Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a `tibble`.
+Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a \code{tibble}.
 }
 \details{
 The merging process makes sure that all genes detected are present in the merged output.

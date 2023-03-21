@@ -14,17 +14,27 @@ NULL
 #' @importFrom tools file_ext
 #' @importFrom grDevices as.raster
 #'
-#' @section Seurat:
-#' If a Seurat object is provided, the images will be loaded as `raster` objects
-#' and stored inside the \code{Staffli} object that is located in the \code{tools}
-#' slot.
-#'
 #' @section default method:
 #' If a character vector of image paths are provided, the images will be loaded,
-#' then down-scaled based on \code{image_height} and returned as a list of `raster`
+#' then down-scaled based on \code{image_height} and returned as a list of \code{raster}
 #' objects. Only JPEG and PNG images are supported.
 #'
 #' @rdname load-images
+#' 
+#' @examples 
+#' 
+#' library(semla)
+#' 
+#' # Get paths for example images
+#' mousebrain_jpg <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
+#' mousecolon_jpg <- system.file("extdata/mousecolon", "spatial/tissue_hires_image.jpg", package = "semla")
+#' 
+#' rasters <- LoadImages(c(mousebrain_jpg, mousecolon_jpg))
+#' 
+#' par(mfrow = c(1, 2), mar = c(0, 0, 0, 0))
+#' for (rst in rasters) {
+#'   plot(rst)
+#' }
 #'
 #' @export
 #'
@@ -108,6 +118,11 @@ LoadImages.default <- function (
 #' @importFrom rlang %||%
 #'
 #' @rdname load-images
+#' 
+#' @section Seurat:
+#' If a Seurat object is provided, the images will be loaded as \code{raster} objects
+#' and stored inside the \code{Staffli} object that is located in the \code{tools}
+#' slot.
 #'
 #' @examples
 #'

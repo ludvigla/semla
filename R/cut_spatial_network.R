@@ -12,14 +12,16 @@ NULL
 #' the edges can be cut by holding the SHIFT key while moving the cursor
 #' across them. Cut edges can be mended by holding the CTRL key while moving
 #' the cursor across them. The aim is to cut edges between spots located in separate
-#' layers. The output is a `tbl_graph` object representing the spatial network
+#' layers. The output is a \code{tbl_graph} object representing the spatial network
 #' which can be processed further with \code{\link{AdjustTissueCoordinates}}
 #' to perform "digital unrolling".
 #'
-#' A more detailed tutorial can be found on the `semla` website.
+#' @section Examples:
+#' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+#' Got to tutorials -> Digital unrolling
 #'
-#' @param object A `Seurat` object
-#' @param sampleID An integer specifying a tissue section in the `Seurat` object
+#' @param object A \code{Seurat} object created with \code{semla}
+#' @param sampleID An integer specifying a tissue section in the \code{Seurat} object
 #' @param datadir A directory containing network data and image tiles
 #' @param container_width,container_height Set height and width of container
 #' @param overwrite_network_json Logical specifying if the JSON file
@@ -36,6 +38,8 @@ NULL
 #' @seealso export_graph
 #'
 #' @author Ludvig Larsson
+#' 
+#' @returns A \code{tbl_graph} object with 
 #'
 #' @export
 #'

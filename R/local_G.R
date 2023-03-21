@@ -11,8 +11,8 @@ NULL
 #' p-values. Note that p-values are adjusted for multiple hypothesis testing within
 #' each feature using "BH" correction. If you want to adjust p-values with a different
 #' strategy, you can compute the p-values directly from the local G z-scores.
-#' @param return_as_tibble Logical specifying wthether the results should be returned
-#' as an object of class `tbl`
+#' @param return_as_tibble Logical specifying whether the results should be returned
+#' as an object of class \code{tbl}
 #' @param verbose Print messages
 #'
 #' @importFrom glue glue

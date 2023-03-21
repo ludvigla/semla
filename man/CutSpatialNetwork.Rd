@@ -17,11 +17,11 @@ CutSpatialNetwork(
 )
 }
 \arguments{
-\item{object}{A `Seurat` object}
+\item{object}{A \code{Seurat} object created with \code{semla}}
 
 \item{datadir}{A directory containing network data and image tiles}
 
-\item{sampleID}{An integer specifying a tissue section in the `Seurat` object}
+\item{sampleID}{An integer specifying a tissue section in the \code{Seurat} object}
 
 \item{host}{A string with a valid IPv4 or IPv6 address to listen on,
 Defaults to localhost "127.0.0.1"}
@@ -35,6 +35,9 @@ containing the spatial network should be overwritten after completion}
 
 \item{verbose}{Print messages}
 }
+\value{
+A \code{tbl_graph} object with
+}
 \description{
 Opens an interactive viewer where a spatial network is visualized on top
 of an H&E image.
@@ -44,12 +47,16 @@ Each spot is connected to adjacent neighbors by edges and
 the edges can be cut by holding the SHIFT key while moving the cursor
 across them. Cut edges can be mended by holding the CTRL key while moving
 the cursor across them. The aim is to cut edges between spots located in separate
-layers. The output is a `tbl_graph` object representing the spatial network
+layers. The output is a \code{tbl_graph} object representing the spatial network
 which can be processed further with \code{\link{AdjustTissueCoordinates}}
 to perform "digital unrolling".
-
-A more detailed tutorial can be found on the `semla` website.
 }
+\section{Examples}{
+
+A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+Got to tutorials -> Digital unrolling
+}
+
 \seealso{
 export_graph
 

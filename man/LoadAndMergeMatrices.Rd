@@ -7,14 +7,14 @@
 LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 }
 \arguments{
-\item{samplefiles}{Character vector of file/directory paths. Paths should specify `.h5` or
-`.tsv`/`.tsv.gz` files. Alternatively, the paths could specify directories including `barcodes.tsv`,
-`features.tsv` and `matrix.mtx` files.}
+\item{samplefiles}{Character vector of file/directory paths. Paths should specify \code{.h5} or
+\code{.tsv}/\code{.tsv.gz} files. Alternatively, the paths could specify directories including \code{barcodes.tsv},
+\code{features.tsv} and \code{matrix.mtx} files.}
 
 \item{verbose}{Print messages}
 }
 \value{
-A sparse matrix of class `dgCMatrix`
+A sparse matrix of class \code{dgCMatrix}
 }
 \description{
 Gene expression matrices should have features in rows and spots in columns.

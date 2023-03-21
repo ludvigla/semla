@@ -107,10 +107,11 @@ RunMixedNNLS.default <- function (
   
   # Check correlations
   if (verbose) cli_alert_info("Keeping {k} factors with lowest correlation scores")
-  corMat <- try({RcppML::cosine(W, W_nmf)})
-  if (inherits(corMat, what = "try-error")) {
-    corMat <- cor(W, W_nmf, method = "pearson") |> as.matrix()
-  }
+  # corMat <- try({RcppML::cosine(W, W_nmf)})
+  # if (inherits(corMat, what = "try-error")) {
+  #   corMat <- cor(W, W_nmf, method = "pearson") |> as.matrix()
+  # }
+  corMat <- cor(W, W_nmf, method = "pearson") |> as.matrix()
   
   cors_ordered <- apply(corMat, 2, function(x) {
    max(x)

@@ -42,8 +42,8 @@ p-values. Note that p-values are adjusted for multiple hypothesis testing within
 each feature using "BH" correction. If you want to adjust p-values with a different
 strategy, you can compute the p-values directly from the local G z-scores.}
 
-\item{return_as_tibble}{Logical specifying wthether the results should be returned
-as an object of class `tbl`}
+\item{return_as_tibble}{Logical specifying whether the results should be returned
+as an object of class \code{tbl}}
 
 \item{verbose}{Print messages}
 
@@ -58,6 +58,9 @@ is applied, the adjusted p-values will be returned to the meta data slot if
 if \code{store_in_metadata = FALSE}.}
 
 \item{assay_name}{Name of the assay if \code{store_in_metadata=FALSE}}
+}
+\value{
+An object with local G statistics
 }
 \description{
 This local spatial statistic measures the concentration of
