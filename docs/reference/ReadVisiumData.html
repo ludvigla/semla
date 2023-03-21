@@ -16,7 +16,7 @@ stored inside the tools slot of the `Seurat` object in an object called `Staffli
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,6 +62,9 @@ stored inside the tools slot of the `Seurat` object in an object called `Staffli
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -145,10 +148,20 @@ certain spaceranger output file paths. The table should consist of four columns:
 <ul><li><p>"samples" : file paths to expression matrices, e.g. `filtered_bc_matrix.h5`</p></li>
 <li><p>"imgs" : file paths to images, e.g. `tissue_hires_image.jpg`</p></li>
 <li><p>"spotfiles" : file paths to spot coordinate CSV files `tissue_positions_list.csv`</p></li>
-<li><p>"samples" : file paths to scalfactor JSOn files, e.g. `scalefactors_json.json`</p></li>
+<li><p>"json" : file paths to scale factor JSON files, e.g. `scalefactors_json.json`. 
+   It is also possible to provide custom scale factors (more info below).</p></li>
 </ul></div>
     <div class="section level2">
-    <h2 id="load-data-outside-tissue">Load data outside tissue<a class="anchor" aria-label="anchor" href="#load-data-outside-tissue"></a></h2>
+    <h2 id="custom-scale-factors">Custom scale factors<a class="anchor" aria-label="anchor" href="#custom-scale-factors"></a></h2>
+    
+
+<p>You can provide an additional column named 'scalefactor' with custom scale factor values.
+The values should be between 0 to 1, where a 1 would correspond to the original H&amp;E image
+used as input for spaceranger. For instance, if your image was scaled from a height of 30,000
+pixels to a height of 3,000 pixels (with the same aspect ratio), the scalefactor would be 0.1.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="load-data-outside-tissue-section">Load data outside tissue section<a class="anchor" aria-label="anchor" href="#load-data-outside-tissue-section"></a></h2>
     
 
 <p>Sometimes it can be useful to load data for all spots in a 10x Visium dataset, if you

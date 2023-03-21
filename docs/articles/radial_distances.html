@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,9 @@
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -108,7 +111,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Radial distances</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 15 March
+            <h4 data-toc-skip class="date">Last compiled: 21 March
 2023</h4>
       
       
@@ -282,13 +285,6 @@ radial distances from cluster “3”:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="st">"r_dist_3"</span>, center_zero <span class="op">=</span> <span class="cn">TRUE</span>, pt_size <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>            colors <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in</span></span>
-<span><span class="co">## dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `reframe()` instead.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> When switching from `summarise()` to `reframe()`, remember that `reframe()`</span></span>
-<span><span class="co">##   always returns an ungrouped data frame and adjust accordingly.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">semla</span> package.</span></span>
-<span><span class="co">##   Please report the issue to the authors.</span></span></code></pre>
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>The distances are calculated from the border of the ROI, where
 positive values represent the radial distances out from the ROI and
@@ -304,13 +300,13 @@ H&amp;E image and microns, we can easily convert the radial distances to
 microns. In this example data, the center-to-center spot distance is 273
 pixels in the image and we know that the actual center-to-center spot
 distance is 100 microns.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span><span class="op">$</span><span class="va">r_dist_3</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">100</span><span class="op">/</span><span class="fl">273</span><span class="op">)</span><span class="op">*</span><span class="va">se</span><span class="op">$</span><span class="va">r_dist_3</span></span></code></pre></div>
 <p>Alternatively, you can set <code>convert_to_microns = TRUE</code> to
 make <code>RadialDistance</code> do the conversion for you. Note that
 the conversion assumes that you are working with Visium data and that at
 least some spots are adjacent in the dataset.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/radial-distance.html">RadialDistance</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, </span>
 <span>                     selected_groups <span class="op">=</span> <span class="st">"3"</span>, convert_to_microns <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
@@ -328,7 +324,7 @@ least some spots are adjacent in the dataset.</p>
 <p>The scale of the distances is somewhat inconvenient for our color
 scale, so we can apply some transformation to make them easier to
 visualize, for example the square root of the distance:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span><span class="op">$</span><span class="va">r_dist_3_sqrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">se</span><span class="op">$</span><span class="va">r_dist_3</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">se</span><span class="op">$</span><span class="va">r_dist_3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="st">"r_dist_3_sqrt"</span>, center_zero <span class="op">=</span> <span class="cn">TRUE</span>, pt_size <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>            colors <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -340,7 +336,7 @@ interested in the microenvironment outside of our cluster 3, so we will
 filter the data to have a maximum radial distance of 1000 microns
 outside of cluster 3. The red dashed line represents the tumor
 border.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sel_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">se</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
@@ -354,7 +350,7 @@ border.</p>
 <p>Here we can see that the expression of CRISP3 is high inside cluster
 “3” and declines rapidly at the border whereas IGLC2 show the opposite
 trend. We can also visualize these trends spatially:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="fu"><a href="../reference/subset.html">SubsetSTData</a></span><span class="op">(</span><span class="va">se</span>, expression <span class="op">=</span> <span class="va">r_dist_3</span> <span class="op">&lt;</span> <span class="fl">1e3</span><span class="op">)</span>, </span>
 <span>            features <span class="op">=</span> <span class="va">sel_genes</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, scale_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>            image_use <span class="op">=</span> <span class="st">"raw"</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
@@ -383,7 +379,7 @@ you an idea about how the angles are calculated for a certain region.
 The ROI center is defined by taking the median of the x, y coordinates
 for the spots of the ROI. The angles are defined clockwise where 0° =
 right, 90° = down, …</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/AnglePlot.html">AnglePlot</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"cluster_3"</span>, selected_group <span class="op">=</span> <span class="st">"3"</span>, pt_size <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>          crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>, radius <span class="op">=</span> <span class="fl">0.3</span>, drop_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
@@ -402,7 +398,7 @@ components with <code>DisconnectRegions</code> and focus on one ROI.</p>
 provide an interval of angles to narrow down the search area and
 calculate radial distances. The color scale in the plot below represents
 the radial distances from the tumor (cluster 3) center.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/radial-distance.html">RadialDistance</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, selected_groups <span class="op">=</span> <span class="st">"3"</span>, </span>
 <span>                     angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">240</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
@@ -414,14 +410,14 @@ the radial distances from the tumor (cluster 3) center.</p>
 <pre><code><span><span class="co">## →   Detected 3400 spots outside borders</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting search area between 200 and 240 degrees from region center</span></span></code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="st">"r_dist_3"</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="radial_distances_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 <p>If we want to go for a more exploratory approach, we can split the
 radial distances into slices by setting <code>angles_nbreaks</code>. In
 the example below, we narrow the search area to angles between 120-320
 degrees and split it into 6 even slices.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/radial-distance.html">RadialDistance</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, selected_groups <span class="op">=</span> <span class="st">"3"</span>, </span>
 <span>                    angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">320</span><span class="op">)</span>, angles_nbreaks <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
@@ -434,7 +430,7 @@ degrees and split it into 6 even slices.</p>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting search area between 120 and 320 degrees from region center</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Splitting search area into 6 interval(s)</span></span></code></pre>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-labels.html">MapLabels</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"intervals_3"</span>, pt_size <span class="op">=</span> <span class="fl">2</span>, drop_na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>          colors <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">6</span>, name <span class="op">=</span> <span class="st">"Spectral"</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -445,7 +441,7 @@ three new columns: ‘angle_3’, ‘r_dist_3’ and ‘intervals_3’. The
 this data, we can modify our previous plot and split it by slice. If we
 look at the same genes as before (CRISP3 and IGLC2), we can see that the
 trends is quite similar in all 6 directions:</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sel_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CRISP3"</span>, <span class="st">"IGLC2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">se</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
@@ -462,7 +458,7 @@ trends is quite similar in all 6 directions:</p>
 other genes. Below we can see the expression along the radial axis for
 three genes. Depending on the direction, these genes have very distinct
 expression profiles.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sel_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PGM5-AS1"</span>, <span class="st">"CXCL14"</span>, <span class="st">"IGHG3"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">se</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
@@ -485,7 +481,7 @@ tumor cells.</p>
 think through how radial distances should be used for specific
 biological questions. The tools provided in <code>semla</code> are easy
 to adapt to many different scenarios.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">0.93</span><span class="op">)</span>,</span>
 <span>            features <span class="op">=</span> <span class="va">sel_genes</span>, scale_alpha <span class="op">=</span> <span class="cn">TRUE</span>, ncol <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>            image_use <span class="op">=</span> <span class="st">"raw"</span>, pt_size <span class="op">=</span> <span class="fl">1.5</span>, colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
@@ -497,9 +493,9 @@ to adapt to many different scenarios.</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 0.1.0</li>
+<code>semla</code>: 1.0.0</li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -516,7 +512,7 @@ to adapt to many different scenarios.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
 <span><span class="co">## [1] tidyr_1.3.0        scico_1.3.1        patchwork_1.1.2    tibble_3.1.8      </span></span>
-<span><span class="co">## [5] semla_0.1.0        ggplot2_3.4.1      dplyr_1.1.0        SeuratObject_4.1.3</span></span>
+<span><span class="co">## [5] semla_1.0.0        ggplot2_3.4.1      dplyr_1.1.0        SeuratObject_4.1.3</span></span>
 <span><span class="co">## [9] Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>

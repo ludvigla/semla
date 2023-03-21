@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,9 @@
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -108,7 +111,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Non-negative matrix factorization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 15 March
+            <h4 data-toc-skip class="date">Last compiled: 21 March
 2023</h4>
       
       
@@ -282,20 +285,13 @@ we obtain from the NMF run.</p>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>            colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in</span></span>
-<span><span class="co">## dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `reframe()` instead.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> When switching from `summarise()` to `reframe()`, remember that `reframe()`</span></span>
-<span><span class="co">##   always returns an ungrouped data frame and adjust accordingly.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">semla</span> package.</span></span>
-<span><span class="co">##   Please report the issue to the authors.</span></span></code></pre>
 <p><img src="NNMF_files/figure-html/unnamed-chunk-6-1.png" width="864"></p>
 <p><br></p>
 <p>We can also investigate the gene loadings for each factor with
 <code><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings()</a></code> which will give us an idea about what
 the top contributing genes for each factor are. Below we can see the top
 30 contributing genes for NMF_1 and NMF_2.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
 <span>                    dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, </span>
 <span>                    reduction <span class="op">=</span> <span class="st">"nmf"</span>, </span>
@@ -307,15 +303,15 @@ the top contributing genes for each factor are. Below we can see the top
 <p><br></p>
 <p>We can also map multiple factors spatially in a single plot with
 <code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpK45ErP/temp_libpathee0544b4a23f/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">factor_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#332288"</span>, <span class="st">"#88CCEE"</span>, <span class="st">"#44AA99"</span>, <span class="st">"#117733"</span>, </span>
 <span>                   <span class="st">"#999933"</span>, <span class="st">"#DDCC77"</span>, <span class="st">"#CC6677"</span>, <span class="st">"#882255"</span>, <span class="st">"#AA4499"</span><span class="op">)</span></span>
 <span><span class="va">n_k_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">k</span><span class="op">&lt;</span><span class="fl">9</span>, <span class="va">k</span>, <span class="fl">9</span><span class="op">)</span></span>
@@ -331,7 +327,7 @@ the top contributing genes for each factor are. Below we can see the top
 <p><br></p>
 <p>Similarly, we can also summarize the top feature loadings for each
 factor with a heatmap:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
 <span>                    dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">k</span>, </span>
 <span>                    reduction <span class="op">=</span> <span class="st">"nmf"</span>, </span>
@@ -347,11 +343,11 @@ and gene loadings for some factors are noisy.</p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 0.1.0</p></li>
+<li><p><code>semla</code>: 1.0.0</p></li>
 <li><p><code>RcppML</code>: 0.3.7</p></li>
 <li><p><code>singlet</code>: 0.99.1023</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -367,7 +363,7 @@ and gene loadings for some factors are noisy.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] singlet_0.99.1023  semla_0.1.0        ggplot2_3.4.1      dplyr_1.1.0       </span></span>
+<span><span class="co">## [1] singlet_0.99.1023  semla_1.0.0        ggplot2_3.4.1      dplyr_1.1.0       </span></span>
 <span><span class="co">## [5] SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>

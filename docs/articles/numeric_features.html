@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,6 +82,9 @@
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -108,7 +111,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Visualization of numeric features</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 15 March
+            <h4 data-toc-skip class="date">Last compiled: 21 March
 2023</h4>
       
       
@@ -167,16 +170,8 @@ usage is to map gene expression spatially:</p>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                 features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Clu"</span><span class="op">)</span>, </span>
-<span>                 colors <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in</span></span>
-<span><span class="co">## dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `reframe()` instead.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> When switching from `summarise()` to `reframe()`, remember that `reframe()`</span></span>
-<span><span class="co">##   always returns an ungrouped data frame and adjust accordingly.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">semla</span> package.</span></span>
-<span><span class="co">##   Please report the issue to the authors.</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span></span></code></pre></div>
+<span>                 colors <span class="op">=</span> <span class="va">cols</span><span class="op">)</span></span>
+<span><span class="va">p</span></span></code></pre></div>
 <p><img src="numeric_features_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>We can also plot other numeric features present within the
 <code>meta.data</code> slot, such as the quality metrics
@@ -184,7 +179,7 @@ usage is to map gene expression spatially:</p>
 selected feature per sample, the function MapFeaturesSummary() can be
 used to add a subplot next to the spatial plot (choose from histogram,
 box, violin, or density plot).</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/MapFeaturesSummary.html">MapFeaturesSummary</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                        features <span class="op">=</span> <span class="st">"nFeature_Spatial"</span>, </span>
 <span>                        subplot_type <span class="op">=</span> <span class="st">"violin"</span>,</span>
@@ -199,7 +194,7 @@ box, violin, or density plot).</p>
 can be fetched using the <code>Seurat</code> function
 <code><a href="https://mojaveazure.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData()</a></code>. This includes latent vectors from
 dimensionality reduction methods.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="va">se</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -243,7 +238,7 @@ dimensionality reduction methods.</p>
 <p>When plotting numeric features that are centered at 0, it is more
 appropriate to also center the color scale and select a ‘divergent’
 color palette.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>            features <span class="op">=</span> <span class="st">"PC_2"</span>, </span>
 <span>            center_zero <span class="op">=</span> <span class="cn">TRUE</span>, </span>
@@ -258,9 +253,9 @@ color palette.</p>
 <p>If we want to create a map with the H&amp;E images we can do this by
 setting <code>image_use = raw</code>. But before we can do this, we need
 to load the images into our <em>Seurat</em> object:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span><span class="fl">11</span>, <span class="st">"Spectral"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
@@ -272,7 +267,7 @@ to load the images into our <em>Seurat</em> object:</p>
 <p>Right now it’s quite difficult to see the tissue underneath the
 spots. We can add some opacity to the colors which is scaled by the
 feature values to make spots with low expression transparent:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                 features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Clu"</span><span class="op">)</span>, </span>
 <span>                 image_use <span class="op">=</span> <span class="st">"raw"</span>, </span>
@@ -290,7 +285,7 @@ the opposite corners of a rectangle, where the x- and y-axes are defined
 from 0-1.</p>
 <p>In order to more easily see how this rectangle could be defined we
 can get some help by adding a grid to the plot.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                 section_number <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>                 features <span class="op">=</span> <span class="st">"Clu"</span>, </span>
@@ -314,7 +309,7 @@ in the mouse colon sample we can cut the image at:</p>
 </ul>
 <p>Provide these coordinates to the <code>crop_area</code> argument in
 that order (x-left, y-left, x-right, y-right).</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cd79a"</span>, <span class="st">"Clu"</span><span class="op">)</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>, </span>
 <span>                 pt_size <span class="op">=</span> <span class="fl">3</span>, section_number <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>                 color <span class="op">=</span> <span class="va">cols</span>, crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.7</span><span class="op">)</span><span class="op">)</span></span>
@@ -322,7 +317,7 @@ that order (x-left, y-left, x-right, y-right).</p>
 <p><img src="numeric_features_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>And we can patch together a nice figure showing the expression both
 at a global level and inside the GALT:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cd79a"</span>, <span class="st">"Clu"</span><span class="op">)</span>, </span>
 <span>                        image_use <span class="op">=</span> <span class="st">"raw"</span>, </span>
@@ -351,7 +346,7 @@ at a global level and inside the GALT:</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 0.1.0</li>
+<code>semla</code>: 1.0.0</li>
 </ul></details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
