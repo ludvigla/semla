@@ -1,7 +1,7 @@
 url: https://ludvigla.github.io/semla/
 
 home:
-  title: analysis of SRT data
+  title: semla - analysis of SRT data
 
 authors:
   Ludvig Larsson:
@@ -109,6 +109,9 @@ reference:
   - centroid_angles_plot
   - PlotFeatureLoadings
   - scalebar
+  - ThemeClean
+  - ThemeLegendRight
+  - ModifyPatchworkTitles
 - subtitle: Interactive viewer
 - contents:
   - FeatureViewer
