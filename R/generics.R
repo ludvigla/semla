@@ -188,6 +188,8 @@ RegionNeighbors <- function(object, ...) {
 #' @param ... Arguments passed to other methods
 #'
 #' @rdname radial-distance
+#' 
+#' @returns An object with radial distances
 #'
 #' @export
 #'
@@ -274,6 +276,10 @@ RunLocalG <- function(object, ...) {
 #'
 #' @family image transformations
 #' @rdname manual-transform-images
+#' 
+#' @author Ludvig Larsson
+#' 
+#' @returns An object with aligned images
 #'
 #' @export
 #'
@@ -322,6 +328,8 @@ RunAlignment <- function(object, ...) {
 #'
 #' @param object An object
 #' @param ... Arguments passed to other methods
+#' 
+#' @author Ludvig Larsson
 #'
 #' @rdname celltype-prediction
 #' 

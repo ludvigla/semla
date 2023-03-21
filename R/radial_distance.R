@@ -8,7 +8,7 @@ NULL
 #' @description Calculates the radial distances to all spots from the borders of
 #' a selected defined region.
 #'
-#' @section scenario:
+#' @section Scenario:
 #' The region of interest could for example be an isolated tumor in the tissue
 #' section surrounded by stroma. If we are interested in expressional changes
 #' from the tumor core and outwards, we can use radial distances to model such
@@ -22,14 +22,14 @@ NULL
 #'    \item{Identify cell types whose abundances change with distance to tumor}
 #' }
 #'
-#' @section algorithm:
+#' @section Algorithm:
 #' First, the border spots of the selected region is identified based on the
 #' spatial network of nearest neighbors identified with \code{\link{GetSpatialNetwork}}.
 #' For each spot outside of this border, the distance is calculated to its nearest border spot.
 #' Spots located inside the selected region will have negative distances and
 #' spots located outside of the selected region will have positive distances.
 #'
-#' @section search interval:
+#' @section Search interval:
 #' The microenvironment of the region of interest might be extremely heterogeneous
 #' depending on the direction from its center. For this reason, it can be useful to narrow
 #' down the search area by defining a smaller angle interval with \code{angles}. Alternativley,
@@ -55,13 +55,17 @@ NULL
 #' fifth column will be provided that groups spots into even intervals based on angles.
 #' Otherwise, the default is to return numeric vector with radial distances
 #' for all spots in \code{object}.
+#' 
+#' @section Seurat method:
+#' If \code{object} is is a \code{Seurat} object created with \code{semla},
+#' the results are returned to the \code{meta.data} slot.
 #'
 #' @param spots A character vector with spot IDs present \code{object}. These spots typically
 #' represent one particular tissue structure identified either by data-driven clustering
 #' or by the tissue histology.
 #' @param angles A numeric vector of length 2 specifying a "search interval" of angles
 #' to compute the radial distances for. Values between 0 and 360 are accepted where
-#' `angles[1] < angles[2]`. The angles are defined in a clockwise manner, where right=0,
+#' \code{angles[1] < angles[2]}. The angles are defined in a clockwise manner, where right=0,
 #' down=90, left=180 and up=270. The angles are calculated relative to the region
 #' center and can therefore only be used when a single connected region is present. If
 #' there are multiple, spatially disconnected regions present, use \code{\link{DisconnectRegions}}
@@ -79,8 +83,6 @@ NULL
 #' corresponds to 100 microns in Visium. The center to center distance will then be used to 
 #' convert the radial distances. Note that if no spots are adjacent in the dataset or if any other data 
 #' type than Visium is used, the distances will not correspond to micrometers.
-#' 
-#'
 #'
 #' @import dplyr
 #' @importFrom rlang abort warn
@@ -90,9 +92,6 @@ NULL
 #' @importFrom zeallot %<-%
 #'
 #' @rdname radial-distance
-#'
-#' @return A numeric vector with radial distances. If the input object is of class
-#' `Seurat`, the radial distances will be returned in the meta data slot.
 #'
 #' @examples
 #'

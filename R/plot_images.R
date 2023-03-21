@@ -39,7 +39,8 @@ NULL
 #'
 #' @author Ludvig Larsson
 #'
-#' @return draws a plot of the H&E images
+#' @return Draws a plot of the H&E images or alternatively, returns a \code{patchwork} 
+#' composed of \code{ggplot} objects
 #'
 #' @examples
 #'

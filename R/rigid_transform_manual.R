@@ -16,12 +16,12 @@ NULL
 #' the rigid transformations applied to the images.
 #' 
 #' @section Seurat method:
-#' Takes a `Seurat` object with at least 2 tissue sections and opens an interactive
+#' Takes a \code{Seurat} object with at least 2 tissue sections and opens an interactive
 #' shiny application where rigid transformations can be applied to the images.
 #' When the application stops (after clicking "quit & save"), the transformations 
 #' are applied to the images using \code{\link{RigidTransformImages}} and a 
-#' `Seurat` object is returned. If no transformations are supplied, the function
-#' will return the input `Seurat` object unmodified.
+#' \code{Seurat} object is returned. If no transformations are supplied, the function
+#' will return the input \code{Seurat} object unmodified.
 #'
 #' @importFrom shiny fluidPage actionButton tableOutput uiOutput reactiveTimer
 #' observe fluidRow column p h4 helpText strong code h5 observeEvent stopApp
@@ -57,7 +57,6 @@ NULL
 #' }
 #'
 #' @export
-#'
 RunAlignment.default <- function (
     object,
     container_width = '800px',
@@ -155,12 +154,26 @@ RunAlignment.default <- function (
   return(transformations |> as_tibble())
 }
 
-
 #' @importFrom magick image_read
 #' @import rlang
 #' @import cli
 #' @import glue
-#'
+#' 
+#' @rdname manual-transform-images
+#' 
+#' @examples 
+#' \dontrun{
+#' library(semla)
+#' 
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
+#' se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
+#'   LoadImages()
+#' 
+#' # Run alignment application
+#' se_merged <- RunAlignment(se_merged)
+#' }
+#' 
 #' @export
 RunAlignment.Seurat <- function (
   object,
@@ -239,9 +252,9 @@ RunAlignment.Seurat <- function (
 }
 
 
-#' Function used to prepare images for paper JS react app
+#' Prepare images for paper JS react app
 #'
-#' @param input An object of class 'magick-image' or a path
+#' @param input An object of class \code{magick-image} or a path
 #' to an image in png or jpeg format
 #' @param height Height of image sent to react app
 #'
@@ -254,6 +267,15 @@ RunAlignment.Seurat <- function (
 #'
 #' @return a list with an array buffer, the image dimensions and
 #' the length of the array buffer
+#' 
+#' @examples
+#' library(semla)
+#' library(magick)
+#' 
+#' im <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
+#' 
+#' # Prep image
+#' im_prepped <- prep_image(im)
 #'
 #' @export
 #'

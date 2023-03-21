@@ -10,7 +10,7 @@ NULL
 #' 
 #' Coordinates are located outside the H&E images will not be shown in the viewer.
 #'
-#' @param object A `Seurat` object created with `semla`
+#' @param object A \code{Seurat} object created with \code{semla}
 #' @param sampleNumber An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
@@ -23,6 +23,8 @@ NULL
 #' @import dplyr
 #' @importFrom tidyr pivot_wider
 #' @importFrom jsonlite write_json
+#' 
+#' @returns Writes coordinates to a file
 #'
 #' @examples
 #' \dontrun{

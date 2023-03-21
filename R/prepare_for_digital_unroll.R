@@ -23,6 +23,21 @@ NULL
 #' @importFrom jsonlite write_json
 #'
 #' @seealso CutSpatialNetwork
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' library(semla)
+#' library(magick)
+#' 
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' 
+#' # Fetch a spatial network
+#' spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
+#' 
+#' # Export graph as a JSON file to the current working directory
+#' export_graph(se_mbrain, sampleID = 1, outdir = ".")
+#' }
 #'
 #' @export
 #'
@@ -147,10 +162,16 @@ export_graph <- function (
   if (verbose) cli_alert_success("Finished!")
 }
 
+#' Export a tidygraph object
+#' 
+#' @param network An object of class \code{tbl_graph}
+#' @param sampleID An integer specifying a sample ID
+#' @param outdir A åpath to an output directory
+#' 
 #' @noRd
 export_tidygraph <- function (
   network,
-  sampleID = 1,
+  sampleID = 1L,
   outdir
 ) {
 

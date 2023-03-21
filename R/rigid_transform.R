@@ -14,7 +14,15 @@ NULL
 #' @importFrom glue glue
 #' @importFrom rlang abort
 #'
-#' @return a tibble with image transformations
+#' @return A tibble with image transformations
+#' 
+#' @examples 
+#' 
+#' # Flip along x axis and rotate 45 degrees
+#' generate_rigid_transform(sampleID = 1, mirror_x = TRUE, angle = 45)
+#' 
+#' # Move image 100 pixels along x and y axes
+#' generate_rigid_transform(sampleID = 1, tr_x = 100, tr_y = 100)
 #'
 #' @export
 #'
@@ -44,10 +52,10 @@ generate_rigid_transform <- function (
   return(transforms)
 }
 
-#' @param image an image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
+#' @param image An image of class \code{magick-image}, \code{raster}, \code{StoredSpatialImage}
 #' or a path to an image in PNG or JPEG format
-#' @param xy_coords spot coordinates that can be mapped to \code{image}
-#' @param verbose print messages
+#' @param xy_coords Spot coordinates that can be mapped to \code{image}
+#' @param verbose Print messages
 #'
 #' @import cli
 #' @importFrom rlang abort
