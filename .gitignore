@@ -2,11 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-notebooks/seeded_nmf_tests.qmd
+notebooks/
 presentations/
-notebooks/nmf/seeded_nmf_tests.qmd
-notebooks/cell_type_mapping/mousebrain/
-notebooks/cell_type_mapping/kidney/
 vignettes/mousebrain/
 vignettes/kidney
 package.json

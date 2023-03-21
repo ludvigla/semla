@@ -21,3 +21,6 @@ inst/extdata/mousebrain/spatial/tissue_hires_image.png
 inst/extdata/mousebrain/spatial/tissue_lowres_image.png
 inst/extdata/mousecolon/spatial/tissue_hires_image.png
 inst/extdata/mousecolon/spatial/tissue_lowres_image.png
+stereoscope
+notebooks
+^cran-comments\.md$
