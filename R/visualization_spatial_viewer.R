@@ -82,7 +82,7 @@ FeatureViewer <- function (
   .check_seurat_object(object)
 
   # Check custom_color_palettes
-  .color_palettes <- sapply(.color_scales(info = TRUE), function(nm) {
+  .color_palettes <- lapply(.color_scales(info = TRUE), function(nm) {
     .color_scales(colorscale = nm)
   }) |> setNames(nm = .color_scales(info = TRUE))
   if (!is.null(custom_color_palettes)) {
