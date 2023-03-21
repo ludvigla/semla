@@ -79,6 +79,9 @@
     <loc>https://ludvigla.github.io/semla/index.html</loc>
   </url>
   <url>
+    <loc>https://ludvigla.github.io/semla/news/index.html</loc>
+  </url>
+  <url>
     <loc>https://ludvigla.github.io/semla/reference/AdjustTissueCoordinates.html</loc>
   </url>
   <url>
@@ -136,6 +139,9 @@
     <loc>https://ludvigla.github.io/semla/reference/MapLabelsSummary.html</loc>
   </url>
   <url>
+    <loc>https://ludvigla.github.io/semla/reference/ModifyPatchworkTitles.html</loc>
+  </url>
+  <url>
     <loc>https://ludvigla.github.io/semla/reference/PlotFeatureLoadings.html</loc>
   </url>
   <url>
@@ -152,6 +158,12 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/Staffli-set-methods.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/ThemeClean.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/ThemeLegendRight.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/TileImage.html</loc>

@@ -30,7 +30,7 @@ Note that this method is only useful on H&amp;amp;E images. Other stains or imag
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,6 +77,9 @@ Note that this method is only useful on H&amp;amp;E images. Other stains or imag
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -117,12 +120,22 @@ covered by spots.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">MaskImages</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for default</span></span>
-<span><span class="fu">MaskImages</span><span class="op">(</span><span class="va">object</span>, xy_coords <span class="op">=</span> <span class="cn">NULL</span>, minPixels <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">MaskImages</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  xy_coords <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"magentaSeg"</span>, <span class="st">"blurSeg"</span><span class="op">)</span>,</span>
+<span>  custom_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  minPixels <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for Seurat</span></span>
 <span><span class="fu">MaskImages</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  section_numbers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"magentaSeg"</span>, <span class="st">"blurSeg"</span><span class="op">)</span>,</span>
+<span>  custom_method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  minPixels <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -141,6 +154,15 @@ covered by spots.</p>
 
 <dt>xy_coords</dt>
 <dd><p>Optional tibble with spot coordinates matching the input image</p></dd>
+
+
+<dt>method</dt>
+<dd><p>Segmentation method to use. Choose one of "magentaSeg" or "blurSeg"</p></dd>
+
+
+<dt>custom_method</dt>
+<dd><p>A function that takes a "magick-image" object as input and returns a 
+segmented "magick-image" as output. See section "custom masking" below for more details.</p></dd>
 
 
 <dt>minPixels</dt>
@@ -166,6 +188,18 @@ covered by spots.</p>
     
 
 <p>Returns a Seurat object with masked images</p>
+    </div>
+    <div class="section level2">
+    <h2 id="custom-masking">Custom masking<a class="anchor" aria-label="anchor" href="#custom-masking"></a></h2>
+    
+
+<p>If the masking fails, you can write your own masking function with magick. 
+This function needs to take an object of class "magick-image" as input and 
+return an object of the same class. The image needs to be segmented with 
+blob-extraction to work properly. Visit the magick R package 
+[website](https://cran.r-project.org/web/packages/magick/vignettes/intro.html) for more
+information on how to apply magick methods for segmentation. You can find a basic 
+example below or visit the semla website for more detailed instructions.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -212,6 +246,7 @@ covered by spots.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">im_masked</span> <span class="op">&lt;-</span> <span class="fu">MaskImages</span><span class="op">(</span><span class="va">im</span>, xy_coords <span class="op">=</span> <span class="va">xy</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Segmenting image using blob extraction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using method 'magentaSeg'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs with fewer than 100 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
@@ -231,9 +266,9 @@ covered by spots.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpK45ErP/temp_libpathee0544b4a23f/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpqFZoOI/temp_libpatha4b06128c49e/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpK45ErP/temp_libpathee0544b4a23f/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 400x443 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="va">se_merged</span> <span class="op">|&gt;</span> <span class="fu">MaskImages</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -245,11 +280,13 @@ covered by spots.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fetched spot coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Processing sample 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Segmenting image using blob extraction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using method 'magentaSeg'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs with fewer than 100 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Processing sample 2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Segmenting image using blob extraction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using method 'magentaSeg'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs with fewer than 100 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
@@ -258,6 +295,41 @@ covered by spots.</p>
 <span class="r-in"><span><span class="co"># Plot masked images</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mask-images-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using a custom method</span></span></span>
+<span class="r-in"><span><span class="va">custom_fkn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">object</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_convert</a></span><span class="op">(</span>colorspace <span class="op">=</span> <span class="st">"cmyk"</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/color.html" class="external-link">image_channel</a></span><span class="op">(</span>channel <span class="op">=</span> <span class="st">"Magenta"</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/thresholding.html" class="external-link">image_threshold</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="st">"7%"</span><span class="op">)</span> <span class="op">|&gt;</span> </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/thresholding.html" class="external-link">image_threshold</a></span><span class="op">(</span>threshold <span class="op">=</span> <span class="st">"7%"</span>, type <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/segmentation.html" class="external-link">image_connect</a></span><span class="op">(</span>connectivity <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpK45ErP/temp_libpathee0544b4a23f/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
+<span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu">MaskImages</span><span class="op">(</span><span class="va">se_mbrain</span>, custom_method <span class="op">=</span> <span class="va">custom_fkn</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Masking image(s)</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 1 samples</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fetched images</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fetched spot coordinates</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Processing sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Segmenting image using blob extraction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using custom method</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs with fewer than 100 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning Seurat object with masked images</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mask-images-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
