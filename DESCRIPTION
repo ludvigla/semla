@@ -1,7 +1,7 @@
 Package: semla
 Type: Package
 Title: Process, analyze and visualize Spatially Resolved Transcriptomcis data
-Version: 0.1.0
+Version: 1.0.0
 Authors@R:
     c(person(
         "Ludvig", "Larsson",
