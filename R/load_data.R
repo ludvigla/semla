@@ -80,6 +80,8 @@ LoadAndMergeMatrices <- function (
         if (!requireNamespace("data.table")) install.packages("data.table")
         exprMat <- data.frame(data.table::fread(samplefiles[i], sep = "\t", header = TRUE), row.names = 1)
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
+      } else {
+        abort(glue("Invalid file format '{ext}'"))
       }
     }
     if (verbose) cli_alert("  Finished loading expression matrix {i}")
@@ -359,7 +361,7 @@ ReadVisiumData <- function (
   if (!all(c("samples", "imgs", "spotfiles") %in% colnames(infoTable)))
     abort("One or several of 'samples', 'imgs' and 'spotfiles' are missing from infoTable.")
   if (!any(c("json", "scalefactor") %in% colnames(infoTable)))
-    abort("One os 'json' or 'scalefactor' columns needs to be provided")
+    abort("One of 'json' or 'scalefactor' columns needs to be provided")
   if (!any(class(infoTable) %in% c("tbl", "data.frame"))) abort(glue("Invalid class '{class(infoTable)}' of 'infoTable'."))
   if (nrow(infoTable) == 0) abort(glue("'infoTable' is empty."))
   if (!all(sapply(infoTable[, c("samples", "imgs", "spotfiles")], class) %in% "character")) abort(glue("Invalid column classes in 'infoTable'. Expected 'character' vectors."))
@@ -371,14 +373,19 @@ ReadVisiumData <- function (
   }
   missing_files <- infoTable |>
     select(samples, imgs, spotfiles, json) |>
-    mutate(across(samples:json, ~ file.exists(.x))) |>
-    summarize(across(samples:json, ~ any(!.x))) |>
+    mutate(across(samples:spotfiles, ~ file.exists(.x))) |>
+    summarize(across(samples:spotfiles, ~ any(!.x))) |>
     unlist()
   if (any(missing_files)) {
     checks <- missing_files[missing_files]
     sapply(names(checks), function(n) {
       abort(glue("Missing file(s) in the '{n}' column."))
     })
+  }
+  if ("json" %in% colnames(infoTable)) {
+    if (!all(file.exists(infoTable |> pull(json)))) {
+      abort(glue("Missing json file(s)."))
+    }
   }
 
   # Keep additional infoTable columns
@@ -440,7 +447,7 @@ ReadVisiumData <- function (
 
   # Read scale factors
   if ("scalefactor" %in% colnames(infoTable)) {
-    cli_alert_info("Using custom scalefactor(s) from infoTable")
+    if (verbose) cli_alert_info("Using custom scalefactor(s) from infoTable")
     scalefactors <- infoTable |> 
       select(scalefactor) |> 
       dplyr::rename(custom_scalef = scalefactor) |> 

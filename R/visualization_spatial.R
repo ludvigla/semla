@@ -160,6 +160,15 @@ MapFeatures.default <- function (
     extreme_colors <- extreme_colors[blend_order[1:length(features)]]
     #features <- features[blend_order[1:length(features)]]
   }
+  
+  # Check crop_area
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    if (!crop_area[1] < crop_area[3]) abort("'left' value needs to be lower that 'right' value")
+    if (!crop_area[2] < crop_area[4]) abort("'top' value needs to be lower that 'bottom' value")
+  }
 
   # Edit dims of a crop area is provided
   if (!is.null(crop_area)) {
@@ -463,6 +472,15 @@ MapFeatures.Seurat <- function (
                    max(new_dims$full_height/image_dims$full_height))
   }
 
+  # Check crop_area
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    if (!crop_area[1] < crop_area[3]) abort("'left' value needs to be lower that 'right' value")
+    if (!crop_area[2] < crop_area[4]) abort("'top' value needs to be lower that 'bottom' value")
+  }
+  
   # crop images if a crop_area is set
   if (!is.null(image_use)) {
     images <- .crop_images(crop_area, images)
@@ -660,6 +678,15 @@ MapLabels.default <- function (
 
   # get image dimensions
   dims <- .get_dims(dims)
+  
+  # Check crop_area
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    if (!crop_area[1] < crop_area[3]) abort("'left' value needs to be lower that 'right' value")
+    if (!crop_area[2] < crop_area[4]) abort("'top' value needs to be lower that 'bottom' value")
+  }
 
   # Edit dims of a crop area is provided
   if (!is.null(crop_area)) {
@@ -890,6 +917,15 @@ MapLabels.Seurat <- function (
   }
 
 
+  # Check crop_area
+  if (!is.null(crop_area)) {
+    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
+    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
+    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
+    if (!crop_area[1] < crop_area[3]) abort("'left' value needs to be lower that 'right' value")
+    if (!crop_area[2] < crop_area[4]) abort("'top' value needs to be lower that 'bottom' value")
+  }
+  
   # crop images if a crop_area is set
   if (!is.null(image_use)) {
     images <- .crop_images(crop_area, images)
@@ -1694,9 +1730,6 @@ MapLabels.Seurat <- function (
     images
 ) {
   if (!is.null(crop_area)) {
-    if (!is.numeric(crop_area)) abort(glue("Invalid class '{class(crop_area)}' for 'crop_area', expected 'numeric'"))
-    if (length(crop_area) != 4) abort(glue("Invalid length for 'crop_area', expected a 'numeric' vector of length 4"))
-    if (!all(between(x = crop_area, left = 0, right = 1))) abort("'crop_area' can only take values between 0-1")
     images <- setNames(lapply(images, function(im) {
       image_dims <- dim(im)
       x_start <- round(crop_area[1]*image_dims[2])

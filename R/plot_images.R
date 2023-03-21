@@ -103,7 +103,7 @@ ImagePlot <- function (
     label_by_vec <- object[[]] |>
       pull(all_of(label_by))
     if (!class(label_by_vec) %in% c("character", "factor")) abort(glue("Invalid class '{class(label_by_vec)}' for 'label_by' column. ",
-                                                                       "Expects a 'character' of 'factor'."))
+                                                                       "Expected a 'character' of 'factor'."))
     label_by_vec  <- sapply(split(label_by_vec, st_object@meta_data$sampleID), function(x) {
       y <- unique(x)
       if (length(y) > 1) abort("Invalid 'label_by' meta data column. ",
