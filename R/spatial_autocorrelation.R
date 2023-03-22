@@ -2,17 +2,9 @@
 #'
 NULL
 
-# TODO: dealing with NA values, test running with 0 cores
 #' @description
 #' This function can be used to find genes with high spatial autocorrelation in SRT data.
-#' A more detailed description of the algorithm is outlined in the Details section below.
-#'
-#' @details The default method expects a matrix-like object with features in columns and spots in rows
-#' and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
-#'
-#' If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
-#' across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
-#' a list with one `tibble` per sample.
+#' A more detailed description of the algorithm is outlined below.
 #'
 #' @section Spatial autocorrelation:
 #' Spatial autocorrelation is the term used to describe the presence of systematic spatial
@@ -25,7 +17,7 @@ NULL
 #' expression levels of certain genes (or other features) are highly similar and hence
 #' these genes have a positive spatial autocorrelation.
 #'
-#' The method provided in `semla` works as follows. For each feature and spot,
+#' The method provided in \code{semla} works as follows. For each feature and spot,
 #' the expression is averaged across all neighboring spots (typically the 6 closest neighbors)
 #' to produce a lag expression vector. Since this vector represents the average of the surrounding
 #' spots, we can use it to test if the expression in those spots is similar to the center spot.
@@ -49,6 +41,16 @@ NULL
 #'    \eqn{spatcor_{feature} = cor(X_{lagexpr}[feature, ], X_{expr}[feature, ])}
 #'    }
 #' }
+#' 
+#' @section Default method:
+#' The default method expects a matrix-like object with features in columns and spots in rows
+#' and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}. 
+#'
+#' @section Mode:
+#' If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
+#' across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
+#' a list with one \code{tibble} per sample.
+#' 
 #' @param spatnet A list of spatial networks created with \code{\link{GetSpatialNetwork}}. The spots in these
 #' networks should match the spots in the feature matrix.
 #' @param across_all Should the autocorrelation scores be calculated across all samples?

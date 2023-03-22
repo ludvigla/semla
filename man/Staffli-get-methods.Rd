@@ -20,3 +20,16 @@ This only works for extracting elements, not for the replacement.}
 \description{
 Method used to get meta data from a Staffli object
 }
+\examples{
+
+# Load example data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+   LoadImages()
+
+# Fetch Staffli object
+staffli_object <- GetStaffli(se_mbrain)
+
+# Get meta_data from a staffli object
+meta_data <- staffli_object[[]]
+
+}

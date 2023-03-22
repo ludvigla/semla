@@ -75,7 +75,8 @@ datapath <- ExportDataForViewer(se_mbrain, outdir = ".")
 file_server(datapath)
 
 # Run feature viewer widget
-ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial), opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
+ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial),
+          opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
           range = range(se_mbrain$nFeature_Spatial))
 
 # Stop file server

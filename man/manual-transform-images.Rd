@@ -36,6 +36,10 @@ RunAlignment(object, ...)
 \item{launch_browser}{Should the app be opened in the default browser? Default is TRUE.
 Set \code{launch_browser = getOption("shiny.launch.browser", interactive())} to use the RStudio 
 built-in browser.}
+
+\item{image_height}{An integer used for rescaling images}
+
+\item{verbose}{Print messages}
 }
 \value{
 An object with aligned images

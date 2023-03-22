@@ -5,15 +5,29 @@
 \alias{ImageInfo}
 \alias{ImageInfo,Staffli-method}
 \alias{ImageInfo,Staffli,Staffli-method}
-\title{Method for extracting the raw H&E image information from a 'Staffli' object}
+\title{Method for extracting the raw H&E image information from a \code{Staffli} object}
 \usage{
 ImageInfo(object)
 
 \S4method{ImageInfo}{Staffli}(object)
 }
 \arguments{
-\item{object}{A Staffli object}
+\item{object}{A \code{Staffli} object}
 }
 \description{
-Method for extracting the raw H&E image information from a 'Staffli' object
+Method for extracting the raw H&E image information from a \code{Staffli} object
+}
+\examples{
+
+# Load example data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+   LoadImages()
+
+# Fetch Staffli object
+staffli_object <- GetStaffli(se_mbrain)
+
+# Fetch image info
+image_info <- ImageInfo(staffli_object)
+image_info
+
 }

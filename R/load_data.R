@@ -374,7 +374,7 @@ ReadVisiumData <- function (
       abort(glue("Scalefactors need to be in the range 0.001-1."))
   }
   missing_files <- infoTable |>
-    select(samples, imgs, spotfiles, json) |>
+    select(all_of(c("samples", "imgs", "spotfiles")), contains("json")) |>
     mutate(across(samples:spotfiles, ~ file.exists(.x))) |>
     summarize(across(samples:spotfiles, ~ any(!.x))) |>
     unlist()

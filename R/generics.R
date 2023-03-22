@@ -14,7 +14,7 @@
 #' @return A list of tibbles, each containing information about the nearest neighbors of each spot.
 #' For one spot in the column "from", its nearest neighboring spots are provided in the "to" column.
 #' Distances correspond to distances between "to" and "from", and usually correspond to H&E image
-#' pixels. "numK" defines the number of nearest neighbors for "from" spots selected by \code{GetSpatialNetwork}.
+#' pixels. \code{nNeighbors} defines the number of nearest neighbors for "from" spots selected by \code{GetSpatialNetwork}.
 #' "x_start", "y_start" are the spatial coordinates for "from" spots while "x_end", "y_end" are the
 #' spatial coordinates for the neighboring "to" spots.
 #'

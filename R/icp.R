@@ -128,6 +128,8 @@ kabsch <- function(pm, qm) {
 #' # We can obtain the rotation angle in degrees from
 #' # the results
 #' atan2(res$rot_mat[2, 1], res$rot_mat[1, 1])*(180/pi)
+#' 
+#' @export
 #'
 icp <- function (
   xy_ref,

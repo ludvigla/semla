@@ -15,7 +15,7 @@ CreateStaffliObject(
 \arguments{
 \item{imgs}{Character vector specifying paths to images in JPG, PNG or TIF format}
 
-\item{meta_data}{Spot-level metadata to add to the `Staffli` object. This should be a `tbl` with
+\item{meta_data}{Spot-level metadata to add to the \code{Staffli} object. This should be a \code{tbl} with
 required columns 'barcode' representing the spot IDs, 'pxl_col_in_fullres' and 'pxl_row_in_fullres'
 which specifies the 10x Visium array coordinates and a 'sampleID' column with sample IDs}
 
@@ -26,6 +26,86 @@ which specifies the 10x Visium array coordinates and a 'sampleID' column with sa
 \item{scalefactors}{a tibble with scalefactors sued to transform coordinates from
 the original image space to the downscaled images}
 }
+\value{
+A \code{Staffli} object
+}
 \description{
 Create a Staffli object from a set of images and associated spot coordinates
+}
+\examples{
+
+library(semla)
+library(magick)
+library(jsonlite)
+library(tibble)
+
+# Multiple samples
+# \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
+# Create an object with multiple samples
+he_imgs <- c(system.file("extdata/mousebrain", 
+                         "spatial/tissue_hires_image.jpg", 
+                          package = "semla"),
+             system.file("extdata/mousecolon", 
+                         "spatial/tissue_hires_image.jpg", 
+                         package = "semla"))
+spotfiles <- c(system.file("extdata/mousebrain", 
+                           "spatial/tissue_positions_list.csv", 
+                           package = "semla"),
+               system.file("extdata/mousecolon", 
+                           "spatial/tissue_positions_list.csv", 
+                           package = "semla"))
+jsonfiles <- c(system.file("extdata/mousebrain", 
+                           "spatial/scalefactors_json.json", 
+                           package = "semla"),
+               system.file("extdata/mousecolon", 
+                           "spatial/scalefactors_json.json", 
+                           package = "semla"))
+
+# Read coordinates
+coordinates <- do.call(bind_rows, lapply(seq_along(spotfiles), function(i) {
+  sample_coords <- read.csv(spotfiles[i], header = FALSE) |> 
+    as_tibble() |>
+    setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |> 
+    mutate(sampleID = i) |> # Add a unique sampleID
+    filter(selected == 1) |> 
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
+    mutate(barcode = gsub(pattern = "-\\\\d*", # Replace barcode suffix with sampleID
+                          replacement = paste0("-", i), 
+                          x = barcode))
+  return(sample_coords)
+}))
+
+# Create image_info
+image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
+  he_imgs[i] |> 
+    image_read() |> 
+    image_info() |> 
+    mutate(sampleID = paste0(i))
+}))
+
+# Read scalefactors
+scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
+  jsonlite::read_json(jsonfiles[i]) |> 
+    as_tibble() |> 
+    mutate(sampleID = paste0(i))
+}))
+
+# Add additional columns to image_info using scalefactors
+image_info <- image_info |> 
+  mutate(full_width = width/scalefactors$tissue_hires_scalef[row_number()],
+         full_height = height/scalefactors$tissue_hires_scalef[row_number()]) |> 
+  mutate(type = "tissue_hires") |> 
+  select(format, width, height, full_width, full_height, 
+         colorspace, filesize, density, sampleID, type)
+
+# Create Staffli object
+staffli_object <- CreateStaffliObject(imgs = he_imgs, 
+                                      meta_data = coordinates, 
+                                      image_info = image_info, 
+                                      scalefactors = scalefactors)
+staffli_object
+
+}
+\author{
+Ludvig Larsson
 }

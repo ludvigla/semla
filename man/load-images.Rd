@@ -48,8 +48,12 @@ slot.
 library(semla)
 
 # Get paths for example images
-mousebrain_jpg <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
-mousecolon_jpg <- system.file("extdata/mousecolon", "spatial/tissue_hires_image.jpg", package = "semla")
+mousebrain_jpg <- system.file("extdata/mousebrain", 
+                              "spatial/tissue_hires_image.jpg", 
+                              package = "semla")
+mousecolon_jpg <- system.file("extdata/mousecolon", 
+                              "spatial/tissue_hires_image.jpg", 
+                              package = "semla")
 
 rasters <- LoadImages(c(mousebrain_jpg, mousecolon_jpg))
 

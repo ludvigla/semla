@@ -10,7 +10,7 @@
 #' @param text_height Height of scale bar title
 #' @param ... Parameters passed to geom_segment
 #'
-#' @return A `ggplot` object with a scalebar
+#' @return A \code{ggplot} object with a scalebar
 #'
 #' @author Ludvig Larsson
 #'

@@ -7,7 +7,7 @@
 \alias{GetImages,Staffli,Staffli-method}
 \alias{GetImages,Seurat-method}
 \alias{GetImages,Seurat,Seurat-method}
-\title{Method to extract images from a Staffli object}
+\title{Method to extract images from a \code{Staffli} object}
 \usage{
 GetImages(object, type = "raw")
 
@@ -16,10 +16,31 @@ GetImages(object, type = "raw")
 \S4method{GetImages}{Seurat}(object, type = "raw")
 }
 \arguments{
-\item{object}{A Staffli or Seurat object}
+\item{object}{A \code{Staffli} or \code{Seurat} object}
 
-\item{type}{A string specifying the mage type to get}
+\item{type}{A string specifying the image type to get}
 }
 \description{
-Method to extract images from a Staffli object
+Method to extract images from a \code{Staffli} object
+}
+\examples{
+
+# Load example data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+   LoadImages()
+
+# Fetch Staffli object
+staffli_object <- GetStaffli(se_mbrain)
+
+# Fetch images from a Staffli object
+images <- GetImages(staffli_object)
+
+
+# Load example data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+   LoadImages()
+
+# Fetch images from a Seurat object
+images <- GetImages(se_mbrain)
+
 }

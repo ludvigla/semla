@@ -50,9 +50,9 @@ with \code{n_permutations}), allowing the calculation of a z-score.
 The z-score will indicate if a label pair is overrepresented or underrepresented
 as compared to what would be expected to see by chance.
 The output of this function is a tibble table that for each label pair contains
-information about the observed number of edges (`edges`), the mean of the permuted
-results (`perm_mean`), the standard deviation of the permuted results (`perm_sd`),
-and the z-score (`z_score`).
+information about the observed number of edges (\code{edges}), the mean of the permuted
+results (\code{perm_mean}), the standard deviation of the permuted results (\code{perm_sd}),
+and the z-score (\code{z_score}).
 }
 \examples{
 library(semla)

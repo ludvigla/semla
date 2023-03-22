@@ -55,15 +55,7 @@ Either a list of tibbles or a tibble with feature names and correlation scores
 }
 \description{
 This function can be used to find genes with high spatial autocorrelation in SRT data.
-A more detailed description of the algorithm is outlined in the Details section below.
-}
-\details{
-The default method expects a matrix-like object with features in columns and spots in rows
-and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
-
-If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
-across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
-a list with one \code{tibble} per sample.
+A more detailed description of the algorithm is outlined below.
 }
 \section{Spatial autocorrelation}{
 
@@ -103,6 +95,19 @@ lag vector and the initial expression vector: \cr \cr
 \eqn{spatcor_{feature} = cor(X_{lagexpr}[feature, ], X_{expr}[feature, ])}
 }
 }
+}
+
+\section{Default method}{
+
+The default method expects a matrix-like object with features in columns and spots in rows
+and a list of spatial networks generated with \code{\link{GetSpatialNetwork}}.
+}
+
+\section{Mode}{
+
+If \code{across_all} is set to \code{TRUE}, the spatial autocorrelation scores will be computed
+across all samples. Otherwise, the scores will be calculated for each sample separately, and returns
+a list with one \code{tibble} per sample.
 }
 
 \examples{

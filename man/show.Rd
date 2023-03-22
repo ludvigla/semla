@@ -8,7 +8,7 @@
 \S4method{show}{Staffli}(object)
 }
 \arguments{
-\item{object}{object to print preselected attributes for}
+\item{object}{object to print pre-selected attributes for}
 }
 \description{
 Show method for Staffli objects

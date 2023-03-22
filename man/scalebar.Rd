@@ -32,7 +32,7 @@ create 6 vertical lines and 5 even intervals.}
 \item{...}{Parameters passed to geom_segment}
 }
 \value{
-A `ggplot` object with a scalebar
+A \code{ggplot} object with a scalebar
 }
 \description{
 Create a scale bar to use for plots

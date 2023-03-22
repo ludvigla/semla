@@ -21,8 +21,8 @@ GetSpatialNetwork(object, ...)
 number of neighbors is 6 given the hexagonal pattern of 10x Visium arrays.}
 
 \item{maxDist}{Distance cut-off for nearest neighbors to consider. If set to NULL (default),
-`maxDist` is estimated from the data by taking the minimum neighbor distance multiplied by
-a factor of `1.2`.}
+\code{maxDist} is estimated from the data by taking the minimum neighbor distance multiplied by
+a factor of \code{1.2}.}
 
 \item{minK}{Minimum nearest neighbors [default: 0]. Spots with fewer neighbors will be discarded.
 Useful if you want to remove spots with few or no neighbors.}
@@ -31,7 +31,7 @@ Useful if you want to remove spots with few or no neighbors.}
 A list of tibbles, each containing information about the nearest neighbors of each spot.
 For one spot in the column "from", its nearest neighboring spots are provided in the "to" column.
 Distances correspond to distances between "to" and "from", and usually correspond to H&E image
-pixels. "numK" defines the number of nearest neighbors for "from" spots selected by \code{GetSpatialNetwork}.
+pixels. \code{nNeighbors} defines the number of nearest neighbors for "from" spots selected by \code{GetSpatialNetwork}.
 "x_start", "y_start" are the spatial coordinates for "from" spots while "x_end", "y_end" are the
 spatial coordinates for the neighboring "to" spots.
 }
@@ -83,6 +83,19 @@ p2 <- ggplot(spatnet[["2"]], aes(x = x_start, xend = x_end, y = y_start, yend = 
 
 p1 + p2
 }
+
+
+library(semla)
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+
+# Get spatial network from a Seurat object
+spatnet <- GetSpatialNetwork(se_mbrain)
+
+# Plot network
+ggplot(spatnet[["1"]], aes(x = x_start, xend = x_end, y = y_start, yend = y_end)) +
+  geom_segment() +
+  scale_y_reverse()
 
 }
 \seealso{

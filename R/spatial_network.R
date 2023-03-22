@@ -11,8 +11,8 @@ NULL
 #' @param nNeighbors Number of nearest neighbors to calculate for each spot. The default
 #' number of neighbors is 6 given the hexagonal pattern of 10x Visium arrays.
 #' @param maxDist Distance cut-off for nearest neighbors to consider. If set to NULL (default),
-#' `maxDist` is estimated from the data by taking the minimum neighbor distance multiplied by
-#' a factor of `1.2`.
+#' \code{maxDist} is estimated from the data by taking the minimum neighbor distance multiplied by
+#' a factor of \code{1.2}.
 #' @param minK Minimum nearest neighbors [default: 0]. Spots with fewer neighbors will be discarded.
 #' Useful if you want to remove spots with few or no neighbors.
 #'
@@ -147,9 +147,22 @@ GetSpatialNetwork.default <- function (
 #' @rdname get-network
 #'
 #' @importFrom dplyr select rename
+#' 
+#' @examples
+#' 
+#' library(semla)
+#' 
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' 
+#' # Get spatial network from a Seurat object
+#' spatnet <- GetSpatialNetwork(se_mbrain)
+#' 
+#' # Plot network
+#' ggplot(spatnet[["1"]], aes(x = x_start, xend = x_end, y = y_start, yend = y_end)) +
+#'   geom_segment() +
+#'   scale_y_reverse()
 #'
 #' @export
-#' @method GetSpatialNetwork Seurat
 #'
 GetSpatialNetwork.Seurat <- function (
     object,

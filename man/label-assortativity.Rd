@@ -47,9 +47,9 @@ Visium, the theoretical max avg k is 6) and the minimum avg k you would expect t
 are randomly dispered. With the \code{n_permutations} argument, you can specify the number of
 iterations for generating a mean of the minimum avg k for each label.
 The output of this function is a tibble table with entries for each label corresponding to
-the observed avg k (`avg_k`), the mean of the randomized avg k (`min_avg_k_mean`), the standard
-deviation of the randomized avg k (`min_avg_k_sd`), and the scaled avg k (`avg_k_scaled`), which
-has been scaled towards the network max avg k (`k_max`) and thus goes from 0 (completely randomly
+the observed avg k (\code{avg_k}), the mean of the randomized avg k (\code{min_avg_k_mean}), the standard
+deviation of the randomized avg k (\code{min_avg_k_sd}), and the scaled avg k (\code{avg_k_scaled}), which
+has been scaled towards the network max avg k (\code{k_max}) and thus goes from 0 (completely randomly
 dispersed) to 1 (fully connected).
 }
 \examples{

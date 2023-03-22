@@ -154,6 +154,9 @@ RunAlignment.default <- function (
   return(transformations |> as_tibble())
 }
 
+#' @param image_height An integer used for rescaling images
+#' @param verbose Print messages
+#' 
 #' @importFrom magick image_read
 #' @import rlang
 #' @import cli

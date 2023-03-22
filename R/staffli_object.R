@@ -46,7 +46,7 @@ Staffli <- setClass (
 #' Create a Staffli object from a set of images and associated spot coordinates
 #'
 #' @param imgs Character vector specifying paths to images in JPG, PNG or TIF format
-#' @param meta_data Spot-level metadata to add to the `Staffli` object. This should be a `tbl` with
+#' @param meta_data Spot-level metadata to add to the \code{Staffli} object. This should be a \code{tbl} with
 #' required columns 'barcode' representing the spot IDs, 'pxl_col_in_fullres' and 'pxl_row_in_fullres'
 #' which specifies the 10x Visium array coordinates and a 'sampleID' column with sample IDs
 #' @param image_height Specifies the height of the scaled images in pixels [default: 400 pixels]
@@ -59,6 +59,83 @@ Staffli <- setClass (
 #' @importFrom stats setNames
 #' @importFrom rlang abort
 #' @importFrom methods new
+#' 
+#' @author Ludvig Larsson
+#' 
+#' @returns A \code{Staffli} object
+#' 
+#' @examples 
+#' 
+#' library(semla)
+#' library(magick)
+#' library(jsonlite)
+#' library(tibble)
+#' 
+#' # Multiple samples
+#' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#' # Create an object with multiple samples
+#' he_imgs <- c(system.file("extdata/mousebrain", 
+#'                          "spatial/tissue_hires_image.jpg", 
+#'                           package = "semla"),
+#'              system.file("extdata/mousecolon", 
+#'                          "spatial/tissue_hires_image.jpg", 
+#'                          package = "semla"))
+#' spotfiles <- c(system.file("extdata/mousebrain", 
+#'                            "spatial/tissue_positions_list.csv", 
+#'                            package = "semla"),
+#'                system.file("extdata/mousecolon", 
+#'                            "spatial/tissue_positions_list.csv", 
+#'                            package = "semla"))
+#' jsonfiles <- c(system.file("extdata/mousebrain", 
+#'                            "spatial/scalefactors_json.json", 
+#'                            package = "semla"),
+#'                system.file("extdata/mousecolon", 
+#'                            "spatial/scalefactors_json.json", 
+#'                            package = "semla"))
+#' 
+#' # Read coordinates
+#' coordinates <- do.call(bind_rows, lapply(seq_along(spotfiles), function(i) {
+#'   sample_coords <- read.csv(spotfiles[i], header = FALSE) |> 
+#'     as_tibble() |>
+#'     setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |> 
+#'     mutate(sampleID = i) |> # Add a unique sampleID
+#'     filter(selected == 1) |> 
+#'     select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
+#'     mutate(barcode = gsub(pattern = "-\\d*", # Replace barcode suffix with sampleID
+#'                           replacement = paste0("-", i), 
+#'                           x = barcode))
+#'   return(sample_coords)
+#' }))
+#' 
+#' # Create image_info
+#' image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
+#'   he_imgs[i] |> 
+#'     image_read() |> 
+#'     image_info() |> 
+#'     mutate(sampleID = paste0(i))
+#' }))
+#' 
+#' # Read scalefactors
+#' scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
+#'   jsonlite::read_json(jsonfiles[i]) |> 
+#'     as_tibble() |> 
+#'     mutate(sampleID = paste0(i))
+#' }))
+#' 
+#' # Add additional columns to image_info using scalefactors
+#' image_info <- image_info |> 
+#'   mutate(full_width = width/scalefactors$tissue_hires_scalef[row_number()],
+#'          full_height = height/scalefactors$tissue_hires_scalef[row_number()]) |> 
+#'   mutate(type = "tissue_hires") |> 
+#'   select(format, width, height, full_width, full_height, 
+#'          colorspace, filesize, density, sampleID, type)
+#' 
+#' # Create Staffli object
+#' staffli_object <- CreateStaffliObject(imgs = he_imgs, 
+#'                                       meta_data = coordinates, 
+#'                                       image_info = image_info, 
+#'                                       scalefactors = scalefactors)
+#' staffli_object
 #'
 #' @export
 #'
@@ -69,7 +146,47 @@ CreateStaffliObject <- function (
     image_info,
     scalefactors
 ) {
-  if (!all(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID") %in% colnames(meta_data))) abort("Invalid meta_data columns.")
+  
+  # Set global variables to NULL
+  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
+  
+  # Check meta_data
+  if (!all(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID") %in% colnames(meta_data))) abort("Invalid meta_data.")
+  meta_data <- meta_data |> 
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+  checks <- sapply(meta_data, class)
+  if (!checks["barcode"] == "character")
+    abort(glue("Invalid class '{checks['barcode']}' for barcode. Expected a 'character' vector."))
+  if (!checks["pxl_col_in_fullres"] %in% c("numeric", "integer"))
+    abort(glue("Invalid class '{checks['pxl_col_in_fullres']}' for pxl_col_in_fullres. Expected a 'numeric' or 'integer' vector."))
+  if (!checks["pxl_col_in_fullres"] %in% c("numeric", "integer"))
+    abort(glue("Invalid class '{checks['pxl_row_in_fullres']}' for pxl_row_in_fullres. Expected a 'numeric' or 'integer' vector."))
+  if (!checks["sampleID"] == "integer")
+    abort(glue("Invalid class '{checks['sampleID']}' for sampleID. Expected an 'integer' vector."))
+  sampleIDs_meta_data <- meta_data$sampleID |> paste0() |> unique() |> sort()
+  
+  # Check image_info
+  if (!all(c("width", "height", "full_width", "full_height") %in% colnames(image_info))) abort("Invalid image_info.")
+  sampleIDs_image_info <- image_info$sampleID |> sort()
+  
+  # Check image_info
+  sampleIDs_scalefactors <- image_info$sampleID |> sort()
+  
+  # Check sampleIDs
+  if(!all(sampleIDs_meta_data == sampleIDs_image_info)) abort("Invalid sampleIDs")
+  if(!all(sampleIDs_meta_data == sampleIDs_scalefactors)) abort("Invalid sampleIDs")
+  if(!all(sampleIDs_image_info == sampleIDs_scalefactors)) abort("Invalid sampleIDs")
+  
+  # Check H&E images
+  if (!is.null(imgs)) {
+    for (im in imgs) {
+      if (!im %in% c("mousebrain", "mousecolon")) {
+        if (!file.exists(im)) abort(glue("'{im}' is not a valid path. File doesn't exist."))
+      }
+    }
+    if (length(imgs) != length(sampleIDs_meta_data)) 
+      abort(glue("Number of images ({length(imgs)}) does not match the number of sampleIDs ({length(sampleIDs_meta_data)})"))
+  }
 
   object <- new (
     Class = 'Staffli',
@@ -89,9 +206,23 @@ CreateStaffliObject <- function (
 # Staffli methods
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' Method for extracting the raw H&E image information from a 'Staffli' object
+#' Method for extracting the raw H&E image information from a \code{Staffli} object
 #'
-#' @param object A Staffli object
+#' @param object A \code{Staffli} object
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' # Fetch image info
+#' image_info <- ImageInfo(staffli_object)
+#' image_info
+#' 
 #' @export
 #' @docType methods
 #' @rdname ImageInfo
@@ -112,10 +243,10 @@ setMethod (
 )
 
 
-#' Method to extract images from a Staffli object
+#' Method to extract images from a \code{Staffli} object
 #'
-#' @param object A Staffli or Seurat object
-#' @param type A string specifying the mage type to get
+#' @param object A \code{Staffli} or \code{Seurat} object
+#' @param type A string specifying the image type to get
 #'
 #' @export
 #' @docType methods
@@ -126,6 +257,18 @@ setGeneric("GetImages", function(object, type = "raw") {
 })
 #' @rdname GetImages
 #' @aliases GetImages,Staffli,Staffli-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' # Fetch images from a Staffli object
+#' images <- GetImages(staffli_object)
 #'
 #' @export
 #'
@@ -138,6 +281,15 @@ setMethod (
 )
 #' @rdname GetImages
 #' @aliases GetImages,Seurat,Seurat-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#'
+#' # Fetch images from a Seurat object
+#' images <- GetImages(se_mbrain)
 #'
 #' @export
 #'
@@ -152,10 +304,10 @@ setMethod (
 )
 
 
-#' Method used to extract a Staffli object from the tools slot of a
-#' Seurat object
+#' Method used to extract a \code{Staffli} object from the tools slot of a
+#' \code{Staffli} object
 #'
-#' @param object A Seurat object
+#' @param object A \code{Seurat} object
 #'
 #' @export
 #' @docType methods
@@ -166,6 +318,17 @@ setGeneric("GetStaffli", function(object) {
 })
 #' @rdname GetStaffli
 #' @aliases GetStaffli,Seurat,Seurat-method
+#' 
+#' @examples
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object from a Seurat object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' @export
 setMethod (
   f = "GetStaffli",
   signature = "Seurat",
@@ -185,6 +348,18 @@ setMethod (
 #' @param j column indices specifying elements to extract.
 #' @param drop If TRUE the result is coerced to the lowest possible dimension.
 #' This only works for extracting elements, not for the replacement.
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' # Get meta_data from a staffli object
+#' meta_data <- staffli_object[[]]
 #'
 #' @export
 #'
@@ -222,7 +397,7 @@ setMethod (
 #' @rdname show
 #' @aliases show,Staffli,Staffli-method
 #'
-#' @param object object to print preselected attributes for
+#' @param object object to print pre-selected attributes for
 #'
 setMethod (
   f = "show",

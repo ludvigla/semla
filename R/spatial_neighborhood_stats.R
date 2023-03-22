@@ -18,9 +18,9 @@ NULL
 #' The z-score will indicate if a label pair is overrepresented or underrepresented
 #' as compared to what would be expected to see by chance.
 #' The output of this function is a tibble table that for each label pair contains
-#' information about the observed number of edges (`edges`), the mean of the permuted
-#' results (`perm_mean`), the standard deviation of the permuted results (`perm_sd`),
-#' and the z-score (`z_score`).
+#' information about the observed number of edges (\code{edges}), the mean of the permuted
+#' results (\code{perm_mean}), the standard deviation of the permuted results (\code{perm_sd}),
+#' and the z-score (\code{z_score}).
 #'
 #' @param object A Seurat object
 #' @param column_name Column name in metadata corresponding to label ID of the spots.
@@ -248,9 +248,9 @@ RunNeighborhoodEnrichmentTest <- function(
 #' are randomly dispered. With the \code{n_permutations} argument, you can specify the number of
 #' iterations for generating a mean of the minimum avg k for each label.
 #' The output of this function is a tibble table with entries for each label corresponding to
-#' the observed avg k (`avg_k`), the mean of the randomized avg k (`min_avg_k_mean`), the standard
-#' deviation of the randomized avg k (`min_avg_k_sd`), and the scaled avg k (`avg_k_scaled`), which
-#' has been scaled towards the network max avg k (`k_max`) and thus goes from 0 (completely randomly
+#' the observed avg k (\code{avg_k}), the mean of the randomized avg k (\code{min_avg_k_mean}), the standard
+#' deviation of the randomized avg k (\code{min_avg_k_sd}), and the scaled avg k (\code{avg_k_scaled}), which
+#' has been scaled towards the network max avg k (\code{k_max}) and thus goes from 0 (completely randomly
 #' dispersed) to 1 (fully connected).
 #'
 #'

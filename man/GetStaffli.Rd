@@ -5,17 +5,27 @@
 \alias{GetStaffli}
 \alias{GetStaffli,Seurat-method}
 \alias{GetStaffli,Seurat,Seurat-method}
-\title{Method used to extract a Staffli object from the tools slot of a
-Seurat object}
+\title{Method used to extract a \code{Staffli} object from the tools slot of a
+\code{Staffli} object}
 \usage{
 GetStaffli(object)
 
 \S4method{GetStaffli}{Seurat}(object)
 }
 \arguments{
-\item{object}{A Seurat object}
+\item{object}{A \code{Seurat} object}
 }
 \description{
-Method used to extract a Staffli object from the tools slot of a
-Seurat object
+Method used to extract a \code{Staffli} object from the tools slot of a
+\code{Staffli} object
+}
+\examples{
+
+# Load example data
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+   LoadImages()
+
+# Fetch Staffli object from a Seurat object
+staffli_object <- GetStaffli(se_mbrain)
+
 }
