@@ -126,12 +126,12 @@ MergeSTData <- function (
 
   # Check that version matches
   versions <- sapply(st_objects, function(x) paste0(x@version))
-  if (length(unique(versions)) > 1) warn(glue("Different versions; {paste(versions, collapse = ', '')} have been used to process the data"))
+  if (length(unique(versions)) > 1) warn(glue("Different versions; {paste(versions, collapse = ', ')} have been used to process the data"))
 
   # and check that the same heights have been used
   heights_check <- sapply(st_objects, function(x) x@image_height)
   if (length(unique(heights_check)) > 1) {
-    warn(glue("Different heights have been used for the different objects; {paste(heights_check, collapse = ", ")}.",
+    warn(glue("Different heights have been used for the different objects; {paste(heights_check, collapse = ', ')}.",
               "Any loaded images will be removed and a default value of 400 pixels in height will be set."))
     image_height <- 400
   } else {
