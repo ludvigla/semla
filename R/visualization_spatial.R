@@ -183,7 +183,7 @@ MapFeatures.default <- function (
 
     # Create an appropriate plot title
     if (!is.null(label_by)) {
-      cur_label <- unique(gg |> pull(all_of(label_by)))
+      cur_label <- unique(gg |> pull(all_of(label_by))) |> as.character()
     } else {
       cur_label <- paste0("section ", nm)
     }
@@ -1585,13 +1585,15 @@ MapLabels.Seurat <- function (
   if (scale == "free") {
     feature_limits <- lapply(data, function(x) {
       y <- x |>
-        select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID)
+        select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |> 
+        select(where(fn = function(x) inherits(x, what = c("integer", "numeric"))))
       y <- sapply(y, range) |> as_tibble()
       return(y)
     })
   } else if (scale == "shared") {
     y <- do.call(bind_rows, data) |>
-      select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID)
+      select(-barcode, -all_of(coords_columns), -contains("encoded_cols"), -sampleID) |> 
+      select(where(fn = function(x) inherits(x, what = c("integer", "numeric"))))
     y <- sapply(y, range) |> as_tibble()
     feature_limits <- setNames(lapply(names(data), function(nm) {
       y
