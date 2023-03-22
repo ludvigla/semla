@@ -7,7 +7,7 @@ dispersed across a tissue section.'><title>Disconnect regions — DisconnectRegi
 belonging to the same category. In cases where a certain tissue type create
 isolated "islands" in the tissue section, these islands can be separated. A
 common example is tertiary lymphoid structures (TLS) which are typically
-dispersed across a tissue section.'><meta property="og:image" content="https://ludvigla.github.io/semla/logo.png"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+dispersed across a tissue section.'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body>
@@ -84,7 +84,7 @@ dispersed across a tissue section.'><meta property="og:image" content="https://l
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Disconnect regions</h1>
+      <img src="" class="logo" alt=""><h1>Disconnect regions</h1>
       
       <div class="d-none name"><code>disconnect-regions.Rd</code></div>
     </div>
@@ -125,7 +125,7 @@ dispersed across a tissue section.</p>
 
 
 <dt>spots</dt>
-<dd><p>A character vector with spot IDs present `object`</p></dd>
+<dd><p>A character vector with spot IDs present <code>object</code></p></dd>
 
 
 <dt>verbose</dt>
@@ -143,10 +143,16 @@ All groups are selected by default, but the common use case is to select a regio
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>An object with disconnected regions</p>
+    </div>
+    <div class="section level2">
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
     
 
-<p>Takes a `tibble` and set of spot IDs and returns a named character vector with new labels.
+<p>Takes a <code>tibble</code> and set of spot IDs and returns a named character vector with new labels.
 The names of this vector corresponds to the input spot IDs.</p>
     </div>
     <div class="section level2">
@@ -157,7 +163,7 @@ The names of this vector corresponds to the input spot IDs.</p>
 slot using <code>column_name</code>. From this column, one can specify what groups
 to disconnect with <code>selected_groups</code>. If <code>selected_groups</code> isn't specified,
 all groups in <code>selected_groups</code> will be disconnected separately.
-The function returns a `Seurat` object with additional columns in the meta data
+The function returns a <code>Seurat</code> object with additional columns in the meta data
 slot, one for each group in <code>selected_groups</code>. The suffix to these columns is
 "_split", so a group in <code>selected_groups</code> called "tissue" will get a column
 called "tissue_split" with new labels for each spatially disconnected region.</p>
