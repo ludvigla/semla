@@ -88,15 +88,14 @@ MergeSTData <- function (
   se_objects <- c(x, y); rm(x); rm(y)
   st_objects <- c(st_x, st_y); rm(st_x); rm(st_y)
   mergedMetaData <- do.call(rbind, lapply(seq_along(se_objects), function(i) {
-    obj <- se_objects[[i]]
     st_obj <- st_objects[[i]]
-    mergedSampleMetaData <- cbind(obj@meta.data, st_obj@meta_data) |>
+    mergedSampleMetaData <- st_obj@meta_data |>
       as_tibble() |>
       select(barcode, sampleID) |>
-      mutate(sample = i, uniqueID = paste0(i, "_", sampleID))
+      mutate(sample = i)
     return(mergedSampleMetaData)
   })) |>
-    group_by(uniqueID) |>
+    group_by(sample) |>
     mutate(new_sampleID = cur_group_id(), old_names = barcode) |>
     separate(barcode, sep = "-", into = c("barcode", NA)) |>
     unite(col = "barcode", barcode, new_sampleID, sep = "-", remove = FALSE) |>
