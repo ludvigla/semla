@@ -585,6 +585,127 @@ MapLabels(se,
   guides(fill = guide_legend(override.aes = list(size = 3)))
 ```
 
+## Scale bars
+
+To add a scalebar, simply set `add_scalebar = TRUE` and the scalebar should appear in the top right corner.
+
+```{r fig.asp=1, fig.width=5}
+se_mbrain <- LoadImages(se_mbrain)
+MapFeatures(se_mbrain, features = "nFeature_Spatial", pt_size = 1,
+            override_plot_dims = TRUE, image_use = "raw", 
+            add_scalebar = TRUE)
+```
+
+And with `mapLabels`:
+
+```{r fig.asp=1, fig.width=5}
+MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
+          override_plot_dims = TRUE, image_use = "raw", 
+          add_scalebar = TRUE)
+```
+
+You can also tweak the appearance and position of the scalebar with `scalebar_gg`, `scalebar_position` and `scalebar_height`.
+
+-   `scalebar_gg` allows you to modify the width and breaks of the scalebar. The title of the scalebar will be adjusted from micrometers to millimeters if x \> 1000.
+-   `scalebar_position` sets the position of the scalebar relative to the entire plot.
+-   `scalebar_height` can be useful to adjust the height of the scalebar to make the text fit. If the scalebar is too small, for instance when plotting many sections at once, increasing the height will make the text appear.
+
+```{r fig.asp=1, fig.width=5}
+MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
+          image_use = "raw", 
+          add_scalebar = TRUE, 
+          scalebar_gg = scalebar(x = 2000, breaks = 11, highlight_breaks = c(1, 6, 11)),
+          scalebar_position = c(0.55, 0.7), 
+          scalebar_height = 0.07)
+```
+
+Here's another example with image masking:
+
+```{r fig.asp=0.6, fig.width=8, message=FALSE, warning=FALSE}
+
+# Mask image
+se_mbrain <- MaskImages(se_mbrain)
+
+MapFeatures(se_mbrain, features = VariableFeatures(se_mbrain)[1:6],
+          image_use = "raw", 
+          add_scalebar = TRUE, 
+          scale_alpha = TRUE,
+          override_plot_dims = TRUE,
+          scalebar_gg = scalebar(x = 1000),
+          scalebar_position = c(0.55, 0.88),
+          scalebar_height = 0.14) &
+  theme(plot.title = element_blank(), 
+        legend.position = "right", legend.text = element_text(angle = 0))
+```
+
+If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length:
+
+```{r message=FALSE, warning=FALSE}
+se_mbrain <- LoadImages(se_mbrain, image_height = 1.5e3)
+MapFeatures(se_mbrain, features = "Th", pt_size = 5,
+            image_use = "raw", scale_alpha = TRUE,
+            colors = RColorBrewer::brewer.pal(n = 11, name = "Spectral") |> rev(),
+            crop_area = c(0.2, 0.6, 0.4, 0.75),
+            scalebar_position = c(0.7, 0.8), scalebar_height = 0.08,
+            add_scalebar = TRUE, scalebar_gg = scalebar(x = 400))
+```
+
+
+## Rearrange patchworks
+
+While `MapLabels` and `MapFeatures` do not provide arguments to sort samples in a specific order,
+this can be achieved by returning the data as a list of `ggplot` objects and define the order manually.
+
+For instance, if we have plot two features and set `return_plot_list = TRUE`, we can rearrange the plots with 
+`wrap_plots`:
+
+```{r}
+p <- MapFeatures(se_mbrain, c("Th", "Calb2"), return_plot_list = TRUE)
+
+wrap_plots(p$`1`$Calb2, p$`1`$Th)
+```
+
+If we have multiple sections, we can access the section-specific plots from the list. In the example below, 
+the plots have been rearranged so that the columns and rows are flipped.
+
+```{r fig.asp=1}
+p <- MapFeatures(se, c("Th", "Calb2"), return_plot_list = TRUE)
+
+wrap_plots(p$`2`$Calb2, p$`2`$Th, p$`1`$Th, p$`1`$Calb2)
+```
+
+## Basic themes and plot annotation
+
+`semla` also provides a couple of utility functions to make it easier to modify themes.
+
+If you are plotting many features and sections at the same time, it can be useful to remove all components
+of the theme with `ThemeClean` to get a quick overview:
+
+```{r fig.asp=0.4}
+MapFeatures(se, c("Th", "Calb2", "Clu", "Mgp", "Acta2", "Tagln"), 
+            override_plot_dims = TRUE, pt_size = 0.5) & 
+  ThemeClean()
+```
+
+If you like to move the color legends to the right hand side of the plots, you can use `ThemeLegendRight`:
+
+```{r fig.asp=1}
+MapFeatures(se, c("Th", "Calb2"), 
+            override_plot_dims = TRUE) & 
+  ThemeLegendRight()
+```
+
+The titles of individual plots are determined internally by `MapLabels` and `MapFeatures` and it can be 
+difficult to change these titles after the plot has been generated. `ModifyPatchworkTitles` can help with this
+task. All you need to do is to provide a character vector with new titles which should match the number of subplots 
+in the patchwork. In the example below we have 2 genes and 2 sections, so we need to provide 4 titles:
+
+```{r fig.asp=1}
+p <- MapFeatures(se, c("Th", "Calb2"), override_plot_dims = TRUE)
+ModifyPatchworkTitles(p, titles = c("First", "Second", "Third", "Fourth"))
+```
+
+
 <br>
 
 ------------------------------------------------------------------------

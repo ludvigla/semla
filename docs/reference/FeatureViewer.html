@@ -44,7 +44,6 @@ categorical features with a lasso tool."><!-- mathjax --><script src="https://cd
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -115,7 +114,7 @@ categorical features with a lasso tool.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>object</dt>
-<dd><p>A <code>Seurat</code> object</p></dd>
+<dd><p>A <code>Seurat</code> object created with <code>semla</code></p></dd>
 
 
 <dt>slot</dt>
@@ -123,16 +122,18 @@ categorical features with a lasso tool.</p>
 
 
 <dt>datadir</dt>
-<dd><p>A directory spatial data and image tiles</p></dd>
+<dd><p>A directory containing spatial data and image tiles (see <code><a href="ExportDataForViewer.html">ExportDataForViewer</a></code>)</p></dd>
 
 
 <dt>selected_features</dt>
-<dd><p>A character vector of features to select for viewer</p></dd>
+<dd><p>A character vector of features to select for the viewer</p></dd>
 
 
 <dt>sampleIDs</dt>
-<dd><p>An integer vector of section IDs to use for the viewer. All sections
-will be used by default.</p></dd>
+<dd><p>An integer vector of section IDs to use include in the viewer. All sections
+will be used by default. Note that if you have exported the data with <code><a href="ExportDataForViewer.html">ExportDataForViewer</a></code>,
+you need to make sure that the sampleIDs for <code>FeatureViewers</code> matches the sampleIDs
+used for <code><a href="ExportDataForViewer.html">ExportDataForViewer</a></code>.</p></dd>
 
 
 <dt>host</dt>
@@ -145,7 +146,7 @@ Defaults to localhost "127.0.0.1"</p></dd>
 
 
 <dt>custom_color_palettes</dt>
-<dd><p>A names list of color vectors to use as custom color palettes</p></dd>
+<dd><p>A named list of color vectors to use as custom color palettes</p></dd>
 
 
 <dt>categorical_colors</dt>
@@ -167,7 +168,9 @@ label of the category.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A <code>Seurat</code> object</p>
+<p>A <code>Seurat</code> object created with <code>semla</code></p>
+
+
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -177,6 +180,13 @@ is also possible to export the files before running the app and provide the path
 data directory with <code>datadir</code> (see <code><a href="ExportDataForViewer.html">ExportDataForViewer</a></code>).</p>
 <p>A more detailed tutorial can be found on the <code>semla</code> website. You can also
 get more detailed instructions by pressing the help icon in the app.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
+    
+
+<p>A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+Got to tutorials -&gt; Feature Viewer</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

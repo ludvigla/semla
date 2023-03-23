@@ -10,7 +10,7 @@ h3  {
 }
 h4  {
   font-size: smaller;
-  font-weight: bold;
+  font-family: monospace;
 }
 p {
   margin-top: 1em;

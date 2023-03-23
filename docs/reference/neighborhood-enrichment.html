@@ -42,7 +42,6 @@ by chance."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -177,7 +176,8 @@ and the z-score (<code>z_score</code>).</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Read data</span></span></span>
 <span class="r-in"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>,</span></span>
@@ -192,84 +192,15 @@ and the z-score (<code>z_score</code>).</p>
 <span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html" class="external-link">FindNeighbors</a></span><span class="op">(</span>reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html" class="external-link">FindClusters</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  Nrgn, Olfm1, Cck, Nptxr, Rtn1, Snca, Nov, Tmsb4x, Lamp5, Egr1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Crym, Cpne6, Coro1a, Arc, Hpca, Sst, Nr4a1, Npy, Chgb, Neurod6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Snap25, Myh7, Uchl1, Eef1a2, Cort, Grp, Stmn2, Rprm, Spink8, Mfge8 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Negative:  Mbp, Plp1, Apod, Mobp, Ptgds, Mog, Mal, Mag, Cnp, Aldh1a1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Opalin, Tcf7l2, Ddc, Lhx1os, Slc6a3, Ret, Th, Slc18a2, Sncg, Drd2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Chrna6, Slc10a4, Spp1, En1, Dlk1, Calb2, Hbb-bs, Pvalb, Col1a2, Tnnt1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  Myoc, Gfap, Col1a2, Fmod, Slc13a4, Hba-a1, Hbb-bt, Slc6a20a, Hba-a2, Hbb-bs </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Acta2, Tagln, Mgp, Ogn, Vtn, H2-Aa, Lyz2, Cd74, Myl9, Dcn </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Myh11, Ptgds, Cytl1, H2-Eb1, Hmgcs2, Clu, Mfge8, Emp1, Npy, Cnn1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Negative:  Th, Uchl1, Slc18a2, En1, Slc10a4, Slc6a3, Chrna6, Stmn2, Ret, Snap25 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Drd2, Dlk1, Ddc, Scg2, Sncg, Eef1a2, Rtn1, Chga, Pcp4, Calb2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Mobp, Mbp, Chgb, Fabp5, Plp1, Pvalb, Mog, Mal, Mag, Snca </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 3 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  Trbc2, Arc, Egr1, Myl4, Nr4a1, Mbp, Mobp, Pvalb, Plp1, Opalin </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Mog, Mal, Cnp, Mag, Snap25, Lamp5, Ighm, Tcf7l2, Cplx3, Tgm3 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Ighg2c, Pcp4, Hpca, Ly6d, Eef1a2, Tnnt1, Chga, Neurod6, Prph, Ctgf </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Negative:  Nnat, Slc18a2, Dlk1, Slc6a3, Slc10a4, En1, Th, Chrna6, Dcn, Sncg </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Cpne7, Drd2, Ddc, Ret, Hpcal1, Ecel1, Cpne6, Col1a2, Trh, Calb2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Cd24a, Fmod, Mgp, Snca, Lypd1, Slc13a4, Fibcd1, Crym, Spink8, Slc6a20a </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 4 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  Nr4a1, Arc, Lamp5, Egr1, Myl4, Trbc2, Chrna6, Tagln, En1, Snap25 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Th, Slc18a2, Acta2, Col1a2, Myh11, Fmod, Hba-a2, Slc10a4, Slc6a3, Slc13a4 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Ret, Tgm3, Hbb-bt, Slc6a20a, Ighm, Hbb-bs, Hba-a1, Vtn, Mgp, Drd2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Negative:  Spink8, Fibcd1, Tmsb4x, Nnat, Lefty1, Crym, Cpne7, Nos1, Dcn, Cpne6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Grp, Homer3, Htr3a, Tac1, Fabp5, C1ql2, Trh, Opalin, Mog, Plp1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Mag, Calb2, Ecel1, Gfap, Cnp, Tcf7l2, Lypd1, Vgll3, Hpcal1, Mal </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 5 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  En1, Chrna6, Th, Slc18a2, Slc10a4, Ddc, Lefty1, Arc, Slc6a3, Neurod6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Grp, Nov, Lamp5, Fibcd1, Nr4a1, Drd2, Spink8, Vip, Myl4, Ret </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Egr1, Dlk1, Nrgn, Gfap, Trbc2, Tgm3, Myh7, Tac2, Sncg, Npy </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Negative:  Pcp4, Tcf7l2, Snap25, Uchl1, Eef1a2, Chga, Stmn2, Lhx1os, Calb2, Scg2 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   Fabp5, Bok, Prkcd, Pvalb, Cartpt, Chgb, Tnnt1, Gpx3, Slc20a1, Rtn1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 	   C1ql2, Spp1, Hpcal1, Ptgds, Pitx2, Lypd1, Aldh1a1, Ecel1, Vtn, Nme7 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing nearest neighbor graph</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing SNN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of nodes: 2560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of edges: 107827</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Running Louvain algorithm...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maximum modularity in 10 random starts: 0.8228</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of communities: 12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Elapsed time: 0 seconds</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run Neigborhood Enrichment Analysis</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">RunNeighborhoodEnrichmentTest</span><span class="op">(</span>object <span class="op">=</span> <span class="va">se</span>,</span></span>
 <span class="r-in"><span>                                     column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>,</span></span>
 <span class="r-in"><span>                                     n_permutations <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>                                     nCores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Running Neighborhood Enrichment Analysis</span> ──</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Generating neighborhood adjacency data from observed labels in column 'seurat_clusters'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Observed label adjacency calculations complete</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Generating neighborhood adjacency data from randomized labels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Randomized label adjacency calculations complete from 100 iterations</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Scores calculated for each label pair and returned as output tibble</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">z_score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 132 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    label_1 label_2 label_label     edges perm_mean perm_sd z_score</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> Label_0 Label_1 Label_0-Label_1     1      403.    18.2   -<span style="color: #BB0000;">22.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> Label_1 Label_0 Label_1-Label_0     1      403.    18.2   -<span style="color: #BB0000;">22.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> Label_0 Label_4 Label_0-Label_4     4      292.    14.0   -<span style="color: #BB0000;">20.6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> Label_4 Label_0 Label_4-Label_0     4      292.    14.0   -<span style="color: #BB0000;">20.6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> Label_0 Label_2 Label_0-Label_2     2      367.    18.3   -<span style="color: #BB0000;">20.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> Label_2 Label_0 Label_2-Label_0     2      367.    18.3   -<span style="color: #BB0000;">20.0</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> Label_0 Label_3 Label_0-Label_3    13      344.    19.1   -<span style="color: #BB0000;">17.4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Label_3 Label_0 Label_3-Label_0    13      344.    19.1   -<span style="color: #BB0000;">17.4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Label_1 Label_3 Label_1-Label_3    41      294.    15.3   -<span style="color: #BB0000;">16.5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Label_3 Label_1 Label_3-Label_1    41      294.    15.3   -<span style="color: #BB0000;">16.5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 122 more rows</span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

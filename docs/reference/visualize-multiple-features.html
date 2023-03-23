@@ -44,7 +44,6 @@ more than 3 features. See details below for more information."><!-- mathjax --><
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -101,6 +100,7 @@ more than 3 features. See details below for more information.</p>
 <span><span class="co"># S3 method for default</span></span>
 <span><span class="fu">MapMultipleFeatures</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
+<span>  <span class="va">dims</span>,</span>
 <span>  scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shared"</span>, <span class="st">"free"</span><span class="op">)</span>,</span>
 <span>  crop_area <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pt_size <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -109,7 +109,6 @@ more than 3 features. See details below for more information.</p>
 <span>  label_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  dims <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  coords_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span><span class="op">)</span>,</span>
 <span>  return_plot_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  drop_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -149,6 +148,12 @@ more than 3 features. See details below for more information.</p>
 
 <dt>...</dt>
 <dd><p>Arguments passed to other methods</p></dd>
+
+
+<dt>dims</dt>
+<dd><p>A tibble with information about the tissue sections. This information is used to
+determine the limits of the plot area. If <code>dims</code> is not provided, the limits will be
+computed directly from the spatial coordinates provided in <code>object</code>.</p></dd>
 
 
 <dt>scale</dt>
@@ -198,20 +203,14 @@ data. Some useful palettes are available in the <code>RColorBrewer</code>, <code
 <code>scico</code> R packages.</p></dd>
 
 
-<dt>dims</dt>
-<dd><p>A tibble with information about the tissue sections. This information is used to
-determine the limits of the plot area. If <code>dims</code> is not provided, the limits will be
-computed directly from the spatial coordinates provided in <code>object</code>.</p></dd>
-
-
 <dt>coords_columns</dt>
 <dd><p>a character vector of length 2 specifying the names of the columns in
 <code>object</code> holding the spatial coordinates</p></dd>
 
 
 <dt>return_plot_list</dt>
-<dd><p>A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
-By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
+<dd><p>A logical specifying if a <code>patchwork</code> or a list of <code>ggplot</code> objects should be returned.
+By default, a <code>patchwork</code> is returned, but it can sometimes be useful to obtain the list of <code>ggplot</code> objects
 if you want to manipulate each sub plot independently.</p></dd>
 
 
@@ -259,7 +258,7 @@ These arguments can be useful to make sure that the color map doesn't get domina
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A patchwork object</p>
+<p>A <code>patchwork</code> object</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -316,6 +315,28 @@ of features that are expressed in different regions. It is best to map such feat
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, <span class="st">"se_mbrain"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Map multiple features with non-overlapping expression patterns</span></span></span>
+<span class="r-in"><span><span class="va">selected_features</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Prkcd"</span>, <span class="st">"Dsp"</span>, <span class="st">"Trh"</span>, </span></span>
+<span class="r-in"><span>                        <span class="st">"Calb2"</span>, <span class="st">"Pitx2"</span>, <span class="st">"Arc"</span>, <span class="st">"Spink8"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Construct tibble with coordinates and feature values</span></span></span>
+<span class="r-in"><span><span class="va">data_use</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">@</span><span class="va">meta_data</span>, </span></span>
+<span class="r-in"><span>                      <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, vars <span class="op">=</span> <span class="va">selected_features</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Construct a dims tibble</span></span></span>
+<span class="r-in"><span><span class="va">dims</span> <span class="op">&lt;-</span> <span class="fu"><a href="GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">@</span><span class="va">image_info</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Composite plot</span></span></span>
+<span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">data_use</span>, dims <span class="op">=</span> <span class="va">dims</span>, pt_size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">&amp;</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: ggnewscale</span>
+<span class="r-plt img"><img src="visualize-multiple-features-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load example Visium data</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>,</span></span>
 <span class="r-in"><span>                                 <span class="st">"se_mbrain"</span>,</span></span>
@@ -326,27 +347,26 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Map selected features</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">sel_features</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-multiple-features-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summarize in one plot</span></span></span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>,</span></span>
 <span class="r-in"><span>                    features <span class="op">=</span> <span class="va">sel_features</span>,</span></span>
 <span class="r-in"><span>                    pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: ggnewscale</span>
-<span class="r-plt img"><img src="visualize-multiple-features-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-multiple-features-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot with H&amp;E image</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFJGwBj/temp_libpath502354c29e9d/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmpkteoym/temp_libpath132a42121fd41/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span></span>
 <span class="r-in"><span>                    features <span class="op">=</span> <span class="va">sel_features</span>,</span></span>
 <span class="r-in"><span>                    pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-multiple-features-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

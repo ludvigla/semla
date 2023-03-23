@@ -42,7 +42,6 @@ will be plotted individually and arranged into a grid of subplots."><!-- mathjax
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -250,8 +249,8 @@ computed directly from the spatial coordinates provided in <code>object</code>.<
 
 
 <dt>return_plot_list</dt>
-<dd><p>A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
-By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
+<dd><p>A logical specifying if a <code>patchwork</code> or a list of <code>ggplot</code> objects should be returned.
+By default, a <code>patchwork</code> is returned, but it can sometimes be useful to obtain the list of <code>ggplot</code> objects
 if you want to manipulate each sub plot independently.</p></dd>
 
 
@@ -378,6 +377,7 @@ first feature is "red", the second is "green" and the last feature is "blue".</p
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: viridisLite</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load example Visium data</span></span></span>

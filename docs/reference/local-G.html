@@ -48,7 +48,6 @@ NB: This function only calculates G, not G star."><!-- mathjax --><script src="h
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/scalebar.html">Scalebar</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -208,7 +207,7 @@ prefixed with "Gi" and p-values are prefixed with one of "Pr(z &lt;!=",
 <ul><li><p>Ord, J. K. and Getis, A. 1995 Local spatial autocorrelation statistics:
 distributional issues and an application. Geographical Analysis, 27, 286–306</p></li>
 <li><p>Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators
-of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-x">DOI link</a></p></li>
+of spatial association. TEST, 27(3), 716–748 <a href="https://doi.org/10.1007/s11749-018-0599-x" class="external-link">doi:10.1007/s11749-018-0599-x</a></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -232,12 +231,12 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: viridisLite</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># read coordinates</span></span></span>
 <span class="r-in"><span><span class="va">coordfile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain/spatial"</span>,</span></span>
@@ -261,32 +260,10 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span><span class="va">featureMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">feature_matrix</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mgp"</span>, <span class="st">"Th"</span>, <span class="st">"Nrgn"</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">featureMat</span> <span class="op">&lt;-</span> <span class="va">featureMat</span><span class="op">[</span><span class="va">coords</span><span class="op">$</span><span class="va">barcode</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">featureMat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    Mgp Th Nrgn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CATACAAAGCCGAACC-1   0  0   19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> CTGAGCAAGTAACAAG-1   0  0  309</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GGGTACCCACGGTCCT-1   0  0  108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ACGGAATTTAGCAAAT-1   0  0  246</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GGGCGGTCCTATTGTC-1   0  0  190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ATGTTACGAGCAATAC-1   0  0  130</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate G scores</span></span></span>
 <span class="r-in"><span><span class="va">g_scores</span> <span class="op">&lt;-</span> <span class="fu">RunLocalG</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log1p</a></span><span class="op">(</span><span class="va">featureMat</span><span class="op">)</span>, <span class="va">spatnet</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Setting alternative hypothesis to 'two.sided'</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Calculating local G scores for 2559 spots in sample 1</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Calculating p-values for local G scores, MH-adjusted within each feature</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> G scores will be named Gi[Ftr] and adjusted p-values will be named Pr(z != E(Gi[Ftr]))</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">g_scores</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   barcode            `Gi[Mgp]` Pr(z != E(Gi[Mg…¹ Gi[Th…² Pr(z …³ Gi[Nr…⁴ Pr(z …⁵</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> CATACAAAGCCGAACC-1    -<span style="color: #BB0000;">0.893</span>             0.757  -<span style="color: #BB0000;">0.377</span>   0.894   0.804  0.509 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> CTGAGCAAGTAACAAG-1    -<span style="color: #BB0000;">0.711</span>             0.757  -<span style="color: #BB0000;">0.533</span>   0.812   2.40   0.052<span style="text-decoration: underline;">2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> GGGTACCCACGGTCCT-1    -<span style="color: #BB0000;">1.09</span>              0.608  -<span style="color: #BB0000;">0.462</span>   0.856   2.52   0.041<span style="text-decoration: underline;">3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ACGGAATTTAGCAAAT-1    -<span style="color: #BB0000;">0.645</span>             0.757  -<span style="color: #BB0000;">0.654</span>   0.759   2.78   0.024<span style="text-decoration: underline;">7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> GGGCGGTCCTATTGTC-1    -<span style="color: #BB0000;">1.26</span>              0.608  -<span style="color: #BB0000;">0.533</span>   0.812   2.40   0.051<span style="text-decoration: underline;">7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> ATGTTACGAGCAATAC-1    -<span style="color: #BB0000;">1.10</span>              0.608  -<span style="color: #BB0000;">0.654</span>   0.759   2.65   0.032<span style="text-decoration: underline;">2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​`Pr(z != E(Gi[Mgp]))`, ²​`Gi[Th]`,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​`Pr(z != E(Gi[Th]))`, ⁴​`Gi[Nrgn]`, ⁵​`Pr(z != E(Gi[Nrgn]))`</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bind results with coords for plotting</span></span></span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">coords</span> <span class="op">|&gt;</span></span></span>
@@ -305,7 +282,7 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_colour_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span></span></span>
-<span class="r-plt img"><img src="local-G-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
@@ -333,7 +310,7 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot G scores</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="st">"Gi[Th]"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="local-G-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="local-G-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># high/low clustering</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span></span></span>
@@ -342,7 +319,7 @@ of spatial association. TEST, 27(3), 716–748 <a href="10.1007/s11749-018-0599-
 <span class="r-in"><span>    <span class="va">`Pr(z &gt; E(Gi[Th]))`</span> <span class="op">&lt;=</span> <span class="fl">0.05</span> <span class="op">&amp;</span> <span class="va">`Gi[Th]`</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">~</span> <span class="st">"High"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="visualize-labels.html">MapLabels</a></span><span class="op">(</span><span class="va">se_mbrain</span>, column_name <span class="op">=</span> <span class="st">"cluster"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="local-G-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="local-G-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
