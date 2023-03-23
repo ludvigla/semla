@@ -7,7 +7,7 @@
 ImageTransform(im, angle = 0, xy_offset = c(0, 0), scalefactor = 1)
 }
 \arguments{
-\item{im}{An image of class `magick-image`}
+\item{im}{An image of class \code{magick-image}}
 
 \item{angle}{An integer value specifying the rotation angle [-360, 360]}
 
@@ -17,14 +17,14 @@ the x- and y-axis given as pixels. These values should not exceed the image dime
 \item{scalefactor}{A numeric value specifying a scaling factor between [0, 3]}
 }
 \value{
-An object of class `magick-image`
+An object of class \code{magick-image}
 }
 \description{
-This function takes an `magick-image` object as input and applies translations
+This function takes an \code{magick-image} object as input and applies translations
 defined by the \code{angle} and \code{xy_offset} arguments. The output image dimensions
 will remain the same as the input image dimensions, meaning that the transformation might
-result in cropping the image. If you don't want this behavior, you should use `image_rotate`
-from the `magick` R package instead.
+result in cropping the image. If you don't want this behavior, you should use \code{image_rotate}
+from the \code{magick} R package instead.
 }
 \examples{
 

@@ -1,10 +1,10 @@
 #' Tile an H&E image
 #'
-#' This function takes an image of class `magick-image` and create a tile
+#' This function takes an image of class \code{magick-image} and create a tile
 #' map. The size of each tile is 256x256 pixels and the number of zoom levels
 #' are determined from the automatically.
 #'
-#' @param im An image of class `magick-image`
+#' @param im An image of class \code{magick-image}
 #' @param sampleID The section number to use. This number will be appended to the output files names
 #' @param outpath A string specifying an output directory to save the tiled image in.
 #' If this is not provided, a temporary directory will be created
@@ -23,7 +23,7 @@
 #'
 #' @author Ludvig Larsson
 #'
-#' @return Path to tiles
+#' @return A character vector with the tile path
 #'
 #' @examples
 #' \dontrun{

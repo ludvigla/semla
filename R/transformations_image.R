@@ -1,11 +1,11 @@
-#' @title Function used to apply translations to an image object of class `magick-image`
+#' @title Apply translations
 #'
-#' @description This function takes an `magick-image` object as input and applies translations
+#' @description This function takes an \code{magick-image} object as input and applies translations
 #'  defined by the \code{xy_offset} argument. The output image dimensions will remain the same
 #'  as the input image dimensions, meaning that the transformation might result in cropping
 #'  the image.
 #'
-#' @param im An image of class `magick-image`
+#' @param im An image of class \code{magick-image}
 #' @param xy_offset A numeric vector of length 2 providing the offsets along
 #' the x- and y-axis given as pixels. These values should not exceed the image dimensions.
 #'
@@ -13,7 +13,7 @@
 #'
 #' @author Ludvig Larsson
 #'
-#' @return An object of class `magick-image`
+#' @return An object of class \code{magick-image}
 #'
 #' @importFrom magick image_info image_blank image_crop image_append
 #' @importFrom dplyr mutate case_when
@@ -92,13 +92,13 @@ ImageTranslate <- function (
 
 #' @title Apply rotations and translations to an image
 #'
-#' @description This function takes an `magick-image` object as input and applies translations
+#' @description This function takes an \code{magick-image} object as input and applies translations
 #' defined by the \code{angle} and \code{xy_offset} arguments. The output image dimensions
 #' will remain the same as the input image dimensions, meaning that the transformation might
-#' result in cropping the image. If you don't want this behavior, you should use `image_rotate`
-#' from the `magick` R package instead.
+#' result in cropping the image. If you don't want this behavior, you should use \code{image_rotate}
+#' from the \code{magick} R package instead.
 #'
-#' @param im An image of class `magick-image`
+#' @param im An image of class \code{magick-image}
 #' @param angle An integer value specifying the rotation angle [-360, 360]
 #' @param xy_offset A numeric vector of length 2 providing the offsets along
 #' the x- and y-axis given as pixels. These values should not exceed the image dimensions.
@@ -113,7 +113,7 @@ ImageTranslate <- function (
 #' @import rlang
 #' @import glue
 #'
-#' @return An object of class `magick-image`
+#' @return An object of class \code{magick-image}
 #'
 #' @examples
 #'

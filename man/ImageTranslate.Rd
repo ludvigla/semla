@@ -2,21 +2,21 @@
 % Please edit documentation in R/transformations_image.R
 \name{ImageTranslate}
 \alias{ImageTranslate}
-\title{Function used to apply translations to an image object of class `magick-image`}
+\title{Apply translations}
 \usage{
 ImageTranslate(im, xy_offset = NULL)
 }
 \arguments{
-\item{im}{An image of class `magick-image`}
+\item{im}{An image of class \code{magick-image}}
 
 \item{xy_offset}{A numeric vector of length 2 providing the offsets along
 the x- and y-axis given as pixels. These values should not exceed the image dimensions.}
 }
 \value{
-An object of class `magick-image`
+An object of class \code{magick-image}
 }
 \description{
-This function takes an `magick-image` object as input and applies translations
+This function takes an \code{magick-image} object as input and applies translations
  defined by the \code{xy_offset} argument. The output image dimensions will remain the same
  as the input image dimensions, meaning that the transformation might result in cropping
  the image.

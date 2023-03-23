@@ -17,7 +17,7 @@ CoordAndImageTransform(
 )
 }
 \arguments{
-\item{im}{Image of class `magick-image`, `StoredSpatialImage`, `raster` or a
+\item{im}{Image of class \code{magick-image}, \code{StoredSpatialImage}, \code{raster} or a
 path to an external image file.}
 
 \item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.}
@@ -44,8 +44,8 @@ the spots are matched with the image.}
 \value{
 A list with two elements:
 \itemize{
-  \item{"im_transf": An object of class `magick-image` representing the transformed image}
-  \item{"xy_transf": An object of class `tbl` representing the transformed coordinates}
+  \item{"im_transf": An object of class \code{magick-image} representing the transformed image}
+  \item{"xy_transf": An object of class \code{tbl} representing the transformed coordinates}
 }
 }
 \description{

@@ -3,7 +3,7 @@
 NULL
 #' Mirror coordinates
 #'
-#' @details The coordinate system for `xy_coords` should match the dimensions of the
+#' @details The coordinate system for \code{xy_coords} should match the dimensions of the
 #' image. In other words, the coordinates should map spots to the tissue section on H&E image.
 #' A 3x3 transformation matrix is constructed by combining the following matrices:
 #'
@@ -50,7 +50,7 @@ NULL
 #'
 #' \eqn{xy_{out} = T_{final}*xy_{in}}
 #'
-#' @param xy_coords A `matrix`, `data.frame` or `tibble` object with numeric x, y coordinates.
+#' @param xy_coords A \code{matrix}, \code{data.frame} or \code{tbl} object with numeric x, y coordinates.
 #' @param mirror.x,mirror.y Logical specifying whether the coordinates should be reflected along
 #' the x-axis, y-axis or both.
 #' @param center Optional point (x, y) specifying the center of reflection.
@@ -61,7 +61,7 @@ NULL
 #'
 #' @author Ludvig Larsson
 #'
-#' @return A `tbl` object with transformed coordinates
+#' @return A \code{tbl} object with transformed coordinates
 #'
 #' @examples
 #' library(ggplot2)
@@ -189,7 +189,7 @@ CoordMirror <- function (
 #'
 #' The scaling is handled separated after the translations and rotations.
 #'
-#' @param xy_coords A `matrix`, `data.frame` or `tibble` object with numeric x, y coordinates.
+#' @param xy_coords A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.
 #' @param angle Numeric value specifying the degree of rotation. Use negative angles
 #' for counter-clockwise rotation. The value needs to be in the range (-360, 360)
 #' @param center Optional point (x, y) specifying the center of rotation.
@@ -203,7 +203,7 @@ CoordMirror <- function (
 #'
 #' @author Ludvig Larsson
 #'
-#' @return A `tbl` object with transformed coordinates
+#' @return A \code{tbl} object with transformed coordinates
 #'
 #' @examples
 #' # Create a data.frame with x, y coordinates
@@ -302,7 +302,7 @@ CoordTransform <- function (
 #'
 #' @param mirror_x,mirror_y Logical specifying if the image and spots should be mirrored
 #' along the x- and/or y-axis
-#' @param im Image of class `magick-image`, `StoredSpatialImage`, `raster` or a
+#' @param im Image of class \code{magick-image}, \code{StoredSpatialImage}, \code{raster} or a
 #' path to an external image file.
 #' @param imcenter A numeric vector of length 2 specifying the image center. Not required
 #' if the spot coordinates are already aligned to the H&E image.
@@ -324,8 +324,8 @@ CoordTransform <- function (
 #'
 #' @return A list with two elements:
 #' \itemize{
-#'   \item{"im_transf": An object of class `magick-image` representing the transformed image}
-#'   \item{"xy_transf": An object of class `tbl` representing the transformed coordinates}
+#'   \item{"im_transf": An object of class \code{magick-image} representing the transformed image}
+#'   \item{"xy_transf": An object of class \code{tbl} representing the transformed coordinates}
 #' }
 #'
 #' @examples

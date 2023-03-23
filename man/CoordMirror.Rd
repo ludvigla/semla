@@ -7,7 +7,7 @@
 CoordMirror(xy_coords, mirror.x = FALSE, mirror.y = FALSE, center = NULL)
 }
 \arguments{
-\item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tibble} object with numeric x, y coordinates.}
+\item{xy_coords}{A \code{matrix}, \code{data.frame} or \code{tbl} object with numeric x, y coordinates.}
 
 \item{mirror.x, mirror.y}{Logical specifying whether the coordinates should be reflected along
 the x-axis, y-axis or both.}

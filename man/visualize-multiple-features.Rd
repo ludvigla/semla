@@ -11,6 +11,7 @@ MapMultipleFeatures(object, ...)
 
 \method{MapMultipleFeatures}{default}(
   object,
+  dims,
   scale = c("shared", "free"),
   crop_area = NULL,
   pt_size = 1,
@@ -19,7 +20,6 @@ MapMultipleFeatures(object, ...)
   label_by = NULL,
   ncol = NULL,
   colors = NULL,
-  dims = NULL,
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
   drop_na = FALSE,
@@ -54,6 +54,10 @@ MapMultipleFeatures(object, ...)
 
 \item{...}{Arguments passed to other methods}
 
+\item{dims}{A tibble with information about the tissue sections. This information is used to
+determine the limits of the plot area. If \code{dims} is not provided, the limits will be
+computed directly from the spatial coordinates provided in \code{object}.}
+
 \item{scale}{A string specifying a scaling mode. See details below}
 
 \item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
@@ -84,10 +88,6 @@ Otherwise, the patchwork will be arranged based on the \code{arrange_features} p
 preferably consist of a set of colors from a scientific color palette designed for sequential
 data. Some useful palettes are available in the \code{RColorBrewer}, \code{viridis} and
 \code{scico} R packages.}
-
-\item{dims}{A tibble with information about the tissue sections. This information is used to
-determine the limits of the plot area. If \code{dims} is not provided, the limits will be
-computed directly from the spatial coordinates provided in \code{object}.}
 
 \item{coords_columns}{a character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
@@ -121,7 +121,7 @@ area, which will create a lot of white space in the plots.}
 These arguments can be useful to make sure that the color map doesn't get dominated by outliers.}
 }
 \value{
-A patchwork object
+A \code{patchwork} object
 }
 \description{
 \code{MapMultipleFeatures} can be used to map multiple numeric feature on the
@@ -159,6 +159,26 @@ of features that are expressed in different regions. It is best to map such feat
 \code{\link{MapFeatures}} first, before attempting to summarize them in one plot.
 }
 \examples{
+
+library(semla)
+
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+
+# Map multiple features with non-overlapping expression patterns
+selected_features <-  c("Th", "Prkcd", "Dsp", "Trh", 
+                        "Calb2", "Pitx2", "Arc", "Spink8")
+
+# Construct tibble with coordinates and feature values
+data_use <- bind_cols(GetStaffli(se_mbrain)@meta_data, 
+                      FetchData(se_mbrain, vars = selected_features))
+
+# Construct a dims tibble
+dims <- GetStaffli(se_mbrain)@image_info
+
+# Composite plot
+MapMultipleFeatures(data_use, dims = dims, pt_size = 1.5) & 
+  theme(plot.title = element_blank())
+
 
 library(semla)
 

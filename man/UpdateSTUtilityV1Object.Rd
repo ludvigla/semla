@@ -2,25 +2,31 @@
 % Please edit documentation in R/update_stutilityv1_object.R
 \name{UpdateSTUtilityV1Object}
 \alias{UpdateSTUtilityV1Object}
-\title{Update an STUtility v1 object to work with `semla`}
+\title{Update an STUtility v1 object to work with \code{semla}}
 \usage{
 UpdateSTUtilityV1Object(object, verbose = TRUE)
 }
 \arguments{
-\item{object}{A `Seurat` object created with STUtility v1}
+\item{object}{A \code{Seurat} object created with \code{STUtility} v1}
 
 \item{verbose}{Print messages}
 }
 \value{
-A `Seurat` object compatible with semla
+A \code{Seurat} object compatible with \code{semla}
 }
 \description{
-Some features will no longer be available when updating an STUtility v1 object.
-STUtility v1 objects do not store information about scaling factors to convert
+Some features will no longer be available when updating an \code{STUtility} v1 object.
+\code{STUtility} v1 objects do not store information about scaling factors to convert
 between pixels and real distances which will set limitations on some of the
 visualization methods and spatial functions. To mitigate these issues, you can
 either reload the data from the raw space ranger output files or manually add
 the missing information stored in the "scalefactors_json.json" files.
+}
+\examples{
+
+# Convert an old object
+# se_new <- UpdateSTUtilityV1Object(se_old)
+
 }
 \author{
 Ludvig Larsson

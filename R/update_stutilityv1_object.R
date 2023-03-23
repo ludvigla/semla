@@ -1,16 +1,16 @@
-#' Update an STUtility v1 object to work with `semla`
+#' Update an STUtility v1 object to work with \code{semla}
 #'
-#' Some features will no longer be available when updating an STUtility v1 object.
-#' STUtility v1 objects do not store information about scaling factors to convert
+#' Some features will no longer be available when updating an \code{STUtility} v1 object.
+#' \code{STUtility} v1 objects do not store information about scaling factors to convert
 #' between pixels and real distances which will set limitations on some of the
 #' visualization methods and spatial functions. To mitigate these issues, you can
 #' either reload the data from the raw space ranger output files or manually add
 #' the missing information stored in the "scalefactors_json.json" files.
 #'
-#' @param object A `Seurat` object created with STUtility v1
+#' @param object A \code{Seurat} object created with \code{STUtility} v1
 #' @param verbose Print messages
 #'
-#' @return A `Seurat` object compatible with semla
+#' @return A \code{Seurat} object compatible with \code{semla}
 #'
 #' @author Ludvig Larsson
 #'
@@ -18,6 +18,11 @@
 #' @import glue
 #' @import dplyr
 #' @importFrom tibble as_tibble
+#' 
+#' @examples 
+#' 
+#' # Convert an old object
+#' # se_new <- UpdateSTUtilityV1Object(se_old)
 #'
 #' @export
 UpdateSTUtilityV1Object <- function (

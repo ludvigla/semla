@@ -20,23 +20,25 @@ FeatureViewer(
 )
 }
 \arguments{
-\item{object}{A \code{Seurat} object}
+\item{object}{A \code{Seurat} object created with \code{semla}}
 
 \item{slot}{A slot to use for Assay data}
 
-\item{datadir}{A directory spatial data and image tiles}
+\item{datadir}{A directory containing spatial data and image tiles (see \code{\link{ExportDataForViewer}})}
 
-\item{selected_features}{A character vector of features to select for viewer}
+\item{selected_features}{A character vector of features to select for the viewer}
 
-\item{sampleIDs}{An integer vector of section IDs to use for the viewer. All sections
-will be used by default.}
+\item{sampleIDs}{An integer vector of section IDs to use include in the viewer. All sections
+will be used by default. Note that if you have exported the data with \code{\link{ExportDataForViewer}},
+you need to make sure that the sampleIDs for \code{FeatureViewers} matches the sampleIDs
+used for \code{\link{ExportDataForViewer}}.}
 
 \item{host}{A string with a valid IPv4 or IPv6 address to listen on,
 Defaults to localhost "127.0.0.1"}
 
 \item{port}{An integer that indicates the port to listen on.}
 
-\item{custom_color_palettes}{A names list of color vectors to use as custom color palettes}
+\item{custom_color_palettes}{A named list of color vectors to use as custom color palettes}
 
 \item{categorical_colors}{A named list of character vectors with color names. The name of
 each character vector should correspond to a categorical variable in the meta.data slot of the
@@ -48,7 +50,7 @@ label of the category.}
 \item{verbose}{Print messages}
 }
 \value{
-A \code{Seurat} object
+A \code{Seurat} object created with \code{semla}
 }
 \description{
 \code{FeatureViewer} opens up an interactive shiny application where
@@ -65,6 +67,12 @@ data directory with \code{datadir} (see \code{\link{ExportDataForViewer}}).
 A more detailed tutorial can be found on the \code{semla} website. You can also
 get more detailed instructions by pressing the help icon in the app.
 }
+\section{Examples}{
+
+A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+Got to tutorials -> Feature Viewer
+}
+
 \seealso{
 \code{\link{TileImage}},\code{\link{export_coordinates}}
 

@@ -35,12 +35,34 @@ NULL
 #'
 #' @author Ludvig Larsson
 #'
-#' @return A patchwork object
+#' @return A \code{patchwork} object
+#' 
+#' @examples
+#' 
+#' library(semla)
+#' 
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+#' 
+#' # Map multiple features with non-overlapping expression patterns
+#' selected_features <-  c("Th", "Prkcd", "Dsp", "Trh", 
+#'                         "Calb2", "Pitx2", "Arc", "Spink8")
+#' 
+#' # Construct tibble with coordinates and feature values
+#' data_use <- bind_cols(GetStaffli(se_mbrain)@meta_data, 
+#'                       FetchData(se_mbrain, vars = selected_features))
+#' 
+#' # Construct a dims tibble
+#' dims <- GetStaffli(se_mbrain)@image_info
+#' 
+#' # Composite plot
+#' MapMultipleFeatures(data_use, dims = dims, pt_size = 1.5) & 
+#'   theme(plot.title = element_blank())
 #'
 #' @export
 #'
 MapMultipleFeatures.default <- function (
     object,
+    dims,
     scale = c("shared", "free"),
     crop_area = NULL,
     pt_size = 1,
@@ -49,7 +71,6 @@ MapMultipleFeatures.default <- function (
     label_by = NULL,
     ncol = NULL,
     colors = NULL,
-    dims = NULL,
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
     drop_na = FALSE,
@@ -325,6 +346,7 @@ MapMultipleFeatures.Seurat <- function (
   # generate plots
   wrapped_plots <- MapMultipleFeatures(
     object = data_use,
+    dims = dims,
     scale = scale,
     crop_area = crop_area,
     pt_size = pt_size,
@@ -333,7 +355,6 @@ MapMultipleFeatures.Seurat <- function (
     label_by = label_by,
     ncol = ncol,
     colors = colors,
-    dims = dims,
     coords_columns = coords_columns,
     return_plot_list = (!is.null(image_use)) | return_plot_list,
     add_colorscale_text = add_colorscale_text
@@ -358,7 +379,7 @@ MapMultipleFeatures.Seurat <- function (
 #'
 #' @param gg tibble with spatial coordinates and feature values
 #' @param nm sample ID
-#' @param features A caharcter vector with feature IDs
+#' @param features A character vector with feature IDs
 #' @param colors a character vector of colors to use for scale bar
 #' @param dims tibble containing information about the dimensions
 #' of the plotting area
@@ -373,7 +394,7 @@ MapMultipleFeatures.Seurat <- function (
 #' @import ggplot2
 #' @import dplyr
 #'
-#' @return a `ggplot` object with a spatial plot
+#' @return A \code{ggplot} object with a spatial plot
 #'
 #' @noRd
 .spatial_feature_plot_multiple <- function (

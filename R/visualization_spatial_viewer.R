@@ -18,14 +18,20 @@ NULL
 #'
 #' A more detailed tutorial can be found on the \code{semla} website. You can also
 #' get more detailed instructions by pressing the help icon in the app.
+#' 
+#' @section Examples:
+#' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+#' Got to tutorials -> Feature Viewer
 #'
-#' @param object A \code{Seurat} object
+#' @param object A \code{Seurat} object created with \code{semla}
 #' @param slot A slot to use for Assay data
-#' @param datadir A directory spatial data and image tiles
-#' @param selected_features A character vector of features to select for viewer
-#' @param sampleIDs An integer vector of section IDs to use for the viewer. All sections
-#' will be used by default.
-#' @param custom_color_palettes A names list of color vectors to use as custom color palettes
+#' @param datadir A directory containing spatial data and image tiles (see \code{\link{ExportDataForViewer}})
+#' @param selected_features A character vector of features to select for the viewer
+#' @param sampleIDs An integer vector of section IDs to use include in the viewer. All sections
+#' will be used by default. Note that if you have exported the data with \code{\link{ExportDataForViewer}},
+#' you need to make sure that the sampleIDs for \code{FeatureViewers} matches the sampleIDs
+#' used for \code{\link{ExportDataForViewer}}.
+#' @param custom_color_palettes A named list of color vectors to use as custom color palettes
 #' @param categorical_colors A named list of character vectors with color names. The name of
 #' each character vector should correspond to a categorical variable in the meta.data slot of the
 #' \code{Seurat} object. Each character vector should be named where each name corresponds to a
@@ -35,7 +41,7 @@ NULL
 #'
 #' @family feature-viewer-methods
 #'
-#' @return A \code{Seurat} object
+#' @return A \code{Seurat} object created with \code{semla}
 #'
 #' @author Ludvig Larsson
 #'

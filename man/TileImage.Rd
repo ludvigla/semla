@@ -16,7 +16,7 @@ TileImage(
 )
 }
 \arguments{
-\item{im}{An image of class `magick-image`}
+\item{im}{An image of class \code{magick-image}}
 
 \item{sampleID}{The section number to use. This number will be appended to the output files names}
 
@@ -34,10 +34,10 @@ If this is not provided, a temporary directory will be created}
 \item{verbose}{Print messages}
 }
 \value{
-Path to tiles
+A character vector with the tile path
 }
 \description{
-This function takes an image of class `magick-image` and create a tile
+This function takes an image of class \code{magick-image} and create a tile
 map. The size of each tile is 256x256 pixels and the number of zoom levels
 are determined from the automatically.
 }
