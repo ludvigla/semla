@@ -174,7 +174,7 @@ distributional issues and an application. Geographical Analysis, 27, 286–306
 }
 \item{
 Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators
-of spatial association. TEST, 27(3), 716–748 \href{10.1007/s11749-018-0599-x}{DOI link}
+of spatial association. TEST, 27(3), 716–748 \doi{10.1007/s11749-018-0599-x}
 }
 }
 }

@@ -41,9 +41,9 @@ MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
 
 You can also tweak the appearance and position of the scalebar with `scalebar_gg`, `scalebar_position` and `scalebar_height`.
 
-* `scalebar_gg` allows you to modify the width and breaks of the scalebar. The title of the scalebar will be adjusted from micrometers to millimeters if x > 1000.
-* `scalebar_position` sets the position of the scalebar relative to the entire plot. 
-* `scalebar_height` can be useful to adjust the height of the scalebar to make the text fit. If the scalebar is too small, for instance when plotting many sections at once, increasing the height will make the text appear.
+-   `scalebar_gg` allows you to modify the width and breaks of the scalebar. The title of the scalebar will be adjusted from micrometers to millimeters if x \> 1000.
+-   `scalebar_position` sets the position of the scalebar relative to the entire plot.
+-   `scalebar_height` can be useful to adjust the height of the scalebar to make the text fit. If the scalebar is too small, for instance when plotting many sections at once, increasing the height will make the text appear.
 
 ```{r fig.asp=1, fig.width=5}
 MapLabels(se_mbrain, column_name = "sample_id", pt_size = 1,
@@ -84,7 +84,6 @@ MapFeatures(se_mbrain, features = "Th", pt_size = 5,
             scalebar_position = c(0.7, 0.8), scalebar_height = 0.08,
             add_scalebar = TRUE, scalebar_gg = scalebar(x = 400))
 ```
-
 
 <br>
 

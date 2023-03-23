@@ -244,7 +244,7 @@ DisconnectRegions <- function(object, ...) {
 #'    }
 #'    \item{
 #'    Bivand RS, Wong DWS 2018 Comparing implementations of global and local indicators
-#'    of spatial association. TEST, 27(3), 716–748 [DOI link](10.1007/s11749-018-0599-x)
+#'    of spatial association. TEST, 27(3), 716–748 \doi{10.1007/s11749-018-0599-x}
 #'    }
 #' }
 #' 

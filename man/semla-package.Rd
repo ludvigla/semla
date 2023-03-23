@@ -4,9 +4,9 @@
 \name{semla-package}
 \alias{semla}
 \alias{semla-package}
-\title{semla: Process, analyze and visualize Spatially Resolved Transcriptomics data}
+\title{semla: Tools for Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization}
 \description{
-semla collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
+A toolkit for Spatially Resolved Transcriptomics data exploration and analysis. semla provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
 }
 \seealso{
 Useful links:
