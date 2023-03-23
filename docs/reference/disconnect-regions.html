@@ -7,18 +7,18 @@ dispersed across a tissue section.'><title>Disconnect regions — DisconnectRegi
 belonging to the same category. In cases where a certain tissue type create
 isolated "islands" in the tissue section, these islands can be separated. A
 common example is tertiary lymphoid structures (TLS) which are typically
-dispersed across a tissue section.'><meta property="og:image" content="https://ludvigla.github.io/semla/logo.png"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+dispersed across a tissue section.'><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-inverse navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,8 +60,12 @@ dispersed across a tissue section.'><meta property="og:image" content="https://l
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
+    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -79,7 +83,7 @@ dispersed across a tissue section.'><meta property="og:image" content="https://l
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Disconnect regions</h1>
+      <img src="" class="logo" alt=""><h1>Disconnect regions</h1>
       
       <div class="d-none name"><code>disconnect-regions.Rd</code></div>
     </div>
@@ -103,7 +107,7 @@ dispersed across a tissue section.</p>
 <span><span class="fu">DisconnectRegions</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  <span class="va">column_name</span>,</span>
-<span>  select_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  selected_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -120,7 +124,7 @@ dispersed across a tissue section.</p>
 
 
 <dt>spots</dt>
-<dd><p>A character vector with spot IDs present 'object'</p></dd>
+<dd><p>A character vector with spot IDs present <code>object</code></p></dd>
 
 
 <dt>verbose</dt>
@@ -128,20 +132,26 @@ dispersed across a tissue section.</p>
 
 
 <dt>column_name</dt>
-<dd><p>A character specifying the name of a column in your meta data that contains
-categorical data, e.g. clusters or manual selections</p></dd>
+<dd><p>A character specifying the name of a column in the meta data slot of a `Seurat` 
+object that contains categorical data, e.g. clusters or manual selections</p></dd>
 
 
-<dt>select_groups</dt>
+<dt>selected_groups</dt>
 <dd><p>A character vector to select specific groups in <code>column_name</code> with.
 All groups are selected by default, but the common use case is to select a region of interest.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>An object with disconnected regions</p>
+    </div>
+    <div class="section level2">
     <h2 id="default-method">default method<a class="anchor" aria-label="anchor" href="#default-method"></a></h2>
     
 
-<p>Takes a set of spot IDs and returns a named character vector with new labels.
+<p>Takes a <code>tibble</code> and set of spot IDs and returns a named character vector with new labels.
 The names of this vector corresponds to the input spot IDs.</p>
     </div>
     <div class="section level2">
@@ -150,11 +160,11 @@ The names of this vector corresponds to the input spot IDs.</p>
 
 <p>A categorical variable is selected from the <code>Seurat</code> object meta data
 slot using <code>column_name</code>. From this column, one can specify what groups
-to disconnect with <code>select_groups</code>. If <code>select_groups</code> isn't specified,
-all groups in <code>select_groups</code> will be disconnected separately.
-The function returns a Seurat object with additional columns in the meta data
-slot, one for each group in <code>select_groups</code>. The suffix to these columns is
-"_split", so a group in <code>select_groups</code> called "tissue" will get a column
+to disconnect with <code>selected_groups</code>. If <code>selected_groups</code> isn't specified,
+all groups in <code>selected_groups</code> will be disconnected separately.
+The function returns a <code>Seurat</code> object with additional columns in the meta data
+slot, one for each group in <code>selected_groups</code>. The suffix to these columns is
+"_split", so a group in <code>selected_groups</code> called "tissue" will get a column
 called "tissue_split" with new labels for each spatially disconnected region.</p>
     </div>
     <div class="section level2">
@@ -196,7 +206,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">V2</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">V1</span>, <span class="va">V6</span>, <span class="va">V5</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select spots</span></span></span>
@@ -241,7 +251,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-plt img"><img src="disconnect-regions-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disconnect regions</span></span></span>
-<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, selected_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'GALT'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 106 spots</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 8 disconnected graph(s) in data</span>
@@ -266,7 +276,7 @@ called "tissue_split" with new labels for each spatially disconnected region.</p
 <span class="r-plt img"><img src="disconnect-regions-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disconnect regions</span></span></span>
-<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_merged</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, select_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu">DisconnectRegions</span><span class="op">(</span><span class="va">se_merged</span>, column_name <span class="op">=</span> <span class="st">"selection"</span>, selected_groups <span class="op">=</span> <span class="st">"GALT"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group 'GALT'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 212 spots</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 16 disconnected graph(s) in data</span>

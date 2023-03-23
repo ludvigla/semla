@@ -9,7 +9,7 @@ h3  {
   margin-top: 1em;
 }
 h4  {
-  font-size: calc(0.6rem + .3vw);
+  font-size: smaller;
   font-family: monospace;
 }
 p {
