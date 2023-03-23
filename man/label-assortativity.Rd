@@ -53,6 +53,7 @@ has been scaled towards the network max avg k (\code{k_max}) and thus goes from 
 dispersed) to 1 (fully connected).
 }
 \examples{
+\dontrun{
 library(semla)
 
 # Read data
@@ -76,7 +77,7 @@ res <- RunLabelAssortativityTest(object = se,
                                  nCores = 2)
 
 res |> arrange(desc(avg_k_scaled))
-
+}
 
 }
 \seealso{

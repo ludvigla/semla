@@ -89,6 +89,7 @@ prefixed with "Gi" and p-values are prefixed with one of "Pr(z <!=",
 }
 
 \examples{
+\dontrun{
 library(semla)
 library(tibble)
 library(dplyr)
@@ -139,6 +140,7 @@ p <- p1 + p2 + p3 &
   coord_fixed() &
   scale_colour_gradientn(colours = viridis(n = 9))
 p
+}
 
 
 library(semla)

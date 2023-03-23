@@ -161,6 +161,7 @@ head(spatgenes[[1]])
 # typically only cover a few spots and more randomly dispersed throughput the tissue
 head(VariableFeatures(se_mbrain))
 
+\dontrun{
 # The same principle can be used to estimate spatial autocorrelation for other features,
 # for example dimensionality reduction vectors
 spatpcs <- CorSpatialFeatures(se_mbrain,
@@ -185,6 +186,7 @@ spatgenes <- CorSpatialFeatures(se_merged,
 head(spatgenes[[1]])
 # Check spatial autocorrelation scores mouse colon data
 head(spatgenes[[2]])
+}
 
 }
 \seealso{

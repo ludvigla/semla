@@ -33,6 +33,7 @@ NULL
 #' test.
 #'
 #' @examples
+#' \dontrun{
 #' library(semla)
 #' library(tibble)
 #' library(dplyr)
@@ -83,6 +84,7 @@ NULL
 #'   coord_fixed() &
 #'   scale_colour_gradientn(colours = viridis(n = 9))
 #' p
+#' }
 #'
 #' @export
 #'

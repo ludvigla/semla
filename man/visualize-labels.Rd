@@ -98,8 +98,8 @@ computed directly from the spatial coordinates provided in \code{object}.}
 \code{object} holding the spatial coordinates}
 
 \item{return_plot_list}{logical specifying whether the plots should be return as a list of
-`ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
-into a `patchwork`}
+\code{ggplot} objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
+into a \code{patchwork}}
 
 \item{drop_na}{A logical specifying if NA values should be dropped}
 
@@ -132,7 +132,7 @@ achieved with the \code{crop_area} but the crop area is instead determined direc
 from the data.}
 }
 \value{
-A `patchwork` object or a list of `ggplot` objects
+A \code{patchwork} object or a list of \code{ggplot} objects
 }
 \description{
 \code{MapLabels} colors spots based on the values of a categorical feature.
@@ -165,6 +165,8 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2)
 # Plot clusters in split view
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
           section_number = 1, split_labels = TRUE, ncol = 4)
+          
+\dontrun{
 
 # Combine plots with different labels
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |
@@ -194,6 +196,7 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = 
 cols <- setNames(cols, nm = paste0(0:5))
 cols
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
+}
 
 }
 \seealso{

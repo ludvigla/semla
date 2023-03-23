@@ -82,8 +82,8 @@ achieved with the \code{crop_area} but the crop area is instead determined direc
 from the data.}
 
 \item{return_plot_list}{logical specifying whether the plots should be return as a list of
-`ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
-into a `patchwork`}
+\code{ggplot} objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
+into a \code{patchwork}}
 
 \item{drop_na}{A logical specifying if NA values should be dropped}
 

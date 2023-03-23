@@ -1,4 +1,4 @@
-#' Check if a Seurat object has been processed with `semla` or STUtility
+#' Check if a Seurat object has been processed with \code{semla}
 #'
 #' @param object A Seurat object
 #'

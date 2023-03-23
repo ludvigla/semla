@@ -92,8 +92,8 @@ data. Some useful palettes are available in the \code{RColorBrewer}, \code{virid
 \item{coords_columns}{a character vector of length 2 specifying the names of the columns in
 \code{object} holding the spatial coordinates}
 
-\item{return_plot_list}{A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
-By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
+\item{return_plot_list}{A logical specifying if a \code{patchwork} or a list of \code{ggplot} objects should be returned.
+By default, a \code{patchwork} is returned, but it can sometimes be useful to obtain the list of \code{ggplot} objects
 if you want to manipulate each sub plot independently.}
 
 \item{drop_na}{A logical specifying if NA values should be dropped}

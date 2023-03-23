@@ -44,8 +44,8 @@ NULL
 #' computed directly from the spatial coordinates provided in \code{object}.
 #' @param coords_columns a character vector of length 2 specifying the names of the columns in
 #' \code{object} holding the spatial coordinates
-#' @param return_plot_list A logical specifying if a `patchwork` or a list of `ggplot` objects should be returned.
-#' By default, a `patchwork` is returned, but it can sometimes be useful to obtain the list of `ggplot` objects
+#' @param return_plot_list A logical specifying if a \code{patchwork} or a list of \code{ggplot} objects should be returned.
+#' By default, a \code{patchwork} is returned, but it can sometimes be useful to obtain the list of \code{ggplot} objects
 #' if you want to manipulate each sub plot independently.
 #' @param blend a logical specifying whether blending should be used. See the section about color 
 #' blending below for more information.
@@ -581,8 +581,8 @@ MapFeatures.Seurat <- function (
 #' @param coords_columns A character vector of length 2 specifying the names of the columns in
 #' \code{object} holding the spatial coordinates
 #' @param return_plot_list logical specifying whether the plots should be return as a list of
-#' `ggplot` objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
-#' into a `patchwork`
+#' \code{ggplot} objects. If \code{return_plot_list = FALSE} (default), the plots will be arranged
+#' into a \code{patchwork}
 #' @param drop_na A logical specifying if NA values should be dropped
 #' @param add_scalebar A logical specifying if a scale bar should be added to the plots
 #' @param scalebar_gg A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
@@ -603,7 +603,7 @@ MapFeatures.Seurat <- function (
 #' @rdname visualize-labels
 #' @family spatial-visualization-methods
 #'
-#' @return A `patchwork` object or a list of `ggplot` objects
+#' @return A \code{patchwork} object or a list of \code{ggplot} objects
 #'
 #' @export
 #'
@@ -805,6 +805,8 @@ MapLabels.default <- function (
 #' # Plot clusters in split view
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
 #'           section_number = 1, split_labels = TRUE, ncol = 4)
+#'           
+#' \dontrun{
 #'
 #' # Combine plots with different labels
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |
@@ -834,6 +836,7 @@ MapLabels.default <- function (
 #' cols <- setNames(cols, nm = paste0(0:5))
 #' cols
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2, colors = cols)
+#' }
 #'
 #' @export
 #'
@@ -1721,9 +1724,9 @@ MapLabels.Seurat <- function (
 #' Crop images
 #'
 #' @param crop_area a numeric vector of length 4 specifying a rectangle to crop data by
-#' @param images a list of `raster` objects (images)
+#' @param images a list of \code{raster} objects (images)
 #'
-#' @return a  list of cropped `raster` objects
+#' @return a  list of cropped \code{raster} objects
 #'
 #' @noRd
 .crop_images <- function (
@@ -1749,12 +1752,12 @@ MapLabels.Seurat <- function (
 #'
 #' @param dims tibble specifying original image dimensions
 #' @param crop_area a numeric vector of length 4 specifying a rectangle to crop data by
-#' @param data list of `tibble` objects with spot coordinates
+#' @param data list of \code{tbl} objects with spot coordinates
 #' @param coords_columns character vector specifying column names for spot coordinates
 #'
 #' @import dplyr
 #'
-#' @return a tibble with modified image dimensions \code{dims} and list of `tibble` objects
+#' @return a tibble with modified image dimensions \code{dims} and list of \code{tbl} objects
 #' with cropped spot coordinates
 #'
 #' @noRd
@@ -1793,23 +1796,23 @@ MapLabels.Seurat <- function (
   return(list(dims, data))
 }
 
-#' Inject images to list of `ggplot` objects
+#' Inject images to list of \code{ggplot} objects
 #'
 #' @param image_use string specifying image type to use
 #' @param features a character vector of features names
-#' @param arrange_features a string specifying how the `patchwork` should be arranged
-#' @param wrapped_plots list of `ggplot` objects
-#' @param images list of `raster` images
-#' @param ncol number of columns to arrange plots by to produce a `patchwork`
+#' @param arrange_features a string specifying how the \code{patchwork} should be arranged
+#' @param wrapped_plots list of \code{ggplot} objects
+#' @param images list of \code{raster} images
+#' @param ncol number of columns to arrange plots by to produce a \code{patchwork}
 #' @param return_plot_list logical specifying if the result should be returned
-#' as a `patchwork` or a list of `ggplot` objects
+#' as a \code{patchwork} or a list of \code{ggplot} objects
 #' @param blend logical specifying if blend is activated
 #'
 #' @importFrom patchwork inset_element wrap_plots
 #' @importFrom rlang %||% warn
 #' @importFrom ggplot2 is.ggplot
 #'
-#' @return `patchwork` or a list of `ggplot` objects
+#' @return A \code{patchwork} object or a list of \code{ggplot} objects
 #'
 #' @noRd
 .inject_images <- function (
@@ -1857,13 +1860,13 @@ MapLabels.Seurat <- function (
 
 #' Arrange plots
 #'
-#' @param wrapped_plots A list of `ggplot` objects
+#' @param wrapped_plots A list of \code{ggplot} objects
 #' @param features A character vector of feature names
 #' @param blend A logical specifying if colors are blended or not
 #' @param arrange_features A string specifying how features should
 #' be arranged
 #' @param ncol An integer specifying the number of columns to arrange the
-#' `patchwork` by
+#' \code{patchwork} by
 #'
 #' @importFrom patchwork wrap_plots
 #'
@@ -1915,12 +1918,12 @@ MapLabels.Seurat <- function (
 
 #' Get coords_columns
 #'
-#' util function to get appropriate column names for spot coordinates
+#' Utility function to get appropriate column names for spot coordinates
 #'
-#' @param image_use string specifying image type to use
-#' @param coords_use string specifying coordinate type to use
+#' @param image_use A string specifying image type to use
+#' @param coords_use A string specifying coordinate type to use
 #'
-#' @return a character vector with column names for spot coordinates
+#' @return A character vector with column names for spot coordinates
 #'
 #' @noRd
 .get_coords_column <- function (
@@ -1940,7 +1943,7 @@ MapLabels.Seurat <- function (
 
 #' Generate colors
 #'
-#' @param n integer specifying the number of colors to generate
+#' @param n An integer specifying the number of colors to generate
 #'
 #' @importFrom grDevices hcl
 #'

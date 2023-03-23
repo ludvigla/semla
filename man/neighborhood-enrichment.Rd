@@ -55,6 +55,7 @@ results (\code{perm_mean}), the standard deviation of the permuted results (\cod
 and the z-score (\code{z_score}).
 }
 \examples{
+\dontrun{
 library(semla)
 
 # Read data
@@ -78,7 +79,7 @@ res <- RunNeighborhoodEnrichmentTest(object = se,
                                      nCores = 2)
 
 res |> arrange(desc(abs(z_score)))
-
+}
 
 }
 \seealso{

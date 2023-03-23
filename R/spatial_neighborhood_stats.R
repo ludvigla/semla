@@ -50,6 +50,7 @@ NULL
 #'
 #'
 #' @examples
+#' \dontrun{
 #' library(semla)
 #'
 #' # Read data
@@ -73,7 +74,7 @@ NULL
 #'                                      nCores = 2)
 #'
 #' res |> arrange(desc(abs(z_score)))
-#'
+#' }
 #'
 #' @export
 RunNeighborhoodEnrichmentTest <- function(
@@ -279,6 +280,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #'
 #'
 #' @examples
+#' \dontrun{
 #' library(semla)
 #'
 #' # Read data
@@ -302,7 +304,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #'                                  nCores = 2)
 #'
 #' res |> arrange(desc(avg_k_scaled))
-#'
+#'}
 #'
 #' @export
 RunLabelAssortativityTest <- function(
