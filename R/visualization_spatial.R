@@ -54,7 +54,7 @@ NULL
 #' @param drop_na A logical specifying if NA values should be dropped
 #' @param center_zero A logical specifying whether the color scale should be centered at 0
 #' @param add_scalebar A logical specifying if a scale bar should be added to the plots
-#' @param scalebar_gg A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+#' @param scalebar_gg A \code{ggplot} object generated with \code{\link{scalebar}}. The appearance of the scale
 #' bar is styled by passing parameters to \code{\link{scalebar}}.
 #' @param scalebar_height A numeric value specifying the height of the scale bar relative to the
 #' height of the full plot area. Has to be a value between 0 and 1. The title of the scale bar is
