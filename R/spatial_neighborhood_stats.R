@@ -224,9 +224,9 @@ RunNeighborhoodEnrichmentTest <- function(
   res_out[res_out$perm_sd == 0, "perm_sd"] <- 0.0001  # add pseudocount if sd is 0
   res_out$z_score <- round((res_out$edges - res_out$perm_mean) / (res_out$perm_sd),
                            digits = 3)
-
+  res_out <- res_out |> select(colnames(res_out)[c(1:3,7,4:6)])
+  
   if (verbose) cli_alert_success("Scores calculated for each label pair and returned as output tibble")
-
   return(res_out)
 }
 
@@ -428,7 +428,8 @@ RunLabelAssortativityTest <- function(
   res_out <- full_join(x = obs_k_stats, y = perm_k_res, by = "label")
   res_out$k_max <- network_k_max
   res_out$avg_k_scaled <- (res_out$avg_k-res_out$min_avg_k_mean)/(network_k_max-res_out$min_avg_k_mean)
-
+  res_out <- res_out |> select(colnames(res_out)[c(1,6,2:5)])
+  
   if (verbose) cli_alert_success("Scores calculated for each label and returned as output tibble")
   return(res_out)
 }
@@ -473,6 +474,5 @@ RunLabelAssortativityTest <- function(
     })
   }))
   rownames(perm_data) <- colnames(object)
-
   return(perm_data)
 }
