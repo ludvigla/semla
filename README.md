@@ -1,4 +1,4 @@
-# semla <img src="vignettes/logo.png" align="right" height="120"/>
+# semla <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 

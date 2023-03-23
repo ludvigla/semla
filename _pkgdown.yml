@@ -10,7 +10,7 @@ authors:
     href: https://github.com/lfranzen
   Spatial Research:
     href: https://www.spatialresearch.org/
-    html: "<img src='vignettes/sr-logo.png' height='36' alt='spatialresearch'/>"
+    html: "<img src='man/figures/sr-logo.png' height='36' alt='spatialresearch'/>"
 
 template:
   bootstrap: 5
