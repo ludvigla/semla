@@ -79,7 +79,7 @@ UpdateSTUtilityV1Object <- function (
 
   # Fetch meta data and convert it to a tibble with the correct column names
   if (verbose) cli_alert_info("Updating meta_data slot")
-   meta_data <- object@tools$Staffli@meta.data |>
+  meta_data <- object@tools$Staffli@meta.data |>
     select(-contains("barcode")) |> 
     rownames_to_column(var = "barcode") |>
     as_tibble() |>
