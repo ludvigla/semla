@@ -40,7 +40,7 @@ MaskImages(object, ...)
 \item{custom_method}{A function that takes a "magick-image" object as input and returns a 
 segmented "magick-image" as output. See section "custom masking" below for more details.}
 
-\item{minPixels}{Minimum area for blobs used to remove small artefacts given in pixels.}
+\item{minPixels}{Minimum area for blobs used to remove small artifacts given in pixels.}
 
 \item{verbose}{Print messages}
 
@@ -54,11 +54,11 @@ Image masking can sometimes be useful when you want to remove background from
 an H&E image. This is usually only relevant when creating figures. This function
 provides a simple image masking technique based on blob extraction. Since image
 masking is a challenging task, it is not guaranteed that it will work on all
-H&E images. Certain artefacts can be particularly difficult to remove, for example
+H&E images. Certain artifacts can be particularly difficult to remove, for example
 bubbles or if the tissue stain hasn't been removed properly.
 
-Even if some artefacts are detected by the algorithm, you can provide a set of
-spot coordinates that will be used to try to filter out artefacts that are not
+Even if some artifacts are detected by the algorithm, you can provide a set of
+spot coordinates that will be used to try to filter out artifacts that are not
 covered by spots.
 
 Note that this method is only useful on H&E images. Other stains or image types

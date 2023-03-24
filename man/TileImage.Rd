@@ -29,7 +29,7 @@ If this is not provided, a temporary directory will be created}
 
 \item{nCores}{Number of cores to use for threading}
 
-\item{overwrite}{If the the folder '<outpath>/viwer_data' already exists, it will be overwritten.}
+\item{overwrite}{If the the folder '<outpath>/viewer_data' already exists, it will be overwritten.}
 
 \item{verbose}{Print messages}
 }

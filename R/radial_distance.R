@@ -32,7 +32,7 @@ NULL
 #' @section Search interval:
 #' The microenvironment of the region of interest might be extremely heterogeneous
 #' depending on the direction from its center. For this reason, it can be useful to narrow
-#' down the search area by defining a smaller angle interval with \code{angles}. Alternativley,
+#' down the search area by defining a smaller angle interval with \code{angles}. Alternatively,
 #' you can split the radial distances into an even number of slices with \code{angles_nbreaks}.
 #' When using a predefined search interval, the region of interest (e.g. manual annotation)
 #' should not contain multiple spatially disconnected regions. Angles are calculated from

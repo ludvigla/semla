@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-Subseting and merging data is done using the two functions `SubsetSTData()` and `MergeSTData()`.
+Subsetting and merging data is done using the two functions `SubsetSTData()` and `MergeSTData()`.
 
 If you use the generic functions `subset` and `merge`, these will work fine on `Seurat` objects but they will not be able to handle the spatial data that has been placed inside the `Seurat` object by `semla`, causing the spatial data to be lost or corrupted.
 

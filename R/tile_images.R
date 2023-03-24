@@ -11,7 +11,7 @@
 #' @param maxZoomLevel Max zoom level
 #' @param maxImgWidth Safety threshold to make sure that the zoom level doesn't get too deep.
 #' @param nCores Number of cores to use for threading
-#' @param overwrite If the the folder '<outpath>/viwer_data' already exists, it will be overwritten.
+#' @param overwrite If the the folder '<outpath>/viewer_data' already exists, it will be overwritten.
 #' @param verbose Print messages
 #'
 #' @importFrom parallel detectCores
