@@ -1,4 +1,4 @@
-# semla <img src="man/figures/logo.png" align="right" height="120"/>
+# semla <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
@@ -14,6 +14,8 @@ Here you can find documentation of functions together with examples on how to us
 
 ## Installation
 
+The dev version of the package can be installed through GitHub using;
+
 ````
 remotes::install_github("ludvigla/semla")
 ````
@@ -21,7 +23,7 @@ remotes::install_github("ludvigla/semla")
 
 ## Setting up a conda environment
 
-First, you need to make sure to have anaconda installed. I suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+If you want to run `semla` within a conda environment, you first need to ensure to have anaconda installed. I suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
     conda create -n r-semla r-essentials r-base
 
