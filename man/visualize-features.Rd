@@ -140,7 +140,7 @@ active when \code{blend = TRUE}. See color blending for more information.}
 
 \item{add_scalebar}{A logical specifying if a scale bar should be added to the plots}
 
-\item{scalebar_gg}{A 'ggplot' object generated with \code{\link{scalebar}}. The appearance of the scale
+\item{scalebar_gg}{A \code{ggplot} object generated with \code{\link{scalebar}}. The appearance of the scale
 bar is styled by passing parameters to \code{\link{scalebar}}.}
 
 \item{scalebar_height}{A numeric value specifying the height of the scale bar relative to the

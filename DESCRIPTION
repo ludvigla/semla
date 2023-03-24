@@ -39,7 +39,7 @@ Imports:
     methods,
     glue,
     magick (>= 2.7.0),
-    Matrix (>= 1.4),
+    Matrix (>= 1.5-3),
     patchwork (>= 1.1.0),
     scales (>= 1.2.0),
     zeallot,
