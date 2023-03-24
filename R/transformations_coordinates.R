@@ -102,7 +102,8 @@ CoordMirror <- function (
 ) {
 
   # Check xy_coords
-  if (!any(c("tbl", "data.frame", "matrix") %in% class(xy_coords))) abort(glue::glue("Invalid format '{class(xy_coords)}' of xy_coords"))
+  if (!any(c("tbl", "data.frame", "matrix") %in% class(xy_coords))) 
+    abort(glue::glue("Invalid class '{class(xy_coords)}' for xy_coords. Expected a data.frame like object."))
   if (!ncol(xy_coords) == 2) abort(glue::glue("Expected 2 columns, got '{ncol(xy_coords)}'"))
   if (!all(sapply(xy_coords, is.numeric))) abort(glue::glue("Invalid column classes."))
 

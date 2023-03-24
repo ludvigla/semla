@@ -200,9 +200,6 @@ FeatureViewer <- function (
   if (verbose) cli_alert_info("Starting static file server")
   beakr::stopAllServers()
   fs <- try({file_server(hostDir = datapath, host = host, port = port)})
-  if (verbose) {
-    cli_alert_info("Hosting file server at http://{host}:{port}")
-  }
   if (inherits(fs, what = "try-error"))
     abort(c(
       "Failed to start static file server",
@@ -213,6 +210,9 @@ FeatureViewer <- function (
         "You can stop all servers with beakr::stopAllServers()"
       )
     ))
+  if (verbose) {
+    cli_alert_info("Hosting file server at http://{host}:{port}")
+  }
 
   # Open communication with react app through window
   # This will make it possible to retrieve lasso selections
