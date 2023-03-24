@@ -294,7 +294,7 @@ SubsetSTData <- function (
   if (length(all_sampleIDs) > length(remaining_samples)) {
     st_meta_data <- st_meta_data |>
       group_by(sampleID) |>
-      mutate(sampleID = cur_group_id() |> as.character()) |>
+      mutate(sampleID = cur_group_id()) |>
       separate(barcode, sep = "-", into = c("barcode", NA)) |>
       unite(col = "barcode", barcode, sampleID, sep = "-", remove = FALSE) |>
       ungroup()
