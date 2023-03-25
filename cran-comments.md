@@ -1,3 +1,18 @@
+## CRAN pre-tests
+
+* checking CRAN incoming feasibility ... [9s] NOTE
+Possibly misspelled words in DESCRIPTION:
+  Transcriptomics (3:37, 24:47)
+  semla (24:94)
+  
+Comment: Words are not misspelled
+
+* checking package dependencies ... NOTE
+Package suggested but not available for checking: 'TabulaMurisSenisData'
+
+Comment: package not hosted on CRAN
+
+
 ## Test environments
 
 * local macOS Big Sur 10.16 install (devel), R version 4.2.1
