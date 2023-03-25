@@ -79,6 +79,9 @@
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Staffli</h6>
+    <a class="dropdown-item" href="../articles/create_object.html">Create Staffli object</a>
   </div>
 </li>
 <li class="nav-item">
@@ -110,7 +113,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Advanced visualization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 24 March
+            <h4 data-toc-skip class="date">Last compiled: 25 March
 2023</h4>
       
       
@@ -533,9 +536,9 @@ images in slightly higher resolution.</p>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmpkteoym/temp_libpath132a441ec9a74/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 1000x941 pixels</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmpkteoym/temp_libpath132a441ec9a74/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 1000x1109 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -814,7 +817,7 @@ the scalebar should appear in the top right corner.</p>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmpkteoym/temp_libpath132a441ec9a74/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
@@ -997,15 +1000,15 @@ have 2 genes and 2 sections, so we need to provide 4 titles:</p>
 <span><span class="co">##  [91] cowplot_1.1.1          tidyselect_1.2.0       parallelly_1.32.1     </span></span>
 <span><span class="co">##  [94] RcppAnnoy_0.0.19       plyr_1.8.7             magrittr_2.0.3        </span></span>
 <span><span class="co">##  [97] R6_2.5.1               magick_2.7.3           generics_0.1.3        </span></span>
-<span><span class="co">## [100] DBI_1.1.3              withr_2.5.0            pillar_1.8.1          </span></span>
-<span><span class="co">## [103] fitdistrplus_1.1-8     abind_1.4-5            survival_3.4-0        </span></span>
-<span><span class="co">## [106] sp_1.5-1               future.apply_1.9.0     KernSmooth_2.23-20    </span></span>
-<span><span class="co">## [109] utf8_1.2.2             spatstat.geom_3.0-3    plotly_4.10.0         </span></span>
-<span><span class="co">## [112] rmarkdown_2.15         viridis_0.6.2          grid_4.2.1            </span></span>
-<span><span class="co">## [115] data.table_1.14.2      forcats_0.5.2          digest_0.6.29         </span></span>
-<span><span class="co">## [118] xtable_1.8-4           dbscan_1.1-10          tidyr_1.3.0           </span></span>
-<span><span class="co">## [121] httpuv_1.6.5           textshaping_0.3.6      munsell_0.5.0         </span></span>
-<span><span class="co">## [124] viridisLite_0.4.1      bslib_0.4.0            shinyjs_2.1.0</span></span></code></pre>
+<span><span class="co">## [100] withr_2.5.0            pillar_1.8.1           fitdistrplus_1.1-8    </span></span>
+<span><span class="co">## [103] abind_1.4-5            survival_3.4-0         sp_1.5-1              </span></span>
+<span><span class="co">## [106] future.apply_1.9.0     KernSmooth_2.23-20     utf8_1.2.2            </span></span>
+<span><span class="co">## [109] spatstat.geom_3.0-3    plotly_4.10.0          rmarkdown_2.15        </span></span>
+<span><span class="co">## [112] viridis_0.6.2          grid_4.2.1             data.table_1.14.2     </span></span>
+<span><span class="co">## [115] forcats_0.5.2          digest_0.6.29          xtable_1.8-4          </span></span>
+<span><span class="co">## [118] dbscan_1.1-10          tidyr_1.3.0            httpuv_1.6.5          </span></span>
+<span><span class="co">## [121] textshaping_0.3.6      munsell_0.5.0          viridisLite_0.4.1     </span></span>
+<span><span class="co">## [124] bslib_0.4.0            shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
