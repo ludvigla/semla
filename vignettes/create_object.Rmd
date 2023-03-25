@@ -1,0 +1,220 @@
+---
+title: "Create dataset"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+In this notebook, we'll have a look at how you can create a `Seurat` object compatible with `semla`.
+
+## Load libraries
+
+```{r message=FALSE, warning=FALSE}
+library(semla)
+library(magick)
+library(jsonlite)
+library(tibble)
+```
+
+## Load coordinates
+
+The `Staffli` object requires image and coordinate data that can be retireved from the spaceranger output files.
+
+Below we'll use the mouse brain and mouse colon example data:
+
+```{r}
+he_imgs <- c(system.file("extdata/mousebrain", 
+                         "spatial/tissue_hires_image.jpg", 
+                          package = "semla"),
+             system.file("extdata/mousecolon", 
+                         "spatial/tissue_hires_image.jpg", 
+                         package = "semla"))
+spotfiles <- c(system.file("extdata/mousebrain", 
+                           "spatial/tissue_positions_list.csv", 
+                           package = "semla"),
+               system.file("extdata/mousecolon", 
+                           "spatial/tissue_positions_list.csv", 
+                           package = "semla"))
+jsonfiles <- c(system.file("extdata/mousebrain", 
+                           "spatial/scalefactors_json.json", 
+                           package = "semla"),
+               system.file("extdata/mousecolon", 
+                           "spatial/scalefactors_json.json", 
+                           package = "semla"))
+```
+
+When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The `coordinates` tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs.
+
+```{r eval=FALSE}
+# Read coordinates
+coordinates <- do.call(bind_rows, lapply(seq_along(spotfiles), function(i) {
+  sample_coords <- read.csv(spotfiles[i], header = FALSE) |> 
+    as_tibble() |>
+    setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |> 
+    mutate(sampleID = i) |> # Add a unique sampleID
+    filter(selected == 1) |> 
+    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
+    mutate(barcode = gsub(pattern = "-\\d*", # Replace barcode suffix with sampleID
+                          replacement = paste0("-", i), 
+                          x = barcode))
+  return(sample_coords)
+}))
+```
+
+`semla` provides `LoadSpatialCoordinates` to make the task a little easier:
+
+```{r}
+coordinates <- LoadSpatialCoordinates(coordinatefiles = spotfiles, verbose = FALSE) |> 
+  select(barcode, pxl_row_in_fullres, pxl_col_in_fullres, sampleID)
+
+coordinates
+
+# Check number of spots per sample
+table(coordinates$sampleID)
+```
+
+
+## Fetch image info
+
+Next, we'll fetch meta data for the sample H&E images. Here, the tibble must contain the width and height of `he_imgs` as well as a sampleID column.
+
+```{r}
+# Create image_info
+image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
+  he_imgs[i] |> 
+    image_read() |> 
+    image_info() |> 
+    mutate(sampleID = paste0(i))
+}))
+image_info
+```
+
+## Define image dimensions
+
+The `jsonfiles` contain scaling factors that allows us to find the original H&E image dimensions. We can load the scale factors with `read_json` and store them in a tibble. The tibble should also contain a sampleID column.
+
+```{r}
+# Read scalefactors
+scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
+  jsonlite::read_json(jsonfiles[i]) |> 
+    as_tibble() |> 
+    mutate(sampleID = paste0(i))
+}))
+scalefactors
+```
+
+Once we have the scale factors, we can add additional columns to `image_info` which specify the dimensions of the original H&E images:
+
+```{r}
+# Add additional columns to image_info using scale factors
+image_info <- image_info |> 
+  mutate(full_width = round(width/scalefactors$tissue_hires_scalef[row_number()]),
+         full_height = round(height/scalefactors$tissue_hires_scalef[row_number()])) |> 
+  mutate(type = "tissue_hires") |> 
+  select(format, width, height, full_width, full_height, 
+         colorspace, filesize, density, sampleID, type)
+image_info
+```
+Finally, we are ready to create the `Staffli` object. Here we'll provide the `he_imgs` so that we can load the images later with `LoadImages`. The `coordinates` are stored in the `meta_data` slot. `image_info` will be used by the plot functions provided in `semla` to define the dimensions of the plot area.
+
+```{r}
+# Create Staffli object
+staffli_object <- CreateStaffliObject(imgs = he_imgs, 
+                                      meta_data = coordinates, 
+                                      image_info = image_info, 
+                                      scalefactors = scalefactors)
+staffli_object
+```
+
+## Use a `Staffli` object in `Seurat`
+
+Now let's see how we can incorporate our `Staffli` object in `Seurat`. First, we'll load the gene expression matrices for our samples and merge them. 
+
+```{r}
+# Get paths for expression matrices
+expr_matrix_files <- he_imgs <- c(system.file("extdata/mousebrain", 
+                         "filtered_feature_bc_matrix.h5", 
+                          package = "semla"),
+             system.file("extdata/mousecolon", 
+                         "filtered_feature_bc_matrix.h5", 
+                         package = "semla"))
+```
+
+Before merging the matrices, it's important to rename the barcodes so that they match the barcodes in `Staffli_object`.
+
+```{r eval=FALSE}
+exprMatList <- lapply(seq_along(expr_matrix_files), function(i) {
+  exprMat <- Seurat::Read10X_h5(expr_matrix_files[i])
+  colnames(exprMat) <- gsub(pattern = "-\\d*", # Replace barcode suffix with sampleID
+                          replacement = paste0("-", i), 
+                          x = colnames(exprMat))
+  return(exprMat)
+})
+
+# Merge expression matrices
+mergedExprMat <- SeuratObject::RowMergeSparseMatrices(exprMatList[[1]], exprMatList[[2]])
+
+```
+
+Alternatively, use the `LoadAndMergeMatrices` function from `semla`:
+
+```{r warning=FALSE, message=FALSE}
+mergedExprMat <- LoadAndMergeMatrices(samplefiles = expr_matrix_files, verbose = FALSE)
+
+# Create Seurat object
+se <- CreateSeuratObject(counts = mergedExprMat)
+```
+
+Rearrange `Staffli` object to match `Seurat` object. If the barcode are mismatched, make sure to subset the two object to contain intersecting barcodes.
+
+```{r}
+staffli_object@meta_data <- staffli_object@meta_data[match(colnames(se), staffli_object@meta_data$barcode), ]
+```
+
+Check that the `Staffli` object matches `Seurat` object:
+
+```{r}
+all(staffli_object@meta_data$barcode == colnames(se))
+```
+
+Place `Staffli` object in the `Seurat` object:
+
+```{r}
+se@tools$Staffli <- staffli_object
+```
+
+Now the `semla` functions should be compatible with the `Seurat` object!
+
+```{r}
+MapFeatures(se, features = "nFeature_RNA")
+
+se <- LoadImages(se, verbose = FALSE)
+MapFeatures(se, features = "nFeature_RNA", image_use = "raw", override_plot_dims = TRUE)
+```
+
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

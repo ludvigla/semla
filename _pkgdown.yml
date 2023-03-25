@@ -81,6 +81,10 @@ navbar:
         href: articles/mask_images.html
       - text: Image alignment
         href: articles/image_alignment.html
+      - text: '-------'
+      - text: Staffli
+      - text: Create Staffli object
+        href: articles/create_object.html
 
 reference:
 - title: Function reference
