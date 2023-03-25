@@ -223,13 +223,12 @@ MaskImages.default <- function (
 #'
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
-#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-#' se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
-#' se_merged <- se_merged |> MaskImages()
+#' se_mbrain <- se_mbrain |> LoadImages()
 #'
 #' # Plot masked images
-#' ImagePlot(se_merged)
+#' ImagePlot(se_mbrain)
 #' 
+#' \dontrun{
 #' # Using a custom method
 #' custom_fkn <- function(object) {
 #'   object |>
@@ -244,6 +243,7 @@ MaskImages.default <- function (
 #' se_mbrain <- MaskImages(se_mbrain, custom_method = custom_fkn)
 #' 
 #' ImagePlot(se_mbrain)
+#' }
 #'
 #' @export
 #'
