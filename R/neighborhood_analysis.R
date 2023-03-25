@@ -167,6 +167,7 @@ RegionNeighbors.default <- function (
 #' MapLabels(se_mbrain, column_name = "selected_clusters") |
 #'   MapLabels(se_mbrain, column_name = "nb_to_10")
 #'
+#' \dontrun{
 #' # Find neighbors to clusters 8 and 10
 #' se_mbrain$selected_clusters <- se_mbrain[[]] |>
 #'   mutate(across(where(is.factor), as.character)) |>
@@ -194,7 +195,8 @@ RegionNeighbors.default <- function (
 #'                              nNeighbors = 40,
 #'                              maxDist = Inf)
 #' MapLabels(se_mbrain, column_name = "nb_to_10")
-#'
+#' }
+#' 
 #' @export
 #'
 RegionNeighbors.Seurat <- function (

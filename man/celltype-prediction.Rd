@@ -155,7 +155,7 @@ estimated cell type proportions.
 }
 
 \references{
-\href{https://doi.org/10.1101/2021.09.01.458620}{RcppML}
+\doi{https://doi.org/10.1101/2021.09.01.458620)}
 \href{https://github.com/zdebruine/RcppML}{RcppML GitHub page}
 }
 \author{
