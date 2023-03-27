@@ -39,21 +39,20 @@ NULL
 #'
 #' library(semla)
 #' library(magick)
-#'
+#' 
 #' im_mbrain <- system.file("extdata/mousebrain/spatial",
-#'                          "tissue_hires_image.jpg",
+#'                          "tissue_lowres_image.jpg",
 #'                          package = "semla")
-#'
+#' 
 #' img1 <- prep_image(im_mbrain |>
-#'                    image_read(),
-#'                    height = 512)
+#'                      image_read(),
+#'                    height = 256)
 #' img2 <- prep_image(im_mbrain |>
-#'                    image_read() |>
-#'                    image_flip(),
-#'                    height = 512)
-#'
-#' transforms <- RunAlignment(object = list(img1, img2))
-#'
+#'                      image_read() |>
+#'                      image_flip(),
+#'                    height = 256)
+#' 
+#' transforms <- RunAlignment(object = list(img1, img2)
 #' }
 #'
 #' @export
@@ -275,7 +274,7 @@ RunAlignment.Seurat <- function (
 #' library(semla)
 #' library(magick)
 #' 
-#' im <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
+#' im <- system.file("extdata/mousebrain", "spatial/tissue_lowres_image.jpg", package = "semla")
 #' 
 #' # Prep image
 #' im_prepped <- prep_image(im)
