@@ -34,22 +34,23 @@
 #' library(magick)
 #' library(shiny)
 #' library(leaflet)
-#'
+#' 
+#' # Download hires image
+#' download.file(file.path("https://raw.githubusercontent.com/ludvigla/semla",
+#'                         "main/images/mousebrain/tissue_hires_image.jpg"),
+#'               destfile = "tissue_hires_image.jpg")
+#' 
 #' # Load H&E image with magick
-#' imfile <-
-#'   system.file("extdata/mousecolon/spatial",
-#'               "tissue_hires_image.jpg",
-#'               package = "semla")
-#' im <- image_read(imfile)
-#'
+#' im <- image_read("tissue_hires_image.jpg")
+#' 
 #' # tile image and return path to tiles
 #' tile_res <- TileImage(im, nCores = 2)
-#'
+#' 
 #' # Create a simple viewer with leaflet
 #' ui <- fluidPage(
 #'   leafletOutput("map", height = 512, width = 512),
 #' )
-#'
+#' 
 #' server <- function(input, output, session) {
 #'   addResourcePath("mytiles", tile_res$tilepath)
 #'   output$map <- renderLeaflet({
