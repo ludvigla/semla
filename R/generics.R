@@ -1,3 +1,22 @@
+#' Load images
+#' 
+#' Load H&E images (or any other custom images) required for visualization methods in \code{semla}.
+#' 
+#' @param object An object
+#' @param ... Arguments passed to other methods
+#' 
+#' @family pre-process
+#' @rdname load-images
+#' 
+#' @return An object with images in \code{raster} format
+#' 
+#' @export
+#' 
+LoadImages <- function(object, ...) {
+  UseMethod(generic = 'LoadImages', object = object)
+}
+
+
 #' Create Spatial Networks
 #'
 #' Create spatial networks from spatial coordinates. The spatial networks are provided in a long
@@ -21,7 +40,7 @@
 #' @family network-methods
 #' @rdname get-network
 #'
-#' @export GetSpatialNetwork
+#' @export
 #'
 GetSpatialNetwork <- function(object, ...) {
   UseMethod(generic = 'GetSpatialNetwork', object = object)
@@ -114,24 +133,6 @@ MapMultipleFeatures <- function(object, ...) {
 #'
 MapLabels <- function(object, ...) {
   UseMethod(generic = 'MapLabels', object = object)
-}
-
-
-#' Load images
-#' 
-#' Load H&E images (or any other custom images) required for visualization methods in \code{semla}.
-#'
-#' @param object An object
-#' @param ... Arguments passed to other methods
-#'
-#' @rdname load-images
-#' 
-#' @returns An object with images in \code{raster} format
-#'
-#' @export
-#'
-LoadImages <- function(object, ...) {
-  UseMethod(generic = 'LoadImages', object = object)
 }
 
 
