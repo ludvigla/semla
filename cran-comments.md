@@ -1,3 +1,13 @@
+## CRAN pre-tests (2023-03-27)
+
+Found the following (possibly) invalid URLs:
+  URL: https://opensource.org/licenses/mit/ (moved to https://opensource.org/license/mit/)
+    From: README.md
+    Status: 301
+    Message: Moved Permanently
+    
+Comment: Fixed typo in URL.
+
 ## CRAN pre-tests
 
 * checking CRAN incoming feasibility ... [9s] NOTE
