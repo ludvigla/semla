@@ -7,14 +7,13 @@ webpack.config.js
 yarn.lock
 ^srcjs$
 presentations/
-# R/transformations_coordinates.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^\.github$
 TODO.md
 vignettes
-images
+images/
 inst/htmlwidgets/paper.js.map
 inst/htmlwidgets/osddu.js.map
 inst/htmlwidgets/ftrviewer.js.map
