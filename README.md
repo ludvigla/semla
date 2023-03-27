@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-1.0.0-blue.svg)](https://github.com/ludvigla/semla) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/mit)
+[![](https://img.shields.io/badge/devel%20version-1.0.0-blue.svg)](https://github.com/ludvigla/semla) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/mit/)
 
 <!-- badges: end -->
 
