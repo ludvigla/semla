@@ -1,25 +1,30 @@
 #' @include checks.R
 #' @include generics.R
-#'
+#' @include staffli_object.R
 NULL
 
 #' @param image_height An integer specifying the height of the down-scaled images
 #' @param pad_info A tibble with information about how the image should be padded
 #' @param verbose print messages
-#'
+#' 
+#' @rdname load-images
+#' 
 #' @importFrom rlang abort
 #' @import cli
 #' @importFrom glue glue
 #' @importFrom magick image_read image_scale geometry_area image_info
 #' @importFrom tools file_ext
 #' @importFrom grDevices as.raster
-#'
+#' 
 #' @section default method:
 #' If a character vector of image paths are provided, the images will be loaded,
 #' then down-scaled based on \code{image_height} and returned as a list of \code{raster}
 #' objects. Only JPEG and PNG images are supported.
-#'
-#' @rdname load-images
+#' 
+#' @section Seurat:
+#' If a Seurat object is provided, the images will be loaded as \code{raster} objects
+#' and stored inside the \code{Staffli} object that is located in the \code{tools}
+#' slot.
 #' 
 #' @examples 
 #' 
@@ -27,10 +32,10 @@ NULL
 #' 
 #' # Get paths for example images
 #' mousebrain_jpg <- system.file("extdata/mousebrain", 
-#'                               "spatial/tissue_hires_image.jpg", 
+#'                               "spatial/tissue_lowres_image.jpg", 
 #'                               package = "semla")
 #' mousecolon_jpg <- system.file("extdata/mousecolon", 
-#'                               "spatial/tissue_hires_image.jpg", 
+#'                               "spatial/tissue_lowres_image.jpg", 
 #'                               package = "semla")
 #' 
 #' rasters <- LoadImages(c(mousebrain_jpg, mousecolon_jpg))
@@ -39,9 +44,9 @@ NULL
 #' for (rst in rasters) {
 #'   plot(rst)
 #' }
-#'
+#' 
 #' @export
-#'
+#' 
 LoadImages.default <- function (
   object,
   image_height = 400,
@@ -121,27 +126,23 @@ LoadImages.default <- function (
 
 #' @importFrom rlang %||%
 #'
+#' @family pre-process
 #' @rdname load-images
 #' 
-#' @section Seurat:
-#' If a Seurat object is provided, the images will be loaded as \code{raster} objects
-#' and stored inside the \code{Staffli} object that is located in the \code{tools}
-#' slot.
-#'
 #' @examples
-#'
-#' #' library(semla)
-#'
+#' 
+#' library(semla)
+#' 
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
-#'
+#' 
 #' # Load images
 #' se_merged <- LoadImages(se_merged)
-#'
+#' 
 #' @export
-#'
+#' 
 LoadImages.Seurat <- function (
     object,
     image_height = 400,
@@ -198,18 +199,18 @@ LoadImages.Seurat <- function (
 }
 
 
-#' Utility function for setting images in package Seurat objects
+#' Utility function for setting images
 #'
 #' @param dataset One of "mousebrain" or "mousecolon"
 #'
-#' @return Path to "tissue_hires_image.jpg"
+#' @return Path to "tissue_lowres_image.jpg"
 #'
 #' @noRd
 .load_ext_images <- function (
   dataset = "mousebrain"
 ) {
   hiresresimagefile <- system.file(paste0("extdata/", dataset, "/spatial"),
-                                   "tissue_hires_image.jpg",
+                                   "tissue_lowres_image.jpg",
                                    package = "semla")
   return(hiresresimagefile)
 }
