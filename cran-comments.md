@@ -34,7 +34,7 @@ Size of tarball: 6165189 bytes
 
 Not more than 5MB for a CRAN package.
 
-Comment: Reduced size of example data. Tarball size is now 3747733 bytes.
+Comment: Reduced size of example data. Tarball size is now 3747730 bytes.
 
 
 ## Test environments
