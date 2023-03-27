@@ -196,8 +196,6 @@ LoadSpatialCoordinates <- function (
 
 #' Read image data
 #'
-#' Load image related data from \strong{tissue_hires_image.jpg} files.
-#'
 #' @family pre-process
 #'
 #' @param images An object of class \code{tibble} containing paths to images in PNG format, with
@@ -324,7 +322,7 @@ LoadImageData <- function (
 #'                           "/*/filtered_feature_bc_matrix.h5"))
 #' imgs <-
 #'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
-#'                           "/*/spatial/tissue_hires_image.jpg"))
+#'                           "/*/spatial/tissue_lowres_image.jpg"))
 #' spotfiles <-
 #'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
 #'                           "/*/spatial/tissue_positions_list.csv"))
@@ -442,7 +440,7 @@ ReadVisiumData <- function (
       image_info() |>
       mutate(sampleID = paste0(i),
              type = case_when(basename(f) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
-                              basename(f) %in% paste0("tissue_lowres_image", c("jpg", "png")) ~ "tissue_lowres",
+                              basename(f) %in% paste0("tissue_lowres_image.", c("jpg", "png")) ~ "tissue_lowres",
                               TRUE ~ "unknown"))
     return(image_data)
   })) |> as_tibble()
