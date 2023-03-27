@@ -6,7 +6,7 @@ NULL
 #'
 #' The Staffli object is designed to hold information about the spatial data generated in a 10x
 #' Visium SRT experiment. This includes paths to images, spot coordinates as well as loaded images
-#' in `raster` format and additional information about these images.
+#' in \code{raster} format and additional information about these images.
 #'
 #' @slot imgs A character vector of paths to the raw HE images
 #' @slot rasterlists A list of lists containing images in 'raster' format
@@ -75,10 +75,10 @@ Staffli <- setClass (
 #' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' # Create an object with multiple samples
 #' he_imgs <- c(system.file("extdata/mousebrain", 
-#'                          "spatial/tissue_hires_image.jpg", 
-#'                           package = "semla"),
+#'                          "spatial/tissue_lowres_image.jpg", 
+#'                          package = "semla"),
 #'              system.file("extdata/mousecolon", 
-#'                          "spatial/tissue_hires_image.jpg", 
+#'                          "spatial/tissue_lowres_image.jpg", 
 #'                          package = "semla"))
 #' spotfiles <- c(system.file("extdata/mousebrain", 
 #'                            "spatial/tissue_positions_list.csv", 
@@ -94,18 +94,8 @@ Staffli <- setClass (
 #'                            package = "semla"))
 #' 
 #' # Read coordinates
-#' coordinates <- do.call(bind_rows, lapply(seq_along(spotfiles), function(i) {
-#'   sample_coords <- read.csv(spotfiles[i], header = FALSE) |> 
-#'     as_tibble() |>
-#'     setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |> 
-#'     mutate(sampleID = i) |> # Add a unique sampleID
-#'     filter(selected == 1) |> 
-#'     select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
-#'     mutate(barcode = gsub(pattern = "-\\d*", # Replace barcode suffix with sampleID
-#'                           replacement = paste0("-", i), 
-#'                           x = barcode))
-#'   return(sample_coords)
-#' }))
+#' coordinates <- LoadSpatialCoordinates(spotfiles) |> 
+#'   select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
 #' 
 #' # Create image_info
 #' image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
@@ -124,9 +114,9 @@ Staffli <- setClass (
 #' 
 #' # Add additional columns to image_info using scalefactors
 #' image_info <- image_info |> 
-#'   mutate(full_width = width/scalefactors$tissue_hires_scalef[row_number()],
-#'          full_height = height/scalefactors$tissue_hires_scalef[row_number()]) |> 
-#'   mutate(type = "tissue_hires") |> 
+#'   mutate(full_width = width/scalefactors$tissue_lowres_scalef[row_number()],
+#'          full_height = height/scalefactors$tissue_lowres_scalef[row_number()]) |> 
+#'   mutate(type = "tissue_lowres") |> 
 #'   select(format, width, height, full_width, full_height, 
 #'          colorspace, filesize, density, sampleID, type)
 #' 
@@ -338,7 +328,7 @@ setMethod (
   }
 )
 
-#' Method used to get meta data from a Staffli object
+#' Method used to get meta data from a \code{Staffli} object
 #'
 #' @rdname Staffli-get-methods
 #' @aliases `[[`,Staffli,Staffli-method
@@ -371,7 +361,7 @@ setMethod (
   }
 )
 
-#' Method used to set meta data in a Staffli object
+#' Method used to set meta data in a \code{Staffli} object
 #' @rdname Staffli-set-methods
 #' @aliases `[[<-`,Staffli,Staffli-method
 #'
