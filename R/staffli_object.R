@@ -196,9 +196,20 @@ CreateStaffliObject <- function (
 # Staffli methods
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' Method for extracting the raw H&E image information from a \code{Staffli} object
+
+#' Method to extract image info
 #'
-#' @param object A \code{Staffli} object
+#' @param object A \code{Staffli} or \code{Seurat} object
+#'
+#' @export
+#' @docType methods
+#' @rdname GetImageInfo
+#'
+setGeneric("GetImageInfo", function(object) {
+  standardGeneric("GetImageInfo")
+})
+#' @rdname GetImageInfo
+#' @aliases GetImageInfo,Staffli,Staffli-method
 #' 
 #' @examples 
 #' 
@@ -209,40 +220,179 @@ CreateStaffliObject <- function (
 #' # Fetch Staffli object
 #' staffli_object <- GetStaffli(se_mbrain)
 #' 
-#' # Fetch image info
-#' image_info <- ImageInfo(staffli_object)
+#' # Fetch images from a Staffli object
+#' image_info <- GetImageInfo(staffli_object)
 #' image_info
-#' 
-#' @export
-#' @docType methods
-#' @rdname ImageInfo
-setGeneric("ImageInfo", function(object) {
-  standardGeneric("ImageInfo")
-})
-#' @rdname ImageInfo
-#' @aliases ImageInfo,Staffli,Staffli-method
 #'
 #' @export
 #'
 setMethod (
-  f = "ImageInfo",
+  f = "GetImageInfo",
   signature = "Staffli",
   definition = function(object) {
     object@image_info
   }
 )
+#' @rdname GetImageInfo
+#' @aliases GetImageInfo,Seurat,Seurat-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#'
+#' # Fetch images from a Seurat object
+#' image_info <- GetImageInfo(se_mbrain)
+#' image_info
+#'
+#' @export
+#'
+setMethod (
+  f = "GetImageInfo",
+  signature = "Seurat",
+  definition = function(object) {
+    .check_seurat_object(object)
+    st_object <- object@tools$Staffli
+    st_object@image_info
+  }
+)
 
 
-#' Method to extract images from a \code{Staffli} object
+#' Method to extract image scale factors
 #'
 #' @param object A \code{Staffli} or \code{Seurat} object
-#' @param type A string specifying the image type to get
+#'
+#' @export
+#' @docType methods
+#' @rdname GetScaleFactors
+#'
+setGeneric("GetScaleFactors", function(object) {
+  standardGeneric("GetScaleFactors")
+})
+#' @rdname GetScaleFactors
+#' @aliases GetScaleFactors,Staffli,Staffli-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' # Fetch images from a Staffli object
+#' scalefactors <- GetScaleFactors(staffli_object)
+#' scalefactors
+#'
+#' @export
+#'
+setMethod (
+  f = "GetScaleFactors",
+  signature = "Staffli",
+  definition = function(object) {
+    object@scalefactors
+  }
+)
+#' @rdname GetScaleFactors
+#' @aliases GetScaleFactors,Seurat,Seurat-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#'
+#' # Fetch images from a Seurat object
+#' scalefactors <- GetScaleFactors(se_mbrain)
+#' scalefactors
+#'
+#' @export
+#'
+setMethod (
+  f = "GetScaleFactors",
+  signature = "Seurat",
+  definition = function(object) {
+    .check_seurat_object(object)
+    st_object <- object@tools$Staffli
+    st_object@scalefactors
+  }
+)
+
+
+#' Method to extract coordinates
+#'
+#' @param object A \code{Staffli} or \code{Seurat} object
+#'
+#' @export
+#' @docType methods
+#' @rdname GetCoordinates
+#'
+setGeneric("GetCoordinates", function(object) {
+  standardGeneric("GetCoordinates")
+})
+#' @rdname GetCoordinates
+#' @aliases GetCoordinates,Staffli,Staffli-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#' 
+#' # Fetch Staffli object
+#' staffli_object <- GetStaffli(se_mbrain)
+#' 
+#' # Fetch images from a Staffli object
+#' coordinates <- GetCoordinates(staffli_object)
+#' coordinates
+#'
+#' @export
+#'
+setMethod (
+  f = "GetCoordinates",
+  signature = "Staffli",
+  definition = function(object) {
+    object@meta_data
+  }
+)
+#' @rdname GetCoordinates
+#' @aliases GetCoordinates,Seurat,Seurat-method
+#' 
+#' @examples 
+#' 
+#' # Load example data
+#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
+#'    LoadImages()
+#'
+#' # Fetch images from a Seurat object
+#' coordinates <- GetCoordinates(se_mbrain)
+#' coordinates
+#'
+#' @export
+#'
+setMethod (
+  f = "GetCoordinates",
+  signature = "Seurat",
+  definition = function(object) {
+    .check_seurat_object(object)
+    st_object <- object@tools$Staffli
+    st_object@meta_data
+  }
+)
+
+
+#' Method to extract images
+#'
+#' @param object A \code{Staffli} or \code{Seurat} object
+#' @param image_use A string specifying the image type to get
 #'
 #' @export
 #' @docType methods
 #' @rdname GetImages
 #'
-setGeneric("GetImages", function(object, type = "raw") {
+setGeneric("GetImages", function(object, image_use = c("raw", "transformed")) {
   standardGeneric("GetImages")
 })
 #' @rdname GetImages
@@ -265,8 +415,13 @@ setGeneric("GetImages", function(object, type = "raw") {
 setMethod (
   f = "GetImages",
   signature = "Staffli",
-  definition = function(object, type) {
-    object@rasterlists[[type]]
+  definition = function(object, image_use = "raw") {
+    image_use <- match.arg(image_use, choices = c("raw", "transformed"))
+    if (!inherits(image_use, what = "character"))
+      abort(glue("Invalid class '{class(image_use)}' of 'image_use'. Expected a 'character' vector."))
+    if (!image_use %in% names(object@rasterlists)) 
+      abort(glue("'{image_use}' images are not available."))
+    object@rasterlists[[image_use]]
   }
 )
 #' @rdname GetImages
@@ -286,10 +441,15 @@ setMethod (
 setMethod (
   f = "GetImages",
   signature = "Seurat",
-  definition = function(object, type) {
+  definition = function(object, image_use) {
+    image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     .check_seurat_object(object)
-    st.object <- object@tools$Staffli
-    st.object@rasterlists[[type]]
+    st_object <- object@tools$Staffli
+    if (!inherits(image_use, what = "character"))
+      abort(glue("Invalid class '{class(image_use)}' of 'image_use'. Expected a 'character' vector."))
+    if (!image_use %in% names(st_object@rasterlists)) 
+      abort(glue("'{image_use}' images are not available."))
+    st_object@rasterlists[[image_use]]
   }
 )
 
@@ -382,7 +542,83 @@ setMethod (
   }
 )
 
-#' Show method for Staffli objects
+
+#' Replace image paths
+#' 
+#' @param object A \code{Staffli} or \code{Seurat} object
+#' @param paths A character vector with image paths
+#' 
+#' @import rlang
+#' @import glue
+#' @import dplyr
+#' @importFrom magick image_read image_info
+#' @importFrom tibble tibble
+#' 
+#' @export
+#' @docType methods
+#' @rdname ReplaceImagePaths
+#' 
+setGeneric("ReplaceImagePaths", function(object, paths) {
+  standardGeneric("ReplaceImagePaths")
+})
+#' @rdname ReplaceImagePaths
+#' @aliases ReplaceImagePaths,Staffli,Staffli-method
+#' 
+#' @export
+#' 
+setMethod (
+  f = "ReplaceImagePaths",
+  signature = "Staffli",
+  definition = function(object, paths) {
+    
+    # Set global variables to NULL
+    width <- height <- full_width <- full_height <- colorspace <- filesize <- density <- sampleID <- type <- NULL
+    
+    if (!inherits(paths, what = "character")) 
+      abort(glue("Invalid class '{class(paths)}'. Expected a 'character' vector."))
+    if (!length(paths) == length(nrow(object@image_info))) 
+      abort(glue("Invalid {nrow(object@image_info)} images, got {length(paths)}"))
+    image_info <- object@image_info
+    image_info_new <- tibble()
+    for (i in seq_along(paths)) {
+      if (!file.exists(paths[i]))
+        abort("Invalid 'paths'. File '{impath}' does not exist.")
+      image_info_sample <- paths[] |> 
+        image_read() |> 
+        image_info() |> 
+        mutate(sampleID = paste0(i),
+               type = case_when(basename(paths[i]) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
+                                basename(paths[i]) %in% paste0("tissue_lowres_image.", c("jpg", "png")) ~ "tissue_lowres",
+                                TRUE ~ "unknown"))
+      image_info_new <- bind_rows(image_info_new, image_info_sample)
+    }
+    image_info_new$full_width <- image_info$full_width
+    image_info_new$full_height <- image_info$full_height
+    object@imgs <- paths
+    object@image_info <- image_info_new |> 
+      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+    return(object)
+  }
+)
+#' @rdname ReplaceImagePaths
+#' @aliases ReplaceImagePaths,Seurat,Seurat-method
+#' 
+#' @export
+#' 
+setMethod (
+  f = "ReplaceImagePaths",
+  signature = "Seurat",
+  definition = function(object, paths) {
+    .check_seurat_object(object)
+    st_object <- object@tools$Staffli
+    st_object <- ReplaceImagePaths(st_object, paths)
+    object@tools$Staffli <- st_object
+    return(object)
+  }
+)
+
+
+#' Show method for \code{Staffli} objects
 #'
 #' @rdname show
 #' @aliases show,Staffli,Staffli-method
@@ -407,5 +643,94 @@ setMethod (
         '\n'
       )
     }
+  }
+)
+
+
+
+#' Plot method for \code{Staffli} objects
+#' 
+#' @import rlang
+#' @import glue
+#' @import dplyr
+#' @importFrom patchwork wrap_plots inset_element
+#'
+#' @rdname plot
+#' @aliases plot,Staffli,Staffli-method
+#'
+#' @param x A \code{Staffli} object
+#' @param image_use A string specifying the image to plot
+#' @param coords_use A character vector of length 2 specifying the coordinates to use
+#' @param ncol Integer specifying the number of columns in the plot grid
+#' @param ... Additional parameters passed to \code{geom_point}
+#'
+setMethod (
+  f = "plot",
+  signature = "Staffli",
+  definition = function(x, image_use = NULL, coords_use = c("raw", "transformed"), ncol = NULL, ...) {
+    
+    # Set global variables to NULL
+    sampleID <- NULL
+    
+    # Check image_use
+    if (!is.null(image_use)) {
+      image_use <- match.arg(image_use, choices = c("raw", "transformed"))
+    }
+    coords_use <- match.arg(coords_use, choices = c("raw", "transformed"))
+    
+    if (!is.null(image_use)) {
+      if (!inherits(image_use, what = "character"))
+        abort(glue("Invalid class '{class(image_use)}' for 'image_use'. Expected a 'character'."))
+      if (!image_use %in% names(x@rasterlists))
+        abort(glue("'{image_use}' images are not available."))
+      if (image_use == "raw") {
+        coords_columns <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
+      }
+      if (image_use == "transformed") {
+        coords_columns <- c("pxl_col_in_fullres_transformed", "pxl_row_in_fullres_transformed")
+      }
+      rstrs <- x@rasterlists[[image_use]]
+    } else {
+      if (coords_use == "raw") {
+        coords_columns <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
+      }
+      if (coords_use == "transformed") {
+        coords_columns <- c("pxl_col_in_fullres_transformed", "pxl_row_in_fullres_transformed")
+      }
+    }
+    # Split coordinates
+    coords_split <- x@meta_data |> 
+      group_by(sampleID) |> 
+      group_split()
+    
+    # Get dims
+    dims <- x@image_info |> 
+      mutate(sampleID = 1:n()) |> 
+      group_by(sampleID) |> 
+      group_split()
+    
+    # Create plot
+    plots <- lapply(seq_along(coords_split), function(i) {
+      xy <- coords_split[[i]]
+      ggplot(xy, aes(x = !! sym(coords_columns[1]), y = !! sym(coords_columns[2]))) +
+        geom_point(shape = 21, fill = NA, ...) +
+        scale_x_continuous(limits = c(0, dims[[i]]$full_width), expand = c(0, 0)) +
+        scale_y_reverse(limits = c(dims[[i]]$full_height, 0), expand = c(0, 0)) +
+        theme_void() +
+        coord_fixed() +
+        ggtitle(label = paste0("Section ", i))
+    })
+    
+    # Add images
+    if (!is.null(image_use)) {
+      plots <- lapply(seq_along(plots), function(i) {
+        plots[[i]] +
+          inset_element(p = rstrs[[i]], left = 0, bottom = 0, right = 1, top = 1, on_top = FALSE)
+      })
+    }
+    
+    # Wrap plots
+    ncol <- ncol %||% ceiling(sqrt(length(plots)))
+    wrap_plots(plots, ncol = ncol)
   }
 )

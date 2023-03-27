@@ -3,7 +3,7 @@
 \name{show,Staffli-method}
 \alias{show,Staffli-method}
 \alias{show,Staffli,Staffli-method}
-\title{Show method for Staffli objects}
+\title{Show method for \code{Staffli} objects}
 \usage{
 \S4method{show}{Staffli}(object)
 }
@@ -11,5 +11,5 @@
 \item{object}{object to print pre-selected attributes for}
 }
 \description{
-Show method for Staffli objects
+Show method for \code{Staffli} objects
 }
