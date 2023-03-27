@@ -5,12 +5,26 @@ Possibly misspelled words in DESCRIPTION:
   Transcriptomics (3:37, 24:47)
   semla (24:94)
   
-Comment: Words are not misspelled
+Comment: Transcriptomics is not misspelled. Added single quotes to package name semla.
+
+Found the following (possibly) invalid URLs:
+  URL: https://opensource.org/licenses/mit (moved to https://opensource.org/license/mit/)
+    From: README.md
+    Status: 301
+    Message: Moved Permanently
+    
+Comment: Added trailing slash to URL.
 
 * checking package dependencies ... NOTE
 Package suggested but not available for checking: 'TabulaMurisSenisData'
 
 Comment: package not hosted on CRAN
+
+Size of tarball: 6165189 bytes
+
+Not more than 5MB for a CRAN package.
+
+Comment: Reduced size of example data. Tarball size is now 3747733 bytes.
 
 
 ## Test environments
