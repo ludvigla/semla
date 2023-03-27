@@ -3,7 +3,7 @@
 \name{[[<-,Staffli,ANY,ANY,ANY-method}
 \alias{[[<-,Staffli,ANY,ANY,ANY-method}
 \alias{`[[<-`,Staffli,Staffli-method}
-\title{Method used to set meta data in a Staffli object}
+\title{Method used to set meta data in a \code{Staffli} object}
 \usage{
 \S4method{[[}{Staffli,ANY,ANY,ANY}(x, i, j, ...) <- value
 }
@@ -19,5 +19,5 @@
 \item{value}{Data to add to meta data data.frame.}
 }
 \description{
-Method used to set meta data in a Staffli object
+Method used to set meta data in a \code{Staffli} object
 }

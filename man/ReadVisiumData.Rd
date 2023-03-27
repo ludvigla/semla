@@ -82,7 +82,7 @@ samples <-
                           "/*/filtered_feature_bc_matrix.h5"))
 imgs <-
   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
-                          "/*/spatial/tissue_hires_image.jpg"))
+                          "/*/spatial/tissue_lowres_image.jpg"))
 spotfiles <-
   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
                           "/*/spatial/tissue_positions_list.csv"))
@@ -102,6 +102,7 @@ se
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImages}()},
 \code{\link{LoadSpatialCoordinates}()}
 }
 \concept{pre-process}

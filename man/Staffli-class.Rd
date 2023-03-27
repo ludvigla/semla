@@ -8,7 +8,7 @@
 \description{
 The Staffli object is designed to hold information about the spatial data generated in a 10x
 Visium SRT experiment. This includes paths to images, spot coordinates as well as loaded images
-in `raster` format and additional information about these images.
+in \code{raster} format and additional information about these images.
 }
 \section{Slots}{
 

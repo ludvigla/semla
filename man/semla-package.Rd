@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A toolkit for Spatially Resolved Transcriptomics data exploration and analysis. semla provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
+A toolkit for Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
 }
 \seealso{
 Useful links:

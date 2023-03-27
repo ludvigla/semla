@@ -23,7 +23,7 @@ Prepare images for paper JS react app
 library(semla)
 library(magick)
 
-im <- system.file("extdata/mousebrain", "spatial/tissue_hires_image.jpg", package = "semla")
+im <- system.file("extdata/mousebrain", "spatial/tissue_lowres_image.jpg", package = "semla")
 
 # Prep image
 im_prepped <- prep_image(im)

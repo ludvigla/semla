@@ -49,10 +49,10 @@ library(semla)
 
 # Get paths for example images
 mousebrain_jpg <- system.file("extdata/mousebrain", 
-                              "spatial/tissue_hires_image.jpg", 
+                              "spatial/tissue_lowres_image.jpg", 
                               package = "semla")
 mousecolon_jpg <- system.file("extdata/mousecolon", 
-                              "spatial/tissue_hires_image.jpg", 
+                              "spatial/tissue_lowres_image.jpg", 
                               package = "semla")
 
 rasters <- LoadImages(c(mousebrain_jpg, mousecolon_jpg))
@@ -63,7 +63,7 @@ for (rst in rasters) {
 }
 
 
-#' library(semla)
+library(semla)
 
 # Load example Visium data
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
@@ -74,3 +74,15 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon)
 se_merged <- LoadImages(se_merged)
 
 }
+\seealso{
+Other pre-process: 
+\code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadSpatialCoordinates}()},
+\code{\link{ReadVisiumData}()}
+
+Other pre-process: 
+\code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadSpatialCoordinates}()},
+\code{\link{ReadVisiumData}()}
+}
+\concept{pre-process}

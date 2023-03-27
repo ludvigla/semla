@@ -20,16 +20,16 @@ library(tibble)
 
 ## Load coordinates
 
-The `Staffli` object requires image and coordinate data that can be retireved from the spaceranger output files.
+The `Staffli` object requires image and coordinate data that can be retrieved from the spaceranger output files.
 
 Below we'll use the mouse brain and mouse colon example data:
 
 ```{r}
 he_imgs <- c(system.file("extdata/mousebrain", 
-                         "spatial/tissue_hires_image.jpg", 
+                         "spatial/tissue_lowres_image.jpg", 
                           package = "semla"),
              system.file("extdata/mousecolon", 
-                         "spatial/tissue_hires_image.jpg", 
+                         "spatial/tissue_lowres_image.jpg", 
                          package = "semla"))
 spotfiles <- c(system.file("extdata/mousebrain", 
                            "spatial/tissue_positions_list.csv", 
@@ -75,7 +75,6 @@ coordinates
 table(coordinates$sampleID)
 ```
 
-
 ## Fetch image info
 
 Next, we'll fetch meta data for the sample H&E images. Here, the tibble must contain the width and height of `he_imgs` as well as a sampleID column.
@@ -110,13 +109,14 @@ Once we have the scale factors, we can add additional columns to `image_info` wh
 ```{r}
 # Add additional columns to image_info using scale factors
 image_info <- image_info |> 
-  mutate(full_width = round(width/scalefactors$tissue_hires_scalef[row_number()]),
-         full_height = round(height/scalefactors$tissue_hires_scalef[row_number()])) |> 
+  mutate(full_width = round(width/scalefactors$tissue_lowres_scalef[row_number()]),
+         full_height = round(height/scalefactors$tissue_lowres_scalef[row_number()])) |> 
   mutate(type = "tissue_hires") |> 
   select(format, width, height, full_width, full_height, 
          colorspace, filesize, density, sampleID, type)
 image_info
 ```
+
 Finally, we are ready to create the `Staffli` object. Here we'll provide the `he_imgs` so that we can load the images later with `LoadImages`. The `coordinates` are stored in the `meta_data` slot. `image_info` will be used by the plot functions provided in `semla` to define the dimensions of the plot area.
 
 ```{r}
@@ -130,7 +130,7 @@ staffli_object
 
 ## Use a `Staffli` object in `Seurat`
 
-Now let's see how we can incorporate our `Staffli` object in `Seurat`. First, we'll load the gene expression matrices for our samples and merge them. 
+Now let's see how we can incorporate our `Staffli` object in `Seurat`. First, we'll load the gene expression matrices for our samples and merge them.
 
 ```{r}
 # Get paths for expression matrices
@@ -193,7 +193,6 @@ MapFeatures(se, features = "nFeature_RNA")
 se <- LoadImages(se, verbose = FALSE)
 MapFeatures(se, features = "nFeature_RNA", image_use = "raw", override_plot_dims = TRUE)
 ```
-
 
 <br>
 

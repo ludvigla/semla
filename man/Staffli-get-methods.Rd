@@ -3,7 +3,7 @@
 \name{[[,Staffli,ANY,ANY-method}
 \alias{[[,Staffli,ANY,ANY-method}
 \alias{`[[`,Staffli,Staffli-method}
-\title{Method used to get meta data from a Staffli object}
+\title{Method used to get meta data from a \code{Staffli} object}
 \usage{
 \S4method{[[}{Staffli,ANY,ANY}(x, i, j, drop = F)
 }
@@ -18,7 +18,7 @@
 This only works for extracting elements, not for the replacement.}
 }
 \description{
-Method used to get meta data from a Staffli object
+Method used to get meta data from a \code{Staffli} object
 }
 \examples{
 

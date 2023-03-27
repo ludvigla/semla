@@ -8,7 +8,6 @@ A Visium dataset obtained from a coronal tissue section of a mouse brain.
 \itemize{
    \item{\strong{mousebrain/filtered_feature_bc_matrix.h5}:\cr light weight gene expression matrix with 188 genes in hdf5 format filtered to include spots under the tissue}
    \item{\strong{mousebrain/spatial/tissue_lowres_image.jpg}: \cr H&E image (600x565) pixels}
-   \item{\strong{mousebrain/spatial/tissue_hires_image.jpg}: \cr H&E image (2000x1882) pixels}
    \item{\strong{mousebrain/spatial/tissue_positions_list.csv}: \cr CSV file with spot coordinates}
    \item{\strong{mousebrain/spatial/scalefactors_json.json}: \cr JSON file with scalefactors}
    \item{\strong{mousebrain/se_mbrain}: \cr Seurat object stored as an .Rds file with the top 100 most variable features}

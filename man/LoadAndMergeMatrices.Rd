@@ -52,6 +52,7 @@ mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 \seealso{
 Other pre-process: 
+\code{\link{LoadImages}()},
 \code{\link{LoadSpatialCoordinates}()},
 \code{\link{ReadVisiumData}()}
 }
