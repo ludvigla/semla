@@ -45,34 +45,32 @@ NULL
 #' @examples
 #'
 #' library(semla)
-#'
+#' 
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
-#'
+#' 
 #' # ImagePlot will throw an error if no images are loaded
 #' \dontrun{
-#' ImagePlot(se_merged)
+#'   ImagePlot(se_merged)
 #' }
-#'
+#' 
 #' # Load images
 #' se_merged <- LoadImages(se_merged)
 #' ImagePlot(se_merged)
-#'
+#' 
 #' # Plot only selected tissue sections
 #' ImagePlot(se_merged, sampleIDs = 1)
-#'
+#' 
 #' # Change order of plot
 #' ImagePlot(se_merged, sampleIDs = 2:1)
-#'
+#' 
 #' # Add a sample_id column and label plots
 #' se_merged$sample_id <- ifelse(GetStaffli(se_merged)@meta_data$sampleID == 1, "brain", "colon")
 #' ImagePlot(se_merged, label_by = "sample_id")
-#'
-#' # Reload images in higher resolution, crop image and remove margins
-#' se_merged <- LoadImages(se_merged, image_height = 1e3)
-#' se_merged <- LoadImages(se_merged, image_height = 1.5e3)
+#' 
+#' # Crop image and remove margins
 #' ImagePlot(se_merged, crop_area = c(0.4, 0.4, 0.7, 0.7), sampleIDs = 1, mar = c(0, 0, 0, 0))
 #' ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), sampleIDs = 2, mar = c(0, 0, 0, 0))
 #'
