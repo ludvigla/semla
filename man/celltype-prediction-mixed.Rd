@@ -52,9 +52,9 @@ RunMixedNNLS(object, ...)
 \item{singlecell_matrix}{A matrix-like object with scRNA-seq data}
 
 \item{groups}{A character vector of length \code{ncol(singlecell_matrix)}
-with cell type labels. For `Seurat` objects, one can omit groups in which case
+with cell type labels. For \code{Seurat} objects, one can omit groups in which case
 the current identity is used instead. Alternatively, a string can be provided
-specifying a column to use from the `singlecell_object` meta.data slot.}
+specifying a column to use from the \code{singlecell_object} meta.data slot.}
 
 \item{k}{An integer specifying the number of factors to compute}
 
@@ -107,8 +107,6 @@ will instead be named "factor_1", "factor_2", ...}
 }
 \value{
 An object with mixed cell type and factor proportion estimates
-
-An object with cell type proportion estimates
 }
 \description{
 This function can be used to obtain proportion estimates for a mixture of cell types
@@ -122,17 +120,17 @@ data using Non-negative Least Squares (NNLS).
 }
 \section{default method}{
 
-Input `object` is a matrix-like object with 10x Visium data. The function returns
+Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 a matrix with estimated proportions of dimensions (nCellTypes + k) x nSpots,
 where nCellTypes is the number of cell types, k is the number of factors and nSpots is the number of spots.
-If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-proportions `prop` and the cell type/factor expression profile matrix `W`.
+If \code{return_expression_profiles=TRUE}, the returned object will be a list with estimated
+proportions \code{prop} and the cell type/factor expression profile matrix \code{W}.
 }
 
 \section{Seurat method}{
 
-Input \code{object} is a \code{Seurat} object with 10x Visium data. The function returns
-the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
+Input \code{object} is a \code{Seurat) object with 10x Visium data. The function returns
+the \code{Seurat) object with either a new \code{Assay} or \code{DimReduc} object containing
 estimated proportions for cell types and additional factors.
 }
 

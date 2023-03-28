@@ -24,18 +24,16 @@ NULL
 #' @importFrom tidyr pivot_wider
 #' @importFrom jsonlite write_json
 #' 
-#' @returns Writes coordinates to a file
+#' @returns No return value, writes coordinates to a file
 #'
 #' @examples
-#' \dontrun{
-#' libary(semla)
+#' library(semla)
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
 #'                                  package = "semla"))
 #'
-#' export_coordinates(se_mbrain, outdir = "./")
-#' }
+#' export_coordinates(se_mbrain, outdir = tempdir())
 #'
 #' @export
 #'

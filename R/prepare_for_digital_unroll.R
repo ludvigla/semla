@@ -9,7 +9,6 @@ NULL
 #' The exported JSON file should be exported to the same directory as
 #' the H&E image tiles generated with \code{\link{TileImage}}
 #'
-#' @param object A `Seurat` object created with `semla`
 #' @param sampleID An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
@@ -24,9 +23,10 @@ NULL
 #'
 #' @seealso CutSpatialNetwork
 #' 
+#' @return No return value, writes data to an output directory
+#' 
 #' @examples 
 #' 
-#' \dontrun{
 #' library(semla)
 #' library(magick)
 #' 
@@ -35,9 +35,8 @@ NULL
 #' # Fetch a spatial network
 #' spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
 #' 
-#' # Export graph as a JSON file to the current working directory
-#' export_graph(se_mbrain, sampleID = 1, outdir = ".")
-#' }
+#' # Export graph as a JSON file to a temporary directory
+#' export_graph(se_mbrain, sampleID = 1, outdir = tempdir())
 #'
 #' @export
 #'
@@ -65,7 +64,8 @@ export_graph <- function (
 
   # Import tidygraph
   if (!requireNamespace("tidygraph"))
-    install.packages("tidygraph")
+    abort(glue("Package {cli::col_br_magenta('tidygraph')} is required. Please install it with: \n",
+               "install.packages('tidygraph')"))
 
   # Create spatial network
   if (verbose) cli_alert_info("Creating spatial network for sample {sampleID}")

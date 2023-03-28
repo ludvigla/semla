@@ -15,7 +15,7 @@ Defaults to localhost "127.0.0.1"}
 \item{port}{An integer that indicates the port to listen on.}
 }
 \value{
-A beakr server with an active instance
+A \code{Beakr} class object server defining a server instance
 }
 \description{
 Hosts a file server from a specified directory. See

@@ -143,7 +143,6 @@ the results are returned to the \code{meta.data} slot.
 
 \examples{
 
-\dontrun{
 library(semla)
 library(ggplot2)
 library(patchwork)
@@ -191,6 +190,7 @@ wrap_plots(p2, p1, ncol = 2) &
   coord_fixed() &
   theme_void()
 
+\donttest{
 # \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
 # Calculate radial distances for fixed angle interval
 # \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%

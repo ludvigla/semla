@@ -36,7 +36,7 @@ containing the spatial network should be overwritten after completion}
 \item{verbose}{Print messages}
 }
 \value{
-A \code{tbl_graph} object with
+A \code{tbl_graph} object representing a spatial network
 }
 \description{
 Opens an interactive viewer where a spatial network is visualized on top

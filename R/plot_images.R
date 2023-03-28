@@ -39,8 +39,8 @@ NULL
 #'
 #' @author Ludvig Larsson
 #'
-#' @return Draws a plot of the H&E images or alternatively, returns a \code{patchwork} 
-#' composed of \code{ggplot} objects
+#' @return No return value. Draws a plot of the H&E images or alternatively, 
+#' returns a \code{patchwork} composed of \code{ggplot} objects.
 #'
 #' @examples
 #'
@@ -50,11 +50,6 @@ NULL
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
-#' 
-#' # ImagePlot will throw an error if no images are loaded
-#' \dontrun{
-#'   ImagePlot(se_merged)
-#' }
 #' 
 #' # Load images
 #' se_merged <- LoadImages(se_merged)
@@ -152,6 +147,8 @@ ImagePlot <- function (
 
   if (!return_as_gg) {
     # Create a plot layout
+    oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar)) # Go back to previous settings on exit
     layout.matrix <- t(matrix(c(1:length(images), rep(0, nrows*ncols - length(images))), nrow = ncols, ncol = nrows))
     layout(mat = layout.matrix)
     

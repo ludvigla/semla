@@ -18,6 +18,9 @@
 
 \item{value}{Data to add to meta data data.frame.}
 }
+\value{
+No return value, adds meta data to a \code{Staffli} object
+}
 \description{
 Method used to set meta data in a \code{Staffli} object
 }

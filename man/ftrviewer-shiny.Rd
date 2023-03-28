@@ -24,6 +24,11 @@ string and have \code{'px'} appended.}
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
 }
+\value{
+A \code{shiny.tag.list} output or a \code{shiny.render.function} 
+function produced to be used in a \code{shiny} app. \code{ftrviewerOutput} 
+is used in the UI and \code{renderFtrviewer} on the server side.
+}
 \description{
 Output and render functions for using ftrviewer within Shiny
 applications and interactive Rmd documents.

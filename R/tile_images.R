@@ -7,7 +7,6 @@
 #' @param im An image of class \code{magick-image}
 #' @param sampleID The section number to use. This number will be appended to the output files names
 #' @param outpath A string specifying an output directory to save the tiled image in.
-#' If this is not provided, a temporary directory will be created
 #' @param maxZoomLevel Max zoom level
 #' @param maxImgWidth Safety threshold to make sure that the zoom level doesn't get too deep.
 #' @param nCores Number of cores to use for threading
@@ -26,11 +25,8 @@
 #' @return A character vector with the tile path
 #'
 #' @examples
-#' \dontrun{
-#' if (!requireNamespace("shiny"))
-#'   install.packages("shiny")
-#' if (!requireNamespace("leaflet"))
-#'   install.packages("leaflet")
+#' \donttest{
+#' 
 #' library(magick)
 #' library(shiny)
 #' library(leaflet)
@@ -44,7 +40,7 @@
 #' im <- image_read("tissue_hires_image.jpg")
 #' 
 #' # tile image and return path to tiles
-#' tile_res <- TileImage(im, nCores = 2)
+#' tile_res <- TileImage(im, outpath = tempdir(), nCores = 1)
 #' 
 #' # Create a simple viewer with leaflet
 #' ui <- fluidPage(
@@ -69,7 +65,7 @@
 TileImage <- function (
     im,
     sampleID = 1,
-    outpath = NULL,
+    outpath,
     maxZoomLevel = 4,
     maxImgWidth = 1e4,
     nCores = detectCores() - 1,

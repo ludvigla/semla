@@ -51,7 +51,8 @@ assay will be used.}
 \item{slot_use}{Select slot to use from assay object.}
 }
 \value{
-Either a list of tibbles or a tibble with feature names and correlation scores
+Either a list of tibbles or a tibble with feature names and correlation
+scores. See section \strong{Mode} for details.
 }
 \description{
 This function can be used to find genes with high spatial autocorrelation in SRT data.
@@ -111,7 +112,7 @@ a list with one \code{tibble} per sample.
 }
 
 \examples{
-\dontrun{
+\donttest{
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
@@ -161,7 +162,7 @@ head(spatgenes[[1]])
 # typically only cover a few spots and more randomly dispersed throughput the tissue
 head(VariableFeatures(se_mbrain))
 
-\dontrun{
+\donttest{
 # The same principle can be used to estimate spatial autocorrelation for other features,
 # for example dimensionality reduction vectors
 spatpcs <- CorSpatialFeatures(se_mbrain,

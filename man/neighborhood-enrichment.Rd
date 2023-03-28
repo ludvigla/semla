@@ -55,7 +55,7 @@ results (\code{perm_mean}), the standard deviation of the permuted results (\cod
 and the z-score (\code{z_score}).
 }
 \examples{
-\dontrun{
+\donttest{
 library(semla)
 
 # Read data

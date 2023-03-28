@@ -11,9 +11,11 @@
 #' @param elementId The element id of the widget
 #' @param quit A logical specifying is the app should quit
 #' 
+#' @return A \code{htmlwidget} to be used in a \code{shiny} application
+#' 
 #' @examples 
 #' 
-#' \dontrun{
+#' \donttest{
 #' library(semla)
 #' library(magick)
 #' 
@@ -29,7 +31,7 @@
 #'   image_read()
 #' 
 #' # Tile image
-#' tilepath <- TileImage(im = im, outpath = ".")
+#' tilepath <- TileImage(im = im, outpath = tempdir())
 #' 
 #' # Get spatial network
 #' spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
@@ -63,7 +65,8 @@ osddu <- function (
 
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   # describe a React component to send to the browser for rendering.
@@ -108,7 +111,11 @@ widget_html.osddu <- function(id, style, class, ...) {
 #' @param expr An expression that generates a osddu
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' is useful if you want to save an expression in a variable.
+#'   
+#' @return A \code{shiny.tag.list} output or a \code{shiny.render.function} 
+#' function produced to be used in a \code{shiny} app. \code{osdduOutput} 
+#' is used in the UI and \code{renderOsddu} on the server side.
 #'
 #' @name osddu-shiny
 #'

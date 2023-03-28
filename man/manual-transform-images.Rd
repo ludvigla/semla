@@ -70,7 +70,6 @@ will return the input \code{Seurat} object unmodified.
 }
 
 \examples{
-\dontrun{
 
 library(semla)
 library(magick)
@@ -87,20 +86,17 @@ img2 <- prep_image(im_mbrain |>
                      image_flip(),
                    height = 256)
 
-transforms <- RunAlignment(object = list(img1, img2)
-}
+# Align images and find transform
+transforms <- RunAlignment(object = list(img1, img2))
 
-\dontrun{
-library(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
   LoadImages()
 
-# Run alignment application
+# Run alignment application on a Seurat object
 se_merged <- RunAlignment(se_merged)
-}
 
 }
 \seealso{

@@ -35,7 +35,6 @@ NULL
 #' @author Ludvig Larsson
 #'
 #' @examples
-#' \dontrun{
 #'
 #' library(semla)
 #' library(magick)
@@ -52,8 +51,8 @@ NULL
 #'                      image_flip(),
 #'                    height = 256)
 #' 
-#' transforms <- RunAlignment(object = list(img1, img2)
-#' }
+#' # Align images and find transform
+#' transforms <- RunAlignment(object = list(img1, img2))
 #'
 #' @export
 RunAlignment.default <- function (
@@ -164,17 +163,14 @@ RunAlignment.default <- function (
 #' @rdname manual-transform-images
 #' 
 #' @examples 
-#' \dontrun{
-#' library(semla)
 #' 
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
 #'   LoadImages()
 #' 
-#' # Run alignment application
+#' # Run alignment application on a Seurat object
 #' se_merged <- RunAlignment(se_merged)
-#' }
 #' 
 #' @export
 RunAlignment.Seurat <- function (

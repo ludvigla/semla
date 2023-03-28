@@ -20,6 +20,9 @@ GetImages(object, image_use = c("raw", "transformed"))
 
 \item{image_use}{A string specifying the image type to get}
 }
+\value{
+A \code{list} of images in \code{raster} format
+}
 \description{
 Method to extract images
 }

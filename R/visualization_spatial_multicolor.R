@@ -416,7 +416,8 @@ MapMultipleFeatures.Seurat <- function (
 
   # require ggnewscale
   if (!requireNamespace("ggnewscale")) {
-    install.packages("ggnewscale")
+    abort(glue("Package {cli::col_br_magenta('ggnewscale')} is required. Please install it with: \n",
+               "install.packages('ggnewscale')"))
   }
 
   # Should NA values be dropped?

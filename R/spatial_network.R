@@ -4,7 +4,6 @@ NULL
 
 #' @importFrom dplyr group_by mutate ungroup filter left_join summarize n add_count
 #' @importFrom tibble tibble
-#' @importFrom utils install.packages
 #' @importFrom rlang %||% abort
 #'
 #' @param object An object
@@ -22,7 +21,7 @@ NULL
 #' @author Ludvig Larsson
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(ggplot2)
 #'
 #' # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs
@@ -95,7 +94,9 @@ GetSpatialNetwork.default <- function (
   }
 
   # install dbscan if not already installed
-  if (!requireNamespace("dbscan")) install.packages("dbscan")
+  if (!requireNamespace("dbscan")) 
+    abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
+               "install.packages('dbscan')"))
 
   # Set number of nearest neighbors if NULL
   nNeighbors <- nNeighbors %||% 6

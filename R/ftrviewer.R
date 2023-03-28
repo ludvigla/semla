@@ -1,6 +1,6 @@
 #' Open a feature viewer react application
 #'
-#' This function will open a react application that listens can
+#' This function will open a react application that can
 #' be used to interactively visualize categorical or numeric features
 #' as spatial maps. For the application to run properly, relevant data needs
 #' to be available via a file server. This function is intended to be used
@@ -23,14 +23,15 @@
 #' @param container_width,container_height Container width/height in pixels
 #' @param elementId The id of the viewer element
 #' 
+#' @return A \code{htmlwidget} to be used in a \code{shiny} application
+#' 
 #' @examples
-#' \dontrun{
 #' 
 #' library(semla)
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mbrain <- LoadImages(se_mbrain)
 #' 
-#' datapath <- ExportDataForViewer(se_mbrain, outdir = ".")
+#' datapath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
 #' 
 #' # Start file server
 #' file_server(datapath)
@@ -42,8 +43,6 @@
 #' 
 #' # Stop file server
 #' beakr::stopAllServers()
-#' 
-#' }
 #'
 #' @export
 ftrviewer <- function (
@@ -67,7 +66,8 @@ ftrviewer <- function (
 
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   stopifnot(
@@ -127,7 +127,8 @@ widget_html.ftrviewer <- function(id, style, class, ...) {
 
   # Require htmltools
   if (!requireNamespace("htmltools", quietly = TRUE)) {
-    install.packages("htmltools")
+    abort(glue("Package {cli::col_br_magenta('htmltools')} is required. Please install it with: \n",
+               "install.packages('htmltools')"))
   }
 
   htmltools::tagList(
@@ -151,7 +152,11 @@ widget_html.ftrviewer <- function(id, style, class, ...) {
 #' @param expr An expression that generates a ftrviewer
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' is useful if you want to save an expression in a variable.
+#' 
+#' @return A \code{shiny.tag.list} output or a \code{shiny.render.function} 
+#' function produced to be used in a \code{shiny} app. \code{ftrviewerOutput} 
+#' is used in the UI and \code{renderFtrviewer} on the server side.
 #'
 #' @name ftrviewer-shiny
 #'
@@ -159,7 +164,8 @@ widget_html.ftrviewer <- function(id, style, class, ...) {
 ftrviewerOutput <- function(outputId, width = '100%', height = '400px'){
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   htmlwidgets::shinyWidgetOutput(outputId, 'ftrviewer', width, height, package = 'semla')
@@ -170,7 +176,8 @@ ftrviewerOutput <- function(outputId, width = '100%', height = '400px'){
 renderFtrviewer <- function(expr, env = parent.frame(), quoted = FALSE) {
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   if (!quoted) { expr <- substitute(expr) } # force quoted

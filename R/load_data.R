@@ -77,7 +77,9 @@ LoadAndMergeMatrices <- function (
       if (ext == "h5") {
         exprMat <- Read10X_h5(samplefiles[i])
       } else if (ext %in% c("tsv", "tsv.gz")) {
-        if (!requireNamespace("data.table")) install.packages("data.table")
+        if (!requireNamespace("data.table")) 
+          abort(glue("Package {cli::col_br_magenta('data.table')} is required. Please install it with: \n",
+                     "install.packages('data.table')"))
         exprMat <- data.frame(data.table::fread(samplefiles[i], sep = "\t", header = TRUE), row.names = 1)
         exprMat <- as(as.matrix(exprMat), "dgCMatrix")
       } else {
@@ -136,7 +138,7 @@ LoadAndMergeMatrices <- function (
 #' @import dplyr
 #' @importFrom utils read.csv
 #'
-#' @return An object of class \code{tbl}
+#' @return An object of class \code{tbl} containing spot coordinates
 #'
 #' @examples
 #'
@@ -232,10 +234,9 @@ LoadImageData <- function (
     exts <- file_ext(png.files)
     check <- exts %in% "png"
     if (!all(check)) abort(glue::glue("Invalid image format: '{exts[!check]}'"))
-    if (!requireNamespace("BiocManager"))
-      install.packages("BiocManager")
     if (!requireNamespace("SpatialExperiment"))
-      install.packages("SpatialExperiment")
+      abort(glue("Package {cli::col_br_magenta('SpatialExperiment')} is required. Please install it with: \n",
+                 "BiocManager::install('SpatialExperiment'')"))
     DF <- SpatialExperiment::readImgData(
       imageSources = unlist(images[i, ]),
       scaleFactors = jsonfiles[i],

@@ -10,9 +10,10 @@
 #' @param height height of component
 #' @param elementId Component element ID
 #' 
+#' @return A \code{htmlwidget} to be used in a \code{shiny} application
+#' 
 #' @examples 
 #' 
-#' \dontrun{
 #' library(semla)
 #' library(magick)
 #' 
@@ -29,7 +30,6 @@
 #'                    height = 256)
 #' 
 #' paper(data = list(img1, img2), width = 600, height = 600)
-#' }
 #'
 #' @export
 paper <- function (
@@ -41,13 +41,9 @@ paper <- function (
 
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
-
-  # validate data
-  # if (!class(data) == "list") stop(sprintf("invalid class '%s' of data object", class(data)))
-  # if (!all(names(data) == c("data", "dimx", "dimy", "length"))) stop("Invalid structure of data.")
-  # if (data$length == 0) stop("The length of the buffer is 0.")
 
   content <- reactR::component(
     "Paper",
@@ -79,7 +75,8 @@ widget_html.paper <- function (
 
   # Require htmltools
   if (!requireNamespace("htmltools", quietly = TRUE)) {
-    install.packages("htmltools")
+    abort(glue("Package {cli::col_br_magenta('htmltools')} is required. Please install it with: \n",
+               "install.packages('htmltools')"))
   }
 
   htmltools::tagList(
@@ -103,7 +100,11 @@ widget_html.paper <- function (
 #' @param expr An expression that generates a paper
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' is useful if you want to save an expression in a variable.
+#'   
+#' @return A \code{shiny.tag.list} output or a \code{shiny.render.function} 
+#' function produced to be used in a \code{shiny} app. \code{paperOutput} 
+#' is used in the UI and \code{renderPaper} on the server side.
 #'
 #' @name paper-shiny
 #'
@@ -116,7 +117,8 @@ paperOutput <- function (
 ){
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   htmlwidgets::shinyWidgetOutput(outputId, 'paper', width, height, package = 'semla')
@@ -132,7 +134,8 @@ renderPaper <- function (
 ) {
   # Require htmlwidgets
   if (!requireNamespace("htmlwidgets", quietly = TRUE)) {
-    install.packages("htmlwidgets")
+    abort(glue("Package {cli::col_br_magenta('htmlwidgets')} is required. Please install it with: \n",
+               "install.packages('htmlwidgets')"))
   }
 
   if (!quoted) { expr <- substitute(expr) } # force quoted

@@ -4,11 +4,11 @@
 \name{semla-package}
 \alias{semla}
 \alias{semla-package}
-\title{semla: Tools for Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization}
+\title{semla: Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A toolkit for Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
+Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
 }
 \seealso{
 Useful links:

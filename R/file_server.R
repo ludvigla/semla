@@ -11,7 +11,7 @@
 #' @import rlang
 #' @import glue
 #'
-#' @return A beakr server with an active instance
+#' @return A \code{Beakr} class object server defining a server instance
 #'
 #' @examples
 #' \donttest{
@@ -41,7 +41,8 @@ file_server <- function (
 
   # Check if beakr is installed
   if (!requireNamespace("beakr"))
-    install.packages("beakr")
+    abort(glue("Package {cli::col_br_magenta('beakr')} is required. Please install it with: \n",
+               "install.packages('beakr')"))
 
   # Create a new beakr instance
   beakr <- beakr::newBeakr()

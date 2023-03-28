@@ -15,6 +15,9 @@ GetStaffli(object)
 \arguments{
 \item{object}{A \code{Seurat} object}
 }
+\value{
+A \code{Staffli} object
+}
 \description{
 Method used to extract a \code{Staffli} object from the tools slot of a
 \code{Staffli} object

@@ -40,10 +40,17 @@ NULL
 #' 
 #' rasters <- LoadImages(c(mousebrain_jpg, mousecolon_jpg))
 #' 
+#' # Save graphical parameters
+#' oldpar <- par(no.readonly = TRUE)
+#' 
+#' # plot images
 #' par(mfrow = c(1, 2), mar = c(0, 0, 0, 0))
 #' for (rst in rasters) {
 #'   plot(rst)
 #' }
+#' 
+#' # Reset graphical parameters
+#' par(oldpar)
 #' 
 #' @export
 #' 

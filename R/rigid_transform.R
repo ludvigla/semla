@@ -14,7 +14,7 @@ NULL
 #' @importFrom glue glue
 #' @importFrom rlang abort
 #'
-#' @return A tibble with image transformations
+#' @return A \code{tbl} with image transformations
 #' 
 #' @examples 
 #' 

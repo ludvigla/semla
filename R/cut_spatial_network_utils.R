@@ -1,6 +1,6 @@
 #' Adjust tissue coordinates for digital unrolling
 #'
-#' This function takes a `tbl_graph` object as input generated
+#' This function takes a \code{tbl_graph} object as input generated
 #' with \code{\link{CutSpatialNetwork}} and attempts to calculate
 #' the unrolled tissue coordinates.
 #'
@@ -28,7 +28,7 @@
 #' properly with \code{\link{CutSpatialNetwork}}, otherwise the results will be
 #' inaccurate. See the package website for examples.
 #'
-#' @param full_graph A `tbl_graph` object generated with \code{\link{CutSpatialNetwork}}
+#' @param full_graph A \code{tbl_graph} object generated with \code{\link{CutSpatialNetwork}}
 #' @param verbose Print messages
 #'
 #' @import rlang
@@ -37,7 +37,7 @@
 #' @importFrom tibble tibble as_tibble
 #' @import cli
 #'
-#' @return A `tibble` with "unrolled" tissue coordinates
+#' @return A \code{tibble} with "unrolled" tissue coordinates
 #'
 #' @export
 #'
@@ -51,10 +51,11 @@ AdjustTissueCoordinates <- function (
 
   # Import tidygraph and igraph
   if (!requireNamespace("tidygraph"))
-    install.packages("tidygraph")
+    abort(glue("Package {cli::col_br_magenta('tidygraph')} is required. Please install it with: \n",
+               "install.packages('tidygraph')"))
   if (!requireNamespace("igraph"))
-    install.packages("igraph")
-
+    abort(glue("Package {cli::col_br_magenta('igraph')} is required. Please install it with: \n",
+               "install.packages('igraph')"))
   if (!inherits(full_graph, what = "tbl_graph"))
     abort(glue("Invalid class '{class(full_graph)[1]}', expected a 'tbl_graph'"))
 

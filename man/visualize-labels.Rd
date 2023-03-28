@@ -146,7 +146,6 @@ Only 1 categorical feature can be provided.
 \examples{
 
 library(semla)
-library(ggplot2)
 
 # Load Seurat object
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
@@ -166,7 +165,7 @@ MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 2)
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
           section_number = 1, split_labels = TRUE, ncol = 4)
           
-\dontrun{
+\donttest{
 
 # Combine plots with different labels
 MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |

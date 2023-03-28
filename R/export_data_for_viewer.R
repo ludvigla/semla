@@ -23,23 +23,23 @@
 #' @return A path to the directory where the data is saved
 #'
 #' @examples
-#' \dontrun{
+#' 
 #' libary(semla)
 #'
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain",
 #'                                  "se_mbrain",
 #'                                  package = "semla"))
 #'
-#' # Export viewer files to current working directory
-#' ExportDataForViewer(se_mbrain, outdir = "./")
-#' }
+#' # Export viewer files to a temporary directory
+#' outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
+#' outpath
 #'
 #' @export
 #'
 ExportDataForViewer <- function (
   object,
   sampleIDs = NULL,
-  outdir = "./",
+  outdir,
   overwrite = FALSE,
   verbose = TRUE
 ) {

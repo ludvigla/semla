@@ -95,7 +95,6 @@ NULL
 #'
 #' @examples
 #'
-#' \dontrun{
 #' library(semla)
 #' library(ggplot2)
 #' library(patchwork)
@@ -143,6 +142,7 @@ NULL
 #'   coord_fixed() &
 #'   theme_void()
 #'
+#' \donttest{
 #' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #' # Calculate radial distances for fixed angle interval
 #' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -295,7 +295,8 @@ RadialDistance.default <- function (
   # Convert to microns
   if (convert_to_microns) {
     if (!requireNamespace("dbscan")) {
-      install.packages("dbscan")
+      abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
+                 "install.packages('dbscan')"))
     }
     center_to_center_pixel_distances <- sapply(object |> group_by(sampleID) |> group_split(), function(xy) {
       kNN(x = xy |> select(x, y), k = 1)$dist |> min()

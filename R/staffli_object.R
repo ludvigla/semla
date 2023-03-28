@@ -200,6 +200,8 @@ CreateStaffliObject <- function (
 #' Method to extract image info
 #'
 #' @param object A \code{Staffli} or \code{Seurat} object
+#' 
+#' @return A \code{tbl} with image information
 #'
 #' @export
 #' @docType methods
@@ -262,6 +264,8 @@ setMethod (
 #' Method to extract image scale factors
 #'
 #' @param object A \code{Staffli} or \code{Seurat} object
+#' 
+#' @return A \code{tbl} with image scale factors
 #'
 #' @export
 #' @docType methods
@@ -324,6 +328,8 @@ setMethod (
 #' Method to extract coordinates
 #'
 #' @param object A \code{Staffli} or \code{Seurat} object
+#' 
+#' @return A \code{tbl} with spot coordinates
 #'
 #' @export
 #' @docType methods
@@ -387,6 +393,8 @@ setMethod (
 #'
 #' @param object A \code{Staffli} or \code{Seurat} object
 #' @param image_use A string specifying the image type to get
+#' 
+#' @return A \code{list} of images in \code{raster} format
 #'
 #' @export
 #' @docType methods
@@ -458,6 +466,8 @@ setMethod (
 #' \code{Staffli} object
 #'
 #' @param object A \code{Seurat} object
+#' 
+#' @return A \code{Staffli} object
 #'
 #' @export
 #' @docType methods
@@ -499,6 +509,8 @@ setMethod (
 #' @param drop If TRUE the result is coerced to the lowest possible dimension.
 #' This only works for extracting elements, not for the replacement.
 #' 
+#' @return Meta data from a \Code{Staffli} object
+#' 
 #' @examples 
 #' 
 #' # Load example data
@@ -524,6 +536,8 @@ setMethod (
 #' Method used to set meta data in a \code{Staffli} object
 #' @rdname Staffli-set-methods
 #' @aliases `[[<-`,Staffli,Staffli-method
+#' 
+#' @return No return value, adds meta data to a \code{Staffli} object
 #'
 #' @param x object in which to replace element(s).
 #' @param i row indices specifying elements to replace.
@@ -553,6 +567,8 @@ setMethod (
 #' @import dplyr
 #' @importFrom magick image_read image_info
 #' @importFrom tibble tibble
+#' 
+#' @return A \code{Staffli} or \code{Seurat} object with updated image paths
 #' 
 #' @export
 #' @docType methods
@@ -622,6 +638,9 @@ setMethod (
 #'
 #' @rdname show
 #' @aliases show,Staffli,Staffli-method
+#' 
+#' @return No return value, plots the spot coordinates and alternatively also
+#' the images found in a \code{Staffli} object
 #'
 #' @param object object to print pre-selected attributes for
 #'
@@ -653,7 +672,9 @@ setMethod (
 #' @import rlang
 #' @import glue
 #' @import dplyr
-#' @importFrom patchwork wrap_plots inset_element
+#' @importFrom patchwork wrap_plots inset_element 
+#' 
+#' @return Noe return value, prints information about a \code{Staffli} object
 #'
 #' @rdname plot
 #' @aliases plot,Staffli,Staffli-method

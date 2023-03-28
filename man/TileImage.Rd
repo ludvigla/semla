@@ -7,7 +7,7 @@
 TileImage(
   im,
   sampleID = 1,
-  outpath = NULL,
+  outpath,
   maxZoomLevel = 4,
   maxImgWidth = 10000,
   nCores = detectCores() - 1,
@@ -20,8 +20,7 @@ TileImage(
 
 \item{sampleID}{The section number to use. This number will be appended to the output files names}
 
-\item{outpath}{A string specifying an output directory to save the tiled image in.
-If this is not provided, a temporary directory will be created}
+\item{outpath}{A string specifying an output directory to save the tiled image in.}
 
 \item{maxZoomLevel}{Max zoom level}
 
@@ -42,11 +41,8 @@ map. The size of each tile is 256x256 pixels and the number of zoom levels
 are determined from the automatically.
 }
 \examples{
-\dontrun{
-if (!requireNamespace("shiny"))
-  install.packages("shiny")
-if (!requireNamespace("leaflet"))
-  install.packages("leaflet")
+\donttest{
+
 library(magick)
 library(shiny)
 library(leaflet)
@@ -60,7 +56,7 @@ download.file(file.path("https://raw.githubusercontent.com/ludvigla/semla",
 im <- image_read("tissue_hires_image.jpg")
 
 # tile image and return path to tiles
-tile_res <- TileImage(im, nCores = 2)
+tile_res <- TileImage(im, outpath = tempdir(), nCores = 1)
 
 # Create a simple viewer with leaflet
 ui <- fluidPage(

@@ -20,6 +20,9 @@ ReplaceImagePaths(object, paths)
 
 \item{paths}{A character vector with image paths}
 }
+\value{
+A \code{Staffli} or \code{Seurat} object with updated image paths
+}
 \description{
 Replace image paths
 }

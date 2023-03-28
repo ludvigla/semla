@@ -24,6 +24,11 @@ string and have \code{'px'} appended.}
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
 }
+\value{
+A \code{shiny.tag.list} output or a \code{shiny.render.function} 
+function produced to be used in a \code{shiny} app. \code{paperOutput} 
+is used in the UI and \code{renderPaper} on the server side.
+}
 \description{
 Output and render functions for using paper within Shiny
 applications and interactive Rmd documents.

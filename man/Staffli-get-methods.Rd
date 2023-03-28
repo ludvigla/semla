@@ -17,6 +17,9 @@
 \item{drop}{If TRUE the result is coerced to the lowest possible dimension.
 This only works for extracting elements, not for the replacement.}
 }
+\value{
+Meta data from a \Code{Staffli} object
+}
 \description{
 Method used to get meta data from a \code{Staffli} object
 }

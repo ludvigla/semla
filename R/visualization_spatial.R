@@ -153,7 +153,8 @@ MapFeatures.default <- function (
   # add blend colors if blend=TRUE
   if (blend) {
     if (!requireNamespace("farver", quietly = TRUE)) {
-      install.packages("farver")
+      abort(glue("Package {cli::col_br_magenta('farver')} is required. Please install it with: \n",
+                 "install.packages('farver')"))
     }
     data <- .color_blender(data, features, blend_order, feature_limits, scale_alpha)
     extreme_colors <- farver::encode_colour(diag(ncol = 3, nrow = 3)*255, from = "rgb")
@@ -234,7 +235,8 @@ MapFeatures.default <- function (
   # Add scalebar
   if (add_scalebar) {
     if (!requireNamespace("dbscan")) {
-      install.packages("dbscan")
+      abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
+                 "install.packages('dbscan')"))
     }
     scalebar_width <- scalebar_gg$labels$scalebar_width
     sample_plots <- lapply(names(sample_plots), function(nm) {
@@ -299,17 +301,14 @@ MapFeatures.default <- function (
 #' @examples
 #'
 #' library(semla)
-#' if (!requireNamespace("viridis"))
-#'   install.packages("viridis")
 #' library(viridis)
-#' library(ggplot2)
 #'
 #' # Load example Visium data
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 #' se_merged <- MergeSTData(se_mbrain, se_mcolon)
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #' # Select features
 #' selected_features <- c("Clu", "Slc6a3", "Vip")
@@ -730,7 +729,8 @@ MapLabels.default <- function (
   # Add scalebar
   if (add_scalebar) {
     if (!requireNamespace("dbscan")) {
-      install.packages("dbscan")
+      abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
+                 "install.packages('dbscan')"))
     }
     scalebar_width <- scalebar_gg$labels$scalebar_width
     sample_plots <- lapply(names(sample_plots), function(nm) {
@@ -786,7 +786,6 @@ MapLabels.default <- function (
 #' @examples
 #'
 #' library(semla)
-#' library(ggplot2)
 #'
 #' # Load Seurat object
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
@@ -806,7 +805,7 @@ MapLabels.default <- function (
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2", pt_size = 0.5,
 #'           section_number = 1, split_labels = TRUE, ncol = 4)
 #'           
-#' \dontrun{
+#' \donttest{
 #'
 #' # Combine plots with different labels
 #' MapLabels(se_mbrain, column_name = "Spatial_snn_res.0.2") |
@@ -1653,7 +1652,8 @@ MapLabels.Seurat <- function (
     mat <- matrix(0, ncol = 3, nrow = nrow(feature_values))
     mat[, blend_order[1:length(features)]] <- (feature_values*255) |> as.matrix()
     if (!requireNamespace("farver", quietly = TRUE)) {
-      install.packages("farver")
+      abort(glue("Package {cli::col_br_magenta('farver')} is required. Please install it with: \n",
+                 "install.packages('farver')"))
     }
     encoded_cols <- mat |>
       farver::encode_colour(from = "rgb")

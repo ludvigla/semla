@@ -24,6 +24,9 @@
 
 \item{...}{Additional parameters passed to \code{geom_point}}
 }
+\value{
+Noe return value, prints information about a \code{Staffli} object
+}
 \description{
 Plot method for \code{Staffli} objects
 }

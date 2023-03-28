@@ -7,15 +7,15 @@
 AdjustTissueCoordinates(full_graph, verbose = TRUE)
 }
 \arguments{
-\item{full_graph}{A `tbl_graph` object generated with \code{\link{CutSpatialNetwork}}}
+\item{full_graph}{A \code{tbl_graph} object generated with \code{\link{CutSpatialNetwork}}}
 
 \item{verbose}{Print messages}
 }
 \value{
-A `tibble` with "unrolled" tissue coordinates
+A \code{tibble} with "unrolled" tissue coordinates
 }
 \description{
-This function takes a `tbl_graph` object as input generated
+This function takes a \code{tbl_graph} object as input generated
 with \code{\link{CutSpatialNetwork}} and attempts to calculate
 the unrolled tissue coordinates.
 }

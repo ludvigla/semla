@@ -77,7 +77,16 @@ FeatureViewer <- function (
   sampleID <- barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
   if (!requireNamespace("shinyBS"))
-    install.packages("shinyBS")
+    abort(glue("Package {cli::col_br_magenta('shinyBS')} is required. Please install it with: \n",
+               "install.packages('shinyBS')"))
+  # Import beakr
+  if (!requireNamespace("beakr"))
+    abort(glue("Package {cli::col_br_magenta('beakr')} is required. Please install it with: \n",
+               "install.packages('beakr')"))
+  # Import colourpicker
+  if (!requireNamespace("colourpicker"))
+    abort(glue("Package {cli::col_br_magenta('colourpicker')} is required. Please install it with: \n",
+               "install.packages('colourpicker')"))
 
   # Create link to javascript and css files for package
   # This has to be loaded before running the app to make sure
@@ -180,13 +189,6 @@ FeatureViewer <- function (
     select(barcode, sampleID)
   # Split barcodes by sampleIDs
   barcodes <- split(barcodes$barcode, barcodes$sampleID)
-
-  # Import beakr
-  if (!requireNamespace("beakr"))
-    install.packages("beakr")
-  # Import colourpicker
-  if (!requireNamespace("colourpicker"))
-    install.packages("colourpicker")
 
   # Check input
   stopifnot(
@@ -1020,7 +1022,8 @@ FeatureViewer <- function (
   info = FALSE
 ) {
   if (!requireNamespace("viridis"))
-    install.packages("viridis")
+    abort(glue("Package {cli::col_br_magenta('viridis')} is required. Please install it with: \n",
+               "install.packages('viridis')"))
   colscales <- list(
     viridis = viridis::viridis(n = 50),
     magma = viridis::magma(n = 50, direction = -1),

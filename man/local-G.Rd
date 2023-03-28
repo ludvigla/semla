@@ -89,7 +89,7 @@ prefixed with "Gi" and p-values are prefixed with one of "Pr(z <!=",
 }
 
 \examples{
-\dontrun{
+\donttest{
 library(semla)
 library(tibble)
 library(dplyr)

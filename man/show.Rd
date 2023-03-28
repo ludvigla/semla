@@ -10,6 +10,10 @@
 \arguments{
 \item{object}{object to print pre-selected attributes for}
 }
+\value{
+No return value, plots the spot coordinates and alternatively also
+the images found in a \code{Staffli} object
+}
 \description{
 Show method for \code{Staffli} objects
 }

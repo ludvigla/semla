@@ -21,8 +21,9 @@
 #' 
 #' @examples 
 #' 
-#' # Convert an old object
-#' # se_new <- UpdateSTUtilityV1Object(se_old)
+#' # The se_old object is missing and will throw an error, but the code demonstrates
+#' # how the function should be used
+#' se_new <- try({UpdateSTUtilityV1Object(se_old)})
 #'
 #' @export
 UpdateSTUtilityV1Object <- function (
@@ -93,16 +94,6 @@ UpdateSTUtilityV1Object <- function (
   # Update names of Seurat object
   if (verbose) cli_alert_info("Renaming spots in {col_br_magenta('Seurat')} object")
   object <- RenameCells(object, new.names = meta_data$barcode)
-
-  # Create an image_info tibble
-  # if (verbose) cli_alert_info("Updating image_info slot")
-  # image_info <- do.call(bind_rows, lapply(seq_along(object@tools$Staffli@dims), function(i) {
-  #   object@tools$Staffli@dims[[i]] |>
-  #     as_tibble() |>
-  #     select(width, height, colorspace, filesize, density, format) |>
-  #     mutate(sampleID = paste0(i), full_width = width, full_height = height) |>
-  #     select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID)
-  # }))
 
   # Create new Staffli object for semla
   if (verbose) cli_alert_info("Creating new Staffli object")

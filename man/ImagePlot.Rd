@@ -44,8 +44,8 @@ grid}
 \item{return_as_gg}{Should the plot be returned as a \code{ggplot} object?}
 }
 \value{
-Draws a plot of the H&E images or alternatively, returns a \code{patchwork} 
-composed of \code{ggplot} objects
+No return value. Draws a plot of the H&E images or alternatively, 
+returns a \code{patchwork} composed of \code{ggplot} objects.
 }
 \description{
 If images are loaded into the \code{Seurat} object with \code{LoadImages},
@@ -62,11 +62,6 @@ library(semla)
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 se_merged <- MergeSTData(se_mbrain, se_mcolon)
-
-# ImagePlot will throw an error if no images are loaded
-\dontrun{
-  ImagePlot(se_merged)
-}
 
 # Load images
 se_merged <- LoadImages(se_merged)

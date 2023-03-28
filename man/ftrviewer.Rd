@@ -55,21 +55,23 @@ ftrviewer(
 
 \item{elementId}{The id of the viewer element}
 }
+\value{
+A \code{htmlwidget} to be used in a \code{shiny} application
+}
 \description{
-This function will open a react application that listens can
+This function will open a react application that can
 be used to interactively visualize categorical or numeric features
 as spatial maps. For the application to run properly, relevant data needs
 to be available via a file server. This function is intended to be used
 within a shiny app
 }
 \examples{
-\dontrun{
 
 library(semla)
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mbrain <- LoadImages(se_mbrain)
 
-datapath <- ExportDataForViewer(se_mbrain, outdir = ".")
+datapath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
 
 # Start file server
 file_server(datapath)
@@ -81,7 +83,5 @@ ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial),
 
 # Stop file server
 beakr::stopAllServers()
-
-}
 
 }

@@ -24,8 +24,9 @@ the missing information stored in the "scalefactors_json.json" files.
 }
 \examples{
 
-# Convert an old object
-# se_new <- UpdateSTUtilityV1Object(se_old)
+# The se_old object is missing and will throw an error, but the code demonstrates
+# how the function should be used
+se_new <- try({UpdateSTUtilityV1Object(se_old)})
 
 }
 \author{

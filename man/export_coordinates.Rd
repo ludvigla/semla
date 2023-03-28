@@ -25,7 +25,7 @@ spatial network for}
 \item{verbose}{Print messages}
 }
 \value{
-Writes coordinates to a file
+No return value, writes coordinates to a file
 }
 \description{
 Utility function to prepare data for \code{\link{FeatureViewer}}.
@@ -36,14 +36,12 @@ the H&E image tiles generated with \code{\link{TileImage}}
 Coordinates are located outside the H&E images will not be shown in the viewer.
 }
 \examples{
-\dontrun{
-libary(semla)
+library(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
 
-export_coordinates(se_mbrain, outdir = "./")
-}
+export_coordinates(se_mbrain, outdir = tempdir())
 
 }

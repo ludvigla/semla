@@ -18,7 +18,7 @@ LoadSpatialCoordinates(
 \item{verbose}{Print messages}
 }
 \value{
-An object of class \code{tbl}
+An object of class \code{tbl} containing spot coordinates
 }
 \description{
 Load coordinates from \strong{'tissue_positions_list.csv'} files and merge them into a \code{tibble}.

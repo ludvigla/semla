@@ -39,7 +39,7 @@ NULL
 #'
 #' @author Ludvig Larsson
 #' 
-#' @returns A \code{tbl_graph} object with 
+#' @returns A \code{tbl_graph} object representing a spatial network
 #'
 #' @export
 #'
@@ -63,9 +63,11 @@ CutSpatialNetwork <- function (
 
   # Import tidygraph
   if (!requireNamespace("tidygraph"))
-    install.packages("tidygraph")
+    abort(glue("Package {cli::col_br_magenta('tidygraph')} is required. Please install it with: \n",
+               "install.packages('tidygraph')"))
   if (!requireNamespace("beakr"))
-    install.packages("beakr")
+    abort(glue("Package {cli::col_br_magenta('beakr')} is required. Please install it with: \n",
+               "install.packages('beakr')"))
 
   # Check input parameters
   stopifnot(

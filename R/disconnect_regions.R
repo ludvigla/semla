@@ -122,7 +122,8 @@ DisconnectRegions.default <- function (
 
   # load tidygraph
   if (!requireNamespace("tidygraph"))
-    install.packages("tidygraph")
+    abort(glue("Package {cli::col_br_magenta('tidygraph')} is required. Please install it with: \n",
+               "install.packages('tidygraph')"))
 
   # Check if graph is disconnected
   if (!.is_disconnected(spatnet)) {

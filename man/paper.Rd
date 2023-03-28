@@ -15,6 +15,9 @@ paper(data, width = NULL, height = NULL, elementId = NULL)
 
 \item{elementId}{Component element ID}
 }
+\value{
+A \code{htmlwidget} to be used in a \code{shiny} application
+}
 \description{
 Provided a list of images, this function is used to open an interactive app
 built with react and paper JS. The application is mean to be used in a shiny 
@@ -23,7 +26,6 @@ in \code{semla}.
 }
 \examples{
 
-\dontrun{
 library(semla)
 library(magick)
 
@@ -40,6 +42,5 @@ img2 <- prep_image(im_mbrain |>
                    height = 256)
 
 paper(data = list(img1, img2), width = 600, height = 600)
-}
 
 }

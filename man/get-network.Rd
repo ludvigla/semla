@@ -46,7 +46,7 @@ is a character vector with spatial barcodes, "x", "y" hold numeric values repres
 coordinates and "sample" is a character vector with unique sample IDs.
 }
 \examples{
-\dontrun{
+\donttest{
 library(ggplot2)
 
 # Create a spatial network from a tibble with barcodes, (x, y) coordinates and sample IDs

@@ -6,9 +6,9 @@ NULL
 #' @param object A matrix-like object with 10x Visium data
 #' @param singlecell_matrix A matrix-like object with scRNA-seq data
 #' @param groups A character vector of length \code{ncol(singlecell_matrix)}
-#' with cell type labels. For `Seurat` objects, one can omit groups in which case
+#' with cell type labels. For \code{Seurat} objects, one can omit groups in which case
 #' the current identity is used instead. Alternatively, a string can be provided
-#' specifying a column to use from the `singlecell_object` meta.data slot.
+#' specifying a column to use from the \code{singlecell_object} meta.data slot.
 #' @param k An integer specifying the number of factors to compute 
 #' @param nCells_per_group Each cell type is down sampled to this number before
 #' computing cell type expression profiles. This is mainly used to speed up
@@ -31,11 +31,11 @@ NULL
 #' @rdname celltype-prediction-mixed
 #'
 #' @section default method:
-#' Input `object` is a matrix-like object with 10x Visium data. The function returns
+#' Input \code{object} is a matrix-like object with 10x Visium data. The function returns
 #' a matrix with estimated proportions of dimensions (nCellTypes + k) x nSpots,
 #' where nCellTypes is the number of cell types, k is the number of factors and nSpots is the number of spots.
-#' If `return_expression_profiles=TRUE`, the returned object will be a list with estimated
-#' proportions `prop` and the cell type/factor expression profile matrix `W`.
+#' If \code{return_expression_profiles=TRUE}, the returned object will be a list with estimated
+#' proportions \code{prop} and the cell type/factor expression profile matrix \code{W}.
 #'
 #' @export
 RunMixedNNLS.default <- function (
@@ -82,7 +82,8 @@ RunMixedNNLS.default <- function (
   
   # Make sure that dev version of RcppML is installed
   if (!requireNamespace("RcppML"))
-    install.packages("RcppML") # compile dev version
+    abort(glue("Package {cli::col_br_magenta('RcppML')} is required. Please install it with: \n",
+               "install.packages('RcppML')"))
   if ((packageVersion("RcppML") |> as.character()) != "0.3.7") {
     cli_alert_warning("  The NNLS function might break if a dev version of RcppML is used. ")
     cli_alert_warning("  If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML.")
@@ -144,33 +145,31 @@ RunMixedNNLS.default <- function (
 #' provided, the intersection of variable features between sc_object and st_object
 #' will be used. Note that the intersect can be quite small, in which case you can
 #' increase the number of variable features by rerunning \code{FindVariableFeatures}
-#' and increase the number with the `nfeatures` argument.
-#' @param singlecell_object A `Seurat` object with single-cell gene expression data
+#' and increase the number with the \code{nfeatures} argument.
+#' @param singlecell_object A \code{Seurat} object with single-cell gene expression data
 #' @param singlecell_assay Assay in single cell data object to use for deconvolution
 #' @param spatial_assay Assay in Visium data object to use for deconvolution
-#' @param slot Name of slot in `singlecell_assay` and `spatial_assay` to use for
+#' @param slot Name of slot in \code{singlecell_assay} and \code{spatial_assay} to use for
 #' deconvolution
-#' @param assay_name Sets the name of the returned `Assay` object. Only active
+#' @param assay_name Sets the name of the returned \code{Assay} object. Only active
 #' if return.as.dimred = FALSE.
-#' @param dimred_name Sets the name of  the returned `DimReduc` object. Only
+#' @param dimred_name Sets the name of  the returned \code{DimReduc} object. Only
 #' active if return.as.dimred = TRUE.
-#' @param return_as_dimred By default, the results are returned as an `Assay`
+#' @param return_as_dimred By default, the results are returned as an \code{Assay}
 #' named "celltypeprops", where each feature is named after the cell type IDs.
-#' Alternatively, you can return the results as a `DimReduc` object. This will
+#' Alternatively, you can return the results as a \code{DimReduc} object. This will
 #' also provide the cell gene loadings for each cell type. However, the proportions
 #' will instead be named "factor_1", "factor_2", ...
 #'
 #' @section Seurat method:
-#' Input `object` is a `Seurat` object with 10x Visium data. The function returns
-#' the `Seurat` object with either a new `Assay` or `DimReduc` object containing
+#' Input \code{object} is a \code{Seurat) object with 10x Visium data. The function returns
+#' the \code{Seurat) object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated proportions for cell types and additional factors.
 #'
 #' @importFrom Seurat GetAssayData CreateAssayObject CreateDimReducObject
 #' @import cli
 #'
 #' @rdname celltype-prediction-mixed
-#'
-#' @return An object with cell type proportion estimates
 #'
 #' @export
 #'

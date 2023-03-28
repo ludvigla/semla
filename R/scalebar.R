@@ -40,7 +40,8 @@ scalebar <- function (
 
   # load ggfittext
   if (!requireNamespace("ggfittext")) {
-    install.packages("ggfittext")
+    abort(glue("Package {cli::col_br_magenta('ggfittext')} is required. Please install it with: \n",
+               "install.packages('ggfittext')"))
   }
 
   # Set global variables to NULL

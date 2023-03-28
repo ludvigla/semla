@@ -33,7 +33,7 @@ NULL
 #' test.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(semla)
 #' library(tibble)
 #' library(dplyr)

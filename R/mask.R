@@ -66,9 +66,16 @@ NULL
 #'
 #' im_masked <- MaskImages(im, xy_coords = xy)
 #'
+#' # Save graphical parameters
+#' oldpar <- par(no.readonly = TRUE)
+#'
+#' # Plot masked images
 #' par(mfrow = c(1, 2), mar = c(0, 0, 0, 0))
 #' im |> as.raster() |> plot()
 #' im_masked |> as.raster() |> plot()
+#' 
+#' # Reset graphical parameters
+#' par(oldpar)
 #'
 #' @export
 #'
@@ -228,7 +235,7 @@ MaskImages.default <- function (
 #' # Plot masked images
 #' ImagePlot(se_mbrain)
 #' 
-#' \dontrun{
+#' \donttest{
 #' # Using a custom method
 #' custom_fkn <- function(object) {
 #'   object |>

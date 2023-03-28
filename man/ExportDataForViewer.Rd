@@ -7,7 +7,7 @@
 ExportDataForViewer(
   object,
   sampleIDs = NULL,
-  outdir = "./",
+  outdir,
   overwrite = FALSE,
   verbose = TRUE
 )
@@ -37,16 +37,16 @@ With \code{ExportDataForViewer}, you only have to export the files once and you 
 data path for \code{\link{FeatureViewer}} to look for the required files in that directory.
 }
 \examples{
-\dontrun{
+
 libary(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
 
-# Export viewer files to current working directory
-ExportDataForViewer(se_mbrain, outdir = "./")
-}
+# Export viewer files to a temporary directory
+outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
+outpath
 
 }
 \seealso{

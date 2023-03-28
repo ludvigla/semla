@@ -18,6 +18,9 @@ GetImageInfo(object)
 \arguments{
 \item{object}{A \code{Staffli} or \code{Seurat} object}
 }
+\value{
+A \code{tbl} with image information
+}
 \description{
 Method to extract image info
 }

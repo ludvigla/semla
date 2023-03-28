@@ -18,6 +18,9 @@ GetCoordinates(object)
 \arguments{
 \item{object}{A \code{Staffli} or \code{Seurat} object}
 }
+\value{
+A \code{tbl} with spot coordinates
+}
 \description{
 Method to extract coordinates
 }

@@ -28,7 +28,7 @@ for counter-clockwise rotation. The value needs to be in the range (-360, 360)}
 \item{scalefactor}{A numeric value specifying a scaling factor between (0, 3)}
 }
 \value{
-A tibble with image transformations
+A \code{tbl} with image transformations
 }
 \description{
 Utility function to generate a tibble with image transformations

@@ -50,7 +50,7 @@ NULL
 #'
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(semla)
 #'
 #' # Read data
@@ -280,7 +280,7 @@ RunNeighborhoodEnrichmentTest <- function(
 #'
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(semla)
 #'
 #' # Read data

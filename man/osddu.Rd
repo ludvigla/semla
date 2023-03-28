@@ -27,6 +27,9 @@ osddu(
 
 \item{quit}{A logical specifying is the app should quit}
 }
+\value{
+A \code{htmlwidget} to be used in a \code{shiny} application
+}
 \description{
 This function is used to start an interactive widget for
 digital unrolling. It requires a static files server to be
@@ -34,7 +37,7 @@ hosted in order to find load the necessary files.
 }
 \examples{
 
-\dontrun{
+\donttest{
 library(semla)
 library(magick)
 
@@ -50,7 +53,7 @@ im <- GetStaffli(se_mcolon)@imgs[1] |>
   image_read()
 
 # Tile image
-tilepath <- TileImage(im = im, outpath = ".")
+tilepath <- TileImage(im = im, outpath = tempdir())
 
 # Get spatial network
 spatnet <- GetSpatialNetwork(se_mcolon)[[1]]

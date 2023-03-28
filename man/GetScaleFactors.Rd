@@ -18,6 +18,9 @@ GetScaleFactors(object)
 \arguments{
 \item{object}{A \code{Staffli} or \code{Seurat} object}
 }
+\value{
+A \code{tbl} with image scale factors
+}
 \description{
 Method to extract image scale factors
 }

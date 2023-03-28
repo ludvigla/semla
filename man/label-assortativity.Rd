@@ -53,7 +53,7 @@ has been scaled towards the network max avg k (\code{k_max}) and thus goes from 
 dispersed) to 1 (fully connected).
 }
 \examples{
-\dontrun{
+\donttest{
 library(semla)
 
 # Read data
