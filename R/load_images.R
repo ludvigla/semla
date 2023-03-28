@@ -80,19 +80,21 @@ LoadImages.default <- function (
     }
   }
 
-  # Check files
-  for (f in object) {
-    if (!file_ext(f) %in% c("png", "jpg", "jpeg"))
-      abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
-    if (!file.exists(f)) abort(glue("File {f} doesn't exist."))
-  }
-
   # Load images
   raw_rasters <- lapply(seq_along(object), function(i) {
     f <- object[i]
+    
+    # Check file extension
+    if (file.exists(f)) {
+      if (!file_ext(f) %in% c("png", "jpg", "jpeg"))
+        abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
+    }
+    
     if (verbose) cli_alert_info("Loading image from {f}")
-    im <- f |>
-      image_read()
+    im <- try({f |> image_read()}, silent = TRUE)
+    if (inherits(im, "try-error"))
+      abort(glue("Invalid path/url {f}. Make sure to have ",
+                 "valid image paths before running {col_br_magenta('LoadImages')}"))
     info <- im |>
       image_info()
 

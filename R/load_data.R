@@ -373,9 +373,9 @@ ReadVisiumData <- function (
       abort(glue("Scalefactors need to be in the range 0.001-1."))
   }
   missing_files <- infoTable |>
-    select(all_of(c("samples", "imgs", "spotfiles")), contains("json")) |>
-    mutate(across(samples:spotfiles, ~ file.exists(.x))) |>
-    summarize(across(samples:spotfiles, ~ any(!.x))) |>
+    select(all_of(c("samples", "spotfiles")), contains("json")) |>
+    mutate(across(everything(), ~ file.exists(.x))) |>
+    summarize(across(everything(), ~ any(!.x))) |>
     unlist()
   if (any(missing_files)) {
     checks <- missing_files[missing_files]
@@ -437,7 +437,11 @@ ReadVisiumData <- function (
   # Read image info
   image_info <- do.call(rbind, lapply(seq_along(infoTable$imgs), function(i) {
     f <- infoTable$imgs[i]
-    image_data <- image_read(f) |>
+    im <- try({image_read(f)}, silent = TRUE)
+    if (inherits(im, "try-error"))
+      abort(glue("Invalid path/url found in 'imgs'. Make sure to have ",
+                 "valid image paths before running {col_br_magenta('ReadVisiumData')}"))
+    image_data <- im |>
       image_info() |>
       mutate(sampleID = paste0(i),
              type = case_when(basename(f) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",

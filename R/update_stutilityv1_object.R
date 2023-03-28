@@ -62,11 +62,11 @@ UpdateSTUtilityV1Object <- function (
   if (verbose) cli_alert_info("Updating image_info slot")
   image_data <- tibble()
   for (i in seq_along(imgs)) {
-    if (!file.exists(imgs[i])) {
-      abort(glue("Invalid path {imgs[i]}. The file does not exist. Make sure ",
-                 "to have valide image paths before running {col_br_magenta('UpdateSTUtilityV1Object')}"))
-    }
-    image_data_sample <- image_read(imgs[i]) |>
+    im <- try({image_read(imgs[i])}, silent = TRUE)
+    if (inherits(im, "try-error"))
+      abort(glue("Invalid path/url {imgs[i]}. Make sure to have ",
+                 "valid image paths before running {col_br_magenta('UpdateSTUtilityV1Object')}"))
+    image_data_sample <- im |>
       image_info() |>
       mutate(sampleID = paste0(i),
              type = case_when(basename(imgs[i]) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
@@ -117,7 +117,7 @@ UpdateSTUtilityV1Object <- function (
   # Try to unload STUtility v1
   unload_STUtilityv1 <- try({detach("package:STutility", unload = TRUE)}, silent = TRUE)
   if (inherits(unload_STUtilityv1, what = "try-error") & verbose)
-    cli_alert_warning("Unloaded {col_br_magenta('STUtility v1')} package")
+    cli_alert_warning("Failed to unload {col_br_magenta('STUtility v1')} package")
 
   # Throw warning
   if (verbose) {

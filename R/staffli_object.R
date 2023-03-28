@@ -169,11 +169,8 @@ CreateStaffliObject <- function (
   
   # Check H&E images
   if (!is.null(imgs)) {
-    for (im in imgs) {
-      if (!im %in% c("mousebrain", "mousecolon")) {
-        if (!file.exists(im)) abort(glue("'{im}' is not a valid path. File doesn't exist."))
-      }
-    }
+    if (!inherits(imgs, what = "character"))
+      abort(glue("Invalid class '{class(imgs)}'. Expected a 'character' vector."))
     if (length(imgs) != length(sampleIDs_meta_data)) 
       abort(glue("Number of images ({length(imgs)}) does not match the number of sampleIDs ({length(sampleIDs_meta_data)})"))
   }
