@@ -25,14 +25,11 @@
 #' 
 #' @examples 
 #' 
-#' # Download old object
-#' destpath <- tempfile()
-#' download.file(file.path("https://github.com/ludvigla/semla",
-#'                         "blob/main/images/mousebrain/se_old?raw=true"), 
-#'               destpath)
+#' se_old_url <- file.path("https://github.com/ludvigla/semla",
+#'                         "blob/main/images/mousebrain/se_old?raw=true")
 #' 
 #' # Load old STUtility object
-#' se_old <- readRDS(destpath)
+#' se_old <- readRDS(url(se_old_url))
 #' 
 #' # Update old STUtility object
 #' se_new <- UpdateSTUtilityV1Object(se_old)
