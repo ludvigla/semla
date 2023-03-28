@@ -33,7 +33,7 @@ NULL
 #'                                  "se_mbrain",
 #'                                  package = "semla"))
 #'
-#' export_coordinates(se_mbrain, outdir = tempdir())
+#' export_coordinates(se_mbrain, outdir = tempdir(), overwrite = TRUE)
 #'
 #' @export
 #'
