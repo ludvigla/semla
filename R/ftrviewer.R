@@ -25,25 +25,6 @@
 #' 
 #' @return A \code{htmlwidget} to be used in a \code{shiny} application
 #' 
-#' @examples
-#' 
-#' library(semla)
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
-#' se_mbrain <- LoadImages(se_mbrain)
-#' 
-#' datapath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
-#' 
-#' # Start file server
-#' file_server(datapath)
-#' 
-#' # Run feature viewer widget
-#' ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial),
-#'           opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
-#'           range = range(se_mbrain$nFeature_Spatial))
-#' 
-#' # Stop file server
-#' beakr::stopAllServers()
-#'
 #' @export
 ftrviewer <- function (
     host = "127.0.0.1",
