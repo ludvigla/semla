@@ -12,7 +12,6 @@
 ^CRAN-SUBMISSION$
 ^stereoscope$
 ^TODO\.md$
-^presentations$
 ^yarn\.lock$
 ^webpack\.config\.js$
 ^package\.json$
@@ -20,8 +19,3 @@
 inst/htmlwidgets/paper.js.map
 inst/htmlwidgets/osddu.js.map
 inst/htmlwidgets/ftrviewer.js.map
-inst/extdata/mousebrain/spatial/tissue_hires_image.png
-inst/extdata/mousebrain/spatial/tissue_lowres_image.png
-inst/extdata/mousecolon/spatial/tissue_hires_image.png
-inst/extdata/mousecolon/spatial/tissue_hires_image.jpg
-inst/extdata/mousecolon/spatial/tissue_lowres_image.png
