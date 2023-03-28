@@ -16,14 +16,11 @@
 #' @examples
 #' \donttest{
 #'
-#' # Host files in current directory
-#' fs <- file_server(hostDir = "./")
+#' # Host files in temporary directory
+#' fs <- file_server(hostDir = tempdir())
 #'
 #' # Stop server
 #' beakr::stopServer(fs)
-#'
-#' # Or stop all servers
-#' beakr::stopAllServers()
 #' }
 #'
 #' @export
