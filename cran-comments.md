@@ -2,7 +2,7 @@
 
 We thank the CRAN Submissions team for their detailed and insightful remarks. We have addressed each of the remarks and answered with a few comments, viewed below.
 
-As a general note, the tutorials placed in the folder "vignettes/" is deliberately included in the package `.Rbuildignore` file to be excluded from the package build. Therefore, we have not updated the content of those files.
+As a general note, the tutorials placed in the folder "vignettes/" are deliberately included in the package `.Rbuildignore` file to be excluded from the package build. Therefore, we have not updated the content of those files.
 
 <br>
 
@@ -42,7 +42,7 @@ __Comment:__ Removed comment from example in `UpdateSTUtilityV1Object.Rd` and in
 > Does not seem necessary.  
 > Please unwrap the examples if they are executable in < 5 sec, or replace `\\dontrun{}` with `\\donttest{}`.  
 
-__Comment:__ Removed `\\dontrun{}` from some tests and replaced with `\\donttest{}` for the remaining ones where they are still deemed necessary for various reasons.
+__Comment:__ Removed `\\dontrun{}` from some tests and replaced with `\\donttest{}` for the remaining ones where they are still deemed necessary to avoid running slow examples. We have kept `\\dontrun{}` for a few examples that demonstrates the usage of shiny applications and htmlwidgets provided in the package. This is to avoid running the apps which stalls the checks.
 <br><br>
 
 > Please ensure that your functions do not write by default or in your examples/vignettes/tests in the user's home filespace (including the package directory and getwd()). This is not allowed by CRAN policies.  
@@ -76,7 +76,7 @@ __Comment:__ Removed `install.packages()` calls from examples and functions and 
 
 > Please ensure that you do not use more than 2 cores in your examples, vignettes, etc.
 
-__Comment:__ We have checked the function examples to make sure that no more than 2 cores are used. The following functions are using the `nCore` argument in their example, and all instances have now been adjusted to set `nCores = 1`; `TileImage()`, `CorSpatialFeatures()`, `RunLabelAssortativityTest()`, and `RunNeighborhoodEnrichmentTest()`.  
+__Comment:__ We have checked the function examples to make sure that no more than 2 cores are used. The following functions are using the `nCores` argument in their example, and all instances have now been adjusted to set `nCores = 1`; `TileImage()`, `CorSpatialFeatures()`, `RunLabelAssortativityTest()`, and `RunNeighborhoodEnrichmentTest()`.  
 
 
 ## CRAN pre-tests (2023-03-27)
