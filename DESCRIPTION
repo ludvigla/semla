@@ -1,6 +1,6 @@
 Package: semla
 Type: Package
-Title: Tools for Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization
+Title: Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization
 Version: 1.0.0
 Authors@R:
     c(person(
@@ -20,7 +20,7 @@ Authors@R:
         role = c('fnd'))
     )
 Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
-Description: A toolkit for Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
+Description: Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
