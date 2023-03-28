@@ -509,7 +509,7 @@ setMethod (
 #' @param drop If TRUE the result is coerced to the lowest possible dimension.
 #' This only works for extracting elements, not for the replacement.
 #' 
-#' @return Meta data from a \Code{Staffli} object
+#' @return Meta data from a \code{Staffli} object
 #' 
 #' @examples 
 #' 

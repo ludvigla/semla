@@ -1,4 +1,4 @@
-## CRAN submission
+## CRAN submission (2023-03-28)
 
 Please omit the redundant "Tools for" in your title and "A toolkit for" from the start of your description text.
 
@@ -25,18 +25,18 @@ Please never do that. Ideally find toy examples that can be regularly executed a
 Examples in comments in:
 UpdateSTUtilityV1Object.Rd
 
-__Comment: Removed comment from example in UpdateSTUtilityV1Object.Rd.__
+__Comment: Removed comment from example in UpdateSTUtilityV1Object.Rd. Updated example to use real data.__
 
 \dontrun{} should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in \dontrun{} adds the comment ("# Not run:") as a warning for the user.
 Does not seem necessary.
 Please unwrap the examples if they are executable in < 5 sec, or replace \dontrun{} with \donttest{}.
 
-__Comment: Removed dontrun from some tests and replaces with donttest for the remaining ones.__
+__Comment: Removed dontrun from some tests and replaced with donttest for the remaining ones.__
 
 Please ensure that your functions do not write by default or in your examples/vignettes/tests in the user's home filespace (including the package directory and getwd()). This is not allowed by CRAN policies.
 Please omit any default path in writing functions. In your examples/vignettes/tests you can write to tempdir().
 
-__Comment: Removed default paths from functions and changed to tempdir() in examples.__
+__Comment: Removed default paths from functions and changed to tempdir() in examples. Vignettes are only provided on our pkgdown website and thus excluded from the package build.__
 
 Please make sure that you do not change the user's options, par or working directory. If you really have to do so within functions, please ensure with an *immediate* call of on.exit() that the settings are reset when the function is exited. e.g.:
 ...
@@ -59,7 +59,7 @@ __Comment: Removed calls to install.packages from examples and functions.__
 
 Please ensure that you do not use more than 2 cores in your examples, vignettes, etc.
 
-__Comment: TBA.__
+__Comment: We have check the function examples to make sure that no more than 2 cores are used.__
 
 
 ## CRAN pre-tests (2023-03-27)

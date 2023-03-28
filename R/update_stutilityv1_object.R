@@ -6,6 +6,10 @@
 #' visualization methods and spatial functions. To mitigate these issues, you can
 #' either reload the data from the raw space ranger output files or manually add
 #' the missing information stored in the "scalefactors_json.json" files.
+#' 
+#' Note that valid image paths need to be available from the \code{STUtility} v1 object.
+#' If not, you can set the paths manually before updating the object:
+#' \code{old_se@tools$Staffli@imgs <- c("path/to/im1.jpg", "path/to/im2.jpg", ...)}
 #'
 #' @param object A \code{Seurat} object created with \code{STUtility} v1
 #' @param verbose Print messages
@@ -21,9 +25,17 @@
 #' 
 #' @examples 
 #' 
-#' # The se_old object is missing and will throw an error, but the code demonstrates
-#' # how the function should be used
-#' se_new <- try({UpdateSTUtilityV1Object(se_old)})
+#' # Download old object
+#' destpath <- tempfile()
+#' download.file(file.path("https://github.com/ludvigla/semla",
+#'                         "blob/main/images/mousebrain/se_old?raw=true"), 
+#'               destpath)
+#' 
+#' # Load old STUtility object
+#' se_old <- readRDS(destpath)
+#' 
+#' # Update old STUtility object
+#' se_new <- UpdateSTUtilityV1Object(se_old)
 #'
 #' @export
 UpdateSTUtilityV1Object <- function (
@@ -45,7 +57,9 @@ UpdateSTUtilityV1Object <- function (
 
   # get image paths
   imgs <- object@tools$Staffli@imgs
-  if (verbose) cli_alert_info("Found {length(imgs)} datasets in {col_br_magenta('STUtility v1')} object")
+  if (is.null(imgs))
+    abort(glue("No image paths found in Seurat object."))
+  if (verbose) cli_alert_info("Found {length(object@tools$Staffli@samplenames)} datasets in {col_br_magenta('STUtility v1')} object")
   
   # Check images
   if (verbose) cli_alert_info("Updating image_info slot")

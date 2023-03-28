@@ -76,17 +76,13 @@ FeatureViewer <- function (
   # Set global variables to NULL
   sampleID <- barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
 
-  if (!requireNamespace("shinyBS"))
-    abort(glue("Package {cli::col_br_magenta('shinyBS')} is required. Please install it with: \n",
-               "install.packages('shinyBS')"))
-  # Import beakr
-  if (!requireNamespace("beakr"))
-    abort(glue("Package {cli::col_br_magenta('beakr')} is required. Please install it with: \n",
-               "install.packages('beakr')"))
-  # Import colourpicker
-  if (!requireNamespace("colourpicker"))
-    abort(glue("Package {cli::col_br_magenta('colourpicker')} is required. Please install it with: \n",
-               "install.packages('colourpicker')"))
+  # Check packages
+  pkgs <- c('shinyBS', 'beakr', 'colourpicker')
+  check_pkgs <- sapply(pkgs, function(x) !requireNamespace(x))
+  if (any(check_pkgs))
+    abort(glue("Packages 'shinyBS', 'beakr' and 'colourpicker' are required. ",
+               "Please install them with: \n",
+               "install.packages(c('shinyBS', 'beakr', 'colourpicker'))"))
 
   # Create link to javascript and css files for package
   # This has to be loaded before running the app to make sure
