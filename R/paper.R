@@ -11,6 +11,30 @@
 #' @param elementId Component element ID
 #' 
 #' @return A \code{htmlwidget} to be used in a \code{shiny} application
+#' 
+#' @examples 
+#' 
+#' library(semla)
+#' library(magick)
+#' 
+#' im_mbrain <- system.file("extdata/mousebrain/spatial",
+#'                          "tissue_lowres_image.jpg",
+#'                          package = "semla")
+#' 
+#' img1 <- prep_image(im_mbrain |>
+#'                      image_read(),
+#'                    height = 256)
+#' img2 <- prep_image(im_mbrain |>
+#'                      image_read() |>
+#'                      image_flip(),
+#'                    height = 256)
+#' 
+#' \dontrun{
+#' if (interactive()) {
+#' # Run widget
+#' paper(data = list(img1, img2), width = 600, height = 600)
+#' }
+#' }
 #'
 #' @export
 paper <- function (

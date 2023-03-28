@@ -52,7 +52,11 @@ NULL
 #'                    height = 256)
 #' 
 #' # Align images and find transform
-#' transforms <- RunAlignment(object = list(img1, img2))
+#' \dontrun{
+#' if (interactive()) {
+#'   transforms <- RunAlignment(object = list(img1, img2))
+#' }
+#' }
 #'
 #' @export
 RunAlignment.default <- function (
@@ -170,7 +174,11 @@ RunAlignment.default <- function (
 #'   LoadImages()
 #' 
 #' # Run alignment application on a Seurat object
-#' se_merged <- RunAlignment(se_merged)
+#' \dontrun{
+#' if (interactive()) {
+#'   se_merged <- RunAlignment(se_merged)
+#' }
+#' }
 #' 
 #' @export
 RunAlignment.Seurat <- function (
