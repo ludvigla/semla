@@ -56,7 +56,7 @@ download.file(file.path("https://raw.githubusercontent.com/ludvigla/semla",
 im <- image_read("tissue_hires_image.jpg")
 
 # tile image and return path to tiles
-tile_res <- TileImage(im, outpath = tempdir(), nCores = 1)
+tile_res <- TileImage(im, outpath = tempdir(), nCores = 1, overwrite = TRUE)
 
 # Create a simple viewer with leaflet
 ui <- fluidPage(

@@ -7,6 +7,8 @@
 export_graph(object, sampleID = 1L, outdir, verbose = TRUE)
 }
 \arguments{
+\item{object}{A \code{Seurat} object created with \code{semla}}
+
 \item{sampleID}{An integer specifying a sample ID to export
 spatial network for}
 
@@ -25,15 +27,11 @@ the H&E image tiles generated with \code{\link{TileImage}}
 \examples{
 
 library(semla)
-library(magick)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 
-# Fetch a spatial network
-spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
-
 # Export graph as a JSON file to a temporary directory
-export_graph(se_mbrain, sampleID = 1, outdir = tempdir())
+export_graph(se_mbrain, sampleID = 1L, outdir = tempdir())
 
 }
 \seealso{

@@ -129,8 +129,8 @@ proportions \code{prop} and the cell type/factor expression profile matrix \code
 
 \section{Seurat method}{
 
-Input \code{object} is a \code{Seurat) object with 10x Visium data. The function returns
-the \code{Seurat) object with either a new \code{Assay} or \code{DimReduc} object containing
+Input \code{object} is a \code{Seurat} object with 10x Visium data. The function returns
+the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 estimated proportions for cell types and additional factors.
 }
 

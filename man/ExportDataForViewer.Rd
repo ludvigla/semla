@@ -38,11 +38,12 @@ data path for \code{\link{FeatureViewer}} to look for the required files in that
 }
 \examples{
 
-libary(semla)
+library(semla)
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
+se_mbrain <- LoadImages(se_mbrain)
 
 # Export viewer files to a temporary directory
 outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir())

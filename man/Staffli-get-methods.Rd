@@ -18,7 +18,7 @@
 This only works for extracting elements, not for the replacement.}
 }
 \value{
-Meta data from a \Code{Staffli} object
+Meta data from a \code{Staffli} object
 }
 \description{
 Method used to get meta data from a \code{Staffli} object

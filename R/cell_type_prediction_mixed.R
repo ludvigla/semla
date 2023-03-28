@@ -38,6 +38,7 @@ NULL
 #' proportions \code{prop} and the cell type/factor expression profile matrix \code{W}.
 #'
 #' @export
+#' 
 RunMixedNNLS.default <- function (
     object,
     singlecell_matrix,
@@ -162,10 +163,10 @@ RunMixedNNLS.default <- function (
 #' will instead be named "factor_1", "factor_2", ...
 #'
 #' @section Seurat method:
-#' Input \code{object} is a \code{Seurat) object with 10x Visium data. The function returns
-#' the \code{Seurat) object with either a new \code{Assay} or \code{DimReduc} object containing
+#' Input \code{object} is a \code{Seurat} object with 10x Visium data. The function returns
+#' the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated proportions for cell types and additional factors.
-#'
+#' 
 #' @importFrom Seurat GetAssayData CreateAssayObject CreateDimReducObject
 #' @import cli
 #'
@@ -173,7 +174,6 @@ RunMixedNNLS.default <- function (
 #'
 #' @export
 #'
-#' @md
 RunMixedNNLS.Seurat <- function (
     object,
     singlecell_object,

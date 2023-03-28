@@ -9,6 +9,7 @@ NULL
 #' The exported JSON file should be exported to the same directory as
 #' the H&E image tiles generated with \code{\link{TileImage}}
 #'
+#' @param object A \code{Seurat} object created with \code{semla}
 #' @param sampleID An integer specifying a sample ID to export
 #' spatial network for
 #' @param outdir Name of a directory to export JSON file to
@@ -28,15 +29,11 @@ NULL
 #' @examples 
 #' 
 #' library(semla)
-#' library(magick)
 #' 
 #' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 #' 
-#' # Fetch a spatial network
-#' spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
-#' 
 #' # Export graph as a JSON file to a temporary directory
-#' export_graph(se_mbrain, sampleID = 1, outdir = tempdir())
+#' export_graph(se_mbrain, sampleID = 1L, outdir = tempdir())
 #'
 #' @export
 #'
@@ -102,7 +99,13 @@ export_graph <- function (
     cli_alert_info("Creating tidy graph object")
     cli_alert_info("Adding node attributes")
   }
-  network <- suppressWarnings({tidygraph::as_tbl_graph(wide_spatial_network, directed = FALSE)})
+  barcodes <- colnames(wide_spatial_network)
+  colnames(wide_spatial_network) <- NULL
+  rownames(wide_spatial_network) <- NULL
+  network <- tidygraph::as_tbl_graph(wide_spatial_network, directed = FALSE)
+  network <- network |> 
+    tidygraph::activate(nodes) |> 
+    mutate(name = barcodes)
 
   st_object <- GetStaffli(object)
   network <- network |>
