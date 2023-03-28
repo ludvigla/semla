@@ -24,23 +24,3 @@ built with react and paper JS. The application is mean to be used in a shiny
 application and is used for the \code{\link{RunAlignment}} function provided 
 in \code{semla}.
 }
-\examples{
-
-library(semla)
-library(magick)
-
-im_mbrain <- system.file("extdata/mousebrain/spatial",
-                         "tissue_lowres_image.jpg",
-                         package = "semla")
-
-img1 <- prep_image(im_mbrain |>
-                     image_read(),
-                   height = 256)
-img2 <- prep_image(im_mbrain |>
-                     image_read() |>
-                     image_flip(),
-                   height = 256)
-
-paper(data = list(img1, img2), width = 600, height = 600)
-
-}

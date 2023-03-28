@@ -42,6 +42,6 @@ se_mbrain <- readRDS(system.file("extdata/mousebrain",
                                  "se_mbrain",
                                  package = "semla"))
 
-export_coordinates(se_mbrain, outdir = tempdir())
+export_coordinates(se_mbrain, outdir = tempdir(), overwrite = TRUE)
 
 }

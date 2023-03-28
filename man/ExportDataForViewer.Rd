@@ -46,7 +46,7 @@ se_mbrain <- readRDS(system.file("extdata/mousebrain",
 se_mbrain <- LoadImages(se_mbrain)
 
 # Export viewer files to a temporary directory
-outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
+outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir(), overwrite = TRUE)
 outpath
 
 }

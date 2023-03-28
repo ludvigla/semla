@@ -65,23 +65,3 @@ as spatial maps. For the application to run properly, relevant data needs
 to be available via a file server. This function is intended to be used
 within a shiny app
 }
-\examples{
-
-library(semla)
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
-se_mbrain <- LoadImages(se_mbrain)
-
-datapath <- ExportDataForViewer(se_mbrain, outdir = tempdir())
-
-# Start file server
-file_server(datapath)
-
-# Run feature viewer widget
-ftrviewer(values = as.numeric(se_mbrain$nFeature_Spatial),
-          opacities = rep(1, ncol(se_mbrain)), isNumeric = TRUE,
-          range = range(se_mbrain$nFeature_Spatial))
-
-# Stop file server
-beakr::stopAllServers()
-
-}
