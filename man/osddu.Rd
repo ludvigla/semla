@@ -35,3 +35,47 @@ This function is used to start an interactive widget for
 digital unrolling. It requires a static files server to be
 hosted in order to find load the necessary files.
 }
+\examples{
+
+library(semla)
+library(magick)
+
+se_mcolon <- readRDS(system.file("extdata/mousecolon", 
+                                 "se_mcolon", 
+                                 package = "semla"))
+# Load images
+se_mcolon <- se_mcolon |> 
+  LoadImages()
+
+# fetch path for one H&E image
+im <- GetStaffli(se_mcolon)@imgs[1] |> 
+  image_read()
+
+# Get spatial network
+spatnet <- GetSpatialNetwork(se_mcolon)[[1]]
+
+\dontrun{
+# Tile image
+tilepath <- TileImage(im = im, outpath = tempdir())
+
+# Export spatial network as JSON
+# Make sure that sampleID matches the ID of the H&E image
+export_graph(se_mcolon, sampleID = 1, outdir = tilepath$datapath)
+
+if (interactive()) {
+# Host file server
+file_server(hostDir = tilepath$datapath)
+
+# Run widget
+osddu(sampleID = 1,
+      host = "127.0.0.1",
+      port = 8080L,
+      width = '800px',
+      height = '800px',
+      quit = FALSE)
+
+beakr::stopAllServers()
+}
+}
+
+}

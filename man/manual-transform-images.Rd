@@ -87,7 +87,11 @@ img2 <- prep_image(im_mbrain |>
                    height = 256)
 
 # Align images and find transform
-transforms <- RunAlignment(object = list(img1, img2))
+\dontrun{
+if (interactive()) {
+  transforms <- RunAlignment(object = list(img1, img2))
+}
+}
 
 
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
@@ -96,7 +100,11 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
   LoadImages()
 
 # Run alignment application on a Seurat object
-se_merged <- RunAlignment(se_merged)
+\dontrun{
+if (interactive()) {
+  se_merged <- RunAlignment(se_merged)
+}
+}
 
 }
 \seealso{
