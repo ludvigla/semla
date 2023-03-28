@@ -74,7 +74,7 @@ se <- se |>
 res <- RunLabelAssortativityTest(object = se,
                                  column_name = "seurat_clusters",
                                  n_permutations = 100,
-                                 nCores = 2)
+                                 nCores = 1)
 
 res |> arrange(desc(avg_k_scaled))
 }

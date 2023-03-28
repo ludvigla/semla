@@ -76,7 +76,7 @@ se <- se |>
 res <- RunNeighborhoodEnrichmentTest(object = se,
                                      column_name = "seurat_clusters",
                                      n_permutations = 100,
-                                     nCores = 2)
+                                     nCores = 1)
 
 res |> arrange(desc(abs(z_score)))
 }
