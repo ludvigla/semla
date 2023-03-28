@@ -1,65 +1,82 @@
 ## CRAN submission (2023-03-28)
 
-Please omit the redundant "Tools for" in your title and "A toolkit for" from the start of your description text.
+We thank the CRAN Submissions team for their detailed and insightful remarks. We have addressed each of the remarks and answered with a few comments, viewed below.
 
-__Comment: Done.__
+As a general note, the tutorials placed in the folder "vignettes/" is deliberately included in the package `.Rbuildignore` file to be excluded from the package build. Therefore, we have not updated the content of those files.
 
-Unexecutable code in man/manual-transform-images.Rd
--> Please check that
+<br>
 
-__Comment: Fixed example.__
+> Please omit the redundant "Tools for" in your title and "A toolkit for" from the start of your description text.
 
-Please add \value to .Rd files regarding exported methods and explain the functions results in the documentation. Please write about the structure of the output (class) and also what the output means. (If a function does not return a value, please document that too, e.g. \value{No return value, called for side effects} or similar)
-Missing Rd-tags in up to 11 .Rd files, e.g.:
-export_graph.Rd: \value
-ftrviewer-shiny.Rd: \value
-ftrviewer.Rd: \value
-osddu-shiny.Rd: \value
-osddu.Rd: \value
-paper-shiny.Rd: \value
+__Comment:__ Fixed.
+<br><br>
 
-__Comment: Added \value to exported functions in .Rd files.__
+> Unexecutable code in man/manual-transform-images.Rd  
+> 
+> -> Please check that
 
-Some code lines in examples are commented out.
-Please never do that. Ideally find toy examples that can be regularly executed and checked. Lengthy examples (> 5 sec), can be wrapped in \donttest{}.
-Examples in comments in:
-UpdateSTUtilityV1Object.Rd
+__Comment:__ Example has been fixed to work properly.
+<br><br>
 
-__Comment: Removed comment from example in UpdateSTUtilityV1Object.Rd. Updated example to use real data.__
+> Please add `\value` to .Rd files regarding exported methods and explain the functions results in the documentation. Please write about the structure of the output (class) and also what the output means. (If a function does not return a value, please document that too, e.g. `\value{No return value, called for side effects}` or similar). 
+Missing Rd-tags in up to 11 .Rd files, e.g.:  
+> export_graph.Rd: `\value`  
+> ftrviewer-shiny.Rd: `\value`  
+> ftrviewer.Rd: `\value`  
+> osddu-shiny.Rd: `\value`  
+> osddu.Rd: `\value`  
+> paper-shiny.Rd: `\value`  
 
-\dontrun{} should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in \dontrun{} adds the comment ("# Not run:") as a warning for the user.
-Does not seem necessary.
-Please unwrap the examples if they are executable in < 5 sec, or replace \dontrun{} with \donttest{}.
+__Comment:__ `\value` have been added to all functions in the .Rd files by adding @return statements to their corresponding exported function. The `@return` statements have been made to be as concise as possible, and where needed, additional information about the output have been further explained in the "Details" and/or under the specific "method" sections of the function documentation.
+<br><br>
 
-__Comment: Removed dontrun from some tests and replaced with donttest for the remaining ones.__
+> Some code lines in examples are commented out.  
+> Please never do that. Ideally find toy examples that can be regularly executed and checked. Lengthy examples (> 5 sec), can be wrapped in `\\donttest{}`.  
+> Examples in comments in:  
+> UpdateSTUtilityV1Object.Rd  
 
-Please ensure that your functions do not write by default or in your examples/vignettes/tests in the user's home filespace (including the package directory and getwd()). This is not allowed by CRAN policies.
-Please omit any default path in writing functions. In your examples/vignettes/tests you can write to tempdir().
+__Comment:__ Removed comment from example in `UpdateSTUtilityV1Object.Rd` and instead updated with an example to use real data.
+<br><br>
 
-__Comment: Removed default paths from functions and changed to tempdir() in examples. Vignettes are only provided on our pkgdown website and thus excluded from the package build.__
+> `\\dontrun{}` should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in `\\dontrun{}` adds the comment ("# Not run:") as a warning for the user.  
+> Does not seem necessary.  
+> Please unwrap the examples if they are executable in < 5 sec, or replace `\\dontrun{}` with `\\donttest{}`.  
 
-Please make sure that you do not change the user's options, par or working directory. If you really have to do so within functions, please ensure with an *immediate* call of on.exit() that the settings are reset when the function is exited. e.g.:
-...
-oldpar <- par(no.readonly = TRUE)  # code line i
-on.exit(par(oldpar))  # code line i + 1
-...
-par(mfrow=c(2,2))  # somewhere after
-...
-e.g.: R/plot_images.R
-If you're not familiar with the function, please check ?on.exit. This function makes it possible to restore options before exiting a function even if the function breaks. Therefore it needs to be called immediately after the option change within a function.
+__Comment:__ Removed `\\dontrun{}` from some tests and replaced with `\\donttest{}` for the remaining ones where they are still deemed necessary for various reasons.
+<br><br>
 
-Please always make sure to reset to user's options(), working directory or par() after you changed it in examples and vignettes and demos. -> man/load-images.Rd ; man/mask-images.Rde.g.:
-oldpar <- par(mfrow = c(1,2))
+> Please ensure that your functions do not write by default or in your examples/vignettes/tests in the user's home filespace (including the package directory and getwd()). This is not allowed by CRAN policies.  
+>
+> Please omit any default path in writing functions. In your examples/vignettes/tests you can write to tempdir().  
 
-__Comment: Changed code in R/plot_images.R to return to previous graphical parameter settings on exit. Also changed examples in load_images.R and mask.R.__
+__Comment:__ Removed default paths from functions and changed to `tempdir()` in examples.
+<br><br>
 
-Please do not install packages in your functions, examples or vignette. This can make the functions,examples and cran-check very slow.
+> Please make sure that you do not change the user's options, par or working directory. If you really have to do so within functions, please ensure with an *immediate* call of on.exit() that the settings are reset when the function is exited. e.g.:  
+> ...  
+> oldpar <- par(no.readonly = TRUE)  # code line i. 
+> on.exit(par(oldpar))  # code line i + 1  
+> ...  
+> par(mfrow=c(2,2))  # somewhere after  
+> ...  
+> e.g.: R/plot_images.R  
+>
+> If you're not familiar with the function, please check ?on.exit. This function makes it possible to restore options before > exiting a function even if the function breaks. Therefore it needs to be called immediately after the option change within a function.  
+> 
+> Please always make sure to reset to user's options(), working directory or par() after you changed it in examples and vignettes and demos. -> man/load-images.Rd ; man/mask-images.Rde.g.:  
+> oldpar <- par(mfrow = c(1,2))
 
-__Comment: Removed calls to install.packages from examples and functions.__
+__Comment:__ Changed code in `R/plot_images.R` to return to previous graphical parameter settings on exit. Also changed examples in `load_images.R` and `mask.R`.
+<br><br>
 
-Please ensure that you do not use more than 2 cores in your examples, vignettes, etc.
+> Please do not install packages in your functions, examples or vignette. This can make the functions, examples and cran-check very slow.
 
-__Comment: We have check the function examples to make sure that no more than 2 cores are used.__
+__Comment:__ Removed `install.packages()` calls from examples and functions and replaced with a text message suggesting the user to manually install the necessary package(s).
+<br><br>
+
+> Please ensure that you do not use more than 2 cores in your examples, vignettes, etc.
+
+__Comment:__ We have checked the function examples to make sure that no more than 2 cores are used. The following functions are using the `nCore` argument in their example, and all instances have now been adjusted to set `nCores = 1`; `TileImage()`, `CorSpatialFeatures()`, `RunLabelAssortativityTest()`, and `RunNeighborhoodEnrichmentTest()`.  
 
 
 ## CRAN pre-tests (2023-03-27)
