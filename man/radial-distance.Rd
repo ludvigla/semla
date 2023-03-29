@@ -23,6 +23,7 @@ RadialDistance(object, ...)
   object,
   column_name,
   selected_groups = NULL,
+  column_key = NULL,
   angles = NULL,
   angles_nbreaks = NULL,
   remove_singletons = TRUE,
@@ -71,6 +72,8 @@ categorical data, e.g. clusters or manual selections}
 
 \item{selected_groups}{A character vector to select specific groups in \code{column_name} with.
 All groups are selected by default, but the common use case is to select a region of interest.}
+
+\item{column_key}{suffix to columns returned in the Seurat object}
 }
 \value{
 An object with radial distances
@@ -149,7 +152,9 @@ library(patchwork)
 library(RColorBrewer)
 
 # Get coordinates
-galt_spots_file <- "~/semla/repo/semla/inst/extdata/mousecolon/galt_spots.csv"
+galt_spots_file <- system.file("extdata/mousecolon",
+                               "galt_spots.csv",
+                                package = "semla")
 galt_spots <- read.csv(galt_spots_file) |>
   as_tibble()
 

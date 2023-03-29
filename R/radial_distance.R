@@ -101,7 +101,9 @@ NULL
 #' library(RColorBrewer)
 #'
 #' # Get coordinates
-#' galt_spots_file <- "~/semla/repo/semla/inst/extdata/mousecolon/galt_spots.csv"
+#' galt_spots_file <- system.file("extdata/mousecolon",
+#'                                "galt_spots.csv",
+#'                                 package = "semla")
 #' galt_spots <- read.csv(galt_spots_file) |>
 #'   as_tibble()
 #'
@@ -258,6 +260,13 @@ RadialDistance.default <- function (
     if (verbose) cli_alert_info("Removing {length(spots) - length(spots_filtered)} spots with 0 neighbors.")
     spots <- spots_filtered
   }
+  
+  if(length(spots) == 0) {
+    if (verbose) cli_alert_warning("Found no spots. Returning NA values")
+    res <- rep(NA_real_, nrow(object)) |> 
+      setNames(nm = object$barcode)
+    return(res)
+  }
 
   if (verbose) cli_alert_info("Extracting border spots from a region with {length(spots)} spots")
 
@@ -350,6 +359,7 @@ RadialDistance.default <- function (
 #'  categorical data, e.g. clusters or manual selections
 #' @param selected_groups A character vector to select specific groups in \code{column_name} with.
 #' All groups are selected by default, but the common use case is to select a region of interest.
+#' @param column_key suffix to columns returned in the Seurat object
 #' @param verbose Print messages
 #'
 #' @import dplyr
@@ -406,6 +416,7 @@ RadialDistance.Seurat <- function (
     object,
     column_name,
     selected_groups = NULL,
+    column_key = NULL,
     angles = NULL,
     angles_nbreaks = NULL,
     remove_singletons = TRUE,
@@ -422,6 +433,9 @@ RadialDistance.Seurat <- function (
   .validate_column_name(object, column_name)
   selected_groups <- .validate_selected_labels(object, selected_groups, column_name)
 
+  # Set new column name suffix
+  lbl_suffix <- ifelse(is.null(column_key), "", column_key)
+  
   # Select spots
   spots_list <- .get_spots_list(object, selected_groups, column_name)
 
@@ -449,12 +463,12 @@ RadialDistance.Seurat <- function (
       }
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
-          setNames(nm = c("barcode", paste0("r_dist_", lbl)))
+          setNames(nm = c("barcode", paste0("r_dist_", lbl, "_", lbl_suffix)))
       }
       if (ncol(res) > 2) {
         res <- res |>
           select(barcode, angle, r_dist, contains("intervals"))
-        colnames(res) <- c("barcode", paste0(colnames(res)[2:ncol(res)], "_", lbl))
+        colnames(res) <- c("barcode", paste0(colnames(res)[2:ncol(res)], "_", lbl, "_", lbl_suffix))
       }
       return(res)
     })
