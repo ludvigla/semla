@@ -149,7 +149,9 @@ library(patchwork)
 library(RColorBrewer)
 
 # Get coordinates
-galt_spots_file <- "~/semla/repo/semla/inst/extdata/mousecolon/galt_spots.csv"
+galt_spots_file <- system.file("extdata/mousecolon/",
+                               "galt_spots.csv",
+                               package = "semla")
 galt_spots <- read.csv(galt_spots_file) |>
   as_tibble()
 
