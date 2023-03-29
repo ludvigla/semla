@@ -359,7 +359,7 @@ RadialDistance.default <- function (
 #'  categorical data, e.g. clusters or manual selections
 #' @param selected_groups A character vector to select specific groups in \code{column_name} with.
 #' All groups are selected by default, but the common use case is to select a region of interest.
-#' @param column_key suffix to columns returned in the Seurat object
+#' @param column_suffix Suffix to column names returned in the Seurat object.
 #' @param verbose Print messages
 #'
 #' @import dplyr
@@ -413,16 +413,16 @@ RadialDistance.default <- function (
 #' @export
 #'
 RadialDistance.Seurat <- function (
-    object,
-    column_name,
-    selected_groups = NULL,
-    column_key = NULL,
-    angles = NULL,
-    angles_nbreaks = NULL,
-    remove_singletons = TRUE,
-    convert_to_microns = FALSE,
-    verbose = TRUE,
-    ...
+  object,
+  column_name,
+  selected_groups = NULL,
+  column_suffix = NULL,
+  angles = NULL,
+  angles_nbreaks = NULL,
+  remove_singletons = TRUE,
+  convert_to_microns = FALSE,
+  verbose = TRUE,
+  ...
 ) {
 
   # Set global variables to NULL
@@ -434,7 +434,7 @@ RadialDistance.Seurat <- function (
   selected_groups <- .validate_selected_labels(object, selected_groups, column_name)
 
   # Set new column name suffix
-  lbl_suffix <- ifelse(is.null(column_key), "", column_key)
+  lbl_suffix <- ifelse(is.null(column_suffix), "", column_suffix)
   
   # Select spots
   spots_list <- .get_spots_list(object, selected_groups, column_name)
@@ -463,12 +463,12 @@ RadialDistance.Seurat <- function (
       }
       if (inherits(res, what = "numeric")) {
         res <- tibble(barcode = names(res), res) |>
-          setNames(nm = c("barcode", paste0("r_dist_", lbl, "_", lbl_suffix)))
+          setNames(nm = c("barcode", paste0("r_dist_", lbl, lbl_suffix)))
       }
       if (ncol(res) > 2) {
         res <- res |>
           select(barcode, angle, r_dist, contains("intervals"))
-        colnames(res) <- c("barcode", paste0(colnames(res)[2:ncol(res)], "_", lbl, "_", lbl_suffix))
+        colnames(res) <- c("barcode", paste0(colnames(res)[2:ncol(res)], "_", lbl, lbl_suffix))
       }
       return(res)
     })
