@@ -8,6 +8,7 @@ ExportDataForViewer(
   object,
   sampleIDs = NULL,
   outdir,
+  nCores = detectCores() - 1,
   overwrite = FALSE,
   verbose = TRUE
 )
@@ -20,6 +21,8 @@ all samples are exported.}
 
 \item{outdir}{A character vector specifying the path to an existing directory with permission to read
 and write files.}
+
+\item{nCores}{Number of cores to use parallel image tiling}
 
 \item{overwrite}{Overwrite files if they already exists}
 
@@ -46,7 +49,7 @@ se_mbrain <- readRDS(system.file("extdata/mousebrain",
 se_mbrain <- LoadImages(se_mbrain)
 
 # Export viewer files to a temporary directory
-outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir(), overwrite = TRUE)
+outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir(), nCores = 1, overwrite = TRUE)
 outpath
 
 }

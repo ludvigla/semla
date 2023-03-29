@@ -165,9 +165,15 @@ TileImage <- function (
       image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
     })
   } else {
-    results <- .unixLapply(names(tiles), function(tileName) {
-      image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
-    }, nCores = nCores)
+    if (nCores == 1) {
+      results <- lapply(names(tiles), function(tileName) {
+        image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
+      })
+    } else {
+      results <- .unixLapply(names(tiles), function(tileName) {
+        image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
+      }, nCores = nCores)
+    }
   }
 
   # Export data as JSON

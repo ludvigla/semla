@@ -11,6 +11,7 @@
 #' all samples are exported.
 #' @param outdir A character vector specifying the path to an existing directory with permission to read
 #' and write files.
+#' @param nCores Number of cores to use parallel image tiling
 #' @param overwrite Overwrite files if they already exists
 #' @param verbose Print messages
 #'
@@ -19,6 +20,7 @@
 #' @import rlang
 #' @import glue
 #' @import cli
+#' @importFrom parallel detectCores
 #'
 #' @return A path to the directory where the data is saved
 #'
@@ -32,7 +34,7 @@
 #' se_mbrain <- LoadImages(se_mbrain)
 #'
 #' # Export viewer files to a temporary directory
-#' outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir(), overwrite = TRUE)
+#' outpath <- ExportDataForViewer(se_mbrain, outdir = tempdir(), nCores = 1, overwrite = TRUE)
 #' outpath
 #'
 #' @export
@@ -41,6 +43,7 @@ ExportDataForViewer <- function (
   object,
   sampleIDs = NULL,
   outdir,
+  nCores = detectCores() - 1,
   overwrite = FALSE,
   verbose = TRUE
 ) {
@@ -72,7 +75,7 @@ ExportDataForViewer <- function (
     if (!file.exists(imgs[i])) {
       abort(glue("{imgs[i]} is not a valid path. Add a valid path to @imgs slot in 'Staffli' object"))
     }
-    dirs <- TileImage(im = image_read(imgs[i]), outpath = outdir, sampleID = sampleIDs[i], overwrite = overwrite, verbose = verbose)
+    dirs <- TileImage(im = image_read(imgs[i]), outpath = outdir, sampleID = sampleIDs[i], overwrite = overwrite, nCores = nCores, verbose = verbose)
     datapath <- dirs$datapath
     if (verbose) cli_alert("  Exporting Visium coordinates")
     export_coordinates(object = object, sampleNumber = sampleIDs[i], outdir = datapath, overwrite = overwrite, verbose = FALSE)
