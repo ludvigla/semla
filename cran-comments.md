@@ -1,3 +1,7 @@
+## CRAN submission (2023-03-29)
+
+__Comment:__ Found and fixed a bug in `FeatureViewer`.
+
 ## CRAN submission (2023-03-28)
 
 We thank the CRAN Submissions team for their detailed and insightful remarks. We have addressed each of the remarks and answered with a few comments, viewed below.
