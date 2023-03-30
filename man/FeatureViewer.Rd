@@ -16,6 +16,7 @@ FeatureViewer(
   categorical_colors = NULL,
   container_width = 800,
   container_height = 800,
+  nCores = detectCores() - 1,
   verbose = TRUE
 )
 }
@@ -46,6 +47,9 @@ each character vector should correspond to a categorical variable in the meta.da
 label of the category.}
 
 \item{container_width, container_height}{Set height and width of container}
+
+\item{nCores}{Number of cores to use for threading passed to \code{\link{TileImage}}. Only used
+if \code{datadir} is unavailable.}
 
 \item{verbose}{Print messages}
 }

@@ -37,6 +37,8 @@ NULL
 #' \code{Seurat} object. Each character vector should be named where each name corresponds to a
 #' label of the category.
 #' @param container_width,container_height Set height and width of container
+#' @param nCores Number of cores to use for threading passed to \code{\link{TileImage}}. Only used
+#' if \code{datadir} is unavailable.
 #' @param verbose Print messages
 #'
 #' @family feature-viewer-methods
@@ -70,6 +72,7 @@ FeatureViewer <- function (
     categorical_colors = NULL,
     container_width = 800,
     container_height = 800,
+    nCores = detectCores() - 1,
     verbose = TRUE
 ) {
 
@@ -150,7 +153,7 @@ FeatureViewer <- function (
   }
 
   # Check tile paths
-  params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, verbose = verbose)
+  params <- .check_tile_paths(object = object, datadir = datadir, sampleIDs = sampleIDs, nCores = nCores, verbose = verbose)
   datapath <- params$datapath
   
   # Load subset barcodes
@@ -819,6 +822,7 @@ FeatureViewer <- function (
 #' @param object A \code{Seurat} object
 #' @param datadir A path to a directory with requried input files
 #' @param sampleIDs A vector with sampleIDs
+#' @param nCores Number of cores to use for threading
 #' @param verbose Print messages
 #'
 #' @noRd
@@ -826,6 +830,7 @@ FeatureViewer <- function (
   object,
   datadir,
   sampleIDs,
+  nCores,
   verbose
 ) {
 
@@ -859,7 +864,7 @@ FeatureViewer <- function (
         abort(glue("{imgs[i]} is not a valid path. Update path to @imgs in 'Staffli' slot"))
       }
       if (verbose) cli_alert("  Tiling sample {i} H&E image to temporary directory")
-      dirs <- TileImage(im = image_read(imgs[i]), sampleID = sampleIDs[i], overwrite = TRUE, verbose = verbose)
+      dirs <- TileImage(im = image_read(imgs[i]), sampleID = sampleIDs[i], overwrite = TRUE, nCores = nCores, verbose = verbose)
       datapath <- dirs$datapath
       if (verbose) cli_alert("  Exporting Visium coordinates for sample {sampleIDs[i]}")
       export_coordinates(object = object, sampleNumber = sampleIDs[i], outdir = datapath, overwrite = TRUE, verbose = verbose)
