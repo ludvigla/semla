@@ -36,7 +36,7 @@
 #'                     "main/images/mousebrain/tissue_hires_image.jpg")
 #' 
 #' # Load H&E image with magick
-#' im <- image_read(he_img)
+#' im <- magick::image_read(he_img)
 #' 
 #' # tile image and return path to tiles
 #' tile_res <- TileImage(im, outpath = tempdir(), nCores = 1, overwrite = TRUE)
@@ -64,7 +64,7 @@
 TileImage <- function (
     im,
     sampleID = 1,
-    outpath,
+    outpath = NULL,
     maxZoomLevel = 4,
     maxImgWidth = 1e4,
     nCores = detectCores() - 1,
