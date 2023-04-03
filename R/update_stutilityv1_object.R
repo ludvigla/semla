@@ -25,14 +25,21 @@
 #' 
 #' @examples 
 #' 
+#' \donttest{
 #' se_old_url <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files",
 #'                         "8f9d3dee-a026-40f0-be66-2df693f9db66/file_downloaded")
 #' 
 #' # Load old STUtility object
 #' se_old <- readRDS(url(se_old_url))
 #' 
+#' # Update imgs slot of Staffli object to a valid path or URL (H&E image)
+#' he_img <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files",
+#'                     "d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded")
+#' se_old@tools$Staffli@imgs <- he_img
+#' 
 #' # Update old STUtility object
 #' se_new <- UpdateSTUtilityV1Object(se_old)
+#' }
 #'
 #' @export
 UpdateSTUtilityV1Object <- function (
