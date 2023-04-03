@@ -57,7 +57,9 @@
 #'                                      maxZoom = 3))
 #'   })
 #' }
-#' shinyApp(ui, server)
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
 #' }
 #'
 #' @export
