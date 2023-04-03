@@ -32,11 +32,11 @@
 #' library(leaflet)
 #' 
 #' # Download hires image
-#' he_img <- file.path("https://raw.githubusercontent.com/ludvigla/semla",
-#'                     "main/images/mousebrain/tissue_hires_image.jpg")
+#' he_img <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files",
+#'                     "d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded")
 #' 
 #' # Load H&E image with magick
-#' im <- magick::image_read(he_img)
+#' im <- image_read(he_img)
 #' 
 #' # tile image and return path to tiles
 #' tile_res <- TileImage(im, outpath = tempdir(), nCores = 1, overwrite = TRUE)
