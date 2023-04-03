@@ -79,26 +79,25 @@ NULL
 #'                                  "se_mbrain",
 #'                                  package = "semla"))
 #' featureMat <- FetchData(se_mbrain, vars = VariableFeatures(se_mbrain)[1:100])
-#'
+#' 
 #' coordfile <-
 #'   system.file("extdata/mousebrain/spatial",
 #'               "tissue_positions_list.csv",
 #'               package = "semla")
-#'
+#' 
 #' # Load coordinate data into a tibble
 #' xys <- setNames(read.csv(coordfile, header = FALSE),
 #'                 nm = c("barcode", "selection", "grid_y", "grid_x", "y", "x"))
-#' xys$sample <- paste0(1)
+#' xys$sampleID <- 1L
 #' xys <- xys |>
-#'   dplyr::mutate(barcode = paste0(barcode, "_", 1)) |>
 #'   dplyr::filter(selection == 1) |>
-#'   dplyr::select(barcode, x, y, sample) |>
+#'   dplyr::select(barcode, x, y, sampleID) |>
 #'   tibble::as_tibble()
-#'
+#' 
 #' # Create spatial networks
 #' spatnet <- GetSpatialNetwork(xys)
 #' spatgenes <- CorSpatialFeatures(featureMat, spatnet, nCores = 1)
-#'
+#' 
 #' # Check genes with highest spatial autocorrelation
 #' head(spatgenes[[1]])
 #' }
