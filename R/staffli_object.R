@@ -594,11 +594,22 @@ setMethod (
     image_info <- object@image_info
     image_info_new <- tibble()
     for (i in seq_along(paths)) {
-      if (!file.exists(paths[i]))
-        abort("Invalid 'paths'. File '{impath}' does not exist.")
-      image_info_sample <- paths[] |> 
-        image_read() |> 
-        image_info() |> 
+      f <- paths[i]
+      
+      # Check file extension
+      if (file.exists(f)) {
+        if (!file_ext(f) %in% c("png", "jpg", "jpeg"))
+          abort(glue("Only PNG and JPEG images are supported, got file extension .{file_ext(f)}"))
+      }
+      
+      im <- try({f |> image_read()}, silent = TRUE)
+      if (inherits(im, "try-error"))
+        abort(glue("Invalid path/url {f}. Make sure to have ",
+                   "valid image paths before running {col_br_magenta('LoadImages')}"))
+      info <- im |>
+        image_info()
+      
+      image_info_sample <- info |> 
         mutate(sampleID = paste0(i),
                type = case_when(basename(paths[i]) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
                                 basename(paths[i]) %in% paste0("tissue_lowres_image.", c("jpg", "png")) ~ "tissue_lowres",
