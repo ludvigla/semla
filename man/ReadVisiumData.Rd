@@ -102,7 +102,10 @@ se
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},
-\code{\link{LoadSpatialCoordinates}()}
+\code{\link{LoadScaleFactors}()},
+\code{\link{LoadSpatialCoordinates}()},
+\code{\link{UpdateImageInfo}()}
 }
 \concept{pre-process}

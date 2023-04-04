@@ -46,7 +46,10 @@ coordinates <- LoadSpatialCoordinates(coordinatefiles)
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},
-\code{\link{ReadVisiumData}()}
+\code{\link{LoadScaleFactors}()},
+\code{\link{ReadVisiumData}()},
+\code{\link{UpdateImageInfo}()}
 }
 \concept{pre-process}

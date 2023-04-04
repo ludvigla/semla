@@ -84,12 +84,18 @@ se_merged <- LoadImages(se_merged)
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImageInfo}()},
+\code{\link{LoadScaleFactors}()},
 \code{\link{LoadSpatialCoordinates}()},
-\code{\link{ReadVisiumData}()}
+\code{\link{ReadVisiumData}()},
+\code{\link{UpdateImageInfo}()}
 
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadImageInfo}()},
+\code{\link{LoadScaleFactors}()},
 \code{\link{LoadSpatialCoordinates}()},
-\code{\link{ReadVisiumData}()}
+\code{\link{ReadVisiumData}()},
+\code{\link{UpdateImageInfo}()}
 }
 \concept{pre-process}
