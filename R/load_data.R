@@ -136,6 +136,7 @@ LoadAndMergeMatrices <- function (
 #'
 #' @import rlang
 #' @import dplyr
+#' @importFrom tibble as_tibble
 #' @importFrom utils read.csv
 #'
 #' @return An object of class \code{tbl} containing spot coordinates
@@ -177,7 +178,7 @@ LoadSpatialCoordinates <- function (
     # New format since Space Ranger 2.0.0
     use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
     coords <- read.csv(file = coordinatefiles[i], header = use_header) |>
-      tibble::as_tibble() |>
+      as_tibble() |>
       setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |>
       mutate(across(pxl_col_in_fullres:pxl_row_in_fullres, ~as.integer(.x)))
     if (remove_spots_outside_tissue) {
@@ -195,62 +196,235 @@ LoadSpatialCoordinates <- function (
   return(coordDF)
 }
 
-
-#' Read image data
-#'
+#' Load scale factors
+#' 
+#' Load coordinates from \strong{'scalefactors_json.json'} files and merge them into a \code{tibble}.
+#' 
+#' @param scalefactorfiles A character vector with file paths. Paths should specify JSON files containing
+#' scale factors created with spaceranger.
+#' 
 #' @family pre-process
-#'
-#' @param images An object of class \code{tibble} containing paths to images in PNG format, with
-#' one row per sample. Paths should specify \code{.png} files output by spaceranger such as
-#' \code{tissue_lowres_image.jpg} or \code{tissue_hires_image.jpg}. You do not have to load both
-#' H&E images.
-#' @param jsonfiles A character vector with file paths. Paths should specify JSON files containing
-#' scalefactors output by spaceranger.
-#' @param verbose Print messages
-#'
-#' @import glue
-#' @import cli
-#' @import rlang
+#' 
 #' @import dplyr
+#' @import rlang
+#' @import glue
+#' @importFrom jsonlite read_json
 #' @importFrom tools file_ext
-#'
-#' @return An object of class \code{DFrame}
-#'
-#' @noRd
-LoadImageData <- function (
-    images,
-    jsonfiles,
-    verbose = TRUE
+#' 
+#' @return A \code{tbl} with scale factors
+#' 
+#' @examples
+#' library(semla)
+#' 
+#' jsonfiles <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
+#'                           "/*/spatial/scalefactors_json.json"))
+#' scalefactors <- LoadScaleFactors(jsonfiles)
+#' scalefactors
+#' 
+#' @export
+LoadScaleFactors <- function (
+  scalefactorfiles
 ) {
-
   # Check files
-  check <- sapply(images, file.exists)
-  if (any(!check)) abort(message = c("Invalid path(s):", glue::glue("File path '{unlist(images[!check])}' does not exist")))
+  for (f in scalefactorfiles) {
+    if (!file.exists(f))
+      abort(glue("Invalid path '{scalefactorfiles}'. File doesn't exist."))
+    if (file_ext(f) != "json")
+      abort(glue("Invalid file extension '{file_ext(f)}'. Expected a JSON file."))
+  }
+  
+  scalefactors <- do.call(rbind, lapply(seq_along(scalefactorfiles), function(i) {
+    json_data <- data.frame(read_json(scalefactorfiles[i])) |> mutate(sampleID = paste0(i))
+    return(json_data)
+  })) |> as_tibble()
+  
+  return(scalefactors)
+}
 
-  # read image data
-  if (verbose) cli_alert_info(glue::glue("Reading image data for {nrow(images)} samples."))
-  imgData <- do.call(rbind, lapply(1:nrow(images), function(i) {
-    png.files <- unlist(images[i, ])
-    exts <- file_ext(png.files)
-    check <- exts %in% "png"
-    if (!all(check)) abort(glue::glue("Invalid image format: '{exts[!check]}'"))
-    if (!requireNamespace("SpatialExperiment"))
-      abort(glue("Package {cli::col_br_magenta('SpatialExperiment')} is required. Please install it with: \n",
-                 "BiocManager::install('SpatialExperiment'')"))
-    DF <- SpatialExperiment::readImgData(
-      imageSources = unlist(images[i, ]),
-      scaleFactors = jsonfiles[i],
-      sample_id = paste0(i),
-      load = FALSE
-    )
-    if (verbose)
-      sapply(basename(unlist(images[i, ])), function(impath) {
-        cli_alert_info("Finished reading '{impath}' image data for sample {i}")
-      })
-    return(DF)
-  }))
 
-  return(imgData)
+#' Load image information
+#' 
+#' @param imgfiles A character vector with file paths. Paths should specify PNG or JPEG files containing
+#' images created with spaceranger. Alternatively, the character vector can contain URLs to images. 
+#' 
+#' @family pre-process
+#' 
+#' @import rlang
+#' @import glue
+#' @import dplyr
+#' @import cli
+#' @importFrom magick image_info
+#' @importFrom tibble as_tibble
+#' 
+#' @return A \code{tbl} object with image info
+#' 
+#' @examples
+#' library(semla)
+#' 
+#' imgs <-
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
+#'                           "/*/spatial/tissue_lowres_image.jpg"))
+#' image_info <- LoadImageInfo(imgs)
+#' image_info
+#' 
+#' @export
+LoadImageInfo <- function (
+  imgfiles
+) {
+  image_info <- do.call(rbind, lapply(seq_along(imgfiles), function(i) {
+    f <- imgfiles[i]
+    im <- try({image_read(f)}, silent = TRUE)
+    if (inherits(im, "try-error"))
+      abort(glue("Invalid path/url found in 'imgs'. Make sure to have ",
+                 "valid image paths before running {col_br_magenta('ReadVisiumData')}"))
+    image_data <- im |>
+      image_info() |>
+      mutate(sampleID = paste0(i),
+             type = case_when(basename(f) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
+                              basename(f) %in% paste0("tissue_lowres_image.", c("jpg", "png")) ~ "tissue_lowres",
+                              TRUE ~ "unknown"))
+    return(image_data)
+  })) |> as_tibble()
+  
+  return(image_info)
+}
+
+
+#' Update an \code{image_info} tibble
+#' 
+#' Takes two \code{tbl} objects as input, one with image information produced with 
+#' \code{\link{LoadImageInfo}} and one with scale factors produced with 
+#' \code{\link{LoadScaleFactors}}. The scale factors are used to calculate the 
+#' width and height of the original H&E image which will be added to the output
+#' \code{tbl}.
+#' 
+#' @family pre-process
+#' 
+#' @param image_info A \code{tbl} object with image info
+#' @param scalefactors A \code{tbl} object with scale factors
+#' 
+#' @import dplyr
+#' 
+#' @return A \code{tbl} object with image info
+#' 
+#' @export
+UpdateImageInfo <- function (
+  image_info,
+  scalefactors
+) {
+  
+  # Add full res image dimensions to image data
+  image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
+    mutate(full_width = case_when(type == "tissue_lowres" ~ width/tissue_lowres_scalef,
+                                  type == "tissue_hires" ~ width/tissue_hires_scalef),
+           full_height = case_when(type == "tissue_lowres" ~ height/tissue_lowres_scalef,
+                                   type == "tissue_hires" ~ height/tissue_hires_scalef)) |>
+    select(all_of(c("format", "width", "height", "full_width", "full_height", "colorspace", "filesize", "density", "sampleID", "type")))
+  
+  return(image_info)
+}
+
+
+#' Check if coordinates are located inside tissue section
+#' 
+#' @param coordinates A \code{tbl} with spatial coordinates
+#' @param mergedMat A sparse matrix with gene expression data
+#' @param image_info A \code{tbl} with image info
+#' @param metaData A \code{tbl} with meta data
+#' @param remove_spots_outside_HE Should spots outside the H&E be removed?
+#' 
+#' @import dplyr
+#' @import cli
+#' 
+#' @return A list with \code{coordinates}, \code{mergedMat}, \code{image_info}
+#' and \code{metaData}
+#' 
+#' @noRd
+.check_coordinates <- function (
+  coordinates,
+  mergedMat,
+  image_info,
+  metaData,
+  remove_spots_outside_HE
+) {
+  
+  # Set global variables to NULL
+  full_width <- full_height <- sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- barcode <- NULL
+  check_x <- check_y <- min_x <- max_x <- min_y <- max_y <- pad_before_x <- pad_after_x <- pad_after_y <- pad_before_y <- pad <- NULL
+  
+  # Remove coordinates that are located outside of the tissue
+  check_coordinates <- coordinates |>
+    group_by(sampleID) |>
+    mutate(check_x = case_when(between(x = !! sym("pxl_col_in_fullres"),
+                                       left = 0,
+                                       right = image_info[cur_group_id(), "full_width", drop = TRUE]) ~ "inside",
+                               TRUE ~ "outside"),
+           check_y = case_when(between(x = !! sym("pxl_row_in_fullres"),
+                                       left = 0,
+                                       right = image_info[cur_group_id(), "full_height", drop = TRUE]) ~ "inside",
+                               TRUE ~ "outside"))
+  remove_spots <- c()
+  if (any(check_coordinates$check_x == "outside")) {
+    check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_x == "outside"))
+    for (ID in check_coordinates_x$sampleID) {
+      cli_alert_warning("Found {check_coordinates_x |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with x coordinates outside of the H&E image for sample {ID}")
+    }
+    remove_spots <- c(remove_spots, check_coordinates |> filter(check_x == "outside") |> pull(barcode))
+  }
+  if (any(check_coordinates$check_y == "outside")) {
+    check_coordinates_y <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
+    for (ID in check_coordinates_y$sampleID) {
+      cli_alert_warning("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
+    }
+    remove_spots <- c(remove_spots, check_coordinates |> filter(check_y == "outside") |> pull(barcode))
+  }
+  if (length(remove_spots) > 0) {
+    if (remove_spots_outside_HE) {
+      cli_alert_warning("Removing {length(remove_spots)} spots from the dataset")
+      coordinates <- coordinates |> filter(!barcode %in% remove_spots)
+      mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
+      metaData <- metaData[colnames(mergedMat), , drop = FALSE]
+    } else {
+      # Adjust width and height to match missing data
+      spot_ranges <- coordinates |>
+        group_by(sampleID) |>
+        summarize(min_x = min(pxl_col_in_fullres),
+                  max_x = max(pxl_col_in_fullres),
+                  min_y = min(pxl_row_in_fullres),
+                  max_y = max(pxl_row_in_fullres)) |>
+        mutate(sampleID = paste0(sampleID)) |>
+        left_join(y = image_info |>
+                    select(sampleID, full_width, full_height) |>
+                    mutate(sampleID = paste0(sampleID)), by = "sampleID")
+      image_pad <- spot_ranges |>
+        mutate(pad_before_x = ifelse(min_x < 0, abs(min_x), 0),
+               pad_after_x = ifelse(max_x > full_width, max_x - full_width, 0),
+               pad_before_y = ifelse(min_y < 0, abs(min_y), 0),
+               pad_after_y = ifelse(max_y > full_height, max_y - full_height, 0)) |>
+        mutate(across(pad_before_x:pad_after_y, ~ceiling(.x))) |>
+        mutate(full_width_new = full_width + pad_before_x + pad_after_x,
+               full_height_new = full_height + pad_before_y + pad_after_y)
+      
+      image_info$pad <- image_pad |>
+        tidyr::unite("pad", pad_before_x:pad_after_y, sep = "x") |>
+        pull(pad)
+      coordinates <- coordinates |> 
+        group_by(sampleID) |> 
+        mutate(pxl_col_in_fullres = pxl_col_in_fullres + image_pad[cur_group_id(), ]$pad_before_x,
+               pxl_row_in_fullres = pxl_row_in_fullres + image_pad[cur_group_id(), ]$pad_before_y)
+      sfx <- image_pad$full_width_new/image_info$full_width
+      sfy <- image_pad$full_height_new/image_info$full_height
+      image_info$width <- ceiling(sfx*image_info$width)
+      image_info$height <- ceiling(sfy*image_info$height)
+      image_info$full_width <- ceiling(image_pad$full_width_new)
+      image_info$full_height <- ceiling(image_pad$full_height_new)
+      coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
+      metaData <- metaData[coordinates$barcode, , drop = FALSE]
+    }
+  }
+  return(list("coordinates" = coordinates, "mergedMat" = mergedMat, 
+              "image_info" = image_info, "metaData" = metaData))
 }
 
 
@@ -305,12 +479,10 @@ LoadImageData <- function (
 #'
 #' @import cli
 #' @import rlang
+#' @import dplyr
+#' @importFrom zeallot %<-%
 #' @importFrom glue glue
 #' @importFrom Seurat CreateSeuratObject
-#' @importFrom magick image_read image_info
-#' @importFrom jsonlite read_json
-#' @importFrom dplyr select bind_cols mutate case_when left_join
-#' @importFrom tibble as_tibble
 #' @importFrom tidyr uncount
 #'
 #' @return A \code{\link{Seurat}} object with additional spatial information stored in
@@ -351,10 +523,7 @@ ReadVisiumData <- function (
 ) {
 
   # Set global variables to NULL
-  samples <- imgs <- spotfiles <- json <- barcode <- width <- height <- full_width <- full_height <- NULL
-  colorspace <- density <- sampleID <- type <- pxl_col_in_fullres <- pxl_row_in_fullres <- filesize <- NULL
-  check_x <- check_y <- min_x <- max_x <- min_y <- max_y <- pad_before_x <- pad_after_x <- pad_after_y <- pad_before_y <- pad <- NULL
-  scalefactor <- custom_scalef <- NULL
+  barcode <- width <- height <- scalefactor <- custom_scalef <- NULL
 
   if (verbose) cli_h2("Reading 10x Visium data")
 
@@ -384,7 +553,7 @@ ReadVisiumData <- function (
     })
   }
   if ("json" %in% colnames(infoTable)) {
-    if (!all(file.exists(infoTable |> pull(json)))) {
+    if (!all(file.exists(infoTable |> pull(all_of("json"))))) {
       abort(glue("Missing json file(s)."))
     }
   }
@@ -392,7 +561,7 @@ ReadVisiumData <- function (
   # Keep additional infoTable columns
   if (ncol(infoTable) > 4) {
     additionalMetaData <- infoTable |>
-      select(-samples, -imgs, -spotfiles, -json)
+      select(-all_of(c("samples", "imgs", "spotfiles", "json")))
   } else {
     additionalMetaData <- NULL
   }
@@ -435,20 +604,7 @@ ReadVisiumData <- function (
   if (verbose) cli_alert_success("Expression matrices and coordinates are compatible")
 
   # Read image info
-  image_info <- do.call(rbind, lapply(seq_along(infoTable$imgs), function(i) {
-    f <- infoTable$imgs[i]
-    im <- try({image_read(f)}, silent = TRUE)
-    if (inherits(im, "try-error"))
-      abort(glue("Invalid path/url found in 'imgs'. Make sure to have ",
-                 "valid image paths before running {col_br_magenta('ReadVisiumData')}"))
-    image_data <- im |>
-      image_info() |>
-      mutate(sampleID = paste0(i),
-             type = case_when(basename(f) %in% paste0("tissue_hires_image.", c("jpg", "png")) ~ "tissue_hires",
-                              basename(f) %in% paste0("tissue_lowres_image.", c("jpg", "png")) ~ "tissue_lowres",
-                              TRUE ~ "unknown"))
-    return(image_data)
-  })) |> as_tibble()
+  image_info <- LoadImageInfo(infoTable$imgs)
 
   # Read scale factors
   if ("scalefactor" %in% colnames(infoTable)) {
@@ -461,95 +617,19 @@ ReadVisiumData <- function (
     image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
       mutate(full_width = width/custom_scalef,
              full_height = height/custom_scalef) |>
-      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+      select(all_of(c("format", "width", "height", "full_width", "full_height", "colorspace", "filesize", "density", "sampleID", "type")))
   } else {
-    scalefactors <- do.call(rbind, lapply(seq_along(infoTable$json), function(i) {
-      json_data <- data.frame(read_json(infoTable$json[i])) |> mutate(sampleID = paste0(i))
-      return(json_data)
-    })) |> as_tibble()
+    scalefactors <- LoadScaleFactors(infoTable$json)
     # Add full res image dimensions to image data
-    image_info <- image_info |> left_join(y = scalefactors, by = "sampleID") |>
-      mutate(full_width = case_when(type == "tissue_lowres" ~ width/tissue_lowres_scalef,
-                                    type == "tissue_hires" ~ width/tissue_hires_scalef),
-             full_height = case_when(type == "tissue_lowres" ~ height/tissue_lowres_scalef,
-                                     type == "tissue_hires" ~ height/tissue_hires_scalef)) |>
-      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+    image_info <- UpdateImageInfo(image_info, scalefactors)
   }
-
 
   # Sort coordinates
   coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
-
-  # Remove coordinates that are located outside of the tissue
-  check_coordinates <- coordinates |>
-    group_by(sampleID) |>
-    mutate(check_x = case_when(between(x = pxl_col_in_fullres,
-                                       left = 0,
-                                       right = image_info[cur_group_id(), "full_width", drop = TRUE]) ~ "inside",
-                               TRUE ~ "outside"),
-           check_y = case_when(between(x = pxl_row_in_fullres,
-                                       left = 0,
-                                       right = image_info[cur_group_id(), "full_height", drop = TRUE]) ~ "inside",
-                               TRUE ~ "outside"))
-  remove_spots <- c()
-  if (any(check_coordinates$check_x == "outside")) {
-    check_coordinates_x <- check_coordinates |> summarize(nOutside = sum(check_x == "outside"))
-    for (ID in check_coordinates_x$sampleID) {
-      cli_alert_warning("Found {check_coordinates_x |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with x coordinates outside of the H&E image for sample {ID}")
-    }
-    remove_spots <- c(remove_spots, check_coordinates |> filter(check_x == "outside") |> pull(barcode))
-  }
-  if (any(check_coordinates$check_y == "outside")) {
-    check_coordinates_y <- check_coordinates |> summarize(nOutside = sum(check_y == "outside"))
-    for (ID in check_coordinates_y$sampleID) {
-      cli_alert_warning("Found {check_coordinates_y |> filter(sampleID == ID) |> pull(nOutside)} spot(s) with y coordinates outside of the H&E image for sample {ID}")
-    }
-    remove_spots <- c(remove_spots, check_coordinates |> filter(check_y == "outside") |> pull(barcode))
-  }
-  if (length(remove_spots) > 0) {
-    if (remove_spots_outside_HE) {
-      cli_alert_warning("Removing {length(remove_spots)} spots from the dataset")
-      coordinates <- coordinates |> filter(!barcode %in% remove_spots)
-      mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
-      metaData <- metaData[colnames(mergedMat), , drop = FALSE]
-    } else {
-      # Adjust width and height to match missing data
-      spot_ranges <- coordinates |>
-        group_by(sampleID) |>
-        summarize(min_x = min(pxl_col_in_fullres),
-                  max_x = max(pxl_col_in_fullres),
-                  min_y = min(pxl_row_in_fullres),
-                  max_y = max(pxl_row_in_fullres)) |>
-        mutate(sampleID = paste0(sampleID)) |>
-        left_join(y = image_info |>
-                    select(sampleID, full_width, full_height) |>
-                    mutate(sampleID = paste0(sampleID)), by = "sampleID")
-      image_pad <- spot_ranges |>
-        mutate(pad_before_x = ifelse(min_x < 0, abs(min_x), 0),
-               pad_after_x = ifelse(max_x > full_width, max_x - full_width, 0),
-               pad_before_y = ifelse(min_y < 0, abs(min_y), 0),
-               pad_after_y = ifelse(max_y > full_height, max_y - full_height, 0)) |>
-        mutate(across(pad_before_x:pad_after_y, ~ceiling(.x))) |>
-        mutate(full_width_new = full_width + pad_before_x + pad_after_x,
-               full_height_new = full_height + pad_before_y + pad_after_y)
-
-      image_info$pad <- image_pad |>
-        tidyr::unite("pad", pad_before_x:pad_after_y, sep = "x") |>
-        pull(pad)
-      coordinates <- coordinates |> 
-        group_by(sampleID) |> 
-        mutate(pxl_col_in_fullres = pxl_col_in_fullres + image_pad[cur_group_id(), ]$pad_before_x,
-               pxl_row_in_fullres = pxl_row_in_fullres + image_pad[cur_group_id(), ]$pad_before_y)
-      sfx <- image_pad$full_width_new/image_info$full_width
-      sfy <- image_pad$full_height_new/image_info$full_height
-      image_info$width <- ceiling(sfx*image_info$width)
-      image_info$height <- ceiling(sfy*image_info$height)
-      image_info$full_width <- ceiling(image_pad$full_width_new)
-      image_info$full_height <- ceiling(image_pad$full_height_new)
-      coordinates <- coordinates[match(colnames(mergedMat), coordinates$barcode), ]
-      metaData <- metaData[coordinates$barcode, , drop = FALSE]
-    }
-  }
+  
+  # Check coordinates to make sure that they are located inside the H&E image
+  c(coordinates, mergedMat, image_info, metaData) %<-% 
+    .check_coordinates(coordinates, mergedMat, image_info, metaData, remove_spots_outside_HE)
 
   # Create a Seurat object from expression matrix
   object <- CreateSeuratObject(counts = mergedMat,
@@ -562,7 +642,7 @@ ReadVisiumData <- function (
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
                                         meta_data = coordinates |>
                                           ungroup() |> 
-                                          select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID),
+                                          select(all_of(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID"))),
                                         image_info = image_info,
                                         scalefactors = scalefactors)
   if (verbose) cli_alert_info("Created `Staffli` object")
