@@ -1,6 +1,10 @@
+## CRAN submission (2023-04-05)
+
+Fixed minor bugs and added more function examples.
+
 ## CRAN submission (2023-03-29)
 
-__Comment:__ Found and fixed a bug in `FeatureViewer`.
+__Comment:__ Found and fixed a bug in function `FeatureViewer`.
 
 ## CRAN submission (2023-03-28)
 
