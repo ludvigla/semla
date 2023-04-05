@@ -26,7 +26,8 @@ Let's load an H&E image and visualize it:
 
 ```{r fig.width=6, fig.height=6}
 
-he <- system.file("extdata/mousebrain/spatial", "tissue_hires_image.png", package = "semla")
+he <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files",
+                "d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded")
 im <- image_read(he)
 
 # get information about image
@@ -39,7 +40,7 @@ im |> as.raster() |> plot()
 title(paste0(info$width, "x", info$height))
 ```
 
-The H&E image is 2000 pixels high and 1882 pixels wide. If we want to scale this image, we can use `image_scale()` from `magick`:
+The H&E image is 2000 pixels high and 1882 pixels wide. If we want to scale this image, we can use `image_scale()` from the `magick` R package:
 
 ```{r fig.width=6, fig.height=6}
 
@@ -161,7 +162,7 @@ Now we can see that the scaling factor between the original H&E image and the ti
 
 ```{r}
 lowresimagefile <- system.file("extdata/mousebrain/spatial", 
-                             "tissue_lowres_image.png", 
+                             "tissue_lowres_image.jpg", 
                              package = "semla")
 
 # Load image

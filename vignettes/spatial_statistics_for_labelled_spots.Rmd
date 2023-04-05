@@ -48,7 +48,7 @@ file.remove(file.path(targetdir, "spatial.tar.gz"))
 ```{r}
 # Read data
 samples <- file.path(targetdir, "filtered_feature_bc_matrix.h5")
-imgs <- file.path(targetdir, "spatial", "tissue_hires_image.png")
+imgs <- file.path(targetdir, "spatial", "tissue_lowres_image.png")
 spotfiles <- file.path(targetdir, "spatial", "tissue_positions_list.csv")
 json <- file.path(targetdir, "spatial", "scalefactors_json.json")
 

@@ -45,7 +45,7 @@ samples <- Sys.glob(paths = file.path(data_root_directory,
                                       "filtered_feature_bc_matrix.h5"))
 
 imgs <- Sys.glob(paths = file.path(data_root_directory, 
-                                   "spatial", "tissue_hires_image.png"))
+                                   "spatial", "tissue_lowres_image.jpg"))
 
 spotfiles <- Sys.glob(paths = file.path(data_root_directory, 
                                         "spatial", "tissue_positions_list.csv"))

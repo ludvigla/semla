@@ -359,7 +359,19 @@ p_GALT <- MapFeatures(se,
 
 Right now, you can see that the resolution of zoomed in image is quite low. The reason for this is that the images were loaded to have a height of 400 pixels which is the default setting for `LoadImages`. If you want to, you can reload the images in higher resolution given that you provided higher resolution images as input. For example, if you used the "tissue_hires_image.png" files as input for `ReadVisiumData`, these images are roughly 2000x2000 pixels in size, so you can reload the images in higher resolution. If we run `LoadImages` again and set `image_height = 1000` we should be able to view the H%&E images in slightly higher resolution.
 
+NB: The "hires" images are not provided in `semla` so we will need to download them. We are currently using the "lowres" images which are only about 600x600 pixels large. We can use `ReplaceImagePaths` to replace the current images. You need to make sure that the new images are in the correct order and that they represent scaled representations of the images already loaded into the object.
+
 ```{r}
+# Download hires H&E images
+he_imgs <- c(file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb",
+                       "files/d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded"),
+             file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb",
+                    "files/d33e8074-8d83-4003-b04a-9a78ff465279/file_downloaded"))
+
+# Replace images
+se <- ReplaceImagePaths(se, paths = he_imgs)
+
+# Load images in higher resolution
 se_high_res <- LoadImages(se, image_height = 1000)
 
 # Check object sizes
@@ -638,7 +650,18 @@ MapFeatures(se_mbrain, features = VariableFeatures(se_mbrain)[1:6],
         legend.position = "right", legend.text = element_text(angle = 0))
 ```
 
-If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length:
+NB: We will include a higher resolution version of the H&E image for the next example. This is only relevant for this tutorial and will not be necessary if you created the object using "tissue_hires_image.png" files.
+
+```{r}
+# Download hires H&E images
+he_img <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb",
+                    "files/d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded")
+
+# Replace images
+se_mbrain <- ReplaceImagePaths(se_mbrain, paths = he_img)
+```
+
+If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length. 
 
 ```{r message=FALSE, warning=FALSE}
 se_mbrain <- LoadImages(se_mbrain, image_height = 1.5e3)
@@ -650,14 +673,11 @@ MapFeatures(se_mbrain, features = "Th", pt_size = 5,
             add_scalebar = TRUE, scalebar_gg = scalebar(x = 400))
 ```
 
-
 ## Rearrange patchworks
 
-While `MapLabels` and `MapFeatures` do not provide arguments to sort samples in a specific order,
-this can be achieved by returning the data as a list of `ggplot` objects and define the order manually.
+While `MapLabels` and `MapFeatures` do not provide arguments to sort samples in a specific order, this can be achieved by returning the data as a list of `ggplot` objects and define the order manually.
 
-For instance, if we have plot two features and set `return_plot_list = TRUE`, we can rearrange the plots with 
-`wrap_plots`:
+For instance, if we have plot two features and set `return_plot_list = TRUE`, we can rearrange the plots with `wrap_plots`:
 
 ```{r}
 p <- MapFeatures(se_mbrain, c("Th", "Calb2"), return_plot_list = TRUE)
@@ -665,8 +685,7 @@ p <- MapFeatures(se_mbrain, c("Th", "Calb2"), return_plot_list = TRUE)
 wrap_plots(p$`1`$Calb2, p$`1`$Th)
 ```
 
-If we have multiple sections, we can access the section-specific plots from the list. In the example below, 
-the plots have been rearranged so that the columns and rows are flipped.
+If we have multiple sections, we can access the section-specific plots from the list. In the example below, the plots have been rearranged so that the columns and rows are flipped.
 
 ```{r fig.asp=1}
 p <- MapFeatures(se, c("Th", "Calb2"), return_plot_list = TRUE)
@@ -678,8 +697,7 @@ wrap_plots(p$`2`$Calb2, p$`2`$Th, p$`1`$Th, p$`1`$Calb2)
 
 `semla` also provides a couple of utility functions to make it easier to modify themes.
 
-If you are plotting many features and sections at the same time, it can be useful to remove all components
-of the theme with `ThemeClean` to get a quick overview:
+If you are plotting many features and sections at the same time, it can be useful to remove all components of the theme with `ThemeClean` to get a quick overview:
 
 ```{r fig.asp=0.4}
 MapFeatures(se, c("Th", "Calb2", "Clu", "Mgp", "Acta2", "Tagln"), 
@@ -695,16 +713,12 @@ MapFeatures(se, c("Th", "Calb2"),
   ThemeLegendRight()
 ```
 
-The titles of individual plots are determined internally by `MapLabels` and `MapFeatures` and it can be 
-difficult to change these titles after the plot has been generated. `ModifyPatchworkTitles` can help with this
-task. All you need to do is to provide a character vector with new titles which should match the number of subplots 
-in the patchwork. In the example below we have 2 genes and 2 sections, so we need to provide 4 titles:
+The titles of individual plots are determined internally by `MapLabels` and `MapFeatures` and it can be difficult to change these titles after the plot has been generated. `ModifyPatchworkTitles` can help with this task. All you need to do is to provide a character vector with new titles which should match the number of subplots in the patchwork. In the example below we have 2 genes and 2 sections, so we need to provide 4 titles:
 
 ```{r fig.asp=1}
 p <- MapFeatures(se, c("Th", "Calb2"), override_plot_dims = TRUE)
 ModifyPatchworkTitles(p, titles = c("First", "Second", "Third", "Fourth"))
 ```
-
 
 <br>
 
