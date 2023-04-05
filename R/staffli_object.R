@@ -589,8 +589,8 @@ setMethod (
     
     if (!inherits(paths, what = "character")) 
       abort(glue("Invalid class '{class(paths)}'. Expected a 'character' vector."))
-    if (!length(paths) == length(nrow(object@image_info))) 
-      abort(glue("Invalid {nrow(object@image_info)} images, got {length(paths)}"))
+    if (!length(paths) == nrow(object@image_info)) 
+      abort(glue("Expected {nrow(object@image_info)} images, got {length(paths)}"))
     image_info <- object@image_info
     image_info_new <- tibble()
     for (i in seq_along(paths)) {
