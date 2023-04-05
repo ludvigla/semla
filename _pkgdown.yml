@@ -92,6 +92,9 @@ reference:
 - contents:
   - LoadAndMergeMatrices
   - LoadSpatialCoordinates
+  - LoadScaleFactors
+  - LoadImageInfo
+  - UpdateImageInfo
   - ReadVisiumData
   - LoadImages
   - MergeSTData
@@ -161,10 +164,14 @@ reference:
   - Staffli-class
   - GetImages
   - GetStaffli
-  - ImageInfo
+  - GetImageInfo
+  - GetScaleFactors
+  - GetCoordinates
+  - ReplaceImagePaths
   - '[[,Staffli,ANY,ANY-method'
   - '[[<-,Staffli,ANY,ANY,ANY-method'
   - show,Staffli-method
+  - plot,Staffli,ANY-method
 - subtitle: Data
 - contents:
   - mbrain_dataset

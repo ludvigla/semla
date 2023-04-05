@@ -118,8 +118,7 @@ are determined from the automatically.</p>
 
 
 <dt>outpath</dt>
-<dd><p>A string specifying an output directory to save the tiled image in.
-If this is not provided, a temporary directory will be created</p></dd>
+<dd><p>A string specifying an output directory to save the tiled image in.</p></dd>
 
 
 <dt>maxZoomLevel</dt>
@@ -155,24 +154,41 @@ If this is not provided, a temporary directory will be created</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"shiny"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shiny"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"leaflet"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"leaflet"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/magick/" class="external-link">magick</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘shiny’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:jsonlite’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     validate</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘leaflet’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:SeuratObject’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     JS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:Seurat’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     JS</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Download hires image</span></span></span>
+<span class="r-in"><span><span class="va">he_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files"</span>,</span></span>
+<span class="r-in"><span>                    <span class="st">"d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load H&amp;E image with magick</span></span></span>
-<span class="r-in"><span><span class="va">imfile</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon/spatial"</span>,</span></span>
-<span class="r-in"><span>              <span class="st">"tissue_hires_image.jpg"</span>,</span></span>
-<span class="r-in"><span>              package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">im</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">imfile</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">im</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="va">he_img</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># tile image and return path to tiles</span></span></span>
-<span class="r-in"><span><span class="va">tile_res</span> <span class="op">&lt;-</span> <span class="fu">TileImage</span><span class="op">(</span><span class="va">im</span>, nCores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tile_res</span> <span class="op">&lt;-</span> <span class="fu">TileImage</span><span class="op">(</span><span class="va">im</span>, outpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, nCores <span class="op">=</span> <span class="fl">1</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Got an image of dimensions 2000x1882 for sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Tiling image into 3 zoom levels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp0ipZxO/viewer_data/tiles1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Creating tiles</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting tiles</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting meta data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp0ipZxO/viewer_data/image_info_1.json</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a simple viewer with leaflet</span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
@@ -190,8 +206,10 @@ If this is not provided, a temporary directory will be created</p></dd>
 <span class="r-in"><span>                                     maxZoom <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

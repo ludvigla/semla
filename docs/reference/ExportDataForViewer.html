@@ -92,7 +92,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ExportDataForViewer</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  sampleIDs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  outdir <span class="op">=</span> <span class="st">"./"</span>,</span>
+<span>  <span class="va">outdir</span>,</span>
+<span>  nCores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -112,6 +113,10 @@ all samples are exported.</p></dd>
 <dt>outdir</dt>
 <dd><p>A character vector specifying the path to an existing directory with permission to read
 and write files.</p></dd>
+
+
+<dt>nCores</dt>
+<dd><p>Number of cores to use parallel image tiling</p></dd>
 
 
 <dt>overwrite</dt>
@@ -142,16 +147,31 @@ data path for <code><a href="FeatureViewer.html">FeatureViewer</a></code> to loo
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu">libary</span><span class="op">(</span><span class="va">semla</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>,</span></span>
 <span class="r-in"><span>                                 <span class="st">"se_mbrain"</span>,</span></span>
 <span class="r-in"><span>                                 package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Export viewer files to current working directory</span></span></span>
-<span class="r-in"><span><span class="fu">ExportDataForViewer</span><span class="op">(</span><span class="va">se_mbrain</span>, outdir <span class="op">=</span> <span class="st">"./"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># Export viewer files to a temporary directory</span></span></span>
+<span class="r-in"><span><span class="va">outpath</span> <span class="op">&lt;-</span> <span class="fu">ExportDataForViewer</span><span class="op">(</span><span class="va">se_mbrain</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, nCores <span class="op">=</span> <span class="fl">1</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Attempting to tile H&amp;E image(s)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Got an image of dimensions 600x565 for sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Tiling image into 2 zoom levels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Creating tiles</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting tiles</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting meta data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting Visium coordinates</span>
+<span class="r-in"><span><span class="va">outpath</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp0ipZxO/viewer_data"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

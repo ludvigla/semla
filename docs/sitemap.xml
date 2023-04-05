@@ -112,7 +112,16 @@
     <loc>https://ludvigla.github.io/semla/reference/FeatureViewer.html</loc>
   </url>
   <url>
+    <loc>https://ludvigla.github.io/semla/reference/GetCoordinates.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/GetImageInfo.html</loc>
+  </url>
+  <url>
     <loc>https://ludvigla.github.io/semla/reference/GetImages.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/GetScaleFactors.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/GetStaffli.html</loc>
@@ -133,6 +142,12 @@
     <loc>https://ludvigla.github.io/semla/reference/LoadAndMergeMatrices.html</loc>
   </url>
   <url>
+    <loc>https://ludvigla.github.io/semla/reference/LoadImageInfo.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/LoadScaleFactors.html</loc>
+  </url>
+  <url>
     <loc>https://ludvigla.github.io/semla/reference/LoadSpatialCoordinates.html</loc>
   </url>
   <url>
@@ -149,6 +164,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/ReadVisiumData.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/ReplaceImagePaths.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/STUtility2-package.html</loc>
@@ -170,6 +188,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/TileImage.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/UpdateImageInfo.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/UpdateSTUtilityV1Object.html</loc>
@@ -257,6 +278,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/paper.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/plot.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/prep_image.html</loc>

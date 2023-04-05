@@ -162,10 +162,8 @@ grid</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Draws a plot of the H&amp;E images or alternatively, returns a <code>patchwork</code></p>
- 
-
-<p>composed of <code>ggplot</code> objects</p>
+<p>No return value. Draws a plot of the H&amp;E images or alternatively, 
+returns a <code>patchwork</code> composed of <code>ggplot</code> objects.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -193,20 +191,15 @@ grid</p></dd>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="merge.html">MergeSTData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="va">se_mcolon</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># ImagePlot will throw an error if no images are loaded</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu">ImagePlot</span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load images</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 400x443 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 541x600 to 400x444 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">ImagePlot</span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ImagePlot-1.png" alt="" width="700" height="433"></span>
@@ -224,25 +217,7 @@ grid</p></dd>
 <span class="r-in"><span><span class="fu">ImagePlot</span><span class="op">(</span><span class="va">se_merged</span>, label_by <span class="op">=</span> <span class="st">"sample_id"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ImagePlot-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Reload images in higher resolution, crop image and remove margins</span></span></span>
-<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_merged</span>, image_height <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 1000x941 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 1000x1109 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
-<span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_merged</span>, image_height <span class="op">=</span> <span class="fl">1.5e3</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 1500x1412 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 1500x1663 pixels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
+<span class="r-in"><span><span class="co"># Crop image and remove margins</span></span></span>
 <span class="r-in"><span><span class="fu">ImagePlot</span><span class="op">(</span><span class="va">se_merged</span>, crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">0.7</span><span class="op">)</span>, sampleIDs <span class="op">=</span> <span class="fl">1</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ImagePlot-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu">ImagePlot</span><span class="op">(</span><span class="va">se_merged</span>, crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="fl">0.55</span>, <span class="fl">0.65</span>, <span class="fl">0.7</span><span class="op">)</span>, sampleIDs <span class="op">=</span> <span class="fl">2</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>

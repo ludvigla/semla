@@ -111,6 +111,7 @@ a selected defined region.</p>
 <span>  <span class="va">object</span>,</span>
 <span>  <span class="va">column_name</span>,</span>
 <span>  selected_groups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  column_suffix <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  angles <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  angles_nbreaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  remove_singletons <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -180,6 +181,10 @@ categorical data, e.g. clusters or manual selections</p></dd>
 <dt>selected_groups</dt>
 <dd><p>A character vector to select specific groups in <code>column_name</code> with.
 All groups are selected by default, but the common use case is to select a region of interest.</p></dd>
+
+
+<dt>column_suffix</dt>
+<dd><p>Suffix to column names returned in the Seurat object.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -268,14 +273,15 @@ the results are returned to the <code>meta.data</code> slot.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get coordinates</span></span></span>
-<span class="r-in"><span><span class="va">galt_spots_file</span> <span class="op">&lt;-</span> <span class="st">"~/semla/repo/semla/inst/extdata/mousecolon/galt_spots.csv"</span></span></span>
+<span class="r-in"><span><span class="va">galt_spots_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>,</span></span>
+<span class="r-in"><span>                               <span class="st">"galt_spots.csv"</span>,</span></span>
+<span class="r-in"><span>                                package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">galt_spots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">galt_spots_file</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -293,9 +299,17 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span><span class="co"># Select spots</span></span></span>
 <span class="r-in"><span><span class="va">spots</span> <span class="op">&lt;-</span> <span class="va">galt_spots</span><span class="op">$</span><span class="va">barcode</span><span class="op">[</span><span class="va">galt_spots</span><span class="op">$</span><span class="va">selection</span> <span class="op">==</span> <span class="st">"GALT"</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">spots</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "AAACTGCTGGCTCCAA-1" "AACCTTTAAATACGGT-1" "AACGATAATGCCGTAG-1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "AACGTCAGACTAGTGG-1" "AACTAGGCTTGGGTGT-1" "AAGCATACTCTCCTGA-1"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances</span></span></span>
 <span class="r-in"><span><span class="va">radial_distances</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Removing 23 spots with 0 neighbors.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 83 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 78 spots on borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 83 spots inside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 2521 spots outside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning radial distances</span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">coords</span>, r_dist <span class="op">=</span>  <span class="va">radial_distances</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">galt_spots</span>, by <span class="op">=</span> <span class="st">"barcode"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -315,17 +329,31 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">p2</span>, <span class="va">p1</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="radial-distance-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances for fixed angle interval</span></span></span>
 <span class="r-in"><span><span class="co"># %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span></span></span>
 <span class="r-in"><span><span class="co"># NB: This should only be run on a single region! In</span></span></span>
 <span class="r-in"><span><span class="co"># this example, the disconnected regions have to be split first</span></span></span>
 <span class="r-in"><span><span class="va">disconnected_regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="disconnect-regions.html">DisconnectRegions</a></span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 106 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 8 disconnected graph(s) in data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Sorting disconnected regions by decreasing size</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 12 singletons in data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   These will be labeled as 'singletons'</span>
 <span class="r-in"><span><span class="va">spots_keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">disconnected_regions</span><span class="op">[</span><span class="va">disconnected_regions</span> <span class="op">==</span> <span class="st">"S1_region1"</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances between 200-300 degrees</span></span></span>
 <span class="r-in"><span><span class="va">radial_distances</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots_keep</span>, angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">300</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 65 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 34 spots on borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 65 spots inside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 2539 spots outside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning radial distances</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Setting search area between 200 and 300 degrees from region center</span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">coords</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">sampleID</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">radial_distances</span>, by <span class="op">=</span> <span class="st">"barcode"</span><span class="op">)</span></span></span>
@@ -338,6 +366,7 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html" class="external-link">scale_color_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="radial-distance-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances for multiple angle intervals</span></span></span>
@@ -345,12 +374,25 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span><span class="co"># NB: This should only be run on a single region! In</span></span></span>
 <span class="r-in"><span><span class="co"># this example, the disconnected regions have to be split first</span></span></span>
 <span class="r-in"><span><span class="va">disconnected_regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="disconnect-regions.html">DisconnectRegions</a></span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 106 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 8 disconnected graph(s) in data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Sorting disconnected regions by decreasing size</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 12 singletons in data</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   These will be labeled as 'singletons'</span>
 <span class="r-in"><span><span class="va">spots_keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">disconnected_regions</span><span class="op">[</span><span class="va">disconnected_regions</span> <span class="op">==</span> <span class="st">"S1_region1"</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate radial distances between 0-360 degrees and split</span></span></span>
 <span class="r-in"><span><span class="co"># these into 8 slices</span></span></span>
 <span class="r-in"><span><span class="va">radial_distances</span> <span class="op">&lt;-</span> <span class="fu">RadialDistance</span><span class="op">(</span><span class="va">coords</span>, <span class="va">spots_keep</span>,</span></span>
 <span class="r-in"><span>                                   angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">360</span><span class="op">)</span>, angles_nbreaks <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 65 spots</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 34 spots on borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 65 spots inside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Detected 2539 spots outside borders</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning radial distances</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Setting search area between 0 and 360 degrees from region center</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Splitting search area into 8 interval(s)</span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">coords</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">sampleID</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">radial_distances</span>, by <span class="op">=</span> <span class="st">"barcode"</span><span class="op">)</span></span></span>
@@ -370,7 +412,8 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now we can group our radial distances by slice</span></span></span>
 <span class="r-in"><span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="radial-distance-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
@@ -394,7 +437,7 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="visualize-labels.html">MapLabels</a></span><span class="op">(</span><span class="va">se_mcolon</span>, column_name <span class="op">=</span> <span class="st">"selection"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mcolon</span>, features <span class="op">=</span> <span class="st">"r_dist_GALT"</span>, colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lightgray"</span>, <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span></span></span>
-<span class="r-plt img"><img src="radial-distance-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="radial-distance-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#  Plot expression as function of distance</span></span></span>
 <span class="r-in"><span><span class="va">sel_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Clu"</span>, <span class="st">"Tagln"</span><span class="op">)</span></span></span>
@@ -412,13 +455,13 @@ the results are returned to the <code>meta.data</code> slot.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Combine plots</span></span></span>
 <span class="r-in"><span><span class="va">p1</span><span class="op">/</span><span class="va">p2</span></span></span>
-<span class="r-plt img"><img src="radial-distance-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="radial-distance-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># It can also be useful to apply transformations to the distances</span></span></span>
 <span class="r-in"><span><span class="va">se_mcolon</span><span class="op">$</span><span class="va">r_dist_GALT_sqrt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">se_mcolon</span><span class="op">$</span><span class="va">r_dist_GALT</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">se_mcolon</span><span class="op">$</span><span class="va">r_dist_GALT</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mcolon</span>, features <span class="op">=</span> <span class="st">"r_dist_GALT_sqrt"</span>, pt_size <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>            colors <span class="op">=</span> <span class="fu">RColorBrewer</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html" class="external-link">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="radial-distance-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="radial-distance-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

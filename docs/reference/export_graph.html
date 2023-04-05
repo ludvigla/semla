@@ -101,7 +101,7 @@ the H&amp;E image tiles generated with <code><a href="TileImage.html">TileImage<
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>object</dt>
-<dd><p>A `Seurat` object created with `semla`</p></dd>
+<dd><p>A <code>Seurat</code> object created with <code>semla</code></p></dd>
 
 
 <dt>sampleID</dt>
@@ -118,6 +118,12 @@ spatial network for</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>No return value, writes data to an output directory</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>CutSpatialNetwork</p></div>
     </div>
@@ -125,18 +131,21 @@ spatial network for</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/magick/" class="external-link">magick</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, <span class="st">"se_mbrain"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Fetch a spatial network</span></span></span>
-<span class="r-in"><span><span class="va">spatnet</span> <span class="op">&lt;-</span> <span class="fu"><a href="get-network.html">GetSpatialNetwork</a></span><span class="op">(</span><span class="va">se_mcolon</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Export graph as a JSON file to the current working directory</span></span></span>
-<span class="r-in"><span><span class="fu">export_graph</span><span class="op">(</span><span class="va">se_mbrain</span>, sampleID <span class="op">=</span> <span class="fl">1</span>, outdir <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># Export graph as a JSON file to a temporary directory</span></span></span>
+<span class="r-in"><span><span class="fu">export_graph</span><span class="op">(</span><span class="va">se_mbrain</span>, sampleID <span class="op">=</span> <span class="fl">1L</span>, outdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating spatial network for sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating adjacency matrix from spatial network</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Rearranging 2559x2559 adjacency matrix</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Removing duplicated edges</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating tidy graph object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Adding node attributes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Adding edge attributes</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Exporting spatial network to /var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T//Rtmp0ipZxO/network_Visium_1.json</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Finished!</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

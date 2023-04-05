@@ -259,10 +259,17 @@ example below or visit the semla website for more detailed instructions.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Save graphical parameters</span></span></span>
+<span class="r-in"><span><span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>no.readonly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot masked images</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">im</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/as.raster.html" class="external-link">as.raster</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">im_masked</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/as.raster.html" class="external-link">as.raster</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mask-images-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Reset graphical parameters</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
@@ -273,15 +280,15 @@ example below or visit the semla website for more detailed instructions.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot masked images</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mask-images-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Using a custom method</span></span></span>
 <span class="r-in"><span><span class="va">custom_fkn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">object</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">object</span> <span class="op">|&gt;</span></span></span>
@@ -293,10 +300,30 @@ example below or visit the semla website for more detailed instructions.</p>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu">MaskImages</span><span class="op">(</span><span class="va">se_mbrain</span>, custom_method <span class="op">=</span> <span class="va">custom_fkn</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Masking image(s)</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 1 samples</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fetched images</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fetched spot coordinates</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Processing sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Segmenting image using blob extraction</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Using custom method</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs with fewer than 100 pixels</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Filtering out blobs that do not overlap with provided coordinates</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Composed masked image from selected blobs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning Seurat object with masked images</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ImagePlot.html">ImagePlot</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-plt img"><img src="mask-images-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

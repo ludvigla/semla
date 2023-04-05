@@ -185,7 +185,11 @@ after the object has been created.</p>
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other pre-process: 
 <code><a href="LoadAndMergeMatrices.html">LoadAndMergeMatrices</a>()</code>,
-<code><a href="LoadSpatialCoordinates.html">LoadSpatialCoordinates</a>()</code></p></div>
+<code><a href="LoadImageInfo.html">LoadImageInfo</a>()</code>,
+<code><a href="load-images.html">LoadImages</a>()</code>,
+<code><a href="LoadScaleFactors.html">LoadScaleFactors</a>()</code>,
+<code><a href="LoadSpatialCoordinates.html">LoadSpatialCoordinates</a>()</code>,
+<code><a href="UpdateImageInfo.html">UpdateImageInfo</a>()</code></p></div>
     </div>
 
     <div class="section level2">
@@ -196,7 +200,7 @@ after the object has been created.</p>
 <span class="r-in"><span>                          <span class="st">"/*/filtered_feature_bc_matrix.h5"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">imgs</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                          <span class="st">"/*/spatial/tissue_hires_image.jpg"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                          <span class="st">"/*/spatial/tissue_lowres_image.jpg"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spotfiles</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                          <span class="st">"/*/spatial/tissue_positions_list.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
