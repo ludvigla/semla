@@ -110,6 +110,7 @@ categorical features with a lasso tool.</p>
 <span>  categorical_colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  container_width <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  container_height <span class="op">=</span> <span class="fl">800</span>,</span>
+<span>  nCores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -161,6 +162,11 @@ label of the category.</p></dd>
 
 <dt>container_width, container_height</dt>
 <dd><p>Set height and width of container</p></dd>
+
+
+<dt>nCores</dt>
+<dd><p>Number of cores to use for threading passed to <code><a href="TileImage.html">TileImage</a></code>. Only used
+if <code>datadir</code> is unavailable.</p></dd>
 
 
 <dt>verbose</dt>

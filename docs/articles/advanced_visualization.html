@@ -113,7 +113,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Advanced visualization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 25 March
+            <h4 data-toc-skip class="date">Last compiled: 04 April
 2023</h4>
       
       
@@ -531,23 +531,40 @@ input for <code>ReadVisiumData</code>, these images are roughly
 resolution. If we run <code>LoadImages</code> again and set
 <code>image_height = 1000</code> we should be able to view the H%&amp;E
 images in slightly higher resolution.</p>
+<p>NB: The “hires” images are not provided in <code>semla</code> so we
+will need to download them. We are currently using the “lowres” images
+which are only about 600x600 pixels large. We can use
+<code>ReplaceImagePaths</code> to replace the current images. You need
+to make sure that the new images are in the correct order and that they
+represent scaled representations of the images already loaded into the
+object.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se_high_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se</span>, image_height <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Download hires H&amp;E images</span></span>
+<span><span class="va">he_imgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb"</span>,</span>
+<span>                       <span class="st">"files/d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded"</span><span class="op">)</span>,</span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb"</span>,</span>
+<span>                    <span class="st">"files/d33e8074-8d83-4003-b04a-9a78ff465279/file_downloaded"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Replace images</span></span>
+<span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ReplaceImagePaths.html">ReplaceImagePaths</a></span><span class="op">(</span><span class="va">se</span>, paths <span class="op">=</span> <span class="va">he_imgs</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Load images in higher resolution</span></span>
+<span><span class="va">se_high_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se</span>, image_height <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files/d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 1000x941 pixels</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousecolon/spatial/tissue_hires_image.jpg</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 1804x2000 to 1000x1109 pixels</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files/d33e8074-8d83-4003-b04a-9a78ff465279/file_downloaded</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 8929x9901 to 1000x1109 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check object sizes</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span>, units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## 15.8 Mb</span></span></code></pre>
+<pre><code><span><span class="co">## 16.3 Mb</span></span></code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/object.size.html" class="external-link">object.size</a></span><span class="op">(</span><span class="va">se_high_res</span><span class="op">)</span>, units <span class="op">=</span> <span class="st">"MB"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## 39.2 Mb</span></span></code></pre>
+<pre><code><span><span class="co">## 39.1 Mb</span></span></code></pre>
 <p>Note that these higher resolution images will take up more space and
 might slow down the plotting considerably.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
@@ -817,8 +834,8 @@ the scalebar should appear in the top right corner.</p>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpGMeJsM/temp_libpathe1182c30b153/semla/extdata/mousebrain/spatial/tissue_hires_image.jpg</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 2000x1882 to 400x376 pixels</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="st">"nFeature_Spatial"</span>, pt_size <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -873,9 +890,20 @@ make the text appear.</li>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, </span>
 <span>        legend.position <span class="op">=</span> <span class="st">"right"</span>, legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="advanced_visualization_files/figure-html/unnamed-chunk-45-1.png" width="768"></p>
-<p>If you want to crop the data, you might want to adjust the width
-scalebar to a more appropriate length:</p>
+<p>NB: We will include a higher resolution version of the H&amp;E image
+for the next example. This is only relevant for this tutorial and will
+not be necessary if you created the object using
+“tissue_hires_image.png” files.</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download hires H&amp;E images</span></span>
+<span><span class="va">he_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb"</span>,</span>
+<span>                    <span class="st">"files/d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Replace images</span></span>
+<span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ReplaceImagePaths.html">ReplaceImagePaths</a></span><span class="op">(</span><span class="va">se_mbrain</span>, paths <span class="op">=</span> <span class="va">he_img</span><span class="op">)</span></span></code></pre></div>
+<p>If you want to crop the data, you might want to adjust the width
+scalebar to a more appropriate length.</p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mbrain</span>, image_height <span class="op">=</span> <span class="fl">1.5e3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="st">"Th"</span>, pt_size <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>            image_use <span class="op">=</span> <span class="st">"raw"</span>, scale_alpha <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -883,7 +911,7 @@ scalebar to a more appropriate length:</p>
 <span>            crop_area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.6</span>, <span class="fl">0.4</span>, <span class="fl">0.75</span><span class="op">)</span>,</span>
 <span>            scalebar_position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="fl">0.8</span><span class="op">)</span>, scalebar_height <span class="op">=</span> <span class="fl">0.08</span>,</span>
 <span>            add_scalebar <span class="op">=</span> <span class="cn">TRUE</span>, scalebar_gg <span class="op">=</span> <span class="fu"><a href="../reference/scalebar.html">scalebar</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">400</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-46-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-47-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="rearrange-patchworks">Rearrange patchworks<a class="anchor" aria-label="anchor" href="#rearrange-patchworks"></a>
@@ -895,19 +923,19 @@ and define the order manually.</p>
 <p>For instance, if we have plot two features and set
 <code>return_plot_list = TRUE</code>, we can rearrange the plots with
 <code>wrap_plots</code>:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Calb2"</span><span class="op">)</span>, return_plot_list <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">Calb2</span>, <span class="va">p</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">Th</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-47-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
 <p>If we have multiple sections, we can access the section-specific
 plots from the list. In the example below, the plots have been
 rearranged so that the columns and rows are flipped.</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Calb2"</span><span class="op">)</span>, return_plot_list <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">Calb2</span>, <span class="va">p</span><span class="op">$</span><span class="va">`2`</span><span class="op">$</span><span class="va">Th</span>, <span class="va">p</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">Th</span>, <span class="va">p</span><span class="op">$</span><span class="va">`1`</span><span class="op">$</span><span class="va">Calb2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-48-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-49-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="basic-themes-and-plot-annotation">Basic themes and plot annotation<a class="anchor" aria-label="anchor" href="#basic-themes-and-plot-annotation"></a>
@@ -917,18 +945,18 @@ make it easier to modify themes.</p>
 <p>If you are plotting many features and sections at the same time, it
 can be useful to remove all components of the theme with
 <code>ThemeClean</code> to get a quick overview:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Calb2"</span>, <span class="st">"Clu"</span>, <span class="st">"Mgp"</span>, <span class="st">"Acta2"</span>, <span class="st">"Tagln"</span><span class="op">)</span>, </span>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, pt_size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>  <span class="fu"><a href="../reference/ThemeClean.html">ThemeClean</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-49-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-50-1.png" width="700"></p>
 <p>If you like to move the color legends to the right hand side of the
 plots, you can use <code>ThemeLegendRight</code>:</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Calb2"</span><span class="op">)</span>, </span>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>  <span class="fu"><a href="../reference/ThemeLegendRight.html">ThemeLegendRight</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-50-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-51-1.png" width="700"></p>
 <p>The titles of individual plots are determined internally by
 <code>MapLabels</code> and <code>MapFeatures</code> and it can be
 difficult to change these titles after the plot has been generated.
@@ -936,10 +964,10 @@ difficult to change these titles after the plot has been generated.
 to do is to provide a character vector with new titles which should
 match the number of subplots in the patchwork. In the example below we
 have 2 genes and 2 sections, so we need to provide 4 titles:</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Th"</span>, <span class="st">"Calb2"</span><span class="op">)</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/ModifyPatchworkTitles.html">ModifyPatchworkTitles</a></span><span class="op">(</span><span class="va">p</span>, titles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"First"</span>, <span class="st">"Second"</span>, <span class="st">"Third"</span>, <span class="st">"Fourth"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-51-1.png" width="700"></p>
+<p><img src="advanced_visualization_files/figure-html/unnamed-chunk-52-1.png" width="700"></p>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package version</strong>
@@ -947,7 +975,7 @@ have 2 genes and 2 sections, so we need to provide 4 titles:</p>
 <li>
 <code>semla</code>: 1.0.0</li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -990,25 +1018,25 @@ have 2 genes and 2 sections, so we need to provide 4 titles:</p>
 <span><span class="co">##  [61] goftest_1.2-3          future_1.27.0          MASS_7.3-58.1         </span></span>
 <span><span class="co">##  [64] zoo_1.8-10             scales_1.2.1           ragg_1.2.2            </span></span>
 <span><span class="co">##  [67] promises_1.2.0.1       spatstat.utils_3.0-1   parallel_4.2.1        </span></span>
-<span><span class="co">##  [70] RColorBrewer_1.1-3     yaml_2.3.5             memoise_2.0.1         </span></span>
-<span><span class="co">##  [73] reticulate_1.26        pbapply_1.5-0          gridExtra_2.3         </span></span>
-<span><span class="co">##  [76] sass_0.4.2             stringi_1.7.8          highr_0.9             </span></span>
-<span><span class="co">##  [79] desc_1.4.1             rlang_1.0.6            pkgconfig_2.0.3       </span></span>
-<span><span class="co">##  [82] systemfonts_1.0.4      matrixStats_0.62.0     evaluate_0.16         </span></span>
-<span><span class="co">##  [85] lattice_0.20-45        tensor_1.5             ROCR_1.0-11           </span></span>
-<span><span class="co">##  [88] purrr_1.0.1            labeling_0.4.2         htmlwidgets_1.5.4     </span></span>
-<span><span class="co">##  [91] cowplot_1.1.1          tidyselect_1.2.0       parallelly_1.32.1     </span></span>
-<span><span class="co">##  [94] RcppAnnoy_0.0.19       plyr_1.8.7             magrittr_2.0.3        </span></span>
-<span><span class="co">##  [97] R6_2.5.1               magick_2.7.3           generics_0.1.3        </span></span>
-<span><span class="co">## [100] withr_2.5.0            pillar_1.8.1           fitdistrplus_1.1-8    </span></span>
-<span><span class="co">## [103] abind_1.4-5            survival_3.4-0         sp_1.5-1              </span></span>
-<span><span class="co">## [106] future.apply_1.9.0     KernSmooth_2.23-20     utf8_1.2.2            </span></span>
-<span><span class="co">## [109] spatstat.geom_3.0-3    plotly_4.10.0          rmarkdown_2.15        </span></span>
-<span><span class="co">## [112] viridis_0.6.2          grid_4.2.1             data.table_1.14.2     </span></span>
-<span><span class="co">## [115] forcats_0.5.2          digest_0.6.29          xtable_1.8-4          </span></span>
-<span><span class="co">## [118] dbscan_1.1-10          tidyr_1.3.0            httpuv_1.6.5          </span></span>
-<span><span class="co">## [121] textshaping_0.3.6      munsell_0.5.0          viridisLite_0.4.1     </span></span>
-<span><span class="co">## [124] bslib_0.4.0            shinyjs_2.1.0</span></span></code></pre>
+<span><span class="co">##  [70] RColorBrewer_1.1-3     curl_4.3.2             yaml_2.3.5            </span></span>
+<span><span class="co">##  [73] memoise_2.0.1          reticulate_1.26        pbapply_1.5-0         </span></span>
+<span><span class="co">##  [76] gridExtra_2.3          sass_0.4.2             stringi_1.7.8         </span></span>
+<span><span class="co">##  [79] highr_0.9              desc_1.4.1             rlang_1.0.6           </span></span>
+<span><span class="co">##  [82] pkgconfig_2.0.3        systemfonts_1.0.4      matrixStats_0.62.0    </span></span>
+<span><span class="co">##  [85] evaluate_0.16          lattice_0.20-45        tensor_1.5            </span></span>
+<span><span class="co">##  [88] ROCR_1.0-11            purrr_1.0.1            labeling_0.4.2        </span></span>
+<span><span class="co">##  [91] htmlwidgets_1.5.4      cowplot_1.1.1          tidyselect_1.2.0      </span></span>
+<span><span class="co">##  [94] parallelly_1.32.1      RcppAnnoy_0.0.19       plyr_1.8.7            </span></span>
+<span><span class="co">##  [97] magrittr_2.0.3         R6_2.5.1               magick_2.7.3          </span></span>
+<span><span class="co">## [100] generics_0.1.3         withr_2.5.0            pillar_1.8.1          </span></span>
+<span><span class="co">## [103] fitdistrplus_1.1-8     abind_1.4-5            survival_3.4-0        </span></span>
+<span><span class="co">## [106] sp_1.5-1               future.apply_1.9.0     KernSmooth_2.23-20    </span></span>
+<span><span class="co">## [109] utf8_1.2.2             spatstat.geom_3.0-3    plotly_4.10.0         </span></span>
+<span><span class="co">## [112] rmarkdown_2.15         viridis_0.6.2          grid_4.2.1            </span></span>
+<span><span class="co">## [115] data.table_1.14.2      forcats_0.5.2          digest_0.6.29         </span></span>
+<span><span class="co">## [118] xtable_1.8-4           dbscan_1.1-10          tidyr_1.3.0           </span></span>
+<span><span class="co">## [121] httpuv_1.6.5           textshaping_0.3.6      munsell_0.5.0         </span></span>
+<span><span class="co">## [124] viridisLite_0.4.1      bslib_0.4.0            shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

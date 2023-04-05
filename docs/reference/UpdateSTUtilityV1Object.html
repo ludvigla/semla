@@ -126,6 +126,12 @@ the missing information stored in the "scalefactors_json.json" files.</p>
 
     </div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Note that valid image paths need to be available from the <code>STUtility</code> v1 object.
+If not, you can set the paths manually before updating the object:
+<code>old_se@tools$Staffli@imgs &lt;- c("path/to/im1.jpg", "path/to/im2.jpg", ...)</code></p>
+    </div>
+    <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Ludvig Larsson</p>
     </div>
@@ -133,10 +139,39 @@ the missing information stored in the "scalefactors_json.json" files.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Convert an old object</span></span></span>
-<span class="r-in"><span><span class="co"># se_new &lt;- UpdateSTUtilityV1Object(se_old)</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">se_old_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files"</span>,</span></span>
+<span class="r-in"><span>                        <span class="st">"8f9d3dee-a026-40f0-be66-2df693f9db66/file_downloaded"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># Load old STUtility object</span></span></span>
+<span class="r-in"><span><span class="va">se_old</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">url</a></span><span class="op">(</span><span class="va">se_old_url</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Update imgs slot of Staffli object to a valid path or URL (H&amp;E image)</span></span></span>
+<span class="r-in"><span><span class="va">he_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files"</span>,</span></span>
+<span class="r-in"><span>                    <span class="st">"d97fb9ce-eb7d-4c1f-98e0-c17582024a40/file_downloaded"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">se_old</span><span class="op">@</span><span class="va">tools</span><span class="op">$</span><span class="va">Staffli</span><span class="op">@</span><span class="va">imgs</span> <span class="op">&lt;-</span> <span class="va">he_img</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: STutility</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 method overwritten by 'imager':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method      from</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   plot.imlist     </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘STutility’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:semla’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     CreateStaffliObject, GetStaffli, ImagePlot, LoadImages, MaskImages,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     MergeSTData, SubsetSTData</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Update old STUtility object</span></span></span>
+<span class="r-in"><span><span class="va">se_new</span> <span class="op">&lt;-</span> <span class="fu">UpdateSTUtilityV1Object</span><span class="op">(</span><span class="va">se_old</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found 1 datasets in <span style="color: #FF55FF;">STUtility v1</span> object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Updating image_info slot</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Found raw H&amp;E images</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Updating meta_data slot</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Renaming spots in <span style="color: #FF55FF;">Seurat</span> object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Creating new Staffli object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Successfully updated object</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

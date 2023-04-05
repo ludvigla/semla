@@ -377,41 +377,42 @@ first feature is "red", the second is "green" and the last feature is "blue".</p
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"viridis"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: viridisLite</span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load example Visium data</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, <span class="st">"se_mbrain"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="merge.html">MergeSTData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="va">se_mcolon</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Select features</span></span></span>
 <span class="r-in"><span><span class="va">selected_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Clu"</span>, <span class="st">"Slc6a3"</span>, <span class="st">"Vip"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot selected features with custom colors</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_merged</span>, features <span class="op">=</span> <span class="va">selected_features</span>, colors <span class="op">=</span> <span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="visualize-features-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot selected features with color bars scaled individually for each feature and sample</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_merged</span>, features <span class="op">=</span> <span class="va">selected_features</span>, scale <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="visualize-features-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot selected features and add custom labels for subplots</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span><span class="op">$</span><span class="va">sample_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span><span class="op">@</span><span class="va">meta_data</span><span class="op">$</span><span class="va">sampleID</span> <span class="op">==</span> <span class="st">"1"</span>,</span></span>
 <span class="r-in"><span>                              <span class="st">"mouse brain"</span>,</span></span>
 <span class="r-in"><span>                              <span class="st">"mouse colon"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_merged</span>, features <span class="op">=</span> <span class="va">selected_features</span>, label_by <span class="op">=</span> <span class="st">"sample_id"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="visualize-features-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot selected features arranged by rows instead of columns</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_merged</span>, features <span class="op">=</span> <span class="va">selected_features</span>, arrange_features <span class="op">=</span> <span class="st">"row"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="visualize-features-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Blend features</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_merged</span>, features <span class="op">=</span> <span class="va">selected_features</span>, blend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="visualize-features-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The output is a patchwork object which is easy to manipulate</span></span></span>
 <span class="r-in"><span><span class="va">selected_feature</span> <span class="op">&lt;-</span> <span class="st">"Th"</span></span></span>
@@ -420,13 +421,13 @@ first feature is "red", the second is "green" and the last feature is "blue".</p
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"right"</span>,</span></span>
 <span class="r-in"><span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove titles</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a dark theme</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span>,</span></span>
@@ -437,24 +438,24 @@ first feature is "red", the second is "green" and the last feature is "blue".</p
 <span class="r-in"><span>        plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-3.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-8.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add a background and axes to the plot</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"lightgray"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-4.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-9.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Move legend</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>panel.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"lightgray"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>        legend.justification <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-5.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-10.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Change title of fill aesthetic</span></span></span>
 <span class="r-in"><span><span class="fu">MapFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">selected_feature</span>, pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">&amp;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Gene expression"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-features-6.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-features-11.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

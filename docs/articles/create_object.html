@@ -113,7 +113,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Create dataset</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 25 March
+            <h4 data-toc-skip class="date">Last compiled: 04 April
 2023</h4>
       
       
@@ -137,14 +137,14 @@
 <h2 id="load-coordinates">Load coordinates<a class="anchor" aria-label="anchor" href="#load-coordinates"></a>
 </h2>
 <p>The <code>Staffli</code> object requires image and coordinate data
-that can be retireved from the spaceranger output files.</p>
+that can be retrieved from the spaceranger output files.</p>
 <p>Below we’ll use the mouse brain and mouse colon example data:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">he_imgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, </span>
-<span>                         <span class="st">"spatial/tissue_hires_image.jpg"</span>, </span>
+<span>                         <span class="st">"spatial/tissue_lowres_image.jpg"</span>, </span>
 <span>                          package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span>,</span>
 <span>             <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, </span>
-<span>                         <span class="st">"spatial/tissue_hires_image.jpg"</span>, </span>
+<span>                         <span class="st">"spatial/tissue_lowres_image.jpg"</span>, </span>
 <span>                         package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">spotfiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, </span>
 <span>                           <span class="st">"spatial/tissue_positions_list.csv"</span>, </span>
@@ -224,8 +224,8 @@ as a sampleID column.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 8</span></span></span>
 <span><span class="co">##   format width height colorspace matte filesize density sampleID</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG    <span style="text-decoration: underline;">1</span>882   <span style="text-decoration: underline;">2</span>000 sRGB       FALSE  1<span style="text-decoration: underline;">030</span>876 72x72   1       </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG    <span style="text-decoration: underline;">2</span>000   <span style="text-decoration: underline;">1</span>804 sRGB       FALSE  1<span style="text-decoration: underline;">398</span>278 72x72   2</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600 sRGB       FALSE   <span style="text-decoration: underline;">106</span>233 72x72   1       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541 sRGB       FALSE   <span style="text-decoration: underline;">141</span>710 72x72   2</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="define-image-dimensions">Define image dimensions<a class="anchor" aria-label="anchor" href="#define-image-dimensions"></a>
@@ -255,8 +255,8 @@ H&amp;E images:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add additional columns to image_info using scale factors</span></span>
 <span><span class="va">image_info</span> <span class="op">&lt;-</span> <span class="va">image_info</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">width</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_hires_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>         full_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">height</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_hires_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">width</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_lowres_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>         full_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">height</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_lowres_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"tissue_hires"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">format</span>, <span class="va">width</span>, <span class="va">height</span>, <span class="va">full_width</span>, <span class="va">full_height</span>, </span>
 <span>         <span class="va">colorspace</span>, <span class="va">filesize</span>, <span class="va">density</span>, <span class="va">sampleID</span>, <span class="va">type</span><span class="op">)</span></span>
@@ -264,8 +264,8 @@ H&amp;E images:</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 10</span></span></span>
 <span><span class="co">##   format width height full_width full_he…¹ color…² files…³ density sampl…⁴ type </span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG    <span style="text-decoration: underline;">1</span>882   <span style="text-decoration: underline;">2</span>000      <span style="text-decoration: underline;">18</span>107     <span style="text-decoration: underline;">19</span>242 sRGB    1<span style="text-decoration: underline;">030</span>876 72x72   1       tiss…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG    <span style="text-decoration: underline;">2</span>000   <span style="text-decoration: underline;">1</span>804       <span style="text-decoration: underline;">9</span>901      <span style="text-decoration: underline;">8</span>931 sRGB    1<span style="text-decoration: underline;">398</span>278 72x72   2       tiss…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600      <span style="text-decoration: underline;">18</span>120     <span style="text-decoration: underline;">19</span>242 sRGB     <span style="text-decoration: underline;">106</span>233 72x72   1       tiss…</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541       <span style="text-decoration: underline;">9</span>901      <span style="text-decoration: underline;">8</span>927 sRGB     <span style="text-decoration: underline;">141</span>710 72x72   2       tiss…</span></span>
 <span><span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​full_height, ²​colorspace, ³​filesize,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ⁴​sampleID</span></span></span></code></pre>
 <p>Finally, we are ready to create the <code>Staffli</code> object. Here
