@@ -4,9 +4,7 @@
 \name{GetCoordinates}
 \alias{GetCoordinates}
 \alias{GetCoordinates,Staffli-method}
-\alias{GetCoordinates,Staffli,Staffli-method}
 \alias{GetCoordinates,Seurat-method}
-\alias{GetCoordinates,Seurat,Seurat-method}
 \title{Method to extract coordinates}
 \usage{
 GetCoordinates(object)
@@ -33,14 +31,10 @@ se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "s
 # Fetch Staffli object
 staffli_object <- GetStaffli(se_mbrain)
 
-# Fetch images from a Staffli object
+# Fetch coordinates from a Staffli object
 coordinates <- GetCoordinates(staffli_object)
 coordinates
 
-
-# Load example data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-   LoadImages()
 
 # Fetch images from a Seurat object
 coordinates <- GetCoordinates(se_mbrain)

@@ -193,6 +193,48 @@ CreateStaffliObject <- function (
 # Staffli methods
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+#' Staffli Methods
+#'
+#' Methods for \code{\link{Staffli}} objects for generics defined in other
+#' packages
+#'
+#' @param x,object A \code{\link{Staffli}} object
+#' @param i,barcodes Name of one or more metadata columns
+#' @param ... Arguments passed to other methods
+#'
+#' @name Staffli-methods
+#' @rdname Staffli-methods
+#'
+#' @concept staffli
+#'
+NULL
+
+
+#' @describeIn Staffli-methods Autocompletion for \code{$} access on a
+#' \code{Staffli} object
+#'
+#' @inheritParams utils::.DollarNames
+#'
+#' @importFrom utils .DollarNames
+#' @export
+#' @method .DollarNames Staffli
+#'
+".DollarNames.Staffli" <- function(x, pattern = '') {
+  meta_data <- as.list(x = colnames(x = x@meta_data))
+  names(x = meta_data) <- unlist(x = meta_data)
+  return(.DollarNames(x = meta_data, pattern = pattern))
+}
+
+#' @describeIn Staffli-methods Metadata access for \code{Staffli} objects
+#'
+#' @return A selected metadata column \code{i} for object \code{x}
+#'
+#' @export
+#' @method $ Staffli
+#' 
+"$.Staffli" <- function(x, i, ...) {
+  return(x@meta_data[, i, drop = TRUE])
+}
 
 #' Method to extract image info
 #'
@@ -208,7 +250,6 @@ setGeneric("GetImageInfo", function(object) {
   standardGeneric("GetImageInfo")
 })
 #' @rdname GetImageInfo
-#' @aliases GetImageInfo,Staffli,Staffli-method
 #' 
 #' @examples 
 #' 
@@ -233,13 +274,8 @@ setMethod (
   }
 )
 #' @rdname GetImageInfo
-#' @aliases GetImageInfo,Seurat,Seurat-method
 #' 
 #' @examples 
-#' 
-#' # Load example data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-#'    LoadImages()
 #'
 #' # Fetch images from a Seurat object
 #' image_info <- GetImageInfo(se_mbrain)
@@ -272,7 +308,6 @@ setGeneric("GetScaleFactors", function(object) {
   standardGeneric("GetScaleFactors")
 })
 #' @rdname GetScaleFactors
-#' @aliases GetScaleFactors,Staffli,Staffli-method
 #' 
 #' @examples 
 #' 
@@ -297,14 +332,9 @@ setMethod (
   }
 )
 #' @rdname GetScaleFactors
-#' @aliases GetScaleFactors,Seurat,Seurat-method
 #' 
 #' @examples 
 #' 
-#' # Load example data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-#'    LoadImages()
-#'
 #' # Fetch images from a Seurat object
 #' scalefactors <- GetScaleFactors(se_mbrain)
 #' scalefactors
@@ -336,7 +366,6 @@ setGeneric("GetCoordinates", function(object) {
   standardGeneric("GetCoordinates")
 })
 #' @rdname GetCoordinates
-#' @aliases GetCoordinates,Staffli,Staffli-method
 #' 
 #' @examples 
 #' 
@@ -347,7 +376,7 @@ setGeneric("GetCoordinates", function(object) {
 #' # Fetch Staffli object
 #' staffli_object <- GetStaffli(se_mbrain)
 #' 
-#' # Fetch images from a Staffli object
+#' # Fetch coordinates from a Staffli object
 #' coordinates <- GetCoordinates(staffli_object)
 #' coordinates
 #'
@@ -361,14 +390,9 @@ setMethod (
   }
 )
 #' @rdname GetCoordinates
-#' @aliases GetCoordinates,Seurat,Seurat-method
 #' 
 #' @examples 
 #' 
-#' # Load example data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-#'    LoadImages()
-#'
 #' # Fetch images from a Seurat object
 #' coordinates <- GetCoordinates(se_mbrain)
 #' coordinates
@@ -401,7 +425,6 @@ setGeneric("GetImages", function(object, image_use = c("raw", "transformed")) {
   standardGeneric("GetImages")
 })
 #' @rdname GetImages
-#' @aliases GetImages,Staffli,Staffli-method
 #' 
 #' @examples 
 #' 
@@ -420,7 +443,7 @@ setGeneric("GetImages", function(object, image_use = c("raw", "transformed")) {
 setMethod (
   f = "GetImages",
   signature = "Staffli",
-  definition = function(object, image_use = "raw") {
+  definition = function(object, image_use = c("raw", "transformed")) {
     image_use <- match.arg(image_use, choices = c("raw", "transformed"))
     if (!inherits(image_use, what = "character"))
       abort(glue("Invalid class '{class(image_use)}' of 'image_use'. Expected a 'character' vector."))
@@ -430,13 +453,8 @@ setMethod (
   }
 )
 #' @rdname GetImages
-#' @aliases GetImages,Seurat,Seurat-method
 #' 
 #' @examples 
-#' 
-#' # Load example data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-#'    LoadImages()
 #'
 #' # Fetch images from a Seurat object
 #' images <- GetImages(se_mbrain)
@@ -460,7 +478,7 @@ setMethod (
 
 
 #' Method used to extract a \code{Staffli} object from the tools slot of a
-#' \code{Staffli} object
+#' \code{Seurat} object
 #'
 #' @param object A \code{Seurat} object
 #' 
@@ -474,7 +492,6 @@ setGeneric("GetStaffli", function(object) {
   standardGeneric("GetStaffli")
 })
 #' @rdname GetStaffli
-#' @aliases GetStaffli,Seurat,Seurat-method
 #' 
 #' @examples
 #' 
@@ -494,65 +511,6 @@ setMethod (
     object@tools$Staffli
   }
 )
-
-#' Method used to get meta data from a \code{Staffli} object
-#'
-#' @rdname Staffli-get-methods
-#' @aliases `[[`,Staffli,Staffli-method
-#'
-#' @param x object from which to extract element(s).
-#' @param i row indices specifying elements to extract.
-#' @param j column indices specifying elements to extract.
-#' @param drop If TRUE the result is coerced to the lowest possible dimension.
-#' This only works for extracting elements, not for the replacement.
-#' 
-#' @return Meta data from a \code{Staffli} object
-#' 
-#' @examples 
-#' 
-#' # Load example data
-#' se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-#'    LoadImages()
-#' 
-#' # Fetch Staffli object
-#' staffli_object <- GetStaffli(se_mbrain)
-#' 
-#' # Get meta_data from a staffli object
-#' meta_data <- staffli_object[[]]
-#'
-#' @export
-#'
-setMethod (
-  f = "[[",
-  signature = "Staffli",
-  definition = function(x, i, j, drop = F) {
-    x@meta_data[i, j, drop]
-  }
-)
-
-#' Method used to set meta data in a \code{Staffli} object
-#' @rdname Staffli-set-methods
-#' @aliases `[[<-`,Staffli,Staffli-method
-#' 
-#' @return No return value, adds meta data to a \code{Staffli} object
-#'
-#' @param x object in which to replace element(s).
-#' @param i row indices specifying elements to replace.
-#' @param j column indices specifying elements to replace.
-#' @param value Data to add to meta data data.frame.
-#' @param ... additional parameters
-#'
-#' @export
-#'
-setMethod (
-  f = "[[<-",
-  signature = "Staffli",
-  definition = function(x, i, j, ..., value) {
-    x@meta_data[i, j] <- value
-    return(x)
-  }
-)
-
 
 #' Replace image paths
 #' 
@@ -575,7 +533,6 @@ setGeneric("ReplaceImagePaths", function(object, paths) {
   standardGeneric("ReplaceImagePaths")
 })
 #' @rdname ReplaceImagePaths
-#' @aliases ReplaceImagePaths,Staffli,Staffli-method
 #' 
 #' @export
 #' 
@@ -625,7 +582,6 @@ setMethod (
   }
 )
 #' @rdname ReplaceImagePaths
-#' @aliases ReplaceImagePaths,Seurat,Seurat-method
 #' 
 #' @export
 #' 
@@ -645,16 +601,17 @@ setMethod (
 #' Show method for \code{Staffli} objects
 #'
 #' @rdname show
-#' @aliases show,Staffli,Staffli-method
 #' 
 #' @return No return value, plots the spot coordinates and alternatively also
 #' the images found in a \code{Staffli} object
 #'
 #' @param object object to print pre-selected attributes for
+#' 
+#' @export
 #'
 setMethod (
   f = "show",
-  signature = "Staffli",
+  signature = c(object = "Staffli"),
   definition = function(object) {
     cat("An object of class", class(x = object), "\n")
     cat(
@@ -682,21 +639,22 @@ setMethod (
 #' @import dplyr
 #' @importFrom patchwork wrap_plots inset_element 
 #' 
-#' @return Noe return value, prints information about a \code{Staffli} object
+#' @return No return value, plots the content of a \code{Staffli} object
 #'
 #' @rdname plot
-#' @aliases plot,Staffli,Staffli-method
 #'
 #' @param x A \code{Staffli} object
 #' @param image_use A string specifying the image to plot
 #' @param coords_use A character vector of length 2 specifying the coordinates to use
 #' @param ncol Integer specifying the number of columns in the plot grid
 #' @param ... Additional parameters passed to \code{geom_point}
+#' 
+#' @export
 #'
 setMethod (
   f = "plot",
-  signature = "Staffli",
-  definition = function(x, image_use = NULL, coords_use = c("raw", "transformed"), ncol = NULL, ...) {
+  signature = c(x = "Staffli", y = "missing"),
+  definition = function(x, y, image_use = NULL, coords_use = c("raw", "transformed"), ncol = NULL, ...) {
     
     # Set global variables to NULL
     sampleID <- NULL

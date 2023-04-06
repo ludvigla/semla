@@ -4,14 +4,12 @@
 \name{GetImages}
 \alias{GetImages}
 \alias{GetImages,Staffli-method}
-\alias{GetImages,Staffli,Staffli-method}
 \alias{GetImages,Seurat-method}
-\alias{GetImages,Seurat,Seurat-method}
 \title{Method to extract images}
 \usage{
 GetImages(object, image_use = c("raw", "transformed"))
 
-\S4method{GetImages}{Staffli}(object, image_use = "raw")
+\S4method{GetImages}{Staffli}(object, image_use = c("raw", "transformed"))
 
 \S4method{GetImages}{Seurat}(object, image_use = c("raw", "transformed"))
 }
@@ -38,10 +36,6 @@ staffli_object <- GetStaffli(se_mbrain)
 # Fetch images from a Staffli object
 images <- GetImages(staffli_object)
 
-
-# Load example data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-   LoadImages()
 
 # Fetch images from a Seurat object
 images <- GetImages(se_mbrain)

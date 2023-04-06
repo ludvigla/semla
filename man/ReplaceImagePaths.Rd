@@ -4,9 +4,7 @@
 \name{ReplaceImagePaths}
 \alias{ReplaceImagePaths}
 \alias{ReplaceImagePaths,Staffli-method}
-\alias{ReplaceImagePaths,Staffli,Staffli-method}
 \alias{ReplaceImagePaths,Seurat-method}
-\alias{ReplaceImagePaths,Seurat,Seurat-method}
 \title{Replace image paths}
 \usage{
 ReplaceImagePaths(object, paths)

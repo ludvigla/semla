@@ -4,9 +4,7 @@
 \name{GetScaleFactors}
 \alias{GetScaleFactors}
 \alias{GetScaleFactors,Staffli-method}
-\alias{GetScaleFactors,Staffli,Staffli-method}
 \alias{GetScaleFactors,Seurat-method}
-\alias{GetScaleFactors,Seurat,Seurat-method}
 \title{Method to extract image scale factors}
 \usage{
 GetScaleFactors(object)
@@ -37,10 +35,6 @@ staffli_object <- GetStaffli(se_mbrain)
 scalefactors <- GetScaleFactors(staffli_object)
 scalefactors
 
-
-# Load example data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-   LoadImages()
 
 # Fetch images from a Seurat object
 scalefactors <- GetScaleFactors(se_mbrain)

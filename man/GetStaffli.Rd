@@ -4,9 +4,8 @@
 \name{GetStaffli}
 \alias{GetStaffli}
 \alias{GetStaffli,Seurat-method}
-\alias{GetStaffli,Seurat,Seurat-method}
 \title{Method used to extract a \code{Staffli} object from the tools slot of a
-\code{Staffli} object}
+\code{Seurat} object}
 \usage{
 GetStaffli(object)
 
@@ -20,7 +19,7 @@ A \code{Staffli} object
 }
 \description{
 Method used to extract a \code{Staffli} object from the tools slot of a
-\code{Staffli} object
+\code{Seurat} object
 }
 \examples{
 

@@ -2,7 +2,6 @@
 % Please edit documentation in R/staffli_object.R
 \name{show,Staffli-method}
 \alias{show,Staffli-method}
-\alias{show,Staffli,Staffli-method}
 \title{Show method for \code{Staffli} objects}
 \usage{
 \S4method{show}{Staffli}(object)

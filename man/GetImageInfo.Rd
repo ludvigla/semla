@@ -4,9 +4,7 @@
 \name{GetImageInfo}
 \alias{GetImageInfo}
 \alias{GetImageInfo,Staffli-method}
-\alias{GetImageInfo,Staffli,Staffli-method}
 \alias{GetImageInfo,Seurat-method}
-\alias{GetImageInfo,Seurat,Seurat-method}
 \title{Method to extract image info}
 \usage{
 GetImageInfo(object)
@@ -37,10 +35,6 @@ staffli_object <- GetStaffli(se_mbrain)
 image_info <- GetImageInfo(staffli_object)
 image_info
 
-
-# Load example data
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla")) |> 
-   LoadImages()
 
 # Fetch images from a Seurat object
 image_info <- GetImageInfo(se_mbrain)
