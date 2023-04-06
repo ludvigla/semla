@@ -79,10 +79,10 @@ PlotFeatureLoadings <- function (
   nfeatures = 30,
   mode = c("dotplot", "barplot", "heatmap"),
   type = c("positive", "negative", "centered"),
-  fill = "lightgrey",
+  fill = "grey",
   color = "black",
   bar_width = 0.9,
-  pt_size = 4,
+  pt_size = 3,
   pt_stroke = 0.5,
   linetype = "dashed",
   color_by_loadings = FALSE,
@@ -154,7 +154,9 @@ PlotFeatureLoadings <- function (
         group_by(dim) |>
         slice_head(n = nfeatures)
     }
-
+    # Convert dim to factor
+    dimred_data$dim <- factor(dimred_data$dim, levels = dimred_names)
+    
     # Rearrange values
     dimred_data_split <- dimred_data |>
       arrange(value) |>
@@ -216,7 +218,7 @@ PlotFeatureLoadings <- function (
     stopifnot(length(dims) > 1)
     
     # Convert dim to factor
-    dimred_data$dim <- factor(dimred_data$dim, levels = dimred_data$dim |> unique())
+    dimred_data$dim <- factor(dimred_data$dim, levels = dimred_names)
     
     top_features <- dimred_data |>
       group_by(dim) |>
