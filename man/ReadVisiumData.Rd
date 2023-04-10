@@ -75,6 +75,14 @@ however, it is recommended to use the \code{\link{SubsetSTData}} function for fi
 after the object has been created.
 }
 
+\section{Additional annotations}{
+
+You can add a column named 'annotation_files' with paths to CSV files containing 
+annotations. These files should have the same structure as the CSV the files exported 
+by Loupe Browser. One column with the barcode IDs and one column with the annotation labels.
+The annotations will be added to the \code{meta.data} slot of the returned \code{\link{Seurat}} object.
+}
+
 \examples{
 # Assemble spaceranger output files
 samples <-
@@ -98,10 +106,22 @@ infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", 
 se <- ReadVisiumData(infoTable = infoTable)
 se
 
+# Add additional annotations from CSV files
+annotation_file <- 
+  Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
+                          "/*/galt_spots.csv"))
+annotation_files <- c(NA_character_, annotation_file)
+
+# Create a tibble/data.frame with file paths
+infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"), annotation_files)
+
+se <- ReadVisiumData(infoTable)
+
 }
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},
 \code{\link{LoadScaleFactors}()},

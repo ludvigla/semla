@@ -84,6 +84,7 @@ se_merged <- LoadImages(se_merged)
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadScaleFactors}()},
 \code{\link{LoadSpatialCoordinates}()},
@@ -92,6 +93,7 @@ Other pre-process:
 
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadScaleFactors}()},
 \code{\link{LoadSpatialCoordinates}()},

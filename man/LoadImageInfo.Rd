@@ -29,6 +29,7 @@ image_info
 \seealso{
 Other pre-process: 
 \code{\link{LoadAndMergeMatrices}()},
+\code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImages}()},
 \code{\link{LoadScaleFactors}()},
 \code{\link{LoadSpatialCoordinates}()},

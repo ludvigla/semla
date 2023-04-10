@@ -25,6 +25,8 @@ library(singlet)
 
 <br>
 
+## Run NMF
+
 We'll use our mouse brain test data for the NNMF. The method automatically runs cross-validation to find the best rank and to learn a model at that rank.
 
 NB: The mouse brain test data only includes a subset of the entire data of 188 unique genes. With the full dataset, we would be able to find a higher optimal rank and therefore obtain more factors.
@@ -51,6 +53,8 @@ RankPlot(se_mbrain)
 
 <br>
 
+### Spatial visualization
+
 The results are stored as a `DimReduc` object in our `Seurat` object and we can map the factors spatially with `MapFeatures()`.
 
 ```{r fig.asp=1.2, fig.width=9}
@@ -62,6 +66,8 @@ MapFeatures(se_mbrain,
 ```
 
 <br>
+
+### Explore gene contributions
 
 We can also investigate the gene loadings for each factor with `PlotFeatureLoadings()` which will give us an idea about what the top contributing genes for each factor are. Below we can see the top 30 contributing genes for NMF_1 and NMF_2.
 
@@ -76,6 +82,8 @@ PlotFeatureLoadings(se_mbrain,
 ```
 
 <br>
+
+### Make composite plot
 
 We can also map multiple factors spatially in a single plot with `MapMultipleFeatures()`:
 
@@ -96,6 +104,8 @@ MapMultipleFeatures(se_mbrain,
 
 <br>
 
+### Explore gene contributions (heatmap)
+
 Similarly, we can also summarize the top feature loadings for each factor with a heatmap:
 
 ```{r fig.asp=1}
@@ -108,6 +118,48 @@ PlotFeatureLoadings(se_mbrain,
 ```
 
 NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy.
+
+## FEA
+
+If you want to get the feature loading values for each factor, you can extract them from the `DimReduc` object. This can for example be useful to run Functional Enrichment Analysis (FEA).
+
+```{r}
+# fetch feature.loadings from DimReduc object
+nmf_loadings <- se_mbrain[["nmf"]]@feature.loadings
+
+# Convert to long format and group data by factor
+gene_loadings_sorted <- nmf_loadings |> 
+  as.data.frame() |> 
+  rownames_to_column(var = "gene") |> 
+  as_tibble() |> 
+  tidyr::pivot_longer(all_of(colnames(nmf_loadings)), names_to = "fctr", values_to = "loading") |> 
+  mutate(fctr = factor(fctr, colnames(nmf_loadings))) |> 
+  group_by(fctr) |> 
+  arrange(fctr, -loading)
+
+# Extract top 10 genes per factor
+gene_loadings_sorted |> 
+  slice_head(n = 10)
+```
+
+Run functional enrichment analysis on top 10 genes from factor 1:
+
+```{r}
+library(gprofiler2)
+
+# Get gene sets
+gene_set_nmf_1 <- gene_loadings_sorted |> 
+  filter(fctr == "NMF_1") |> 
+  slice_head(n = 10)
+
+# Run FEA
+fea_results_nmf_1 <- gost(query = gene_set_nmf_1$gene, ordered_query = TRUE, organism = "mmusculus", sources = "GO:BP")$result |> 
+  as_tibble()
+
+# Look at results
+fea_results_nmf_1
+```
+
 
 <br>
 

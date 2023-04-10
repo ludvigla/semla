@@ -52,6 +52,7 @@ mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 \seealso{
 Other pre-process: 
+\code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},
 \code{\link{LoadScaleFactors}()},
