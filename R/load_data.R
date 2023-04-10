@@ -326,6 +326,85 @@ UpdateImageInfo <- function (
 }
 
 
+#' Load annotations from a CSV file
+#' 
+#' Takes a character vector with paths to CSV files and 
+#' returns a \code{data.frame}. The resulting \code{data.frame}
+#' can be added to a \code{Seurat} object using the \code{AddMetaData}
+#' function. 
+#' 
+#' NB: The files need to be loaded in the correct order. For example, 
+#' if you have an object with 5 tissue sections, you should provide
+#' 5 \code{paths} in the correct order.
+#' 
+#' @family pre-process
+#' 
+#' @param paths A character vector with paths to CSV files
+#' 
+#' @import dplyr
+#' @import rlang
+#' @import glue
+#' @importFrom tibble rownames_to_column
+#' @importFrom tools file_ext
+#' 
+#' @return A \code{data.frame} object with barcode IDs and annotations
+#' 
+#' @examples 
+#' 
+#' library(semla)
+#' 
+#' se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
+#' se_merged <- MergeSTData(se_mcolon, y = list(se_mcolon, se_mcolon))
+#' 
+#' # Get annotation file(s)
+#' annotation_files <- system.file("extdata/mousecolon", 
+#'                                 "galt_spots.csv", 
+#'                                 package = "semla") |> rep(3)
+#' 
+#' # Load annotations
+#' annotations <- LoadAnnotationCSV(annotation_files)
+#' head(annotations)
+#' 
+#' # Edit data.frame if needed
+#' annotations <- annotations |> 
+#'   rename(test = selection)
+#' 
+#' # Add annotations to meta data
+#' se_merged <- AddMetaData(se_merged, metadata = annotations)
+#' 
+#' # Plot new categorical variable
+#' MapLabels(se_merged, column_name = "test")
+#' 
+#' @export
+LoadAnnotationCSV <- function (
+  paths
+) {
+  
+  # Create empty tibble
+  ann <- data.frame()
+  
+  # Read csv files
+  for (i in seq_along(paths)) {
+    if (is.na(paths[i]))
+      next
+    if (!file.exists(paths[i]))
+      abort(glue("Invalid path '{paths[i]}'. File doesn't exist."))
+    if (file_ext(paths[i]) != "csv")
+      abort("Invalid file format. Expected a CSV file.")
+    sample_ann <- read.csv(paths[i], check.names = FALSE)
+    if (!colnames(sample_ann)[1] == "barcode") {
+      sample_ann <- sample_ann |> 
+        rename(barcode = 1)
+    }
+    sample_ann <- sample_ann |> 
+      mutate(barcode = gsub(pattern = "-\\d+", replacement = paste0("-", i), x = barcode))
+    ann <- bind_rows(ann, sample_ann)
+  }
+  ann <- ann |> data.frame(row.names = 1, check.names = FALSE)
+  return(ann)
+}
+
+
 #' Check if coordinates are located inside tissue section
 #' 
 #' @param coordinates A \code{tbl} with spatial coordinates
@@ -466,6 +545,12 @@ UpdateImageInfo <- function (
 #' however, it is recommended to use the \code{\link{SubsetSTData}} function for filtering
 #' after the object has been created.
 #'
+#' @section Additional annotations:
+#' You can add a column named 'annotation_files' with paths to CSV files containing 
+#' annotations. These files should have the same structure as the CSV the files exported 
+#' by Loupe Browser. One column with the barcode IDs and one column with the annotation labels.
+#' The annotations will be added to the \code{meta.data} slot of the returned \code{\link{Seurat}} object.
+#'
 #' @family pre-process
 #'
 #' @param infoTable A \code{data.frame} or \code{tbl} with paths to spaceranger output files
@@ -510,16 +595,27 @@ UpdateImageInfo <- function (
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable)
 #' se
+#' 
+#' # Add additional annotations from CSV files
+#' annotation_file <- 
+#'   Sys.glob(paths = paste0(system.file("extdata", package = "semla"),
+#'                           "/*/galt_spots.csv"))
+#' annotation_files <- c(NA_character_, annotation_file)
+#' 
+#' # Create a tibble/data.frame with file paths
+#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"), annotation_files)
+#' 
+#' se <- ReadVisiumData(infoTable)
 #'
 #' @export
 #'
 ReadVisiumData <- function (
-    infoTable,
-    assay = "Spatial",
-    remove_spots_outside_HE = FALSE,
-    remove_spots_outside_tissue = TRUE,
-    verbose = TRUE,
-    ...
+  infoTable,
+  assay = "Spatial",
+  remove_spots_outside_HE = FALSE,
+  remove_spots_outside_tissue = TRUE,
+  verbose = TRUE,
+  ...
 ) {
 
   # Set global variables to NULL
@@ -556,6 +652,18 @@ ReadVisiumData <- function (
     if (!all(file.exists(infoTable |> pull(all_of("json"))))) {
       abort(glue("Missing json file(s)."))
     }
+  }
+  
+  # Check if an annotation_files column was provided
+  if ("annotation_files" %in% colnames(infoTable)) {
+    annfiles <- infoTable |> pull(all_of("annotation_files"))
+    if (verbose) cli_alert_info("Loading annotatons from CSV files")
+    ann <- LoadAnnotationCSV(annfiles)
+    infoTable <- infoTable |> 
+      select(-all_of("annotation_files"))
+    add_annotations <- TRUE
+  } else {
+    add_annotations <- FALSE
   }
 
   # Keep additional infoTable columns
@@ -649,6 +757,11 @@ ReadVisiumData <- function (
 
   # Place Staffli object inside the tools slot of the Seurat object
   object@tools$Staffli <- staffli_object
+  
+  # Add additional annotations if available
+  if (add_annotations) {
+    object <- AddMetaData(object, metadata = ann)
+  }
 
   if (verbose) cli_alert_success(glue("Returning a `Seurat` object with {cli::col_br_blue(nrow(object))}",
                                    " features and {cli::col_br_magenta(ncol(object))} spots"))
