@@ -31,13 +31,11 @@
     <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
     <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Interactive</h6>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -54,9 +52,13 @@
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Staffli</h6>
-    <a class="dropdown-item" href="../articles/create_object.html">Create Staffli object</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
   </div>
 </li>
 <li class="nav-item">
@@ -471,7 +473,7 @@
           <code><a href="GetStaffli.html">GetStaffli()</a></code> 
         </dt>
         <dd>Method used to extract a <code>Staffli</code> object from the tools slot of a
-<code>Staffli</code> object</dd>
+<code>Seurat</code> object</dd>
       </dl><dl><dt>
           
           <code><a href="GetImageInfo.html">GetImageInfo()</a></code> 
@@ -494,14 +496,9 @@
         <dd>Replace image paths</dd>
       </dl><dl><dt>
           
-          <code><a href="Staffli-get-methods.html">`[[`(<i>&lt;Staffli&gt;</i>,<i>&lt;ANY&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> 
+          <code><a href="LoadAnnotationCSV.html">LoadAnnotationCSV()</a></code> 
         </dt>
-        <dd>Method used to get meta data from a <code>Staffli</code> object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="Staffli-set-methods.html">`[[&lt;-`(<i>&lt;Staffli&gt;</i>,<i>&lt;ANY&gt;</i>,<i>&lt;ANY&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> 
-        </dt>
-        <dd>Method used to set meta data in a <code>Staffli</code> object</dd>
+        <dd>Load annotations from a CSV file</dd>
       </dl><dl><dt>
           
           <code><a href="show.html">show(<i>&lt;Staffli&gt;</i>)</a></code> 
@@ -509,9 +506,14 @@
         <dd>Show method for <code>Staffli</code> objects</dd>
       </dl><dl><dt>
           
-          <code><a href="plot.html">plot(<i>&lt;Staffli&gt;</i>,<i>&lt;ANY&gt;</i>)</a></code> 
+          <code><a href="plot.html">plot(<i>&lt;Staffli&gt;</i>,<i>&lt;missing&gt;</i>)</a></code> 
         </dt>
         <dd>Plot method for <code>Staffli</code> objects</dd>
+      </dl><dl><dt>
+          
+          <code><a href="Staffli-methods.html">.DollarNames(<i>&lt;Staffli&gt;</i>)</a></code> <code><a href="Staffli-methods.html">`$`(<i>&lt;Staffli&gt;</i>)</a></code> 
+        </dt>
+        <dd>Staffli Methods</dd>
       </dl></div><div class="section level2">
       
       <h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h3>

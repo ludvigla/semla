@@ -35,13 +35,11 @@ are determined from the automatically."><meta property="og:image" content="https
     <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
     <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Interactive</h6>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -58,9 +56,13 @@ are determined from the automatically."><meta property="og:image" content="https
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Staffli</h6>
-    <a class="dropdown-item" href="../articles/create_object.html">Create Staffli object</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
   </div>
 </li>
 <li class="nav-item">
@@ -184,11 +186,11 @@ are determined from the automatically.</p>
 <span class="r-in"><span><span class="va">tile_res</span> <span class="op">&lt;-</span> <span class="fu">TileImage</span><span class="op">(</span><span class="va">im</span>, outpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, nCores <span class="op">=</span> <span class="fl">1</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Got an image of dimensions 2000x1882 for sample 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Tiling image into 3 zoom levels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp0ipZxO/viewer_data/tiles1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp4LTY6v/viewer_data/tiles1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Creating tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting meta data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp0ipZxO/viewer_data/image_info_1.json</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp4LTY6v/viewer_data/image_info_1.json</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a simple viewer with leaflet</span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>

@@ -37,13 +37,11 @@ stored inside the tools slot of the Seurat object in Staffli object."><meta prop
     <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
     <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Interactive</h6>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -60,9 +58,13 @@ stored inside the tools slot of the Seurat object in Staffli object."><meta prop
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Staffli</h6>
-    <a class="dropdown-item" href="../articles/create_object.html">Create Staffli object</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
   </div>
 </li>
 <li class="nav-item">
@@ -182,9 +184,19 @@ however, it is recommended to use the <code><a href="subset.html">SubsetSTData</
 after the object has been created.</p>
     </div>
     <div class="section level2">
+    <h2 id="additional-annotations">Additional annotations<a class="anchor" aria-label="anchor" href="#additional-annotations"></a></h2>
+    
+
+<p>You can add a column named 'annotation_files' with paths to CSV files containing 
+annotations. These files should have the same structure as the CSV the files exported 
+by Loupe Browser. One column with the barcode IDs and one column with the annotation labels.
+The annotations will be added to the <code>meta.data</code> slot of the returned <code><a href="https://satijalab.org/seurat/reference/Seurat-package.html" class="external-link">Seurat</a></code> object.</p>
+    </div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other pre-process: 
 <code><a href="LoadAndMergeMatrices.html">LoadAndMergeMatrices</a>()</code>,
+<code><a href="LoadAnnotationCSV.html">LoadAnnotationCSV</a>()</code>,
 <code><a href="LoadImageInfo.html">LoadImageInfo</a>()</code>,
 <code><a href="load-images.html">LoadImages</a>()</code>,
 <code><a href="LoadScaleFactors.html">LoadScaleFactors</a>()</code>,
@@ -240,6 +252,40 @@ after the object has been created.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> An object of class Seurat </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 188 features across 5164 samples within 1 assay </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Active assay: Spatial (188 features, 0 variable features)</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add additional annotations from CSV files</span></span></span>
+<span class="r-in"><span><span class="va">annotation_file</span> <span class="op">&lt;-</span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.glob.html" class="external-link">Sys.glob</a></span><span class="op">(</span>paths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                          <span class="st">"/*/galt_spots.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">annotation_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA_character_</span>, <span class="va">annotation_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create a tibble/data.frame with file paths</span></span></span>
+<span class="r-in"><span><span class="va">infoTable</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">samples</span>, <span class="va">imgs</span>, <span class="va">spotfiles</span>, <span class="va">json</span>, sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mousebrain"</span>, <span class="st">"mousecolon"</span><span class="op">)</span>, <span class="va">annotation_files</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu">ReadVisiumData</span><span class="op">(</span><span class="va">infoTable</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Reading 10x Visium data</span> ──</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading annotatons from CSV files</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading matrices:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Finished loading expression matrix 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Finished loading expression matrix 2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> <span style="color: #FF5555;">There are only 188 gene shared across all matrices:</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> → <span style="color: #FF5555;">  Are you sure that the matrices share the same gene IDs?</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> → <span style="color: #FF5555;">  Are the datasets from the same species?</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Merging matrices:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There are <span style="color: #5555FF;">188</span> features and <span style="color: #FF55FF;">5164</span> spots in the merged matrix.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading coordinates:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Finished loading coordinates for sample 1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> →   Finished loading coordinates for sample 2</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Collected coordinates for <span style="color: #FF55FF;">5164</span> spots.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── Creating `Seurat` object </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Expression matrices and coordinates are compatible</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Created `Seurat` object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Created `Staffli` object</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Returning a `Seurat` object with <span style="color: #5555FF;">188</span> features and <span style="color: #FF55FF;">5164</span> spots</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

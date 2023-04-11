@@ -16,9 +16,6 @@
     <loc>https://ludvigla.github.io/semla/articles/NNMF.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/semla/articles/STUtility2.html</loc>
-  </url>
-  <url>
     <loc>https://ludvigla.github.io/semla/articles/advanced_visualization.html</loc>
   </url>
   <url>
@@ -26,6 +23,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/articles/compare_cell_type_mapping_NNLS.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/create_object.html</loc>
@@ -59,9 +59,6 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/region_neighbors.html</loc>
-  </url>
-  <url>
-    <loc>https://ludvigla.github.io/semla/articles/scalebar.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/semla.html</loc>
@@ -127,9 +124,6 @@
     <loc>https://ludvigla.github.io/semla/reference/GetStaffli.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/semla/reference/ImageInfo.html</loc>
-  </url>
-  <url>
     <loc>https://ludvigla.github.io/semla/reference/ImagePlot.html</loc>
   </url>
   <url>
@@ -140,6 +134,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/LoadAndMergeMatrices.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/LoadAnnotationCSV.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/LoadImageInfo.html</loc>
@@ -169,16 +166,10 @@
     <loc>https://ludvigla.github.io/semla/reference/ReplaceImagePaths.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/semla/reference/STUtility2-package.html</loc>
-  </url>
-  <url>
     <loc>https://ludvigla.github.io/semla/reference/Staffli-class.html</loc>
   </url>
   <url>
-    <loc>https://ludvigla.github.io/semla/reference/Staffli-get-methods.html</loc>
-  </url>
-  <url>
-    <loc>https://ludvigla.github.io/semla/reference/Staffli-set-methods.html</loc>
+    <loc>https://ludvigla.github.io/semla/reference/Staffli-methods.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/ThemeClean.html</loc>

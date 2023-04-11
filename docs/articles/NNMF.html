@@ -56,13 +56,11 @@
     <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
     <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Interactive</h6>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
     <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
     <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
     <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
+    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
     <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
@@ -79,9 +77,13 @@
     <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
     <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
     <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Staffli</h6>
-    <a class="dropdown-item" href="../articles/create_object.html">Create Staffli object</a>
+  </div>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
   </div>
 </li>
 <li class="nav-item">
@@ -113,7 +115,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Non-negative matrix factorization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 04 April
+            <h4 data-toc-skip class="date">Last compiled: 11 April
 2023</h4>
       
       
@@ -140,6 +142,9 @@ singlet can be installed from GitHub with
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zdebruine/singlet" class="external-link">singlet</a></span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
+<div class="section level2">
+<h2 id="run-nmf">Run NMF<a class="anchor" aria-label="anchor" href="#run-nmf"></a>
+</h2>
 <p>We’ll use our mouse brain test data for the NNMF. The method
 automatically runs cross-validation to find the best rank and to learn a
 model at that rank.</p>
@@ -278,6 +283,9 @@ we obtain from the NMF run.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/singlet/man/RankPlot.html" class="external-link">RankPlot</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NNMF_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p><br></p>
+<div class="section level3">
+<h3 id="spatial-visualization">Spatial visualization<a class="anchor" aria-label="anchor" href="#spatial-visualization"></a>
+</h3>
 <p>The results are stored as a <code>DimReduc</code> object in our
 <code>Seurat</code> object and we can map the factors spatially with
 <code><a href="../reference/visualize-features.html">MapFeatures()</a></code>.</p>
@@ -289,6 +297,10 @@ we obtain from the NMF run.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NNMF_files/figure-html/unnamed-chunk-6-1.png" width="864"></p>
 <p><br></p>
+</div>
+<div class="section level3">
+<h3 id="explore-gene-contributions">Explore gene contributions<a class="anchor" aria-label="anchor" href="#explore-gene-contributions"></a>
+</h3>
 <p>We can also investigate the gene loadings for each factor with
 <code><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings()</a></code> which will give us an idea about what
 the top contributing genes for each factor are. Below we can see the top
@@ -303,6 +315,10 @@ the top contributing genes for each factor are. Below we can see the top
 <span>                    pt_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NNMF_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p><br></p>
+</div>
+<div class="section level3">
+<h3 id="make-composite-plot">Make composite plot<a class="anchor" aria-label="anchor" href="#make-composite-plot"></a>
+</h3>
 <p>We can also map multiple factors spatially in a single plot with
 <code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -310,7 +326,7 @@ the top contributing genes for each factor are. Below we can see the top
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpFfnJWG/temp_libpath13d3f705dde9/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpjtEGTb/temp_libpathaf5170616d8/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -327,6 +343,10 @@ the top contributing genes for each factor are. Below we can see the top
 <pre><code><span><span class="co">## Loading required namespace: ggnewscale</span></span></code></pre>
 <p><img src="NNMF_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p><br></p>
+</div>
+<div class="section level3">
+<h3 id="explore-gene-contributions-heatmap">Explore gene contributions (heatmap)<a class="anchor" aria-label="anchor" href="#explore-gene-contributions-heatmap"></a>
+</h3>
 <p>Similarly, we can also summarize the top feature loadings for each
 factor with a heatmap:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -341,6 +361,78 @@ factor with a heatmap:</p>
 with the factor analysis, our mouse brain dataset only contain a
 fraction of the full dataset which partly explains why the spatial maps
 and gene loadings for some factors are noisy.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="fea">FEA<a class="anchor" aria-label="anchor" href="#fea"></a>
+</h2>
+<p>If you want to get the feature loading values for each factor, you
+can extract them from the <code>DimReduc</code> object. This can for
+example be useful to run Functional Enrichment Analysis (FEA).</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># fetch feature.loadings from DimReduc object</span></span>
+<span><span class="va">nmf_loadings</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span><span class="op">[[</span><span class="st">"nmf"</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">feature.loadings</span></span>
+<span></span>
+<span><span class="co"># Convert to long format and group data by factor</span></span>
+<span><span class="va">gene_loadings_sorted</span> <span class="op">&lt;-</span> <span class="va">nmf_loadings</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames_to_column</a></span><span class="op">(</span>var <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">nmf_loadings</span><span class="op">)</span><span class="op">)</span>, names_to <span class="op">=</span> <span class="st">"fctr"</span>, values_to <span class="op">=</span> <span class="st">"loading"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>fctr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">fctr</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">nmf_loadings</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">fctr</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">fctr</span>, <span class="op">-</span><span class="va">loading</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Extract top 10 genes per factor</span></span>
+<span><span class="va">gene_loadings_sorted</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 110 × 3</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Groups:   fctr [11]</span></span></span>
+<span><span class="co">##    gene   fctr  loading</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Nrgn   NMF_1  0.041<span style="text-decoration: underline;">8</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Lamp5  NMF_1  0.040<span style="text-decoration: underline;">5</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Cck    NMF_1  0.037<span style="text-decoration: underline;">7</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Egr1   NMF_1  0.037<span style="text-decoration: underline;">2</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Olfm1  NMF_1  0.037<span style="text-decoration: underline;">1</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Snap25 NMF_1  0.034<span style="text-decoration: underline;">2</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Tmsb4x NMF_1  0.033<span style="text-decoration: underline;">5</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Arc    NMF_1  0.033<span style="text-decoration: underline;">3</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Nr4a1  NMF_1  0.032<span style="text-decoration: underline;">5</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Nptxr  NMF_1  0.032<span style="text-decoration: underline;">4</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 100 more rows</span></span></span></code></pre>
+<p>Run functional enrichment analysis on top 10 genes from factor 1:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gprofiler2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get gene sets</span></span>
+<span><span class="va">gene_set_nmf_1</span> <span class="op">&lt;-</span> <span class="va">gene_loadings_sorted</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">fctr</span> <span class="op">==</span> <span class="st">"NMF_1"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run FEA</span></span>
+<span><span class="va">fea_results_nmf_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gprofiler2/man/gost.html" class="external-link">gost</a></span><span class="op">(</span>query <span class="op">=</span> <span class="va">gene_set_nmf_1</span><span class="op">$</span><span class="va">gene</span>, ordered_query <span class="op">=</span> <span class="cn">TRUE</span>, organism <span class="op">=</span> <span class="st">"mmusculus"</span>, sources <span class="op">=</span> <span class="st">"GO:BP"</span><span class="op">)</span><span class="op">$</span><span class="va">result</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Look at results</span></span>
+<span><span class="va">fea_results_nmf_1</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 23 × 14</span></span></span>
+<span><span class="co">##    query  signi…¹ p_value term_…² query…³ inter…⁴ preci…⁵  recall term_id source</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> query… TRUE    1.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     324       8       5   0.625 0.015<span style="text-decoration: underline;">4</span>  GO:000… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> query… TRUE    2.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     360       8       5   0.625 0.013<span style="text-decoration: underline;">9</span>  GO:005… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> query… TRUE    9.52<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     163       8       4   0.5   0.024<span style="text-decoration: underline;">5</span>  GO:000… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> query… TRUE    1.62<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     186       8       4   0.5   0.021<span style="text-decoration: underline;">5</span>  GO:000… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> query… TRUE    2.16<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     868      10       6   0.6   0.006<span style="text-decoration: underline;">91</span> GO:009… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> query… TRUE    2.16<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     868      10       6   0.6   0.006<span style="text-decoration: underline;">91</span> GO:000… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> query… TRUE    2.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    <span style="text-decoration: underline;">3</span>058       9       8   0.889 0.002<span style="text-decoration: underline;">62</span> GO:006… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> query… TRUE    2.26<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     875      10       6   0.6   0.006<span style="text-decoration: underline;">86</span> GO:009… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> query… TRUE    2.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>      44       8       3   0.375 0.068<span style="text-decoration: underline;">2</span>  GO:000… GO:BP </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> query… TRUE    2.83<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     909      10       6   0.6   0.006<span style="text-decoration: underline;">60</span> GO:009… GO:BP </span></span>
+<span><span class="co">## <span style="color: #949494;"># … with 13 more rows, 4 more variables: term_name &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   effective_domain_size &lt;int&gt;, source_order &lt;int&gt;, parents &lt;list&gt;, and</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​significant, ²​term_size, ³​query_size,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   ⁴​intersection_size, ⁵​precision</span></span></span></code></pre>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package versions</strong>
@@ -349,7 +441,7 @@ and gene loadings for some factors are noisy.</p>
 <li><p><code>RcppML</code>: 0.3.7</p></li>
 <li><p><code>singlet</code>: 0.99.1023</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -365,8 +457,8 @@ and gene loadings for some factors are noisy.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] singlet_0.99.1023  semla_1.0.0        ggplot2_3.4.1      dplyr_1.1.0       </span></span>
-<span><span class="co">## [5] SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
+<span><span class="co">## [1] gprofiler2_0.2.1   singlet_0.99.1023  semla_1.0.0        ggplot2_3.4.1     </span></span>
+<span><span class="co">## [5] dplyr_1.1.0        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] fastmatch_1.1-3        systemfonts_1.0.4      plyr_1.8.7            </span></span>
@@ -379,43 +471,46 @@ and gene loadings for some factors are noisy.</p>
 <span><span class="co">##  [22] globals_0.16.0         matrixStats_0.62.0     RcppML_0.3.7          </span></span>
 <span><span class="co">##  [25] pkgdown_2.0.6          spatstat.sparse_3.0-0  colorspace_2.0-3      </span></span>
 <span><span class="co">##  [28] ggrepel_0.9.3          textshaping_0.3.6      xfun_0.32             </span></span>
-<span><span class="co">##  [31] jsonlite_1.8.3         progressr_0.10.1       spatstat.data_3.0-0   </span></span>
-<span><span class="co">##  [34] zeallot_0.1.0          survival_3.4-0         zoo_1.8-10            </span></span>
-<span><span class="co">##  [37] glue_1.6.2             polyclip_1.10-0        gtable_0.3.0          </span></span>
-<span><span class="co">##  [40] leiden_0.4.2           future.apply_1.9.0     abind_1.4-5           </span></span>
-<span><span class="co">##  [43] scales_1.2.1           msigdbr_7.5.1          spatstat.random_3.0-1 </span></span>
-<span><span class="co">##  [46] miniUI_0.1.1.1         Rcpp_1.0.9             viridisLite_0.4.1     </span></span>
-<span><span class="co">##  [49] xtable_1.8-4           reticulate_1.26        htmlwidgets_1.5.4     </span></span>
-<span><span class="co">##  [52] httr_1.4.4             fgsea_1.22.0           RColorBrewer_1.1-3    </span></span>
-<span><span class="co">##  [55] ellipsis_0.3.2         ica_1.0-3              farver_2.1.1          </span></span>
-<span><span class="co">##  [58] pkgconfig_2.0.3        sass_0.4.2             uwot_0.1.14           </span></span>
-<span><span class="co">##  [61] deldir_1.0-6           utf8_1.2.2             labeling_0.4.2        </span></span>
-<span><span class="co">##  [64] tidyselect_1.2.0       rlang_1.0.6            reshape2_1.4.4        </span></span>
-<span><span class="co">##  [67] later_1.3.0            munsell_0.5.0          tools_4.2.1           </span></span>
-<span><span class="co">##  [70] cachem_1.0.6           cli_3.4.1              dbscan_1.1-10         </span></span>
-<span><span class="co">##  [73] generics_0.1.3         ggridges_0.5.3         evaluate_0.16         </span></span>
-<span><span class="co">##  [76] stringr_1.5.0          fastmap_1.1.0          yaml_2.3.5            </span></span>
-<span><span class="co">##  [79] ragg_1.2.2             goftest_1.2-3          babelgene_22.9        </span></span>
-<span><span class="co">##  [82] knitr_1.39             fs_1.5.2               fitdistrplus_1.1-8    </span></span>
-<span><span class="co">##  [85] purrr_1.0.1            RANN_2.6.1             pbapply_1.5-0         </span></span>
-<span><span class="co">##  [88] future_1.27.0          nlme_3.1-159           mime_0.12             </span></span>
-<span><span class="co">##  [91] compiler_4.2.1         rstudioapi_0.14        plotly_4.10.0         </span></span>
-<span><span class="co">##  [94] png_0.1-7              spatstat.utils_3.0-1   tibble_3.1.8          </span></span>
-<span><span class="co">##  [97] bslib_0.4.0            stringi_1.7.8          highr_0.9             </span></span>
-<span><span class="co">## [100] desc_1.4.1             forcats_0.5.2          lattice_0.20-45       </span></span>
-<span><span class="co">## [103] Matrix_1.5-3           shinyjs_2.1.0          vctrs_0.5.2           </span></span>
-<span><span class="co">## [106] pillar_1.8.1           lifecycle_1.0.3        spatstat.geom_3.0-3   </span></span>
-<span><span class="co">## [109] lmtest_0.9-40          jquerylib_0.1.4        RcppAnnoy_0.0.19      </span></span>
-<span><span class="co">## [112] data.table_1.14.2      cowplot_1.1.1          irlba_2.3.5           </span></span>
-<span><span class="co">## [115] httpuv_1.6.5           patchwork_1.1.2        R6_2.5.1              </span></span>
-<span><span class="co">## [118] promises_1.2.0.1       KernSmooth_2.23-20     gridExtra_2.3         </span></span>
-<span><span class="co">## [121] parallelly_1.32.1      codetools_0.2-18       MASS_7.3-58.1         </span></span>
-<span><span class="co">## [124] rprojroot_2.0.3        withr_2.5.0            sctransform_0.3.5     </span></span>
-<span><span class="co">## [127] parallel_4.2.1         grid_4.2.1             tidyr_1.3.0           </span></span>
-<span><span class="co">## [130] rmarkdown_2.15         Rtsne_0.16             ggnewscale_0.4.8      </span></span>
-<span><span class="co">## [133] spatstat.explore_3.0-5 shiny_1.7.4</span></span></code></pre>
+<span><span class="co">##  [31] RCurl_1.98-1.8         jsonlite_1.8.3         progressr_0.10.1      </span></span>
+<span><span class="co">##  [34] spatstat.data_3.0-0    zeallot_0.1.0          survival_3.4-0        </span></span>
+<span><span class="co">##  [37] zoo_1.8-10             glue_1.6.2             polyclip_1.10-0       </span></span>
+<span><span class="co">##  [40] gtable_0.3.0           leiden_0.4.2           future.apply_1.9.0    </span></span>
+<span><span class="co">##  [43] abind_1.4-5            scales_1.2.1           msigdbr_7.5.1         </span></span>
+<span><span class="co">##  [46] spatstat.random_3.0-1  miniUI_0.1.1.1         Rcpp_1.0.9            </span></span>
+<span><span class="co">##  [49] viridisLite_0.4.1      xtable_1.8-4           reticulate_1.26       </span></span>
+<span><span class="co">##  [52] htmlwidgets_1.5.4      httr_1.4.4             fgsea_1.22.0          </span></span>
+<span><span class="co">##  [55] RColorBrewer_1.1-3     ellipsis_0.3.2         ica_1.0-3             </span></span>
+<span><span class="co">##  [58] farver_2.1.1           pkgconfig_2.0.3        sass_0.4.2            </span></span>
+<span><span class="co">##  [61] uwot_0.1.14            deldir_1.0-6           utf8_1.2.2            </span></span>
+<span><span class="co">##  [64] labeling_0.4.2         tidyselect_1.2.0       rlang_1.0.6           </span></span>
+<span><span class="co">##  [67] reshape2_1.4.4         later_1.3.0            munsell_0.5.0         </span></span>
+<span><span class="co">##  [70] tools_4.2.1            cachem_1.0.6           cli_3.4.1             </span></span>
+<span><span class="co">##  [73] dbscan_1.1-10          generics_0.1.3         ggridges_0.5.3        </span></span>
+<span><span class="co">##  [76] evaluate_0.16          stringr_1.5.0          fastmap_1.1.0         </span></span>
+<span><span class="co">##  [79] yaml_2.3.5             ragg_1.2.2             goftest_1.2-3         </span></span>
+<span><span class="co">##  [82] babelgene_22.9         knitr_1.39             fs_1.5.2              </span></span>
+<span><span class="co">##  [85] fitdistrplus_1.1-8     purrr_1.0.1            RANN_2.6.1            </span></span>
+<span><span class="co">##  [88] pbapply_1.5-0          future_1.27.0          nlme_3.1-159          </span></span>
+<span><span class="co">##  [91] mime_0.12              compiler_4.2.1         rstudioapi_0.14       </span></span>
+<span><span class="co">##  [94] plotly_4.10.0          png_0.1-7              spatstat.utils_3.0-1  </span></span>
+<span><span class="co">##  [97] tibble_3.1.8           bslib_0.4.0            stringi_1.7.8         </span></span>
+<span><span class="co">## [100] highr_0.9              desc_1.4.1             forcats_0.5.2         </span></span>
+<span><span class="co">## [103] lattice_0.20-45        Matrix_1.5-3           shinyjs_2.1.0         </span></span>
+<span><span class="co">## [106] vctrs_0.5.2            pillar_1.8.1           lifecycle_1.0.3       </span></span>
+<span><span class="co">## [109] spatstat.geom_3.0-3    lmtest_0.9-40          jquerylib_0.1.4       </span></span>
+<span><span class="co">## [112] RcppAnnoy_0.0.19       bitops_1.0-7           data.table_1.14.2     </span></span>
+<span><span class="co">## [115] cowplot_1.1.1          irlba_2.3.5            httpuv_1.6.5          </span></span>
+<span><span class="co">## [118] patchwork_1.1.2        R6_2.5.1               promises_1.2.0.1      </span></span>
+<span><span class="co">## [121] KernSmooth_2.23-20     gridExtra_2.3          parallelly_1.32.1     </span></span>
+<span><span class="co">## [124] codetools_0.2-18       MASS_7.3-58.1          rprojroot_2.0.3       </span></span>
+<span><span class="co">## [127] withr_2.5.0            sctransform_0.3.5      parallel_4.2.1        </span></span>
+<span><span class="co">## [130] grid_4.2.1             tidyr_1.3.0            rmarkdown_2.15        </span></span>
+<span><span class="co">## [133] Rtsne_0.16             ggnewscale_0.4.8       spatstat.explore_3.0-5</span></span>
+<span><span class="co">## [136] shiny_1.7.4</span></span></code></pre>
 </details><p><br></p>
-  </main>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
