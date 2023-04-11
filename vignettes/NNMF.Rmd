@@ -130,7 +130,7 @@ nmf_loadings <- se_mbrain[["nmf"]]@feature.loadings
 # Convert to long format and group data by factor
 gene_loadings_sorted <- nmf_loadings |> 
   as.data.frame() |> 
-  rownames_to_column(var = "gene") |> 
+  tibble::rownames_to_column(var = "gene") |> 
   as_tibble() |> 
   tidyr::pivot_longer(all_of(colnames(nmf_loadings)), names_to = "fctr", values_to = "loading") |> 
   mutate(fctr = factor(fctr, colnames(nmf_loadings))) |> 

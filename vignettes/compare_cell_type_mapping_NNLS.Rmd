@@ -1,7 +1,9 @@
 ---
 title: "Comparison of cell type mapping with NNLS"
 date: "Posted: `r format(Sys.time(), '%d %B %Y')`"
-format: html
+output:
+  html_document:
+    code_folding: show
 editor: visual
 editor_options: 
   chunk_output_type: inline
@@ -14,11 +16,11 @@ As described in the tutorial [Cell type mapping with NNLS](https://ludvigla.gith
 \operatorname*{arg\:min_{x}} \left||Ax-y\right||_2^2 \text{, subject to } x \geq 0
 \end{equation}
 ```
-where *A* is a Visium gene expression matrix, *y* is a vector of cell type enrichment profiles, and *x* is the cell type estimates we try to solve.
+where *A* is a matrix with cell type enrichment scores, *y* is a vector with mixed a mixed gene expression profile. The solution for x represents estimates of the fractional abundances of cell type estimates.
 
 <br>
 
-To demonstrate the utility of this approach, we have performed a limited comparison using two other popular cell type mapping approaches, applied to two tissue types.
+To demonstrate the utility of this approach, we have performed a basic comparison with two other popular cell type mapping approaches, applied to two tissue types.
 
 <br>
 
@@ -46,7 +48,7 @@ To demonstrate the utility of this approach, we have performed a limited compari
 
     -   Visium: Mouse kidney coronal section data made available by [10x Genomics](https://www.10xgenomics.com/cn/resources/datasets/mouse-kidney-section-coronal-1-standard-1-1-0), processed using the Space Ranger pipeline v1.1.0
 
-The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performace computing servers using their default hyperparameter suggestions.
+The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performace computing servers using default parameter settings.
 
 <br>
 
@@ -71,23 +73,54 @@ colors_ss <- RColorBrewer::brewer.pal(8, "GnBu")
 colors_nnls <- viridis::rocket(8, direction = -1, begin = 0.3)
 ```
 
-```{r}
+```{r include=FALSE}
 se_brain_spatial <- readRDS("~/10x_data/R_objects/se_brain_spatial")
 se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
 ```
 
-```{r}
-se_brain_spatial <- semla::LoadImages(se_brain_spatial)
-se_kidney_spatial <- semla::LoadImages(se_kidney_spatial)
+```{r eval=FALSE}
+se_brain_spatial <- readRDS("<path/to/se_brain_spatial>")
+se_kidney_spatial <- readRDS("<path/to/se_kidney_spatial>")
 ```
 
 ```{r}
+se_brain_spatial <- LoadImages(se_brain_spatial)
+se_kidney_spatial <- LoadImages(se_kidney_spatial)
+```
+
+```{r eval=FALSE}
+# Replace with paths to local files
+se_brain_spatial[["celltypeprops"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousebrain/celltypeprops?raw=true")))
+se_brain_spatial[["stereoscope"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousebrain/stereoscope?raw=true")))
+se_brain_spatial[["cell2location"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousebrain/cell2location?raw=true")))
+```
+
+```{r eval=FALSE}
+# Replace with paths to local files
+se_kidney_spatial[["celltypeprops"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousekidney/celltypeprops?raw=true")))
+se_kidney_spatial[["stereoscope"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousekidney/stereoscope?raw=true")))
+se_kidney_spatial[["cell2location"]] <-
+  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+                        "comparison/mousekidney/cell2location?raw=true")))
+```
+
+```{r include=FALSE}
 se_brain_spatial[["celltypeprops"]] <- readRDS(file = "../vignettes/comparison/mousebrain/celltypeprops")
 se_brain_spatial[["stereoscope"]] <- readRDS(file = "../vignettes/comparison/mousebrain/stereoscope")
 se_brain_spatial[["cell2location"]] <- readRDS(file = "../vignettes/comparison/mousebrain/cell2location")
 ```
 
-```{r}
+```{r include=FALSE}
 se_kidney_spatial[["celltypeprops"]] <- readRDS(file = "../vignettes/comparison/mousekidney/celltypeprops")
 se_kidney_spatial[["stereoscope"]] <- readRDS(file = "../vignettes/comparison/mousekidney/stereoscope")
 se_kidney_spatial[["cell2location"]] <- readRDS(file = "../vignettes/comparison/mousekidney/cell2location")
@@ -125,7 +158,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 corMat_ss_c2l <- corMat
 ```
 
-```{r}
+```{r class.source = 'fold-hide'}
 gg_nnls_ss <- corMat_nnls_ss |>
   data.frame(check.names = FALSE) |> 
   rownames_to_column(var = "NNLS") |> 
@@ -151,7 +184,7 @@ gg_ss_c2l <- corMat_ss_c2l |>
                       values_to = "correlation")
 ```
 
-```{r fig.show='show', fig.width=13, fig.height=5.5}
+```{r fig.show='show', fig.width=13, fig.height=5.5, class.source = 'fold-hide'}
 p1 <- ggplot(gg_nnls_ss, aes(NNLS, stereoscope, fill = correlation)) + geom_tile()
 p2 <- ggplot(gg_nnls_c2l, aes(NNLS, cell2location, fill = correlation)) + geom_tile()
 p3 <- ggplot(gg_ss_c2l, aes(stereoscope, cell2location, fill = correlation)) + geom_tile()
@@ -175,9 +208,9 @@ p_comp_brain + patchwork::plot_annotation(title = "Correlation between cell type
 
 In general, we can see that the correlation between mapped cell types values is high between the NNLS method and the other two tested approaches. As we do not have any ground truth values, it is unfortunately impossible for us to tell which of these methods produce results closest to the true cell type proportions in each spot.
 
-We can also summarze the results by looking at the correlation between matching cell types, to better view if the NNLS method seems to share a higher concordance with a specific method for certain cell types.
+We can also summarize the results by looking at the correlation between matching cell types, to better view if the NNLS method seems to share a higher concordance with a specific method for certain cell types.
 
-```{r fig.width=10, fig.height=4}
+```{r fig.width=10, fig.height=4, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
   gg_nnls_ss |> filter(NNLS==stereoscope) |> mutate(cell_type = NNLS, comparison = "stereoscope") |> select(cell_type, comparison, correlation),
   gg_nnls_c2l |> filter(NNLS==cell2location) |> mutate(cell_type = NNLS, comparison = "cell2location") |> select(cell_type, comparison, correlation)
@@ -214,7 +247,7 @@ brain_selected_cells <-
   )
 ```
 
-```{r}
+```{r class.source = 'fold-hide'}
 plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
     DefaultAssay(se_brain_spatial) <- "celltypeprops"
     p1 <- MapFeatures(se_brain_spatial,
@@ -297,7 +330,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 kdn_corMat_ss_c2l <- corMat
 ```
 
-```{r}
+```{r class.source = 'fold-hide'}
 kdn_gg_nnls_ss <- kdn_corMat_nnls_ss |>
   data.frame(check.names = FALSE) |> 
   rownames_to_column(var = "NNLS") |> 
@@ -323,7 +356,7 @@ kdn_gg_ss_c2l <- kdn_corMat_ss_c2l |>
                       values_to = "correlation")
 ```
 
-```{r fig.show='show', fig.width=18, fig.height=7}
+```{r fig.show='show', fig.width=18, fig.height=7, class.source = 'fold-hide'}
 p1 <- ggplot(kdn_gg_nnls_ss, aes(NNLS, stereoscope, fill = correlation)) + geom_tile()
 p2 <- ggplot(kdn_gg_nnls_c2l, aes(NNLS, cell2location, fill = correlation)) + geom_tile()
 p3 <- ggplot(kdn_gg_ss_c2l, aes(stereoscope, cell2location, fill = correlation)) + geom_tile()
@@ -343,7 +376,7 @@ p_comp_kidney + patchwork::plot_annotation(title = "Correlation between cell typ
                                           theme = theme(plot.title = element_text(hjust=0.5, size=16, face = "bold")))
 ```
 
-```{r fig.width=10, fig.height=5.5}
+```{r fig.width=10, fig.height=5.5, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
   kdn_gg_nnls_ss |> filter(NNLS==stereoscope) |> mutate(cell_type = NNLS, comparison = "stereoscope") |> select(cell_type, comparison, correlation),
   kdn_gg_nnls_c2l |> filter(NNLS==cell2location) |> mutate(cell_type = NNLS, comparison = "cell2location") |> select(cell_type, comparison, correlation)
@@ -376,7 +409,7 @@ kidney_selected_cells <-
   )
 ```
 
-```{r}
+```{r class.source = 'fold-hide'}
 kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
     DefaultAssay(se_kidney_spatial) <- "celltypeprops"
     p1 <- MapFeatures(se_kidney_spatial, 
@@ -424,8 +457,6 @@ for(i in seq_along(kidney_selected_cells)){
 ## Conclusion
 
 In summary, we here demonstrate the utility of the NNLS approach for cell type decomposition of Visium data, using two separate data sets, by comparing it with two well established methods, *stereoscope* and *cell2location*. Overall, the concordance in the inferred cell type spot proportion is high between all methods, showing that NNLS is an acceptable alternative for performing a fast cell type mapping analysis of your Visium data, where a good reference scRNA-seq data set is available. We would still recommend users to try out additional methods on their data in order to fully appreciate the variability in the mapping results that may occur due to design differences of these algorithms. Nonetheless, the NNLS approach provided in `semla` can act as an initial test ground for optimizing cell type annotation levels or filtering parameters in a quick and versatile fashion, before moving on to a slightly more computationally heavy approach.
-
-We are aware of the limitations of the simple method comparison presented here (e.g. the limited number of data sets and methods included), however, we still hope that we have managed to demonstrate a great use for this method and that it can serve you well in your data analyses.
 
 <br>
 
