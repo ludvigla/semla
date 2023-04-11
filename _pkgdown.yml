@@ -25,7 +25,9 @@ navbar:
     left:
     - intro
     - reference
+    - tutorials
     - articles
+    - more
     - news
     right:
     - search
@@ -35,7 +37,7 @@ navbar:
       icon: fa-github
       href: https://github.com/ludvigla/semla
       aria-label: GitHub
-    articles:
+    tutorials:
       text: Tutorials
       menu:
       - text: Intro
@@ -44,10 +46,6 @@ navbar:
       - text: Subset/merge
         href: articles/subset_and_merge.html
       - text: '-------'
-      - text: Interactive
-      - text: Feature viewer
-        href: articles/feature_viewer.html
-      - text: '-------'
       - text: Spatial visualization
       - text: Map numeric features
         href: articles/numeric_features.html
@@ -55,6 +53,8 @@ navbar:
         href: articles/categorical_features.html
       - text: Advanced visualization
         href: articles/advanced_visualization.html
+      - text: Feature viewer
+        href: articles/feature_viewer.html
       - text: '-------'
       - text: Spatial methods
       - text: Radial distances
@@ -81,9 +81,12 @@ navbar:
         href: articles/mask_images.html
       - text: Image alignment
         href: articles/image_alignment.html
-      - text: '-------'
-      - text: Staffli
-      - text: Create Staffli object
+    articles: 
+      text: Articles
+      menu:
+      - text: cell type mapping comparison
+        href: articles/compare_cell_type_mapping_NNLS.html
+      - text: Create a Staffli object
         href: articles/create_object.html
 
 reference:
@@ -168,10 +171,10 @@ reference:
   - GetScaleFactors
   - GetCoordinates
   - ReplaceImagePaths
-  - '[[,Staffli,ANY,ANY-method'
-  - '[[<-,Staffli,ANY,ANY,ANY-method'
+  - LoadAnnotationCSV
   - show,Staffli-method
-  - plot,Staffli,ANY-method
+  - plot,Staffli,missing-method
+  - Staffli-methods
 - subtitle: Data
 - contents:
   - mbrain_dataset
