@@ -45,31 +45,17 @@ jsonfiles <- c(system.file("extdata/mousebrain",
                            package = "semla"))
 ```
 
-When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The `coordinates` tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs.
+When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The `coordinates` tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs. 
+
+`semla` provides `LoadSpatialCoordinates` to make the task a little easier. Note that the suffix for the barcodes have changed for sample 2.
 
 ```{r eval=FALSE}
 # Read coordinates
-coordinates <- do.call(bind_rows, lapply(seq_along(spotfiles), function(i) {
-  sample_coords <- read.csv(spotfiles[i], header = FALSE) |> 
-    as_tibble() |>
-    setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |> 
-    mutate(sampleID = i) |> # Add a unique sampleID
-    filter(selected == 1) |> 
-    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
-    mutate(barcode = gsub(pattern = "-\\d*", # Replace barcode suffix with sampleID
-                          replacement = paste0("-", i), 
-                          x = barcode))
-  return(sample_coords)
-}))
-```
+coordinates <- LoadSpatialCoordinates(spotfiles) |> 
+  select(all_of(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
 
-`semla` provides `LoadSpatialCoordinates` to make the task a little easier:
-
-```{r}
-coordinates <- LoadSpatialCoordinates(coordinatefiles = spotfiles, verbose = FALSE) |> 
-  select(barcode, pxl_row_in_fullres, pxl_col_in_fullres, sampleID)
-
-coordinates
+head(coordinates, n = 2)
+tail(coordinates, n = 2)
 
 # Check number of spots per sample
 table(coordinates$sampleID)
@@ -77,43 +63,29 @@ table(coordinates$sampleID)
 
 ## Fetch image info
 
-Next, we'll fetch meta data for the sample H&E images. Here, the tibble must contain the width and height of `he_imgs` as well as a sampleID column.
+Next, we'll fetch meta data for the sample H&E images. Here, the tibble must contain the width and height of `he_imgs` as well as a sampleID column. Use `LoadImageInfo` to load the image info:
 
 ```{r}
 # Create image_info
-image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
-  he_imgs[i] |> 
-    image_read() |> 
-    image_info() |> 
-    mutate(sampleID = paste0(i))
-}))
+image_info <- LoadImageInfo(he_imgs)
 image_info
 ```
 
 ## Define image dimensions
 
-The `jsonfiles` contain scaling factors that allows us to find the original H&E image dimensions. We can load the scale factors with `read_json` and store them in a tibble. The tibble should also contain a sampleID column.
+The `jsonfiles` contain scaling factors that allows us to find the original H&E image dimensions. We can load the scale factors with `read_json` and store them in a tibble. The tibble should also contain a 'sampleID' column. Use `LoadScaleFactors` to load the scaling factors:
 
 ```{r}
 # Read scalefactors
-scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
-  jsonlite::read_json(jsonfiles[i]) |> 
-    as_tibble() |> 
-    mutate(sampleID = paste0(i))
-}))
+scalefactors <- LoadScaleFactors(jsonfiles)
 scalefactors
 ```
 
-Once we have the scale factors, we can add additional columns to `image_info` which specify the dimensions of the original H&E images:
+Once we have the scale factors, we can add additional columns to `image_info` which specify the dimensions of the original H&E images. Use `UpdateImageInfo` to update `image_info` with the scaling factors: 
 
 ```{r}
 # Add additional columns to image_info using scale factors
-image_info <- image_info |> 
-  mutate(full_width = round(width/scalefactors$tissue_lowres_scalef[row_number()]),
-         full_height = round(height/scalefactors$tissue_lowres_scalef[row_number()])) |> 
-  mutate(type = "tissue_hires") |> 
-  select(format, width, height, full_width, full_height, 
-         colorspace, filesize, density, sampleID, type)
+image_info <- UpdateImageInfo(image_info, scalefactors)
 image_info
 ```
 
