@@ -174,10 +174,14 @@ LoadSpatialCoordinates <- function (
   # Load coordinates
   if (verbose) cli_alert_info("Loading coordinates:")
   coordDF <- do.call(bind_rows, lapply(seq_along(coordinatefiles), function(i) {
-    bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
+    #bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
     # New format since Space Ranger 2.0.0
-    use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
-    coords <- read.csv(file = coordinatefiles[i], header = use_header) |>
+    #use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
+    coords <- read.csv(file = coordinatefiles[i], header = TRUE) 
+    if (!c("barcode") %in% colnames(coords)) {
+      coords <- read.csv(file = coordinatefiles[i], header = FALSE) 
+    }
+    coords <- coords |>
       as_tibble() |>
       setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |>
       mutate(across(pxl_col_in_fullres:pxl_row_in_fullres, ~as.integer(.x)))
@@ -699,12 +703,12 @@ ReadVisiumData <- function (
 
   # Make sure that coordinates and expression matrix are compatible
   if (!all(colnames(mergedMat) %in% coordinates$barcode)) {
-    cli_alert_danger("{sum(!colnames(mergedMat) %in% coordinates$barcode)} spots found in the merged expression matrix but not in coordinate files.")
+    cli_alert_danger("{sum(!colnames(mergedMat) %in% coordinates$barcode)} spots found in the merged expression matrix that are missing in the coordinate files.")
     cli_alert_danger("Removing {sum(!colnames(mergedMat) %in% coordinates$barcode)} spots from the merged expression matrix")
     mergedMat <- mergedMat[, colnames(mergedMat) %in% coordinates$barcode]
   }
   if (!all(coordinates$barcode %in% colnames(mergedMat))) {
-    cli_alert_danger("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files but not in expression data.")
+    cli_alert_danger("{sum(!coordinates$barcode %in% colnames(mergedMat))} spots found in coordinate files that are missing in the expression data.")
     cli_alert_danger("Removing {sum(!coordinates$barcode %in% colnames(mergedMat))} spots from the meta data")
     metaData <- metaData[colnames(mergedMat), , drop = FALSE]
   }
