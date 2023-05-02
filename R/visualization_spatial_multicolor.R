@@ -73,7 +73,6 @@ MapMultipleFeatures.default <- function (
     colors = NULL,
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
-    drop_na = TRUE,
     add_colorscale_text = FALSE,
     ...
 ) {
@@ -184,7 +183,7 @@ MapMultipleFeatures.default <- function (
       pt_stroke = pt_stroke,
       cur_label = cur_label,
       coords_columns = coords_columns,
-      drop_na = drop_na,
+      drop_na = TRUE,
       use_text = add_colorscale_text
     )
     return(p)
@@ -407,7 +406,7 @@ MapMultipleFeatures.Seurat <- function (
     pt_stroke = 0,
     cur_label = NULL,
     coords_columns,
-    drop_na = FALSE,
+    drop_na = TRUE,
     use_text = FALSE
 ) {
 

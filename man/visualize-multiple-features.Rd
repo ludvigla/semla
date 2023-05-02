@@ -22,7 +22,6 @@ MapMultipleFeatures(object, ...)
   colors = NULL,
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
-  drop_na = TRUE,
   add_colorscale_text = FALSE,
   ...
 )
@@ -95,8 +94,6 @@ data. Some useful palettes are available in the \code{RColorBrewer}, \code{virid
 \item{return_plot_list}{A logical specifying if a \code{patchwork} or a list of \code{ggplot} objects should be returned.
 By default, a \code{patchwork} is returned, but it can sometimes be useful to obtain the list of \code{ggplot} objects
 if you want to manipulate each sub plot independently.}
-
-\item{drop_na}{A logical specifying if NA values should be dropped}
 
 \item{add_colorscale_text}{A Logical specifying if labels should be added to
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and
