@@ -73,7 +73,7 @@ MapMultipleFeatures.default <- function (
     colors = NULL,
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
-    drop_na = FALSE,
+    drop_na = TRUE,
     add_colorscale_text = FALSE,
     ...
 ) {
@@ -433,7 +433,11 @@ MapMultipleFeatures.Seurat <- function (
   # Get opacity values
   alpha_values <- gg |>
     select(all_of(features)) |>
-    apply(1, na.omit)
+    apply(1, function(x) {
+      y <- x[!is.na(x)]
+      y <- ifelse(length(y) == 0, 0, y)
+      return(y)
+    })
   gg$alpha <- alpha_values
 
   # Split data by feature

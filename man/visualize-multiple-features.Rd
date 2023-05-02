@@ -22,7 +22,7 @@ MapMultipleFeatures(object, ...)
   colors = NULL,
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
-  drop_na = FALSE,
+  drop_na = TRUE,
   add_colorscale_text = FALSE,
   ...
 )
