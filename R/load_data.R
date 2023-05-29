@@ -63,7 +63,7 @@ LoadAndMergeMatrices <- function (
   # Run checks
   if (!is.character(samplefiles)) abort("'samplefiles' must be a character vector.")
   checks <- tibble(samplefiles) |>
-    mutate(is = case_when(file.exists(samplefiles) ~ "file", dir.exists(samplefiles) ~ "dir"))
+    mutate(is = case_when(dir.exists(samplefiles) ~ "dir", file.exists(samplefiles) ~ "file"))
   if (any(is.na(checks$is))) abort(c("Invalid path(s):", glue::glue("{checks$samplefiles[is.na(checks$is)]}")))
 
   # Load expression matrices

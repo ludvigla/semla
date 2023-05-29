@@ -661,7 +661,7 @@ he_img <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb"
 se_mbrain <- ReplaceImagePaths(se_mbrain, paths = he_img)
 ```
 
-If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length. 
+If you want to crop the data, you might want to adjust the width scalebar to a more appropriate length.
 
 ```{r message=FALSE, warning=FALSE}
 se_mbrain <- LoadImages(se_mbrain, image_height = 1.5e3)
