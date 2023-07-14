@@ -139,7 +139,7 @@ AdjustTissueCoordinates <- function (
     tibble(node_name = node_names[i], spath_node_name = names(closest_spath_node))
   }))
 
-  # Get coodinates for shortest path nodes and convert to matrices
+  # Get coordinates for shortest path nodes and convert to matrices
   coords_spath_nodes <- nodes[match(rownames(dist_subset), nodes$name), c("name", "x", "y")] |>
     mutate(ord = 1:n()) |>
     data.frame(row.names = 1) |>
@@ -169,13 +169,15 @@ AdjustTissueCoordinates <- function (
     select(name, x, y, x_dist, y_dist)
 
   # rescale y distances
-  if (verbose) cli_alert_info("Rescaling y distances to ensure non-negative values")
+  ##if (verbose) cli_alert_info("Rescaling y distances to ensure non-negative values")
+  # ma <- function(x, n = 5){stats::filter(x, rep(1 / n, n), sides = 2)}
   nodes <- nodes |>
     mutate(y_dist = case_when(is.na(y_dist) ~ 0,
-                              TRUE ~ y_dist)) |>
-    na.omit() |>
-    group_by(x_dist) |>
-    mutate(y_dist = y_dist - min(y_dist))
+                              TRUE ~ y_dist)) |> 
+    #mutate(mov = ma(y_dist)) |> 
+    na.omit() #|>
+    #group_by(x_start) |>
+    #mutate(y_dist_test = y_dist - mov)
 
   # Return results
   if (verbose) cli_alert_success("Finished!")
@@ -270,3 +272,4 @@ expand.range <- function(x, exp.factor = 5, maxval = 1e4) {
   y <- c(max(1, x - exp.factor), min(x + exp.factor, maxval))
   return(y)
 }
+

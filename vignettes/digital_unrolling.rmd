@@ -32,7 +32,7 @@ ImagePlot(se_mcolon)
 
 In the H&E image, we can clearly see the organization of large part of the lower intestine. The outermost part of the roll is the ascending colon and the center of the roll is the rectum.
 
-We can identify genes with a regionalized pattern pretty easily but it would we great if we could somehow unroll the tissue so that we can investigate gene expression patterns along the proximal-distance axis.
+We can identify genes with a regionalized pattern pretty easily but it would we great if we could somehow unroll the tissue so that we can investigate gene expression patterns along the proximal-distal axis.
 
 Below is a spatial map of the expression of Fxyd4 which is up-regulated closer to the distal part of the colon.
 
