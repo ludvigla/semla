@@ -92,10 +92,11 @@ MergeSTData <- function (
     mergedSampleMetaData <- st_obj@meta_data |>
       as_tibble() |>
       select(barcode, sampleID) |>
-      mutate(sample = i)
+      mutate(sample = i, sample_group = paste0(i, "_", sampleID))
     return(mergedSampleMetaData)
   })) |>
-    group_by(sample) |>
+    mutate(sample_group = factor(sample_group, levels = unique(sample_group))) |> 
+    group_by(sample_group) |>
     mutate(new_sampleID = cur_group_id(), old_names = barcode) |>
     separate(barcode, sep = "-", into = c("barcode", NA)) |>
     unite(col = "barcode", barcode, new_sampleID, sep = "-", remove = FALSE) |>
@@ -146,7 +147,7 @@ MergeSTData <- function (
   # Check that all objects have images
   imgs_class <- sapply(st_objects, function(x) class(x@imgs))
   if (all(imgs_class == "character")) {
-    imgs <- sapply(st_objects, function(x) x@imgs)
+    imgs <- sapply(st_objects, function(x) x@imgs) |> unlist()
   } else {
     imgs <- NULL
   }
