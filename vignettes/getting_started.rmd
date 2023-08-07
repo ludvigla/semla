@@ -97,7 +97,7 @@ NB: An important thing to know is that some generic functions, such as `subset` 
 
 If you have a `Seurat` object with Visium data that was prepared using `Read10X_Image`, it is possible to add a `Staffli` object for compatibility with `semla` using the `AddSemlaToSeurat` function.
 
-By doing so, you can now use both spatial visualization functions from `Seurat` and `semla`
+By doing so, you can now use both spatial visualization functions from `Seurat` and `semla`.
 
 ```{r eval=FALSE}
 library(SeuratData)
