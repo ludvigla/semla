@@ -92,3 +92,34 @@ ImagePlot(se)
 This should be enough to get you started with the rest of the tutorials!
 
 NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `semla`. Instead, use the `SubsetSTData()` and `MergeSTData()` functions - See the vignette [Subset/merge](https://ludvigla.github.io/semla/articles/subset_and_merge.html).
+
+## Make Seurat object compatible with semla
+
+If you have a `Seurat` object with Visium data that was prepared using `Read10X_Image`, it is possible to add a `Staffli` object for compatibility with `semla` using the `AddSemlaToSeurat` function.
+
+By doing so, you can now use both spatial visualization functions from `Seurat` and `semla`
+
+```{r eval=FALSE}
+library(SeuratData)
+
+InstallData("stxBrain")
+```
+
+```{r warning=FALSE, message=FALSE}
+# Load example Seurat object
+brain <- LoadData("stxBrain", type = "anterior1")
+
+# Make Seurat object compatible with semla
+brain_semla <- AddSemlaToSeurat(brain)
+
+# Load H&E images
+brain_semla <- LoadImages(brain_semla)
+
+# Plot with semla
+MapFeatures(brain_semla, features = "nFeature_Spatial", 
+            image_use = "raw", override_plot_dims = TRUE) & ThemeLegendRight()
+
+# Plot with Seurat
+SpatialFeaturePlot(brain_semla, features = "nFeature_Spatial")
+```
+
