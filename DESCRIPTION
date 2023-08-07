@@ -105,6 +105,7 @@ Collate:
     'rigid_transform_manual.R'
     'scalebar.R'
     'semla-package.R'
+    'seurat_to_semla.R'
     'spatial_autocorrelation.R'
     'spatial_neighborhood_stats.R'
     'spatial_network.R'

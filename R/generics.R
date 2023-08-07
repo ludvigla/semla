@@ -320,7 +320,7 @@ RunAlignment <- function(object, ...) {
 #' from the \code{RcppML} R package developed by Zachary DeBruine.
 #' 
 #' @section Examples:
-#' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+#' A tutorial can be found on our \href{https://ludvigla.github.io/semla/}{package website}.
 #' Got to tutorials -> Cell type mapping
 #'
 #' @references
