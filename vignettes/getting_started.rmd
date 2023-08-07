@@ -99,9 +99,11 @@ If you have a `Seurat` object with Visium data that was prepared using `Read10X_
 
 By doing so, you can now use both spatial visualization functions from `Seurat` and `semla`.
 
-```{r eval=FALSE}
+```{r}
 library(SeuratData)
+```
 
+```{r eval=FALSE}
 InstallData("stxBrain")
 ```
 
