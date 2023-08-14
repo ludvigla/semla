@@ -1,7 +1,7 @@
 Package: semla
 Type: Package
 Title: Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization
-Version: 1.0.0
+Version: 1.1.0
 Authors@R:
     c(person(
         "Ludvig", "Larsson",
