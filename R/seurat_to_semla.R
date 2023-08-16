@@ -45,11 +45,11 @@ NULL
 #' brain <- LoadData("stxBrain", type = "anterior1")
 #' 
 #' # Make Seurat object compatible with semla
-#' brain_semla <- AddSemlaToSeurat(brain)
+#' brain_semla <- UpdateSeuratForSemla(brain)
 #' }
 #' 
 #' @export
-AddSemlaToSeurat <- function (
+UpdateSeuratForSemla <- function (
     object,
     image_type = c("tissue_lowres", "tissue_hires"),
     verbose = TRUE
