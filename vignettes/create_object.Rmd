@@ -45,11 +45,11 @@ jsonfiles <- c(system.file("extdata/mousebrain",
                            package = "semla"))
 ```
 
-When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The `coordinates` tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs. 
+When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The `coordinates` tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs.
 
 `semla` provides `LoadSpatialCoordinates` to make the task a little easier. Note that the suffix for the barcodes have changed for sample 2.
 
-```{r eval=FALSE}
+```{r}
 # Read coordinates
 coordinates <- LoadSpatialCoordinates(spotfiles) |> 
   select(all_of(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
@@ -81,7 +81,7 @@ scalefactors <- LoadScaleFactors(jsonfiles)
 scalefactors
 ```
 
-Once we have the scale factors, we can add additional columns to `image_info` which specify the dimensions of the original H&E images. Use `UpdateImageInfo` to update `image_info` with the scaling factors: 
+Once we have the scale factors, we can add additional columns to `image_info` which specify the dimensions of the original H&E images. Use `UpdateImageInfo` to update `image_info` with the scaling factors:
 
 ```{r}
 # Add additional columns to image_info using scale factors

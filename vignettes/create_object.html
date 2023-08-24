@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.649">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-08-24">
+
+<title>Create dataset</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="create_object_files/libs/clipboard/clipboard.min.js"></script>
+<script src="create_object_files/libs/quarto-html/quarto.js"></script>
+<script src="create_object_files/libs/quarto-html/popper.min.js"></script>
+<script src="create_object_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="create_object_files/libs/quarto-html/anchor.min.js"></script>
+<link href="create_object_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="create_object_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="create_object_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="create_object_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="create_object_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Create dataset</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 24, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<p>In this notebook, we’ll have a look at how you can create a <code>Seurat</code> object compatible with <code>semla</code>.</p>
+<section id="load-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-libraries">Load libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semla)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="load-coordinates" class="level2">
+<h2 class="anchored" data-anchor-id="load-coordinates">Load coordinates</h2>
+<p>The <code>Staffli</code> object requires image and coordinate data that can be retrieved from the spaceranger output files.</p>
+<p>Below we’ll use the mouse brain and mouse colon example data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>he_imgs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">system.file</span>(<span class="st">"extdata/mousebrain"</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"spatial/tissue_lowres_image.jpg"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">package =</span> <span class="st">"semla"</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="fu">system.file</span>(<span class="st">"extdata/mousecolon"</span>, </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"spatial/tissue_lowres_image.jpg"</span>, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">package =</span> <span class="st">"semla"</span>))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>spotfiles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">system.file</span>(<span class="st">"extdata/mousebrain"</span>, </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"spatial/tissue_positions_list.csv"</span>, </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">package =</span> <span class="st">"semla"</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>               <span class="fu">system.file</span>(<span class="st">"extdata/mousecolon"</span>, </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"spatial/tissue_positions_list.csv"</span>, </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                           <span class="at">package =</span> <span class="st">"semla"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>jsonfiles <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">system.file</span>(<span class="st">"extdata/mousebrain"</span>, </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"spatial/scalefactors_json.json"</span>, </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                           <span class="at">package =</span> <span class="st">"semla"</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>               <span class="fu">system.file</span>(<span class="st">"extdata/mousecolon"</span>, </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"spatial/scalefactors_json.json"</span>, </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                           <span class="at">package =</span> <span class="st">"semla"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When loading coordinates from multiple samples, you need to change the barcode IDs so that the suffix matches their respective sampleID. For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The <code>coordinates</code> tibble below contains the barcode IDs, the pixel coordinates and a column with the sampleIDs.</p>
+<p><code>semla</code> provides <code>LoadSpatialCoordinates</code> to make the task a little easier. Note that the suffix for the barcodes have changed for sample 2.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read coordinates</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>coordinates <span class="ot">&lt;-</span> <span class="fu">LoadSpatialCoordinates</span>(spotfiles) <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(<span class="fu">c</span>(<span class="st">"barcode"</span>, <span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span>, <span class="st">"sampleID"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Loading coordinates:</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Finished loading coordinates for sample 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>→   Finished loading coordinates for sample 2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Collected coordinates for 5164 spots.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(coordinates, <span class="at">n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  barcode            pxl_col_in_fullres pxl_row_in_fullres sampleID
+  &lt;chr&gt;                           &lt;int&gt;              &lt;int&gt;    &lt;int&gt;
+1 CATACAAAGCCGAACC-1               6086               4117        1
+2 CTGAGCAAGTAACAAG-1               5062               4472        1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(coordinates, <span class="at">n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 4
+  barcode            pxl_col_in_fullres pxl_row_in_fullres sampleID
+  &lt;chr&gt;                           &lt;int&gt;              &lt;int&gt;    &lt;int&gt;
+1 GAAGGAGTCGAGTGCG-2               4854               6829        2
+2 TGACCAAATCTTAAAC-2               4957               6829        2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check number of spots per sample</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(coordinates<span class="sc">$</span>sampleID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   1    2 
+2560 2604 </code></pre>
+</div>
+</div>
+</section>
+<section id="fetch-image-info" class="level2">
+<h2 class="anchored" data-anchor-id="fetch-image-info">Fetch image info</h2>
+<p>Next, we’ll fetch meta data for the sample H&amp;E images. Here, the tibble must contain the width and height of <code>he_imgs</code> as well as a sampleID column. Use <code>LoadImageInfo</code> to load the image info:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create image_info</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>image_info <span class="ot">&lt;-</span> <span class="fu">LoadImageInfo</span>(he_imgs)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>image_info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 9
+  format width height colorspace matte filesize density sampleID type         
+  &lt;chr&gt;  &lt;int&gt;  &lt;int&gt; &lt;chr&gt;      &lt;lgl&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;        
+1 JPEG     565    600 sRGB       FALSE   106233 72x72   1        tissue_lowres
+2 JPEG     600    541 sRGB       FALSE   141710 72x72   2        tissue_lowres</code></pre>
+</div>
+</div>
+</section>
+<section id="define-image-dimensions" class="level2">
+<h2 class="anchored" data-anchor-id="define-image-dimensions">Define image dimensions</h2>
+<p>The <code>jsonfiles</code> contain scaling factors that allows us to find the original H&amp;E image dimensions. We can load the scale factors with <code>read_json</code> and store them in a tibble. The tibble should also contain a ‘sampleID’ column. Use <code>LoadScaleFactors</code> to load the scaling factors:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read scalefactors</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>scalefactors <span class="ot">&lt;-</span> <span class="fu">LoadScaleFactors</span>(jsonfiles)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>scalefactors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  spot_diameter_fullres tissue_hires_scalef fiducial_diameter_fullres
+                  &lt;dbl&gt;               &lt;dbl&gt;                     &lt;dbl&gt;
+1                 143.                0.104                      215.
+2                  67.0               0.202                      108.
+# ℹ 2 more variables: tissue_lowres_scalef &lt;dbl&gt;, sampleID &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Once we have the scale factors, we can add additional columns to <code>image_info</code> which specify the dimensions of the original H&amp;E images. Use <code>UpdateImageInfo</code> to update <code>image_info</code> with the scaling factors:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add additional columns to image_info using scale factors</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>image_info <span class="ot">&lt;-</span> <span class="fu">UpdateImageInfo</span>(image_info, scalefactors)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>image_info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 10
+  format width height full_width full_height colorspace filesize density
+  &lt;chr&gt;  &lt;int&gt;  &lt;int&gt;      &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;         &lt;int&gt; &lt;chr&gt;  
+1 JPEG     565    600     18120.      19242. sRGB         106233 72x72  
+2 JPEG     600    541      9901.       8927. sRGB         141710 72x72  
+# ℹ 2 more variables: sampleID &lt;chr&gt;, type &lt;chr&gt;</code></pre>
+</div>
+</div>
+<p>Finally, we are ready to create the <code>Staffli</code> object. Here we’ll provide the <code>he_imgs</code> so that we can load the images later with <code>LoadImages</code>. The <code>coordinates</code> are stored in the <code>meta_data</code> slot. <code>image_info</code> will be used by the plot functions provided in <code>semla</code> to define the dimensions of the plot area.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Staffli object</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>staffli_object <span class="ot">&lt;-</span> <span class="fu">CreateStaffliObject</span>(<span class="at">imgs =</span> he_imgs, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">meta_data =</span> coordinates, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">image_info =</span> image_info, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">scalefactors =</span> scalefactors)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>staffli_object</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An object of class Staffli 
+5164 spots across 2 samples. </code></pre>
+</div>
+</div>
+</section>
+<section id="use-a-staffli-object-in-seurat" class="level2">
+<h2 class="anchored" data-anchor-id="use-a-staffli-object-in-seurat">Use a <code>Staffli</code> object in <code>Seurat</code></h2>
+<p>Now let’s see how we can incorporate our <code>Staffli</code> object in <code>Seurat</code>. First, we’ll load the gene expression matrices for our samples and merge them.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get paths for expression matrices</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>expr_matrix_files <span class="ot">&lt;-</span> he_imgs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">system.file</span>(<span class="st">"extdata/mousebrain"</span>, </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"filtered_feature_bc_matrix.h5"</span>, </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">package =</span> <span class="st">"semla"</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>             <span class="fu">system.file</span>(<span class="st">"extdata/mousecolon"</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                         <span class="st">"filtered_feature_bc_matrix.h5"</span>, </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">package =</span> <span class="st">"semla"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before merging the matrices, it’s important to rename the barcodes so that they match the barcodes in <code>Staffli_object</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>exprMatList <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_along</span>(expr_matrix_files), <span class="cf">function</span>(i) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  exprMat <span class="ot">&lt;-</span> Seurat<span class="sc">::</span><span class="fu">Read10X_h5</span>(expr_matrix_files[i])</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(exprMat) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"-</span><span class="sc">\\</span><span class="st">d*"</span>, <span class="co"># Replace barcode suffix with sampleID</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">replacement =</span> <span class="fu">paste0</span>(<span class="st">"-"</span>, i), </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> <span class="fu">colnames</span>(exprMat))</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(exprMat)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge expression matrices</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>mergedExprMat <span class="ot">&lt;-</span> SeuratObject<span class="sc">::</span><span class="fu">RowMergeSparseMatrices</span>(exprMatList[[<span class="dv">1</span>]], exprMatList[[<span class="dv">2</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternatively, use the <code>LoadAndMergeMatrices</code> function from <code>semla</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mergedExprMat <span class="ot">&lt;-</span> <span class="fu">LoadAndMergeMatrices</span>(<span class="at">samplefiles =</span> expr_matrix_files, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Seurat object</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> mergedExprMat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Rearrange <code>Staffli</code> object to match <code>Seurat</code> object. If the barcode are mismatched, make sure to subset the two object to contain intersecting barcodes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>staffli_object<span class="sc">@</span>meta_data <span class="ot">&lt;-</span> staffli_object<span class="sc">@</span>meta_data[<span class="fu">match</span>(<span class="fu">colnames</span>(se), staffli_object<span class="sc">@</span>meta_data<span class="sc">$</span>barcode), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check that the <code>Staffli</code> object matches <code>Seurat</code> object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(staffli_object<span class="sc">@</span>meta_data<span class="sc">$</span>barcode <span class="sc">==</span> <span class="fu">colnames</span>(se))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Place <code>Staffli</code> object in the <code>Seurat</code> object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">@</span>tools<span class="sc">$</span>Staffli <span class="ot">&lt;-</span> staffli_object</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now the <code>semla</code> functions should be compatible with the <code>Seurat</code> object!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"nFeature_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="create_object_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(se, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(se, <span class="at">features =</span> <span class="st">"nFeature_RNA"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="create_object_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><br></p>
+<hr>
+<details open="">
+<summary>
+<strong>Package version</strong>
+</summary>
+<ul>
+<li><code>semla</code>: 1.1.2</li>
+</ul>
+</details>
+<details>
+<summary>
+<strong>Session info</strong>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.2.1 (2022-06-23)
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+Running under: macOS Big Sur ... 10.16
+
+Matrix products: default
+BLAS/LAPACK: /Users/ludviglarsson/miniconda3/envs/R4.2/lib/libopenblasp-r0.3.21.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] tibble_3.2.1       jsonlite_1.8.3     magick_2.7.3       semla_1.1.2       
+[5] ggplot2_3.4.1      dplyr_1.1.2        SeuratObject_4.1.3 Seurat_4.3.0      
+
+loaded via a namespace (and not attached):
+  [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          
+  [4] ellipsis_0.3.2         ggridges_0.5.3         rstudioapi_0.14       
+  [7] spatstat.data_3.0-0    farver_2.1.1           leiden_0.4.2          
+ [10] listenv_0.8.0          bit64_4.0.5            ggrepel_0.9.3         
+ [13] fansi_1.0.3            codetools_0.2-18       splines_4.2.1         
+ [16] knitr_1.39             zeallot_0.1.0          polyclip_1.10-0       
+ [19] ica_1.0-3              cluster_2.1.4          png_0.1-7             
+ [22] uwot_0.1.14            shiny_1.7.4            sctransform_0.3.5     
+ [25] spatstat.sparse_3.0-0  compiler_4.2.1         httr_1.4.4            
+ [28] Matrix_1.5-3           fastmap_1.1.0          lazyeval_0.2.2        
+ [31] cli_3.4.1              later_1.3.0            htmltools_0.5.4       
+ [34] tools_4.2.1            igraph_1.5.1           gtable_0.3.0          
+ [37] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        
+ [40] Rcpp_1.0.9             scattermore_0.8        vctrs_0.6.3           
+ [43] spatstat.explore_3.0-5 nlme_3.1-159           progressr_0.10.1      
+ [46] lmtest_0.9-40          spatstat.random_3.0-1  xfun_0.32             
+ [49] stringr_1.5.0          globals_0.16.0         mime_0.12             
+ [52] miniUI_0.1.1.1         lifecycle_1.0.3        irlba_2.3.5           
+ [55] goftest_1.2-3          future_1.27.0          MASS_7.3-58.1         
+ [58] zoo_1.8-10             scales_1.2.1           promises_1.2.0.1      
+ [61] spatstat.utils_3.0-1   parallel_4.2.1         RColorBrewer_1.1-3    
+ [64] yaml_2.3.5             reticulate_1.26        pbapply_1.5-0         
+ [67] gridExtra_2.3          stringi_1.7.8          rlang_1.1.1           
+ [70] pkgconfig_2.0.3        matrixStats_0.62.0     evaluate_0.16         
+ [73] lattice_0.20-45        ROCR_1.0-11            purrr_1.0.1           
+ [76] tensor_1.5             labeling_0.4.2         patchwork_1.1.2       
+ [79] htmlwidgets_1.5.4      bit_4.0.4              cowplot_1.1.1         
+ [82] tidyselect_1.2.0       parallelly_1.32.1      RcppAnnoy_0.0.19      
+ [85] plyr_1.8.7             magrittr_2.0.3         R6_2.5.1              
+ [88] generics_0.1.3         withr_2.5.0            pillar_1.9.0          
+ [91] fitdistrplus_1.1-8     survival_3.4-0         abind_1.4-5           
+ [94] sp_1.5-1               future.apply_1.9.0     hdf5r_1.3.5           
+ [97] KernSmooth_2.23-20     utf8_1.2.2             spatstat.geom_3.0-3   
+[100] plotly_4.10.0          rmarkdown_2.15         grid_4.2.1            
+[103] data.table_1.14.2      forcats_0.5.2          digest_0.6.29         
+[106] xtable_1.8-4           dbscan_1.1-10          tidyr_1.3.0           
+[109] httpuv_1.6.5           munsell_0.5.0          viridisLite_0.4.1     
+[112] shinyjs_2.1.0         </code></pre>
+</div>
+</div>
+</details>
+<p><br></p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
