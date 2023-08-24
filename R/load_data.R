@@ -238,7 +238,7 @@ LoadScaleFactors <- function (
       abort(glue("Invalid file extension '{file_ext(f)}'. Expected a JSON file."))
   }
   
-  scalefactors <- do.call(rbind, lapply(seq_along(scalefactorfiles), function(i) {
+  scalefactors <- do.call(bind_rows, lapply(seq_along(scalefactorfiles), function(i) {
     json_data <- data.frame(read_json(scalefactorfiles[i])) |> mutate(sampleID = paste0(i))
     return(json_data)
   })) |> as_tibble()
