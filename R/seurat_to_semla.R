@@ -8,20 +8,27 @@ NULL
 #' you can use \code{AddSemlaToSeurat} to add the required 
 #' data to the \code{Seurat} object. This assumes that 
 #' the \code{Seurat} object contains one or more "VisiumV1" 
-#' object(s) in the \code{images} slot. 
+#' object(s) in the \code{images} slot. Alternatviely, you
+#' can convert a \code{Seurat} object with "SlideSeq" data.
 #' 
-#' @details 
+#' @section VisiumV1:
 #' Note that you need to specify what H&E image was loaded, 
 #' one of "tissue_lowres" or "tissue_hires". If this argument 
 #' is incorrect, the tissue coordinates will be misplaced.
 #' 
 #' Visit the \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started}
-#' tutorial on our package website for more details on how to 
-#' use this function.
+#' tutorial on our package website for an example on how to convert a \code{Seurat} object with
+#' VisiumV1 data.
+#' 
+#' @section SlideSeq:
+#' For SlideSeq data, there's no additional H&E image provided. If you convert
+#' a Seurat object containing SlideSeq data, all image related functionality 
+#' of \code{semla} will be inaccessible.
 #' 
 #' @param object An object of class \code{Seurat} with Visium data
 #' @param image_type One of "tissue_lowres" or "tissue_hires", specifying
-#' what H&E image was loaded into the \code{Seurat} object
+#' what H&E image was loaded into the \code{Seurat} object. Only used for 
+#' "VisiumV1" data.
 #' @param verbose Print messages
 #' 
 #' @return A \code{Seurat} object compatible with semla
@@ -39,13 +46,19 @@ NULL
 #' library(semla)
 #' library(SeuratData)
 #' 
+#' # Load example Seurat object with VisiumV1 data
 #' InstallData("stxBrain")
-#' 
-#' # Load example Seurat object
 #' brain <- LoadData("stxBrain", type = "anterior1")
 #' 
 #' # Make Seurat object compatible with semla
 #' brain_semla <- UpdateSeuratForSemla(brain)
+#' 
+#' # Load example Seurat object with SlideSeq data
+#' InstallData("ssHippo")
+#' slide_seq <- LoadData("ssHippo")
+#' 
+#' # Make Seurat object compatible with semla
+#' slide_seq <- UpdateSeuratForSemla(slide_seq)
 #' }
 #' 
 #' @export
@@ -58,13 +71,26 @@ UpdateSeuratForSemla <- function (
   if (!inherits(object, what = "Seurat")) abort(glue("Invalid class '{class(object)}'. Expected a 'Seurat' object."))
   if (length(object@images) == 0) abort(glue("No images available in 'Seurat' object."))
   
-  image_type <- match.arg(arg = image_type, choices = c("tissue_lowres", "tissue_hires"))
-  if (verbose) cli_alert_info("Expecting '{image_type}' format.")
-  
-  # Get images
-  imgs <- lapply(object@images, function(slice) {
-    slice@image |> as.raster()
+  # Check images slot
+  slice_types <- sapply(object@images, function(image) {
+    image |> class() |> as.character()
   })
+  if (length(unique(slice_types)) > 1) abort(glue("Only one spatial data type allowed. Got {paste(slice_types, collapse = ',')}"))
+  if (!all(slice_types %in% c("SlideSeq", "VisiumV1"))) abort(glue("Only 'SlideSeq' and 'VisiumV1' are currently supported. Got {slice_types}"))
+  slice_type <- unique(slice_types)
+  cli_alert_info("Found {slice_type} object(s).")
+  
+  if (slice_type == "VisiumV1") {
+    image_type <- match.arg(arg = image_type, choices = c("tissue_lowres", "tissue_hires"))
+    if (verbose) cli_alert_info("Expecting '{image_type}' format.")
+    
+    # Get images
+    imgs <- lapply(object@images, function(slice) {
+      slice@image |> as.raster()
+    }) 
+  } else {
+    imgs <- NULL
+  }
   
   # Export images
   temp_dir <- tempdir()
@@ -72,62 +98,97 @@ UpdateSeuratForSemla <- function (
   img_info_tibble <- tibble()
   scalefactors_tibble <- tibble()
   coordinates_tibble <- tibble()
-  for (i in seq_along(imgs)) {
+  cli_h3("Collecting data from @images slot")
+  for (i in seq_along(object@images)) {
     
     # Check if the slice represent Visium data
-    if (!inherits(object@images$anterior1, what = "VisiumV1")) abort("Only 'VisiumV1' data is supported.")
+    if (!inherits(object@images[[i]], what = c("VisiumV1", "SlideSeq"))) abort("Only 'VisiumV1' and 'SlideSeq' data is supported.")
     
     # Collect image paths
     if (verbose) cli_alert_info("Collecting data for sample {i}:")
-    dims <- dim(imgs[[i]])
-    image_path <- paste0(temp_dir, "/", i, ".png")
-    if (verbose) cli_alert("  Exporting H&E image width dimensions {dims[1]}x{dims[2]} to {image_path}")
-    png(filename = image_path, height = dims[1], width = dims[2])
-    oldpar <- par(no.readonly = TRUE)
-    on.exit(par(oldpar)) 
-    par(mar = c(0, 0, 0, 0))
-    plot(imgs[[i]])
-    dev.off()
-    image_paths <- c(image_paths, image_path)
-    
-    # Collect scale factors
-    sf <- object@images[[i]]@scale.factors
-    sf <- tibble(spot_diameter_fullres = sf$spot,
-                 tissue_hires_scalef = sf$hires,
-                 fiducial_diameter_fullres = sf$fiducial,
-                 tissue_lowres_scalef = sf$lowres,
-                 sampleID = paste0(i))
-    if (verbose) cli_alert("  Collected scale factors.")
-    scalefactors_tibble <- bind_rows(scalefactors_tibble, sf)
-    
-    # Collect image information
-    sf_image <- ifelse(image_type == "tissue_lowres", sf$tissue_lowres_scalef, sf$tissue_hires_scalef)
-    iminfo <- image_read(image_path) |> 
-      image_info() |> 
-      mutate(full_width = ceiling(dims[1]/sf_image), full_height = ceiling(dims[2]/sf_image),
-             sampleID = paste0(i), type = image_type) |> 
-      select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
-    if (verbose) cli_alert("  Collected image information.")
-    img_info_tibble <- bind_rows(img_info_tibble, iminfo)
+    if (slice_type == "VisiumV1") {
+      dims <- dim(imgs[[i]])
+      image_path <- paste0(temp_dir, "/", i, ".png")
+      if (verbose) cli_alert("  Exporting H&E image width dimensions {dims[1]}x{dims[2]} to {image_path}")
+      png(filename = image_path, height = dims[1], width = dims[2])
+      oldpar <- par(no.readonly = TRUE)
+      on.exit(par(oldpar)) 
+      par(mar = c(0, 0, 0, 0))
+      plot(imgs[[i]])
+      dev.off()
+      image_paths <- c(image_paths, image_path)
+      
+      # Collect scale factors
+      sf <- object@images[[i]]@scale.factors
+      sf <- tibble(spot_diameter_fullres = sf$spot,
+                   tissue_hires_scalef = sf$hires,
+                   fiducial_diameter_fullres = sf$fiducial,
+                   tissue_lowres_scalef = sf$lowres,
+                   sampleID = paste0(i))
+      if (verbose) cli_alert("  Collected scale factors.")
+      scalefactors_tibble <- bind_rows(scalefactors_tibble, sf)
+      
+      # Collect image information
+      sf_image <- ifelse(image_type == "tissue_lowres", sf$tissue_lowres_scalef, sf$tissue_hires_scalef)
+      iminfo <- image_read(image_path) |> 
+        image_info() |> 
+        mutate(full_width = ceiling(dims[1]/sf_image), full_height = ceiling(dims[2]/sf_image),
+               sampleID = paste0(i), type = image_type) |> 
+        select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
+      if (verbose) cli_alert("  Collected image information.")
+      img_info_tibble <- bind_rows(img_info_tibble, iminfo)
+    }
     
     # Collect spatial coordinates
     slice <- object@images[[i]]
     x <- slice@coordinates
-    coordinates <- tibble(barcode = paste0(gsub(pattern = '[0-9]+', replacement = "", x = rownames(x)), i), 
-           pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
-           pxl_row_in_fullres = x[, "imagerow", drop = TRUE],
-           sampleID = i)
-    coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
-    if (verbose) cli_alert("  Collected coordinates")
+    
+    if (slice_type == "VisiumV1") {
+      coordinates <- tibble(barcode = rownames(x), 
+             pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
+             pxl_row_in_fullres = x[, "imagerow", drop = TRUE],
+             sampleID = i)
+      coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
+    } else if (slice_type == "SlideSeq") {
+      coordinates <- tibble(barcode = rownames(x), 
+                            pxl_col_in_fullres = x[, "x", drop = TRUE],
+                            pxl_row_in_fullres = x[, "y", drop = TRUE],
+                            sampleID = i)
+      coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
+      wh <- sapply(x |> select(x, y), range)
+      iminfo <- tibble(format = NA_character_,
+                       width = NA_character_,
+                       height = NA_character_,
+                       full_width = wh[2, 1] + wh[1, 1],
+                       full_height = wh[2, 2] + wh[1, 2],
+                       colorspace = NA_character_,
+                       filesize = NA_integer_,
+                       density = NA_character_,
+                       sampleID = paste0(i),
+                       type = NA_character_)
+      img_info_tibble <- bind_rows(img_info_tibble, iminfo)
+      sf <- tibble(spot_diameter_fullres = NA,
+                   tissue_hires_scalef = NA,
+                   fiducial_diameter_fullres = NA,
+                   tissue_lowres_scalef = NA,
+                   sampleID = paste0(i))
+      scalefactors_tibble <- bind_rows(scalefactors_tibble, sf)
+    }
+    if (verbose) cli_alert("  Collected coordinates.")
   }
   
   # Create Staffli object
-  if (verbose) cli_alert_warning(glue("Paths to raw images are unavailable. See '?ReplaceImagePaths()' ",
-                                 "for more information on how to update the paths."))
+  if (slice_type == "VisiumV1") {
+    if (verbose) cli_alert_warning(glue("Paths to raw images are unavailable. See '?ReplaceImagePaths()' ",
+                                        "for more information on how to update the paths."))
+  }
+  
   st_object <- CreateStaffliObject(imgs = image_paths,
                                    meta_data = coordinates_tibble, 
                                    image_info = img_info_tibble, 
                                    scalefactors = scalefactors_tibble)
   object@tools$Staffli <- st_object
+  cat_line()
+  cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
   return(object)
 }

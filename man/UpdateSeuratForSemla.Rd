@@ -14,7 +14,8 @@ UpdateSeuratForSemla(
 \item{object}{An object of class \code{Seurat} with Visium data}
 
 \item{image_type}{One of "tissue_lowres" or "tissue_hires", specifying
-what H&E image was loaded into the \code{Seurat} object}
+what H&E image was loaded into the \code{Seurat} object. Only used for 
+"VisiumV1" data.}
 
 \item{verbose}{Print messages}
 }
@@ -26,30 +27,46 @@ In order to make a \code{Seurat} object with \code{semla},
 you can use \code{AddSemlaToSeurat} to add the required 
 data to the \code{Seurat} object. This assumes that 
 the \code{Seurat} object contains one or more "VisiumV1" 
-object(s) in the \code{images} slot.
+object(s) in the \code{images} slot. Alternatviely, you
+can convert a \code{Seurat} object with "SlideSeq" data.
 }
-\details{
+\section{VisiumV1}{
+
 Note that you need to specify what H&E image was loaded, 
 one of "tissue_lowres" or "tissue_hires". If this argument 
 is incorrect, the tissue coordinates will be misplaced.
 
 Visit the \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started}
-tutorial on our package website for more details on how to 
-use this function.
+tutorial on our package website for an example on how to convert a \code{Seurat} object with
+VisiumV1 data.
 }
+
+\section{SlideSeq}{
+
+For SlideSeq data, there's no additional H&E image provided. If you convert
+a Seurat object containing SlideSeq data, all image related functionality 
+of \code{semla} will be inaccessible.
+}
+
 \examples{
 
 \dontrun{
 library(semla)
 library(SeuratData)
 
+# Load example Seurat object with VisiumV1 data
 InstallData("stxBrain")
-
-# Load example Seurat object
 brain <- LoadData("stxBrain", type = "anterior1")
 
 # Make Seurat object compatible with semla
 brain_semla <- UpdateSeuratForSemla(brain)
+
+# Load example Seurat object with SlideSeq data
+InstallData("ssHippo")
+slide_seq <- LoadData("ssHippo")
+
+# Make Seurat object compatible with semla
+slide_seq <- UpdateSeuratForSemla(slide_seq)
 }
 
 }
