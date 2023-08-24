@@ -88,6 +88,10 @@ navbar:
         href: articles/compare_cell_type_mapping_NNLS.html
       - text: Create a Staffli object
         href: articles/create_object.html
+      - text: cell type mapping benchmark
+        href: articles/cell_type_mapping_benchmark.html
+      - text: Slide-Seq data
+        href: articles/slide-seq.html
 
 reference:
 - title: Function reference
@@ -182,6 +186,7 @@ reference:
 - subtitle: Misc
 - contents:
   - UpdateSTUtilityV1Object
+  - UpdateSeuratForSemla
   - file_server
   - icp
   - kabsch
