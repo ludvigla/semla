@@ -10,7 +10,7 @@ editor_options:
 
 In this tutorial, we will look at two ways of transforming the H&E images in a 10x Visium dataset. The is typically useful if you want to align similar tissue sections to make it easier to compare results between them.
 
-The alignment functions in `semla` only handles rigid transformations, meaning that non-linear distortions are not possible to mitigate. If rigid transformations are sufficient to generate a decent alignment, one could for example use the aligned coordinates for 3D visualization. However, we do not provide visualization functions for 3D in `semla`.
+The alignment functions in `semla` only handles rigid transformations, meaning that non-linear distortions are not possible to mitigate. If rigid transformations are sufficient to generate a decent alignment, one could for example use the aligned coordinates for 3D visualization. Although we do not provide visualization functions for 3D in `semla`, we have included a few lines of code at the end of this tutorial, demonstrating how to plot in 3D.
 
 ```{r message=FALSE, warning=FALSE}
 library(semla)
@@ -158,7 +158,7 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
 
 ## Images with different dimensions
 
-`RunAlignment` applies the transformations to each image independently and makes sure that the original dimensions of the images are kept. This behavior might seem confusing at first. Let's say that you want to force all images to align with the first H&E image so that you can use the transformed coordinates for 3D visualization, this will not work without some additional processing. 
+`RunAlignment` applies the transformations to each image independently and makes sure that the original dimensions of the images are kept. This behavior might seem confusing at first. Let's say that you want to force all images to align with the first H&E image so that you can use the transformed coordinates for 3D visualization, this will not work without some additional processing.
 
 In the example below, we can see two H&E images with slightly different dimensions. The second image (mouse colon tissue) has an aspect ration lower than 1 whereas the first image (mouse brain tissue) has an aspect ratio higher than 1 but both images are loaded with the same height. When applying transformations to the second image, the dashed box will only define where the image will be placed relative to the first image, but the image will keep its aspect ratio.
 
@@ -174,8 +174,7 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
 se_merged <- RunAlignment(se_merged)
 ```
 
-![](images/alignment/alignment_brain_colon.png)
-If we apply rigid transformations according to the image above, the result will be this:
+![](images/alignment/alignment_brain_colon.png) If we apply rigid transformations according to the image above, the result will be this:
 
 ```{r eval=FALSE}
 ImagePlot(se_merged, image_use = "transformed")
@@ -189,15 +188,22 @@ Here you can see that the second image fits the top and bottom of the dashed box
 
 3D visualization requires some additional processing. For each tissue section, the spot coordinates can be defined on completely different scales. In order to place the coordinates on the same scale, we can adjust the coordinates by dividing them with the width/height of the H&E images.
 
-The code below can be used to scale the transformed coordinates to a common coordinate system, in this case they will range from 0 to 1. We can use the `sampleID` as a z-coordinate to create a "z-stack" that can be visualized in 3D. We'll leave the actual 3D visualization as an exercise, but to achieve this you can for example use the R package [plotly](https://plotly.com/r/).
+The code below can be used to scale the transformed coordinates to a common coordinate system, in this case they will range from 0 to 1. We can use the `sampleID` as a z-coordinate to create a "z-stack" that can be visualized in 3D. 
 
-```{r eval=FALSE}
-xy_coords <- GetStaffli(se_merged)@meta_data |> 
-  select(pxl_col_in_fullres_transformed, pxl_row_in_fullres_transformed, sampleID) |> 
+Below is a simple example showing how to plot sots from stacked and aligned tissue sections in 3D using the [plotly](https://plotly.com/r/) R package. In the example we are just stacking three identical tissue sections, so we can use the default coordinates for the visualization.
+
+```{r warning=FALSE, message=FALSE}
+# Merge data from three identical objects for the demo
+se_merged <- MergeSTData(se_mbrain, list(se_mbrain, se_mbrain))
+
+xy_coords <- GetCoordinates(se_merged) |> 
+  # Note that we use pxl_*_in_fullres here. If ypu have aligned sections, use
+  # pxl_*_in_fullres_transformed instead
+  select(pxl_col_in_fullres, pxl_row_in_fullres, sampleID) |> 
   group_by(sampleID) |> 
   group_split()
   
-image_info <- GetStaffli(se_merged)@image_info
+image_info <- GetImageInfo(se_merged)
 
 # Adjust coordinates
 adjusted_coords <- do.call(bind_rows, lapply(seq_along(xy_coords), function(i) {
@@ -205,13 +211,27 @@ adjusted_coords <- do.call(bind_rows, lapply(seq_along(xy_coords), function(i) {
   full_width <- image_info[i, ]$full_width
   full_height <- image_info[i, ]$full_height
   xy <- xy |> 
-    mutate(x = pxl_col_in_fullres_transformed/full_width,
-           y = pxl_row_in_fullres_transformed/full_height) |> 
-    select(x, y, sampleID)
+    mutate(x = pxl_col_in_fullres/full_width,
+           y = pxl_row_in_fullres/full_height) |> 
+    # Here we can use the sampleID to define a z value. 
+    # We can also adjust it appropriately to set the distance between the sections.
+    mutate(z = sampleID*0.2) |> 
+    select(x, y, z)
 }))
 
-```
+# Obtain clusters for visualization
+se_merged <- se_merged |> 
+  FindVariableFeatures() |> 
+  ScaleData() |> 
+  RunPCA() |> 
+  FindNeighbors() |> 
+  FindClusters(vresolution = 0.4)
 
+# 3D scatter plot with plotly
+library(plotly)
+plot_ly(adjusted_coords, x = ~x, y = ~y, z = ~z, type = "scatter3d", mode = "markers", color = se_merged$seurat_clusters, size = 1)
+
+```
 
 <br>
 
