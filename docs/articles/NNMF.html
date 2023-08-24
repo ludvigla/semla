@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -115,7 +117,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Non-negative matrix factorization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 11 April
+            <h4 data-toc-skip class="date">Last compiled: 24 August
 2023</h4>
       
       
@@ -326,7 +328,7 @@ the top contributing genes for each factor are. Below we can see the top
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpjtEGTb/temp_libpathaf5170616d8/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpUdSjIn/temp_libpath111e038f12c1c/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
@@ -400,7 +402,7 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Arc    NMF_1  0.033<span style="text-decoration: underline;">3</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Nr4a1  NMF_1  0.032<span style="text-decoration: underline;">5</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">10</span> Nptxr  NMF_1  0.032<span style="text-decoration: underline;">4</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 100 more rows</span></span></span></code></pre>
+<span><span class="co">## <span style="color: #949494;"># ℹ 100 more rows</span></span></span></code></pre>
 <p>Run functional enrichment analysis on top 10 genes from factor 1:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gprofiler2</span><span class="op">)</span></span>
@@ -417,27 +419,27 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co"># Look at results</span></span>
 <span><span class="va">fea_results_nmf_1</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 23 × 14</span></span></span>
-<span><span class="co">##    query  signi…¹ p_value term_…² query…³ inter…⁴ preci…⁵  recall term_id source</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> query… TRUE    1.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     324       8       5   0.625 0.015<span style="text-decoration: underline;">4</span>  GO:000… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> query… TRUE    2.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     360       8       5   0.625 0.013<span style="text-decoration: underline;">9</span>  GO:005… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> query… TRUE    9.52<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>     163       8       4   0.5   0.024<span style="text-decoration: underline;">5</span>  GO:000… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> query… TRUE    1.62<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     186       8       4   0.5   0.021<span style="text-decoration: underline;">5</span>  GO:000… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> query… TRUE    2.16<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     868      10       6   0.6   0.006<span style="text-decoration: underline;">91</span> GO:009… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> query… TRUE    2.16<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     868      10       6   0.6   0.006<span style="text-decoration: underline;">91</span> GO:000… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> query… TRUE    2.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>    <span style="text-decoration: underline;">3</span>058       9       8   0.889 0.002<span style="text-decoration: underline;">62</span> GO:006… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> query… TRUE    2.26<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     875      10       6   0.6   0.006<span style="text-decoration: underline;">86</span> GO:009… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> query… TRUE    2.46<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>      44       8       3   0.375 0.068<span style="text-decoration: underline;">2</span>  GO:000… GO:BP </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> query… TRUE    2.83<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>     909      10       6   0.6   0.006<span style="text-decoration: underline;">60</span> GO:009… GO:BP </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 13 more rows, 4 more variables: term_name &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   effective_domain_size &lt;int&gt;, source_order &lt;int&gt;, parents &lt;list&gt;, and</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​significant, ²​term_size, ³​query_size,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ⁴​intersection_size, ⁵​precision</span></span></span></code></pre>
+<span><span class="co">##    query   significant  p_value term_size query_size intersection_size precision</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> query_1 TRUE         7.05<span style="color: #949494;">e</span><span style="color: #BB0000;">-6</span>       941         10                 7     0.7  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> query_1 TRUE         1.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       324          8                 5     0.625</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> query_1 TRUE         2.38<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       360          8                 5     0.625</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> query_1 TRUE         9.48<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       163          8                 4     0.5  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> query_1 TRUE         1.68<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       188          8                 4     0.5  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> query_1 TRUE         2.44<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>        44          8                 3     0.375</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> query_1 TRUE         2.60<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       895         10                 6     0.6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> query_1 TRUE         2.60<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       895         10                 6     0.6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> query_1 TRUE         2.72<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       902         10                 6     0.6  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> query_1 TRUE         3.63<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>      <span style="text-decoration: underline;">3</span>244          9                 8     0.889</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 13 more rows</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 7 more variables: recall &lt;dbl&gt;, term_id &lt;chr&gt;, source &lt;chr&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   term_name &lt;chr&gt;, effective_domain_size &lt;int&gt;, source_order &lt;int&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   parents &lt;list&gt;</span></span></span></code></pre>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.0.0</p></li>
+<li><p><code>semla</code>: 1.1.2</p></li>
 <li><p><code>RcppML</code>: 0.3.7</p></li>
 <li><p><code>singlet</code>: 0.99.1023</p></li>
 </ul></details><details><summary><strong>Session info</strong>
@@ -457,12 +459,12 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] gprofiler2_0.2.1   singlet_0.99.1023  semla_1.0.0        ggplot2_3.4.1     </span></span>
-<span><span class="co">## [5] dplyr_1.1.0        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
+<span><span class="co">## [1] gprofiler2_0.2.1   singlet_0.99.1023  semla_1.1.2        ggplot2_3.4.1     </span></span>
+<span><span class="co">## [5] dplyr_1.1.2        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] fastmatch_1.1-3        systemfonts_1.0.4      plyr_1.8.7            </span></span>
-<span><span class="co">##   [4] igraph_1.3.4           lazyeval_0.2.2         sp_1.5-1              </span></span>
+<span><span class="co">##   [4] igraph_1.5.1           lazyeval_0.2.2         sp_1.5-1              </span></span>
 <span><span class="co">##   [7] splines_4.2.1          BiocParallel_1.30.3    listenv_0.8.0         </span></span>
 <span><span class="co">##  [10] scattermore_0.8        digest_0.6.29          htmltools_0.5.4       </span></span>
 <span><span class="co">##  [13] viridis_0.6.2          magick_2.7.3           fansi_1.0.3           </span></span>
@@ -482,7 +484,7 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">##  [55] RColorBrewer_1.1-3     ellipsis_0.3.2         ica_1.0-3             </span></span>
 <span><span class="co">##  [58] farver_2.1.1           pkgconfig_2.0.3        sass_0.4.2            </span></span>
 <span><span class="co">##  [61] uwot_0.1.14            deldir_1.0-6           utf8_1.2.2            </span></span>
-<span><span class="co">##  [64] labeling_0.4.2         tidyselect_1.2.0       rlang_1.0.6           </span></span>
+<span><span class="co">##  [64] labeling_0.4.2         tidyselect_1.2.0       rlang_1.1.1           </span></span>
 <span><span class="co">##  [67] reshape2_1.4.4         later_1.3.0            munsell_0.5.0         </span></span>
 <span><span class="co">##  [70] tools_4.2.1            cachem_1.0.6           cli_3.4.1             </span></span>
 <span><span class="co">##  [73] dbscan_1.1-10          generics_0.1.3         ggridges_0.5.3        </span></span>
@@ -493,10 +495,10 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">##  [88] pbapply_1.5-0          future_1.27.0          nlme_3.1-159          </span></span>
 <span><span class="co">##  [91] mime_0.12              compiler_4.2.1         rstudioapi_0.14       </span></span>
 <span><span class="co">##  [94] plotly_4.10.0          png_0.1-7              spatstat.utils_3.0-1  </span></span>
-<span><span class="co">##  [97] tibble_3.1.8           bslib_0.4.0            stringi_1.7.8         </span></span>
+<span><span class="co">##  [97] tibble_3.2.1           bslib_0.4.0            stringi_1.7.8         </span></span>
 <span><span class="co">## [100] highr_0.9              desc_1.4.1             forcats_0.5.2         </span></span>
 <span><span class="co">## [103] lattice_0.20-45        Matrix_1.5-3           shinyjs_2.1.0         </span></span>
-<span><span class="co">## [106] vctrs_0.5.2            pillar_1.8.1           lifecycle_1.0.3       </span></span>
+<span><span class="co">## [106] vctrs_0.6.3            pillar_1.9.0           lifecycle_1.0.3       </span></span>
 <span><span class="co">## [109] spatstat.geom_3.0-3    lmtest_0.9-40          jquerylib_0.1.4       </span></span>
 <span><span class="co">## [112] RcppAnnoy_0.0.19       bitops_1.0-7           data.table_1.14.2     </span></span>
 <span><span class="co">## [115] cowplot_1.1.1          irlba_2.3.5            httpuv_1.6.5          </span></span>

@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -115,7 +117,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Images and spot coordinates</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 11 April
+            <h4 data-toc-skip class="date">Last compiled: 24 August
 2023</h4>
       
       
@@ -264,20 +266,19 @@ have.</p>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadSpatialCoordinates.html">LoadSpatialCoordinates</a></span><span class="op">(</span>coordinatefiles <span class="op">=</span> <span class="va">cordinatefile</span>, verbose <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="va">xy</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2,560 × 7</span></span></span>
-<span><span class="co">##    barcode            selected     y     x pxl_row_in_fullres pxl_col_…¹ sampl…²</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> CATACAAAGCCGAACC-1        1    13    35               <span style="text-decoration: underline;">4</span>117       <span style="text-decoration: underline;">6</span>086       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> CTGAGCAAGTAACAAG-1        1    15    25               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>062       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> GGGTACCCACGGTCCT-1        1    14    26               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>164       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> ACGGAATTTAGCAAAT-1        1    15    27               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>266       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> GGGCGGTCCTATTGTC-1        1    14    28               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>369       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> ATGTTACGAGCAATAC-1        1    15    29               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>471       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AACCATGGGATCGCTA-1        1    14    30               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>574       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> TCGCATCCCTAAGTGT-1        1    15    31               <span style="text-decoration: underline;">4</span>473       <span style="text-decoration: underline;">5</span>676       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> ACTTAGTACGACAAGA-1        1    14    32               <span style="text-decoration: underline;">4</span>295       <span style="text-decoration: underline;">5</span>778       1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> GAGCTCTCGGACCTAA-1        1    15    33               <span style="text-decoration: underline;">4</span>473       <span style="text-decoration: underline;">5</span>881       1</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 2,550 more rows, and abbreviated variable names ¹​pxl_col_in_fullres,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ²​sampleID</span></span></span></code></pre>
+<span><span class="co">##    barcode   selected     y     x pxl_row_in_fullres pxl_col_in_fullres sampleID</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> CATACAAA…        1    13    35               <span style="text-decoration: underline;">4</span>117               <span style="text-decoration: underline;">6</span>086        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> CTGAGCAA…        1    15    25               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>062        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> GGGTACCC…        1    14    26               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>164        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> ACGGAATT…        1    15    27               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>266        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> GGGCGGTC…        1    14    28               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>369        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> ATGTTACG…        1    15    29               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>471        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AACCATGG…        1    14    30               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>574        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> TCGCATCC…        1    15    31               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>676        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> ACTTAGTA…        1    14    32               <span style="text-decoration: underline;">4</span>295               <span style="text-decoration: underline;">5</span>778        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> GAGCTCTC…        1    15    33               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>881        1</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 2,550 more rows</span></span></span></code></pre>
 <p>Here we have access to the Visium grid coordinates and the H&amp;E
 image coordinates for the full resolution image used for
 <code>spaceranger count</code>. We also have a column with spot barcodes
@@ -509,7 +510,7 @@ missed when drawing the plot. In this example, we lose 46 spots!</p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.0.0</p></li>
+<li><p><code>semla</code>: 1.1.2</p></li>
 <li><p><code>magick</code>: 2.7.3</p></li>
 </ul></details><details><summary><strong>Session info</strong>
 </summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
@@ -529,8 +530,8 @@ missed when drawing the plot. In this example, we lose 46 spots!</p>
 <span><span class="co">## [8] base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] jsonlite_1.8.3     magick_2.7.3       semla_1.0.0        ggplot2_3.4.1     </span></span>
-<span><span class="co">## [5] dplyr_1.1.0        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
+<span><span class="co">## [1] jsonlite_1.8.3     magick_2.7.3       semla_1.1.2        ggplot2_3.4.1     </span></span>
+<span><span class="co">## [5] dplyr_1.1.2        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          </span></span>
@@ -545,10 +546,10 @@ missed when drawing the plot. In this example, we lose 46 spots!</p>
 <span><span class="co">##  [28] compiler_4.2.1         httr_1.4.4             Matrix_1.5-3          </span></span>
 <span><span class="co">##  [31] fastmap_1.1.0          lazyeval_0.2.2         cli_3.4.1             </span></span>
 <span><span class="co">##  [34] later_1.3.0            htmltools_0.5.4        tools_4.2.1           </span></span>
-<span><span class="co">##  [37] igraph_1.3.4           gtable_0.3.0           glue_1.6.2            </span></span>
+<span><span class="co">##  [37] igraph_1.5.1           gtable_0.3.0           glue_1.6.2            </span></span>
 <span><span class="co">##  [40] RANN_2.6.1             reshape2_1.4.4         Rcpp_1.0.9            </span></span>
 <span><span class="co">##  [43] scattermore_0.8        jquerylib_0.1.4        pkgdown_2.0.6         </span></span>
-<span><span class="co">##  [46] vctrs_0.5.2            nlme_3.1-159           spatstat.explore_3.0-5</span></span>
+<span><span class="co">##  [46] vctrs_0.6.3            nlme_3.1-159           spatstat.explore_3.0-5</span></span>
 <span><span class="co">##  [49] progressr_0.10.1       lmtest_0.9-40          spatstat.random_3.0-1 </span></span>
 <span><span class="co">##  [52] xfun_0.32              stringr_1.5.0          globals_0.16.0        </span></span>
 <span><span class="co">##  [55] mime_0.12              miniUI_0.1.1.1         lifecycle_1.0.3       </span></span>
@@ -559,15 +560,15 @@ missed when drawing the plot. In this example, we lose 46 spots!</p>
 <span><span class="co">##  [70] yaml_2.3.5             memoise_2.0.1          reticulate_1.26       </span></span>
 <span><span class="co">##  [73] pbapply_1.5-0          gridExtra_2.3          sass_0.4.2            </span></span>
 <span><span class="co">##  [76] stringi_1.7.8          highr_0.9              desc_1.4.1            </span></span>
-<span><span class="co">##  [79] rlang_1.0.6            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
+<span><span class="co">##  [79] rlang_1.1.1            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
 <span><span class="co">##  [82] matrixStats_0.62.0     evaluate_0.16          lattice_0.20-45       </span></span>
 <span><span class="co">##  [85] tensor_1.5             ROCR_1.0-11            purrr_1.0.1           </span></span>
 <span><span class="co">##  [88] labeling_0.4.2         patchwork_1.1.2        htmlwidgets_1.5.4     </span></span>
 <span><span class="co">##  [91] cowplot_1.1.1          tidyselect_1.2.0       parallelly_1.32.1     </span></span>
 <span><span class="co">##  [94] RcppAnnoy_0.0.19       plyr_1.8.7             magrittr_2.0.3        </span></span>
 <span><span class="co">##  [97] R6_2.5.1               generics_0.1.3         withr_2.5.0           </span></span>
-<span><span class="co">## [100] pillar_1.8.1           fitdistrplus_1.1-8     abind_1.4-5           </span></span>
-<span><span class="co">## [103] survival_3.4-0         sp_1.5-1               tibble_3.1.8          </span></span>
+<span><span class="co">## [100] pillar_1.9.0           fitdistrplus_1.1-8     abind_1.4-5           </span></span>
+<span><span class="co">## [103] survival_3.4-0         sp_1.5-1               tibble_3.2.1          </span></span>
 <span><span class="co">## [106] future.apply_1.9.0     KernSmooth_2.23-20     utf8_1.2.2            </span></span>
 <span><span class="co">## [109] spatstat.geom_3.0-3    plotly_4.10.0          rmarkdown_2.15        </span></span>
 <span><span class="co">## [112] data.table_1.14.2      forcats_0.5.2          digest_0.6.29         </span></span>

@@ -16,7 +16,7 @@ more than 3 features. See details below for more information."><meta property="o
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,6 +65,8 @@ more than 3 features. See details below for more information."><meta property="o
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -116,7 +118,6 @@ more than 3 features. See details below for more information.</p>
 <span>  colors <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  coords_columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span><span class="op">)</span>,</span>
 <span>  return_plot_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  drop_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  add_colorscale_text <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -219,10 +220,6 @@ By default, a <code>patchwork</code> is returned, but it can sometimes be useful
 if you want to manipulate each sub plot independently.</p></dd>
 
 
-<dt>drop_na</dt>
-<dd><p>A logical specifying if NA values should be dropped</p></dd>
-
-
 <dt>add_colorscale_text</dt>
 <dd><p>A Logical specifying if labels should be added to
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and
@@ -274,17 +271,21 @@ feature will be shown in each spot.</p>
 <p>Before using <code>MapMultipleFeatures</code>, you should be aware that this type of visualization
 will bias what is being shown. Preferably, the selected features should be selecting in
 a way that they are mutually exclusive, i.e. expressed in different spatial locations.</p>
+<p>Each spot is assigned one color determined by the dominant feature in that spot. For instance,
+if cell type proportions are selected for the visualization, each cell type will be assigned a 
+specific color. Then, the cell type with the highest proportion value will determine the spot color
+with a spot opacity equal to the proportion value.</p>
 <p>The values of the selected features will be rescaled for the visualization
 depending on the choice of <code>scale</code>. If <code>scale="free"</code>, each numeric feature
-will be scaled independently across the entire dataset to have values between 0 and 1.
+will be scaled independently across the entire data set to have values ranging from 0 to 1.
 This is most useful if the selected features have different scales and you want to
-avoid some features dominating.</p>
+avoid some features dominating in many spots.</p>
 <p>If you want to keep the relative differences between different feature, you can set
 <code>scale="shared"</code>. In this case, the feature values will be scaled to have values
 between 0 and 1 where 0 and 1 corresponds to the minimum and maximum value across
 all feature values. This could for example be useful if you are visualizing cell type
 proportions in which case the color intensity should reflect the relative differences.</p>
-<p>This type of visualization should be used with some caution. Because only 1 color
+<p>The visualization produced with <code>MapMultipleFeatures</code> should be used with some caution. Because only 1 color
 is selected for each spot, it is biased to focus on dominant features.
 This makes it less meaningful to focus on the exact values and makes the interpretation
 more qualitative. It can however be useful as a way to summarize the spatial distribution
@@ -365,7 +366,7 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpjtEGTb/temp_libpathaf5170616d8/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpUdSjIn/temp_libpath111e038f12c1c/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span></span>

@@ -20,7 +20,7 @@ simultaneously."><meta property="og:image" content="https://ludvigla.github.io/s
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,8 @@ simultaneously."><meta property="og:image" content="https://ludvigla.github.io/s
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -211,20 +213,19 @@ and translations.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Collected coordinates for <span style="color: #FF55FF;">2560</span> spots.</span>
 <span class="r-in"><span><span class="va">xy</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2,560 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    barcode            selected     y     x pxl_row_in_fullres pxl_col_…¹ sampl…²</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CATACAAAGCCGAACC-1        1    13    35               <span style="text-decoration: underline;">4</span>117       <span style="text-decoration: underline;">6</span>086       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CTGAGCAAGTAACAAG-1        1    15    25               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>062       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GGGTACCCACGGTCCT-1        1    14    26               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>164       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ACGGAATTTAGCAAAT-1        1    15    27               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>266       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> GGGCGGTCCTATTGTC-1        1    14    28               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>369       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ATGTTACGAGCAATAC-1        1    15    29               <span style="text-decoration: underline;">4</span>472       <span style="text-decoration: underline;">5</span>471       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> AACCATGGGATCGCTA-1        1    14    30               <span style="text-decoration: underline;">4</span>294       <span style="text-decoration: underline;">5</span>574       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TCGCATCCCTAAGTGT-1        1    15    31               <span style="text-decoration: underline;">4</span>473       <span style="text-decoration: underline;">5</span>676       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ACTTAGTACGACAAGA-1        1    14    32               <span style="text-decoration: underline;">4</span>295       <span style="text-decoration: underline;">5</span>778       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> GAGCTCTCGGACCTAA-1        1    15    33               <span style="text-decoration: underline;">4</span>473       <span style="text-decoration: underline;">5</span>881       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2,550 more rows, and abbreviated variable names ¹​pxl_col_in_fullres,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​sampleID</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    barcode   selected     y     x pxl_row_in_fullres pxl_col_in_fullres sampleID</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CATACAAA…        1    13    35               <span style="text-decoration: underline;">4</span>117               <span style="text-decoration: underline;">6</span>086        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CTGAGCAA…        1    15    25               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>062        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> GGGTACCC…        1    14    26               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>164        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ACGGAATT…        1    15    27               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>266        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> GGGCGGTC…        1    14    28               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>369        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ATGTTACG…        1    15    29               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>471        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> AACCATGG…        1    14    30               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>574        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> TCGCATCC…        1    15    31               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>676        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ACTTAGTA…        1    14    32               <span style="text-decoration: underline;">4</span>295               <span style="text-decoration: underline;">5</span>778        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> GAGCTCTC…        1    15    33               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>881        1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2,550 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load image</span></span></span>
 <span class="r-in"><span><span class="va">lowresimagefile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain/spatial"</span>,</span></span>

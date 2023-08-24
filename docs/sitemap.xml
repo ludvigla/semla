@@ -22,6 +22,9 @@
     <loc>https://ludvigla.github.io/semla/articles/categorical_features.html</loc>
   </url>
   <url>
+    <loc>https://ludvigla.github.io/semla/articles/cell_type_mapping_benchmark.html</loc>
+  </url>
+  <url>
     <loc>https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html</loc>
   </url>
   <url>
@@ -62,6 +65,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/semla.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/articles/slide-seq.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/articles/spatial_autocorrelation.html</loc>
@@ -185,6 +191,9 @@
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/UpdateSTUtilityV1Object.html</loc>
+  </url>
+  <url>
+    <loc>https://ludvigla.github.io/semla/reference/UpdateSeuratForSemla.html</loc>
   </url>
   <url>
     <loc>https://ludvigla.github.io/semla/reference/celltype-prediction-mixed.html</loc>

@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -115,7 +117,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Create dataset</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 11 April
+            <h4 data-toc-skip class="date">Last compiled: 24 August
 2023</h4>
       
       
@@ -166,42 +168,32 @@ For instance, a barcode in sample 1 might be called CATACAAAGCCGAACC-1
 and in sample 2 the same barcode should be CATACAAAGCCGAACC-2. The
 <code>coordinates</code> tibble below contains the barcode IDs, the
 pixel coordinates and a column with the sampleIDs.</p>
+<p><code>semla</code> provides <code>LoadSpatialCoordinates</code> to
+make the task a little easier. Note that the suffix for the barcodes
+have changed for sample 2.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Read coordinates</span></span>
-<span><span class="va">coordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">bind_rows</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">spotfiles</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">sample_coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">spotfiles</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, header <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span>nm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"selected"</span>, <span class="st">"y"</span>, <span class="st">"x"</span>, <span class="st">"pxl_row_in_fullres"</span>, <span class="st">"pxl_col_in_fullres"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Add a unique sampleID</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">selected</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">barcode</span>, <span class="va">pxl_col_in_fullres</span>, <span class="va">pxl_row_in_fullres</span>, <span class="va">sampleID</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>barcode <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"-\\d*"</span>, <span class="co"># Replace barcode suffix with sampleID</span></span>
-<span>                          replacement <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"-"</span>, <span class="va">i</span><span class="op">)</span>, </span>
-<span>                          x <span class="op">=</span> <span class="va">barcode</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">sample_coords</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code>semla</code> provides <code>LoadSpatialCoordinates</code> to
-make the task a little easier:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadSpatialCoordinates.html">LoadSpatialCoordinates</a></span><span class="op">(</span>coordinatefiles <span class="op">=</span> <span class="va">spotfiles</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">barcode</span>, <span class="va">pxl_row_in_fullres</span>, <span class="va">pxl_col_in_fullres</span>, <span class="va">sampleID</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">coordinates</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5,164 × 4</span></span></span>
-<span><span class="co">##    barcode            pxl_row_in_fullres pxl_col_in_fullres sampleID</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> CATACAAAGCCGAACC-1               <span style="text-decoration: underline;">4</span>117               <span style="text-decoration: underline;">6</span>086        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> CTGAGCAAGTAACAAG-1               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>062        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> GGGTACCCACGGTCCT-1               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>164        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> ACGGAATTTAGCAAAT-1               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>266        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> GGGCGGTCCTATTGTC-1               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>369        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> ATGTTACGAGCAATAC-1               <span style="text-decoration: underline;">4</span>472               <span style="text-decoration: underline;">5</span>471        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> AACCATGGGATCGCTA-1               <span style="text-decoration: underline;">4</span>294               <span style="text-decoration: underline;">5</span>574        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> TCGCATCCCTAAGTGT-1               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>676        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> ACTTAGTACGACAAGA-1               <span style="text-decoration: underline;">4</span>295               <span style="text-decoration: underline;">5</span>778        1</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> GAGCTCTCGGACCTAA-1               <span style="text-decoration: underline;">4</span>473               <span style="text-decoration: underline;">5</span>881        1</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 5,154 more rows</span></span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<span><span class="va">coordinates</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadSpatialCoordinates.html">LoadSpatialCoordinates</a></span><span class="op">(</span><span class="va">spotfiles</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="st">"pxl_col_in_fullres"</span>, <span class="st">"pxl_row_in_fullres"</span>, <span class="st">"sampleID"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading coordinates:</span></span></code></pre>
+<pre><code><span><span class="co">## →   Finished loading coordinates for sample 1</span></span></code></pre>
+<pre><code><span><span class="co">## →   Finished loading coordinates for sample 2</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Collected coordinates for <span style="color: #FF55FF;">5164</span> spots.</span></span></code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">coordinates</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">##   barcode            pxl_col_in_fullres pxl_row_in_fullres sampleID</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> CATACAAAGCCGAACC-1               <span style="text-decoration: underline;">6</span>086               <span style="text-decoration: underline;">4</span>117        1</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> CTGAGCAAGTAACAAG-1               <span style="text-decoration: underline;">5</span>062               <span style="text-decoration: underline;">4</span>472        1</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">coordinates</span>, n <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">##   barcode            pxl_col_in_fullres pxl_row_in_fullres sampleID</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> GAAGGAGTCGAGTGCG-2               <span style="text-decoration: underline;">4</span>854               <span style="text-decoration: underline;">6</span>829        2</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> TGACCAAATCTTAAAC-2               <span style="text-decoration: underline;">4</span>957               <span style="text-decoration: underline;">6</span>829        2</span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check number of spots per sample</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">coordinates</span><span class="op">$</span><span class="va">sampleID</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
@@ -213,21 +205,17 @@ make the task a little easier:</p>
 </h2>
 <p>Next, we’ll fetch meta data for the sample H&amp;E images. Here, the
 tibble must contain the width and height of <code>he_imgs</code> as well
-as a sampleID column.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+as a sampleID column. Use <code>LoadImageInfo</code> to load the image
+info:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create image_info</span></span>
-<span><span class="va">image_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">bind_rows</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">he_imgs</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">he_imgs</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">image_read</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://docs.ropensci.org/magick/reference/attributes.html" class="external-link">image_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">image_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadImageInfo.html">LoadImageInfo</a></span><span class="op">(</span><span class="va">he_imgs</span><span class="op">)</span></span>
 <span><span class="va">image_info</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 8</span></span></span>
-<span><span class="co">##   format width height colorspace matte filesize density sampleID</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600 sRGB       FALSE   <span style="text-decoration: underline;">106</span>233 72x72   1       </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541 sRGB       FALSE   <span style="text-decoration: underline;">141</span>710 72x72   2</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 9</span></span></span>
+<span><span class="co">##   format width height colorspace matte filesize density sampleID type         </span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600 sRGB       FALSE   <span style="text-decoration: underline;">106</span>233 72x72   1        tissue_lowres</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541 sRGB       FALSE   <span style="text-decoration: underline;">141</span>710 72x72   2        tissue_lowres</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="define-image-dimensions">Define image dimensions<a class="anchor" aria-label="anchor" href="#define-image-dimensions"></a>
@@ -235,48 +223,39 @@ as a sampleID column.</p>
 <p>The <code>jsonfiles</code> contain scaling factors that allows us to
 find the original H&amp;E image dimensions. We can load the scale
 factors with <code>read_json</code> and store them in a tibble. The
-tibble should also contain a sampleID column.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+tibble should also contain a ‘sampleID’ column. Use
+<code>LoadScaleFactors</code> to load the scaling factors:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Read scalefactors</span></span>
-<span><span class="va">scalefactors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">bind_rows</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">jsonfiles</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="va">jsonfiles</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>sampleID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">scalefactors</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadScaleFactors.html">LoadScaleFactors</a></span><span class="op">(</span><span class="va">jsonfiles</span><span class="op">)</span></span>
 <span><span class="va">scalefactors</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 5</span></span></span>
-<span><span class="co">##   spot_diameter_fullres tissue_hires_scalef fiducial_diameter_…¹ tissu…² sampl…³</span></span>
-<span><span class="co">##                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span>                 143.                0.104                 215.  0.031<span style="text-decoration: underline;">2</span> 1      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span>                  67.0               0.202                 108.  0.060<span style="text-decoration: underline;">6</span> 2      </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​fiducial_diameter_fullres,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ²​tissue_lowres_scalef, ³​sampleID</span></span></span></code></pre>
+<span><span class="co">##   spot_diameter_fullres tissue_hires_scalef fiducial_diameter_fullres</span></span>
+<span><span class="co">##                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span>                 143.                0.104                      215.</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span>                  67.0               0.202                      108.</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 2 more variables: tissue_lowres_scalef &lt;dbl&gt;, sampleID &lt;chr&gt;</span></span></span></code></pre>
 <p>Once we have the scale factors, we can add additional columns to
 <code>image_info</code> which specify the dimensions of the original
-H&amp;E images:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+H&amp;E images. Use <code>UpdateImageInfo</code> to update
+<code>image_info</code> with the scaling factors:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add additional columns to image_info using scale factors</span></span>
-<span><span class="va">image_info</span> <span class="op">&lt;-</span> <span class="va">image_info</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">width</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_lowres_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>         full_height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">height</span><span class="op">/</span><span class="va">scalefactors</span><span class="op">$</span><span class="va">tissue_lowres_scalef</span><span class="op">[</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"tissue_hires"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">format</span>, <span class="va">width</span>, <span class="va">height</span>, <span class="va">full_width</span>, <span class="va">full_height</span>, </span>
-<span>         <span class="va">colorspace</span>, <span class="va">filesize</span>, <span class="va">density</span>, <span class="va">sampleID</span>, <span class="va">type</span><span class="op">)</span></span>
+<span><span class="va">image_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/UpdateImageInfo.html">UpdateImageInfo</a></span><span class="op">(</span><span class="va">image_info</span>, <span class="va">scalefactors</span><span class="op">)</span></span>
 <span><span class="va">image_info</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 2 × 10</span></span></span>
-<span><span class="co">##   format width height full_width full_he…¹ color…² files…³ density sampl…⁴ type </span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600      <span style="text-decoration: underline;">18</span>120     <span style="text-decoration: underline;">19</span>242 sRGB     <span style="text-decoration: underline;">106</span>233 72x72   1       tiss…</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541       <span style="text-decoration: underline;">9</span>901      <span style="text-decoration: underline;">8</span>927 sRGB     <span style="text-decoration: underline;">141</span>710 72x72   2       tiss…</span></span>
-<span><span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​full_height, ²​colorspace, ³​filesize,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ⁴​sampleID</span></span></span></code></pre>
+<span><span class="co">##   format width height full_width full_height colorspace filesize density</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> JPEG     565    600     <span style="text-decoration: underline;">18</span>120.      <span style="text-decoration: underline;">19</span>242. sRGB         <span style="text-decoration: underline;">106</span>233 72x72  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> JPEG     600    541      <span style="text-decoration: underline;">9</span>901.       <span style="text-decoration: underline;">8</span>927. sRGB         <span style="text-decoration: underline;">141</span>710 72x72  </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 2 more variables: sampleID &lt;chr&gt;, type &lt;chr&gt;</span></span></span></code></pre>
 <p>Finally, we are ready to create the <code>Staffli</code> object. Here
 we’ll provide the <code>he_imgs</code> so that we can load the images
 later with <code>LoadImages</code>. The <code>coordinates</code> are
 stored in the <code>meta_data</code> slot. <code>image_info</code> will
 be used by the plot functions provided in <code>semla</code> to define
 the dimensions of the plot area.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create Staffli object</span></span>
 <span><span class="va">staffli_object</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/CreateStaffliObject.html">CreateStaffliObject</a></span><span class="op">(</span>imgs <span class="op">=</span> <span class="va">he_imgs</span>, </span>
 <span>                                      meta_data <span class="op">=</span> <span class="va">coordinates</span>, </span>
@@ -292,7 +271,7 @@ the dimensions of the plot area.</p>
 <p>Now let’s see how we can incorporate our <code>Staffli</code> object
 in <code>Seurat</code>. First, we’ll load the gene expression matrices
 for our samples and merge them.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get paths for expression matrices</span></span>
 <span><span class="va">expr_matrix_files</span> <span class="op">&lt;-</span> <span class="va">he_imgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, </span>
 <span>                         <span class="st">"filtered_feature_bc_matrix.h5"</span>, </span>
@@ -302,7 +281,7 @@ for our samples and merge them.</p>
 <span>                         package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Before merging the matrices, it’s important to rename the barcodes so
 that they match the barcodes in <code>Staffli_object</code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exprMatList</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">expr_matrix_files</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">exprMat</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/Read10X_h5.html" class="external-link">Read10X_h5</a></span><span class="op">(</span><span class="va">expr_matrix_files</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">exprMat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"-\\d*"</span>, <span class="co"># Replace barcode suffix with sampleID</span></span>
@@ -315,7 +294,7 @@ that they match the barcodes in <code>Staffli_object</code>.</p>
 <span><span class="va">mergedExprMat</span> <span class="op">&lt;-</span> <span class="fu">SeuratObject</span><span class="fu">::</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/RowMergeSparseMatrices.html" class="external-link">RowMergeSparseMatrices</a></span><span class="op">(</span><span class="va">exprMatList</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">exprMatList</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, use the <code>LoadAndMergeMatrices</code> function
 from <code>semla</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mergedExprMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/LoadAndMergeMatrices.html">LoadAndMergeMatrices</a></span><span class="op">(</span>samplefiles <span class="op">=</span> <span class="va">expr_matrix_files</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create Seurat object</span></span>
@@ -323,34 +302,34 @@ from <code>semla</code>:</p>
 <p>Rearrange <code>Staffli</code> object to match <code>Seurat</code>
 object. If the barcode are mismatched, make sure to subset the two
 object to contain intersecting barcodes.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">staffli_object</span><span class="op">@</span><span class="va">meta_data</span> <span class="op">&lt;-</span> <span class="va">staffli_object</span><span class="op">@</span><span class="va">meta_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span>, <span class="va">staffli_object</span><span class="op">@</span><span class="va">meta_data</span><span class="op">$</span><span class="va">barcode</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
 <p>Check that the <code>Staffli</code> object matches
 <code>Seurat</code> object:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">staffli_object</span><span class="op">@</span><span class="va">meta_data</span><span class="op">$</span><span class="va">barcode</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p>Place <code>Staffli</code> object in the <code>Seurat</code>
 object:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span><span class="op">@</span><span class="va">tools</span><span class="op">$</span><span class="va">Staffli</span> <span class="op">&lt;-</span> <span class="va">staffli_object</span></span></code></pre></div>
 <p>Now the <code>semla</code> functions should be compatible with the
 <code>Seurat</code> object!</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="st">"nFeature_RNA"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="create_object_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<p><img src="create_object_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se</span>, features <span class="op">=</span> <span class="st">"nFeature_RNA"</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="create_object_files/figure-html/unnamed-chunk-15-2.png" width="700"></p>
+<p><img src="create_object_files/figure-html/unnamed-chunk-14-2.png" width="700"></p>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.0.0</li>
+<code>semla</code>: 1.1.2</li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.1 (2022-06-23)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -366,8 +345,8 @@ object:</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] tibble_3.1.8       jsonlite_1.8.3     magick_2.7.3       semla_1.0.0       </span></span>
-<span><span class="co">## [5] ggplot2_3.4.1      dplyr_1.1.0        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
+<span><span class="co">## [1] tibble_3.2.1       jsonlite_1.8.3     magick_2.7.3       semla_1.1.2       </span></span>
+<span><span class="co">## [5] ggplot2_3.4.1      dplyr_1.1.2        SeuratObject_4.1.3 Seurat_4.3.0      </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] Rtsne_0.16             colorspace_2.0-3       deldir_1.0-6          </span></span>
@@ -382,10 +361,10 @@ object:</p>
 <span><span class="co">##  [28] sctransform_0.3.5      compiler_4.2.1         httr_1.4.4            </span></span>
 <span><span class="co">##  [31] Matrix_1.5-3           fastmap_1.1.0          lazyeval_0.2.2        </span></span>
 <span><span class="co">##  [34] cli_3.4.1              later_1.3.0            htmltools_0.5.4       </span></span>
-<span><span class="co">##  [37] tools_4.2.1            igraph_1.3.4           gtable_0.3.0          </span></span>
+<span><span class="co">##  [37] tools_4.2.1            igraph_1.5.1           gtable_0.3.0          </span></span>
 <span><span class="co">##  [40] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        </span></span>
 <span><span class="co">##  [43] Rcpp_1.0.9             scattermore_0.8        jquerylib_0.1.4       </span></span>
-<span><span class="co">##  [46] pkgdown_2.0.6          vctrs_0.5.2            nlme_3.1-159          </span></span>
+<span><span class="co">##  [46] pkgdown_2.0.6          vctrs_0.6.3            nlme_3.1-159          </span></span>
 <span><span class="co">##  [49] spatstat.explore_3.0-5 progressr_0.10.1       lmtest_0.9-40         </span></span>
 <span><span class="co">##  [52] spatstat.random_3.0-1  xfun_0.32              stringr_1.5.0         </span></span>
 <span><span class="co">##  [55] globals_0.16.0         mime_0.12              miniUI_0.1.1.1        </span></span>
@@ -396,14 +375,14 @@ object:</p>
 <span><span class="co">##  [70] yaml_2.3.5             memoise_2.0.1          reticulate_1.26       </span></span>
 <span><span class="co">##  [73] pbapply_1.5-0          gridExtra_2.3          sass_0.4.2            </span></span>
 <span><span class="co">##  [76] stringi_1.7.8          highr_0.9              desc_1.4.1            </span></span>
-<span><span class="co">##  [79] rlang_1.0.6            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
+<span><span class="co">##  [79] rlang_1.1.1            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
 <span><span class="co">##  [82] matrixStats_0.62.0     evaluate_0.16          lattice_0.20-45       </span></span>
 <span><span class="co">##  [85] tensor_1.5             ROCR_1.0-11            purrr_1.0.1           </span></span>
 <span><span class="co">##  [88] labeling_0.4.2         patchwork_1.1.2        htmlwidgets_1.5.4     </span></span>
 <span><span class="co">##  [91] bit_4.0.4              cowplot_1.1.1          tidyselect_1.2.0      </span></span>
 <span><span class="co">##  [94] parallelly_1.32.1      RcppAnnoy_0.0.19       plyr_1.8.7            </span></span>
 <span><span class="co">##  [97] magrittr_2.0.3         R6_2.5.1               generics_0.1.3        </span></span>
-<span><span class="co">## [100] withr_2.5.0            pillar_1.8.1           fitdistrplus_1.1-8    </span></span>
+<span><span class="co">## [100] withr_2.5.0            pillar_1.9.0           fitdistrplus_1.1-8    </span></span>
 <span><span class="co">## [103] abind_1.4-5            survival_3.4-0         sp_1.5-1              </span></span>
 <span><span class="co">## [106] future.apply_1.9.0     hdf5r_1.3.5            KernSmooth_2.23-20    </span></span>
 <span><span class="co">## [109] utf8_1.2.2             spatstat.geom_3.0-3    plotly_4.10.0         </span></span>

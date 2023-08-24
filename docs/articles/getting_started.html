@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -115,7 +117,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Get started</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 11 April
+            <h4 data-toc-skip class="date">Last compiled: 24 August
 2023</h4>
       
       
@@ -216,6 +218,45 @@ tutorials!</p>
 as <code>subset</code> and <code>merge</code> should not be used with
 <code>semla</code>. Instead, use the <code><a href="../reference/subset.html">SubsetSTData()</a></code> and
 <code><a href="../reference/merge.html">MergeSTData()</a></code> functions - See the vignette <a href="https://ludvigla.github.io/semla/articles/subset_and_merge.html">Subset/merge</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="make-seurat-object-compatible-with-semla">Make Seurat object compatible with semla<a class="anchor" aria-label="anchor" href="#make-seurat-object-compatible-with-semla"></a>
+</h2>
+<p>If you have a <code>Seurat</code> object with Visium data that was
+prepared using <code>Read10X_Image</code>, it is possible to add a
+<code>Staffli</code> object for compatibility with <code>semla</code>
+using the <code>UpdateSeuratForSemla</code> function.</p>
+<p>By doing so, you can now use both spatial visualization functions
+from <code>Seurat</code> and <code>semla</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.satijalab.org/seurat" class="external-link">SeuratData</a></span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## ── <span style="font-weight: bold;">Installed datasets</span> ───────────────────────────────────── SeuratData v0.2.2 ──</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">ssHippo  </span> 3.1.4                       <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tonsilref</span> 1.0.0</span></span>
+<span><span class="co">## <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stxBrain </span> 0.1.1</span></span></code></pre>
+<pre><code><span><span class="co">## ────────────────────────────────────── Key ─────────────────────────────────────</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Dataset loaded successfully</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">❯</span> Dataset built with a newer version of Seurat than installed</span></span>
+<span><span class="co">## <span style="color: #BB0000;">❓</span> Unknown version of Seurat installed</span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/InstallData.html" class="external-link">InstallData</a></span><span class="op">(</span><span class="st">"stxBrain"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load example Seurat object</span></span>
+<span><span class="va">brain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/LoadData.html" class="external-link">LoadData</a></span><span class="op">(</span><span class="st">"stxBrain"</span>, type <span class="op">=</span> <span class="st">"anterior1"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Make Seurat object compatible with semla</span></span>
+<span><span class="va">brain_semla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/UpdateSeuratForSemla.html">UpdateSeuratForSemla</a></span><span class="op">(</span><span class="va">brain</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load H&amp;E images</span></span>
+<span><span class="va">brain_semla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">brain_semla</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot with semla</span></span>
+<span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">brain_semla</span>, features <span class="op">=</span> <span class="st">"nFeature_Spatial"</span>, </span>
+<span>            image_use <span class="op">=</span> <span class="st">"raw"</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="../reference/ThemeLegendRight.html">ThemeLegendRight</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="getting_started_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Plot with Seurat</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/SpatialPlot.html" class="external-link">SpatialFeaturePlot</a></span><span class="op">(</span><span class="va">brain_semla</span>, features <span class="op">=</span> <span class="st">"nFeature_Spatial"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="getting_started_files/figure-html/unnamed-chunk-10-2.png" width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

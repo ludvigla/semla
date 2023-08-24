@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,6 +84,8 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -118,7 +120,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Spatial statistics for labelled spots</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 11 April
+            <h4 data-toc-skip class="date">Last compiled: 24 August
 2023</h4>
       
       
@@ -262,13 +264,12 @@ Then we can add information about clusters before plotting it with
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4 × 10</span></span></span>
-<span><span class="co">##   from           to    dista…¹    nn x_start y_start x_end y_end cluster rando…²</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> AAACCGTTCGTCC… AACT…    138.     6    <span style="text-decoration: underline;">4</span>116    <span style="text-decoration: underline;">7</span>307  <span style="text-decoration: underline;">4</span>047  <span style="text-decoration: underline;">7</span>426 2       2      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> AAACCTAAGCAGC… CAGG…    137.     6    <span style="text-decoration: underline;">6</span>932    <span style="text-decoration: underline;">8</span>873  <span style="text-decoration: underline;">7</span>069  <span style="text-decoration: underline;">8</span>874 5       4      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> AAACGAGACGGTT… AAGA…    137      6    <span style="text-decoration: underline;">6</span>669    <span style="text-decoration: underline;">5</span>280  <span style="text-decoration: underline;">6</span>532  <span style="text-decoration: underline;">5</span>280 6       0      </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> AAACGGTTGCGAA… ATCT…    137      6    <span style="text-decoration: underline;">5</span>279    <span style="text-decoration: underline;">9</span>107  <span style="text-decoration: underline;">5</span>142  <span style="text-decoration: underline;">9</span>107 3       8      </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with abbreviated variable names ¹​distance, ²​random_clusters</span></span></span></code></pre>
+<span><span class="co">##   from  to    distance    nn x_start y_start x_end y_end cluster random_clusters</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> AAAC… AACT…     138.     6    <span style="text-decoration: underline;">4</span>116    <span style="text-decoration: underline;">7</span>307  <span style="text-decoration: underline;">4</span>047  <span style="text-decoration: underline;">7</span>426 2       2              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> AAAC… CAGG…     137.     6    <span style="text-decoration: underline;">6</span>932    <span style="text-decoration: underline;">8</span>873  <span style="text-decoration: underline;">7</span>069  <span style="text-decoration: underline;">8</span>874 5       4              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> AAAC… AAGA…     137      6    <span style="text-decoration: underline;">6</span>669    <span style="text-decoration: underline;">5</span>280  <span style="text-decoration: underline;">6</span>532  <span style="text-decoration: underline;">5</span>280 6       0              </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> AAAC… ATCT…     137      6    <span style="text-decoration: underline;">5</span>279    <span style="text-decoration: underline;">9</span>107  <span style="text-decoration: underline;">5</span>142  <span style="text-decoration: underline;">9</span>107 3       8</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span>, color<span class="op">=</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -351,7 +352,10 @@ of that label.</p>
 <span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` instead.</span></span></code></pre>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` instead.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p><br></p>
 <p>Not surprisingly, we see cluster 1 being clearly in the top as the
@@ -776,7 +780,7 @@ label.</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.0.0</li>
+<code>semla</code>: 1.1.2</li>
 </ul></details><p><br></p>
 </div>
 </div>

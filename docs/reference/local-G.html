@@ -20,7 +20,7 @@ NB: This function only calculates G, not G star."><meta property="og:image" cont
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,6 +69,8 @@ NB: This function only calculates G, not G star."><meta property="og:image" cont
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
   </div>
 </li>
 <li class="nav-item">
@@ -282,16 +284,15 @@ of spatial association. TEST, 27(3), 716–748 <a href="https://doi.org/10.1007/
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> G scores will be named Gi[Ftr] and adjusted p-values will be named Pr(z != E(Gi[Ftr]))</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">g_scores</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   barcode            `Gi[Mgp]` Pr(z != E(Gi[Mg…¹ Gi[Th…² Pr(z …³ Gi[Nr…⁴ Pr(z …⁵</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> CATACAAAGCCGAACC-1    -<span style="color: #BB0000;">0.893</span>             0.757  -<span style="color: #BB0000;">0.377</span>   0.894   0.804  0.509 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> CTGAGCAAGTAACAAG-1    -<span style="color: #BB0000;">0.711</span>             0.757  -<span style="color: #BB0000;">0.533</span>   0.812   2.40   0.052<span style="text-decoration: underline;">2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> GGGTACCCACGGTCCT-1    -<span style="color: #BB0000;">1.09</span>              0.608  -<span style="color: #BB0000;">0.462</span>   0.856   2.52   0.041<span style="text-decoration: underline;">3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ACGGAATTTAGCAAAT-1    -<span style="color: #BB0000;">0.645</span>             0.757  -<span style="color: #BB0000;">0.654</span>   0.759   2.78   0.024<span style="text-decoration: underline;">7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> GGGCGGTCCTATTGTC-1    -<span style="color: #BB0000;">1.26</span>              0.608  -<span style="color: #BB0000;">0.533</span>   0.812   2.40   0.051<span style="text-decoration: underline;">7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> ATGTTACGAGCAATAC-1    -<span style="color: #BB0000;">1.10</span>              0.608  -<span style="color: #BB0000;">0.654</span>   0.759   2.65   0.032<span style="text-decoration: underline;">2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​`Pr(z != E(Gi[Mgp]))`, ²​`Gi[Th]`,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​`Pr(z != E(Gi[Th]))`, ⁴​`Gi[Nrgn]`, ⁵​`Pr(z != E(Gi[Nrgn]))`</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   barcode          `Gi[Mgp]` `Pr(z != E(Gi[Mgp]))` `Gi[Th]` `Pr(z != E(Gi[Th]))`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> CATACAAAGCCGAAC…    -<span style="color: #BB0000;">0.893</span>                 0.757   -<span style="color: #BB0000;">0.377</span>                0.894</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> CTGAGCAAGTAACAA…    -<span style="color: #BB0000;">0.711</span>                 0.757   -<span style="color: #BB0000;">0.533</span>                0.812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> GGGTACCCACGGTCC…    -<span style="color: #BB0000;">1.09</span>                  0.608   -<span style="color: #BB0000;">0.462</span>                0.856</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> ACGGAATTTAGCAAA…    -<span style="color: #BB0000;">0.645</span>                 0.757   -<span style="color: #BB0000;">0.654</span>                0.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> GGGCGGTCCTATTGT…    -<span style="color: #BB0000;">1.26</span>                  0.608   -<span style="color: #BB0000;">0.533</span>                0.812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> ATGTTACGAGCAATA…    -<span style="color: #BB0000;">1.10</span>                  0.608   -<span style="color: #BB0000;">0.654</span>                0.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: `Gi[Nrgn]` &lt;dbl&gt;, `Pr(z != E(Gi[Nrgn]))` &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Bind results with coords for plotting</span></span></span>
 <span class="r-in"><span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="va">coords</span> <span class="op">|&gt;</span></span></span>

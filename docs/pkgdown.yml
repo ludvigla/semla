@@ -5,6 +5,7 @@ articles:
   NNMF: NNMF.html
   advanced_visualization: advanced_visualization.html
   categorical_features: categorical_features.html
+  cell_type_mapping_benchmark: cell_type_mapping_benchmark.html
   cell_type_mapping_with_NNLS: cell_type_mapping_with_NNLS.html
   compare_cell_type_mapping_NNLS: compare_cell_type_mapping_NNLS.html
   create_object: create_object.html
@@ -18,10 +19,11 @@ articles:
   radial_distances: radial_distances.html
   region_neighbors: region_neighbors.html
   semla: semla.html
+  slide-seq: slide-seq.html
   spatial_autocorrelation: spatial_autocorrelation.html
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
-last_built: 2023-04-11T13:57Z
+last_built: 2023-08-24T11:43Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles
