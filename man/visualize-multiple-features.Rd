@@ -136,11 +136,16 @@ Before using \code{MapMultipleFeatures}, you should be aware that this type of v
 will bias what is being shown. Preferably, the selected features should be selecting in
 a way that they are mutually exclusive, i.e. expressed in different spatial locations.
 
+Each spot is assigned one color determined by the dominant feature in that spot. For instance,
+if cell type proportions are selected for the visualization, each cell type will be assigned a 
+specific color. Then, the cell type with the highest proportion value will determine the spot color
+with a spot opacity equal to the proportion value.
+
 The values of the selected features will be rescaled for the visualization
 depending on the choice of \code{scale}. If \code{scale="free"}, each numeric feature
-will be scaled independently across the entire dataset to have values between 0 and 1.
+will be scaled independently across the entire data set to have values ranging from 0 to 1.
 This is most useful if the selected features have different scales and you want to
-avoid some features dominating.
+avoid some features dominating in many spots.
 
 If you want to keep the relative differences between different feature, you can set
 \code{scale="shared"}. In this case, the feature values will be scaled to have values
@@ -148,7 +153,7 @@ between 0 and 1 where 0 and 1 corresponds to the minimum and maximum value acros
 all feature values. This could for example be useful if you are visualizing cell type
 proportions in which case the color intensity should reflect the relative differences.
 
-This type of visualization should be used with some caution. Because only 1 color
+The visualization produced with \code{MapMultipleFeatures} should be used with some caution. Because only 1 color
 is selected for each spot, it is biased to focus on dominant features.
 This makes it less meaningful to focus on the exact values and makes the interpretation
 more qualitative. It can however be useful as a way to summarize the spatial distribution
