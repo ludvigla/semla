@@ -1,0 +1,93 @@
+---
+title: "Slide-Seq data"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this article, we'll demonstrate how to load Slide-Seq data with `semla`. First, we need to load a `Seurat` object with 
+Slide-Seq data. Here we'll use a prepared `Seurat` object that can be install with the `SeuratData` R package. 
+
+See `?ReadSlideSeq` for more information on how to load raw data.
+
+```{r eval=FALSE}
+library(semla)
+library(SeuratData)
+InstallData("ssHippo")
+```
+
+```{r eval=FALSE}
+slide_seq <- LoadData("ssHippo")
+```
+
+Next, we can convert the `Seurat` object to make it compatible with `semla` using the `UpdateSeuratForSemla` function.
+Note that the Slide-Seq data doesn't contain H&E images and therefore, all image related functionality of `semla` 
+will be inaccessible. This includes the Feature Viewer and image alignment tools which requires H&E images to work.
+
+```{r eval=FALSE}
+slide_seq_semla <- UpdateSeuratForSemla(slide_seq)
+```
+
+Now we can use visualization functions from `semla` on our Slide-Seq data.
+
+```{r eval=FALSE}
+MapFeatures(slide_seq_semla, features = "nFeature_Spatial", colors = viridis::magma(n = 11, direction = -1)) & ThemeLegendRight()
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "slide-seq/unique_genes.jpg", width = 2e3, height = 2e3, res = 200)
+MapFeatures(slide_seq_semla, features = "nFeature_Spatial", colors = viridis::magma(n = 11, direction = -1)) & ThemeLegendRight()
+dev.off()
+```
+
+![](slide-seq/unique_genes.jpg)
+
+Zoom in on Dentate gyrus:
+
+```{r eval=FALSE}
+MapFeatures(slide_seq_semla, features = "PROX1", colors = viridis::magma(n = 11, direction = -1),
+            crop_area = c(0.35, 0.45, 0.7, 0.7)) & 
+  ThemeLegendRight() &
+  ggtitle("PROX1 expression in the Dentate Gyrus", subtitle = "")
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "slide-seq/DG.jpg", width = 2e3, height = 1.6e3, res = 300)
+MapFeatures(slide_seq_semla, features = "PROX1", colors = viridis::magma(n = 11, direction = -1),
+            crop_area = c(0.35, 0.45, 0.7, 0.7)) & 
+  ThemeLegendRight() &
+  ggtitle("PROX1 expression in the Dentate Gyrus", subtitle = "")
+dev.off()
+```
+
+![](slide-seq/DG.jpg)
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
