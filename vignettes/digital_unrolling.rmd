@@ -200,7 +200,7 @@ p2 <- ggplot(tidy_network_adjusted, aes(x, y, color = y_dist)) +
 p1 + p2
 ```
 
-The `x_dist` coordinates, which is arguably the most relevant for regionalization patterns, looks quite good. The `y_dist` coordinate shows the distances from the base of the roll (muscle tissue) to the edge (mucosa). It is clear that the `y_dist` are a bit misplaced here misplaced here and there which is because of the uneven thickness of the tissue and protruding structures, in particular in the proximal part.
+The `x_dist` values, which is arguably the most relevant for regionalization patterns, looks quite good. `y_dist` corresponds to the geodesic distances from the nodes along the shortest path, where negative values indicate that the spots are located outside the shortest path and positive values indicate that the spots are located inside the shortest path. 
 
 Now that we have our new coordinate system, we can start looking at regionalization of gene expression along the proximal-distal axis.
 
