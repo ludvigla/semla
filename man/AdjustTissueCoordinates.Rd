@@ -32,11 +32,7 @@ path between the starting point and the end point.
 
 The order of these shortest represents the distances along the x axis
 in the new coordinate system and the geodesics to all other nodes are used
-as distances on the y axis of the in the new coordinate system.
-
-By using information about the location of nodes relative to the position
-of the shortest path nodes, the algorithm also tries to adjust the y axis
-to ensure non-negative values.
+as distances on the y axis of the spots in the new coordinate system.
 
 NB: The graph has to be fully connected. If multiple sub graphs are found,
 only the largest graph will be kept. It is crucial that edges has been cut
