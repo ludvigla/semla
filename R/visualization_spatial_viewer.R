@@ -162,14 +162,15 @@ FeatureViewer <- function (
   
   # Check if image has been padded
   if ("pad" %in% colnames(image_info)) {
-    pad <- strsplit(image_info[image_info$sampleID %in% sampleIDs, ]$pad, "x") |> unlist() |> as.integer() |> split(f = rep(sampleIDs, 4))
+    pad <- strsplit(image_info[image_info$sampleID %in% sampleIDs, ]$pad, "x") |> lapply(as.integer)
     spatial_coords <- GetStaffli(object)@meta_data |> 
       group_by(sampleID) |> 
       group_split()
     spatial_coords <- lapply(seq_along(spatial_coords), function(i) {
       max_imwidth <- image_info[image_info$sampleID == i, ]$full_width
       max_imheight <- image_info[image_info$sampleID == i, ]$full_height
-      spatial_coords[[i]] |> mutate(pxl_col_in_fullres = pxl_col_in_fullres - pad[[i]][1]) |> 
+      spatial_coords[[i]] |> 
+        mutate(pxl_col_in_fullres = pxl_col_in_fullres - pad[[i]][1]) |> 
         mutate(pxl_row_in_fullres = pxl_row_in_fullres - pad[[i]][3]) |> 
         filter(between(x = pxl_col_in_fullres, left = 0, right = max_imwidth - (pad[[i]][1] + pad[[i]][2]))) |> 
         filter(between(x = pxl_row_in_fullres, left = 0, right = max_imheight - (pad[[i]][3] + pad[[i]][4])))
