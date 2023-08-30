@@ -23,6 +23,13 @@ NULL
 #' \code{.tsv}/\code{.tsv.gz} files. Alternatively, the paths could specify directories including \code{barcodes.tsv},
 #' \code{features.tsv} and \code{matrix.mtx} files.
 #' @param verbose Print messages
+#' 
+#' @section IF data:
+#' If the provided h5 files store antibody capture data, \code{LoadAndMergeMatrices} will
+#' return a list of matrices. If multiple samples are loaded, the RNA expression matrices and 
+#' antibody capture matrices will be merged and returned as separate elements of the list.
+#' Note that if one or more samples only have RNA expression data, the function will add empty
+#' values for those samples in the merged antibody capture matrix.
 #'
 #' @importFrom methods as
 #' @importFrom Seurat Read10X Read10X_h5
@@ -34,7 +41,7 @@ NULL
 #' @importFrom tibble tibble
 #' @importFrom tools file_ext
 #'
-#' @return A sparse matrix of class \code{dgCMatrix}
+#' @return A sparse matrix of class \code{dgCMatrix} or a list of sparse matrices of class \code{dgCMatrix}
 #'
 #' @examples
 #'
@@ -68,14 +75,19 @@ LoadAndMergeMatrices <- function (
 
   # Load expression matrices
   if (verbose) cli_alert_info("Loading matrices:")
-  exprMats <- lapply(seq_along(samplefiles), function(i) {
+  exprMats <- list()
+  abMats <- list()
+  ab_exists <- FALSE
+  antibodyMatrix <- NULL
+  for (i in seq_along(samplefiles)) {
     if (checks$is[i] == "dir") {
       # Assumes that the directory contains matrix, barcodes and genes
       exprMat <- Read10X(data.dir = samplefiles[i])
     } else if (checks$is[i] == "file") {
       ext <- file_ext(samplefiles[i])
       if (ext == "h5") {
-        exprMat <- Read10X_h5(samplefiles[i])
+        exprMat <- suppressMessages({Read10X_h5(samplefiles[i])})
+        if (verbose) cli_alert("  Finished loading expression matrix {i}")
       } else if (ext %in% c("tsv", "tsv.gz")) {
         if (!requireNamespace("data.table")) 
           abort(glue("Package {cli::col_br_magenta('data.table')} is required. Please install it with: \n",
@@ -86,13 +98,34 @@ LoadAndMergeMatrices <- function (
         abort(glue("Invalid file format '{ext}'"))
       }
     }
-    if (verbose) cli_alert("  Finished loading expression matrix {i}")
-    colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
-    return(exprMat)
-  })
+    # Check for additional matrices
+    if (inherits(exprMat, what = "list")) {
+      if (!all(names(exprMat) %in% c("Gene Expression", "Antibody Capture")))
+        abort(glue("Data sets not supported: {paste(names(exprMat), collapse=', ')}"))
+      antibodyMatrix <- exprMat[["Antibody Capture"]]
+      exprMat <- exprMat[["Gene Expression"]]
+      colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
+      colnames(antibodyMatrix) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(antibodyMatrix))
+      cli_alert("  Finished loading antibody capture matrix {i}")
+      ab_exists <- TRUE
+    } else {
+      colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
+      if (ab_exists) cli_alert_warning("  No antibody capture matrix found for sample {i}. Returning empty matrix.")
+      if (!is.null(antibodyMatrix)) {
+        capture_ids <- rownames(antibodyMatrix)
+        antibodyMatrix <- Matrix::rsparsematrix(0, nrow = nrow(antibodyMatrix), ncol = ncol(exprMat))
+        rownames(antibodyMatrix) <- capture_ids
+        colnames(antibodyMatrix) <- colnames(exprMat)
+      }
+    }
+    if (ab_exists) {
+      abMats <- c(abMats, list(antibodyMatrix))
+    }
+    exprMats <- c(exprMats, list(exprMat))
+  }
 
   # Check gene overlap
-  all.genes <- lapply(exprMats, function(exprMat) {rownames(exprMat)})
+  all.genes <- lapply(exprMats, function(exprMat) rownames(exprMat))
   intersecting.genes <- Reduce(intersect, all.genes)
   if (length(intersecting.genes) == 0) abort("No shared genes shared across datasets.")
   if (length(intersecting.genes) < 1000) {
@@ -100,21 +133,49 @@ LoadAndMergeMatrices <- function (
     cli_alert(col_br_red("  Are you sure that the matrices share the same gene IDs?"))
     cli_alert(col_br_red("  Are the datasets from the same species?"))
   }
+  
   # Merge matrices
   if (length(exprMats) > 1) {
     if (verbose) {
       cli_text("")
-      cli_alert_info("Merging matrices:")
+      cli_alert_info("Merging expression matrices:")
     }
     mergedMat <- RowMergeSparseMatrices(mat1 = exprMats[[1]], mat2 = exprMats[2:length(exprMats)])
     if (verbose) cli_alert_success(glue("There are {cli::col_br_blue(nrow(mergedMat))} features and {cli::col_br_magenta(ncol(mergedMat))} ",
-                                        "spots in the merged matrix."))
-    return(mergedMat)
+                                        "spots in the merged expression matrix."))
   } else {
-    if (verbose) cli_alert_info("only 1 expression matrix loaded.")
     if (verbose) cli_alert_success(glue("  There are {cli::col_br_blue(nrow(exprMats[[1]]))} features and",
-                                     " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the matrix."))
-    return(exprMats[[1]])
+                                        " {cli::col_br_magenta(ncol(exprMats[[1]]))} spots in the expression matrix."))
+    mergedMat <- exprMats[[1]]
+  }
+  
+  # Check antibody name overlaps
+  if (ab_exists) {
+    all.targets <- lapply(abMats, function(antibodyMatrix) rownames(antibodyMatrix))
+    intersecting.targets <- Reduce(intersect, all.targets)
+    
+    # Merge antibody matrices
+    if (length(abMats) > 1) {
+      if (verbose) {
+        cli_text("")
+        cli_alert_info("Merging antibody capture matrices:")
+      }
+      mergedAbMat <- RowMergeSparseMatrices(mat1 = abMats[[1]], mat2 = abMats[2:length(abMats)])
+      if (verbose) cli_alert_success(glue("There are {cli::col_br_cyan(nrow(mergedAbMat))} targets and {cli::col_br_magenta(ncol(mergedAbMat))} ",
+                                          "spots in the merged antibody capture matrix."))
+    } else {
+      if (verbose) cli_alert_success(glue("  There are {cli::col_br_blue(nrow(abMats[[1]]))} targets and",
+                                          " {cli::col_br_magenta(ncol(abMats[[1]]))} spots in the antobody capture matrix."))
+      mergedAbMat <- abMats[[1]]
+    }
+    # Check if dimensions of the two matrices are the same
+    if (ncol(mergedAbMat) != ncol(mergedMat))
+      cli_alert_danger("Detected different numbers of spots in the RNA expression matrix and the antobody capture matrix")
+    if (!all(colnames(mergedAbMat) == colnames(mergedMat))) 
+      cli_alert_danger("The columns names of the RNA expression matrix and the antobody capture matrix differ.")
+    return(list(exprMat = mergedMat, antibodyMatrix = mergedAbMat))
+  } else {
+    return(mergedMat)
   }
 
 }
@@ -681,6 +742,14 @@ ReadVisiumData <- function (
   # Read expression matrices
   mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
                                     verbose = verbose)
+  
+  # Check if multiple matrices are loaded
+  if (inherits(mergedMat, what = "list")) {
+    antibodyMatrix <- mergedMat[["antibodyMatrix"]]
+    mergedMat <- mergedMat[["exprMat"]]
+  } else {
+    antibodyMatrix <- NULL
+  }
 
   # Read spot coordinates
   coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles,
@@ -765,6 +834,12 @@ ReadVisiumData <- function (
   # Add additional annotations if available
   if (add_annotations) {
     object <- AddMetaData(object, metadata = ann)
+  }
+  
+  # Add additional antibody capture matrix if available
+  if (!is.null(antibodyMatrix)) {
+    if (verbose) cli_alert_info("Adding antibody capture data to assay 'AbCapture'")
+    object[["AbCapture"]] <- suppressWarnings({CreateAssayObject(counts = antibodyMatrix[, coordinates$barcode])})
   }
 
   if (verbose) cli_alert_success(glue("Returning a `Seurat` object with {cli::col_br_blue(nrow(object))}",

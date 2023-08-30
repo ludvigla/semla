@@ -14,7 +14,7 @@ LoadAndMergeMatrices(samplefiles, verbose = TRUE)
 \item{verbose}{Print messages}
 }
 \value{
-A sparse matrix of class \code{dgCMatrix}
+A sparse matrix of class \code{dgCMatrix} or a list of sparse matrices of class \code{dgCMatrix}
 }
 \description{
 Gene expression matrices should have features in rows and spots in columns.
@@ -31,6 +31,15 @@ Since spot barcodes are shared across datasets, there is a risk that some of the
 will be duplicated after merging. To avoid this, the prefix (e.g. "-1") is replaced by
 a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
 }
+\section{IF data}{
+
+If the provided h5 files store antibody capture data, \code{LoadAndMergeMatrices} will
+return a list of matrices. If multiple samples are loaded, the RNA expression matrices and 
+antibody capture matrices will be merged and returned as separate elements of the list.
+Note that if one or more samples only have RNA expression data, the function will add empty
+values for those samples in the merged antibody capture matrix.
+}
+
 \examples{
 
 # Load and merge two gene expression matrices
