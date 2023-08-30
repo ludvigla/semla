@@ -1,0 +1,348 @@
+---
+title: "Visium + Immunofluorescence data"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+library(semla)
+```
+
+In this article, we'll demonstrate how to load Immunoflurescence (IF) data with `semla`.
+
+You can download example data from 10x Genomics website. Here we'll use a Breast Cancer data set called "Visium CytAssist Gene and Protein Expression Library of Human Breast Cancer, IF, 6.5mm (FFPE)". 
+
+Assuming that you have downloaded the data (filtered_feature_bc_matrix.h5 and the spatial/ folder) 
+into your current working directory, you can load the data into a Seurat object:
+
+```{r eval=FALSE}
+samples <- "filtered_feature_bc_matrix.h5"
+imgs <- "spatial/tissue_hires_image.png"
+spotfiles <- "spatial/tissue_positions.csv"
+json <- "spatial/scalefactors_json.json"
+
+infoTable <- tibble(samples, imgs, spotfiles, json)
+hBrCa <- ReadVisiumData(infoTable)
+```
+
+```{r include=FALSE, echo=TRUE}
+samples <- "~/10x_data/hBrCa_IF/filtered_feature_bc_matrix.h5"
+imgs <- "~/10x_data/hBrCa_IF/spatial/tissue_hires_image.png"
+spotfiles <- "~/10x_data/hBrCa_IF/spatial/tissue_positions.csv"
+json <- "~/10x_data/hBrCa_IF/spatial/scalefactors_json.json"
+
+infoTable <- tibble(samples, imgs, spotfiles, json)
+hBrCa <- ReadVisiumData(infoTable)
+```
+
+Now we have access to both gene expression counts stored in the 'Spatial' assay and antibody capture
+measurements stored in the 'AbCapture' assay.
+
+```{r}
+hBrCa
+```
+
+
+This data set comes with a immunofluorescence image that we can use as a background for our plots.
+
+```{r fig.asp=0.98}
+hBrCa <- LoadImages(hBrCa, image_height = 1900)
+ImagePlot(hBrCa, mar = c(0, 0, 0, 0))
+```
+
+Now we can plot both RNA expression values and antibody capture measurements with `semla`. 
+But first, let's normalize the expression values.
+
+```{r eval=FALSE}
+DefaultAssay(hBrCa) <- "Spatial"
+hBrCa <- hBrCa |> NormalizeData()
+DefaultAssay(hBrCa) <- "AbCapture"
+hBrCa <- hBrCa |> NormalizeData(normalization.method = "CLR")
+```
+
+Plot expression values:
+
+```{r fig.asp=0.5, fig.width=8, eval=FALSE}
+DefaultAssay(hBrCa) <- "Spatial"
+p1 <- MapFeatures(hBrCa, features = "MS4A1", override_plot_dims = TRUE) & 
+  ThemeLegendRight()
+p1 <- ModifyPatchworkTitles(p = p1, titles = "Gene expression (normalized)")
+DefaultAssay(hBrCa) <- "AbCapture"
+p2 <- MapFeatures(hBrCa, features = "MS4A1.1", override_plot_dims = TRUE) & 
+  ThemeLegendRight()
+p2 <- ModifyPatchworkTitles(p = p2, titles = "Protein expression (normalized)")
+p1 + p2 + plot_layout(ncol = 2)
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/MS4A1_no_HE.jpg", width = 2e3, height = 1.2e3, res = 300)
+print(p1 + p2 + plot_layout(ncol = 2))
+dev.off()
+```
+
+![](IF_data/MS4A1_no_HE.jpg)
+
+If we include the immunofluorescence image as the background for our plots, we might want to modify 
+the plots to have a black theme.
+
+```{r fig.asp=0.5, fig.width=8, eval=FALSE}
+
+dark_theme <- theme(plot.background = element_rect(fill = "black", color = "black"),
+                    plot.title = element_text(colour = "white"),
+                    plot.subtitle = element_text(colour = "white"),
+                    legend.title = element_text(colour = "white"),
+                    legend.text = element_text(colour = "white"))
+
+DefaultAssay(hBrCa) <- "Spatial"
+p1 <- MapFeatures(hBrCa, features = "MS4A1", override_plot_dims = TRUE, 
+                  colors = viridis::viridis(n = 11), image_use = "raw", 
+                  scale_alpha = TRUE) & 
+  ThemeLegendRight() & dark_theme
+p1 <- ModifyPatchworkTitles(p = p1, titles = "Gene expression")
+DefaultAssay(hBrCa) <- "AbCapture"
+p2 <- MapFeatures(hBrCa, features = "MS4A1.1", override_plot_dims = TRUE, 
+                  colors = viridis::viridis(n = 11), image_use = "raw", 
+                  scale_alpha = TRUE) & 
+  ThemeLegendRight() & dark_theme
+p2 <- ModifyPatchworkTitles(p = p2, titles = "Protein expression")
+p1 + p2 + plot_layout(ncol = 2)
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/MS4A1_IF_bg.jpg", width = 2e3, height = 1.2e3, res = 300)
+p1 + p2 + plot_layout(ncol = 2)
+dev.off()
+```
+
+![](IF_data/MS4A1_IF_bg.jpg)
+
+With this global visualization, it's quite difficult to see the immunofluorescence image in the background. If we 
+zoom in on a smaller area, it become slightly easier to compare the expression values with the background image.
+
+The plots below show a zoom in view of the bottom right corner.
+
+```{r fig.asp=0.7, fig.width=10, eval=FALSE}
+DefaultAssay(hBrCa) <- "Spatial"
+p1 <- MapFeatures(hBrCa, features = "MS4A1", 
+                  crop_area = c(0.5, 0.65, 0.85, 1), pt_size = 2,
+                  colors = viridis::viridis(n = 11)) & 
+  ThemeLegendRight() & dark_theme
+p1 <- ModifyPatchworkTitles(p = p1, titles = "Gene expression")
+DefaultAssay(hBrCa) <- "AbCapture"
+p2 <- MapFeatures(hBrCa, features = "MS4A1.1", 
+                  crop_area = c(0.5, 0.65, 0.85, 1), pt_size = 2, 
+                  colors = viridis::viridis(n = 11)) & 
+  ThemeLegendRight() & dark_theme
+p2 <- ModifyPatchworkTitles(p = p2, titles = "Protein expression")
+p3 <- ImagePlot(hBrCa, crop_area = c(0.5, 0.65, 0.85, 1), return_as_gg = TRUE)
+p3 + p1 + p2 + plot_layout(design = c(area(t = 1, l = 1, b = 2, r = 2),
+                                      area(t = 1, l = 3, b = 1, r = 3),
+                                      area(t = 2, l = 3, b = 2, r = 3))) &
+  dark_theme
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/MS4A1_IF_bg_zoom.jpg", width = 2.3e3, height = 1.5e3, res = 300)
+p3 + p1 + p2 + plot_layout(design = c(area(t = 1, l = 1, b = 2, r = 2),
+                                      area(t = 1, l = 3, b = 1, r = 3),
+                                      area(t = 2, l = 3, b = 2, r = 3))) &
+  dark_theme
+dev.off()
+```
+
+![](IF_data/MS4A1_IF_bg_zoom.jpg)
+
+# Change background image for visualization
+
+We can also easily switch the images in `semla`. The only requirement is that the alternative 
+image is aligned with the spots and has the same aspect ratio as the original image used for Space Ranger.
+
+The code below illustrated how one can select the red and green color channels from the immunofluorescence image
+and reload them for visualization with `semla`.
+
+```{r eval=FALSE}
+library(magick)
+
+# Fetch the path to the immunofluoresence (IF) image
+impath <- GetStaffli(hBrCa)@imgs
+
+# Load IF image
+im <- image_read(path = impath)
+
+# Extract channels. Here we only select the red and green channels, 
+# but we could of course also use the DAPI stain in the blue channel
+cols <- c("red", "green")
+channels <- lapply(cols, function(col) {
+  image_channel(im, channel = col)
+}) |> setNames(nm = cols)
+
+# Apply simple background correction to reduce autofluorescence
+# Note that this code is just for demonstration. 
+channels <- lapply(channels, function(ch) {
+  im_blurred <- image_median(ch, radius = 20)
+  im_composite <- image_composite(im_blurred, ch, operator = "Minus")
+  return(im_composite)
+})
+
+# Export images
+channels$green |> 
+  image_normalize() |> 
+  image_write(path = "IF_data/normalized_image_green.png", 
+              format = "png", quality = 100)
+
+channels$red |> 
+  image_normalize() |> 
+  image_write(path = "IF_data/normalized_image_red.png", 
+              format = "png", quality = 100)
+
+im |> 
+  image_normalize() |> 
+  image_write(path = "IF_data/normalized_image.png", 
+              format = "png", quality = 100)
+```
+
+## Use green channel (PCNA) as background
+
+In order to switch the image in the Seurat object, we can just replace the path to the image using `ReplaceImagePaths` 
+and then reload the image to desired size with `LoadImages`.
+
+```{r eval=FALSE}
+hBrCa <- ReplaceImagePaths(hBrCa, paths = "IF_data/normalized_image_green.png")
+hBrCa <- LoadImages(hBrCa, image_height = 1957)
+```
+
+Now we can make plots with `semla` using the new image as background.
+
+```{r fig.asp=1, fig.width=10, eval=FALSE}
+DefaultAssay(hBrCa) <- "AbCapture"
+p1 <- MapFeatures(hBrCa, features = "PCNA.1", image_use = "raw", slot = "counts", 
+                  scale_alpha = TRUE, pt_size = 1.5,
+                  colors = c("lightgrey", "orange"), max_cutoff = 0.99) & 
+  ThemeLegendRight()
+p1 <- ModifyPatchworkTitles(p1, titles = "Protein expression (raw values)")
+DefaultAssay(hBrCa) <- "Spatial"
+p2 <- MapFeatures(hBrCa, features = "PCNA", image_use = "raw", slot = "counts", 
+                  scale_alpha = TRUE, pt_size = 1.5,
+                  colors = c("lightgrey", "orange"), max_cutoff = 0.99) & 
+  ThemeLegendRight()
+p2 <- ModifyPatchworkTitles(p2, titles = "RNA expression (UMI counts)")
+p3 <- ImagePlot(hBrCa, return_as_gg = TRUE)
+p3 <- ModifyPatchworkTitles(p3, titles = "IF signal (corrected)")
+p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/PCNA_composite.jpg", width = 2e3, height = 2e3, res = 200)
+p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
+dev.off()
+```
+
+![](IF_data/PCNA_composite.jpg)
+
+## Use red channel (VIM) as background
+
+```{r eval=FALSE}
+hBrCa <- ReplaceImagePaths(hBrCa, paths = "IF_data/normalized_image_red.png")
+hBrCa <- LoadImages(hBrCa, image_height = 1957)
+```
+
+```{r fig.asp=1, fig.width=10, eval=FALSE}
+DefaultAssay(hBrCa) <- "AbCapture"
+p1 <- MapFeatures(hBrCa, features = "VIM.1", image_use = "raw", slot = "counts", 
+                  scale_alpha = TRUE, pt_size = 1.5,
+                  colors = c("lightgrey", "orange"), max_cutoff = 0.99) & 
+  ThemeLegendRight()
+p1 <- ModifyPatchworkTitles(p1, titles = "Protein expression (raw values)")
+DefaultAssay(hBrCa) <- "Spatial"
+p2 <- MapFeatures(hBrCa, features = "VIM", image_use = "raw", slot = "counts", 
+                  scale_alpha = TRUE, pt_size = 1.5,
+                  colors = c("lightgrey", "orange"), max_cutoff = 0.99) & 
+  ThemeLegendRight()
+p2 <- ModifyPatchworkTitles(p2, titles = "RNA expression (UMI counts)")
+p3 <- ImagePlot(hBrCa, return_as_gg = TRUE)
+p3 <- ModifyPatchworkTitles(p3, titles = "IF signal (corrected)")
+p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/VIM_composite.jpg", width = 2e3, height = 2e3, res = 200)
+p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
+dev.off()
+```
+
+![](IF_data/VIM_composite.jpg)
+
+## Use normalized IF image as background
+
+```{r eval=FALSE}
+hBrCa <- ReplaceImagePaths(hBrCa, paths = "IF_data/normalized_image.png")
+hBrCa <- LoadImages(hBrCa, image_height = 1957)
+```
+
+```{r eval=FALSE}
+ImgePlot(hBrCa)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/norm_IF.jpg", width = 2e3, height = 2e3, res = 200)
+ImagePlot(hBrCa)
+dev.off()
+```
+
+![](IF_data/norm_IF.jpg)
+
+```{r fig.asp=0.5, fig.width=10, eval=FALSE}
+DefaultAssay(hBrCa) <- "AbCapture"
+MapFeatures(hBrCa, features = c("PCNA.1", "VIM.1"), image_use = "raw", 
+            slot = "counts", colors = c("lightgrey", "yellow"), pt_size = 1.7, 
+            scale_alpha = TRUE, max_cutoff = 0.99) & 
+  ThemeLegendRight() & dark_theme &
+  theme(plot.title = element_blank())
+```
+
+```{r eval=FALSE, include=FALSE}
+jpeg(filename = "IF_data/norm_IF_and_expr.jpg", width = 2e3, height = 1e3, res = 200)
+MapFeatures(hBrCa, features = c("PCNA.1", "VIM.1"), image_use = "raw", 
+            slot = "counts", colors = c("lightgrey", "yellow"), pt_size = 1.7, 
+            scale_alpha = TRUE, max_cutoff = 0.99) & 
+  ThemeLegendRight() & dark_theme &
+  theme(plot.title = element_blank())
+dev.off()
+```
+
+![](IF_data/norm_IF_and_expr.jpg)
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+-   `RcppML`: `r packageVersion("RcppML")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>
+
