@@ -92,6 +92,8 @@ navbar:
         href: articles/cell_type_mapping_benchmark.html
       - text: Slide-Seq data
         href: articles/slide-seq.html
+      - text: IF data
+        href: articles/IF_data.html
 
 reference:
 - title: Function reference
