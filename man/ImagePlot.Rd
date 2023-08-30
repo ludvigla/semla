@@ -12,7 +12,9 @@ ImagePlot(
   sampleIDs = NULL,
   ncol = NULL,
   mar = c(1, 1, 1, 1),
-  return_as_gg = FALSE
+  return_as_gg = FALSE,
+  bg_color = "white",
+  title_color = "black"
 )
 }
 \arguments{
@@ -42,6 +44,10 @@ grid}
 \item{mar}{Margins around each plot. See \code{\link{par}} for details}
 
 \item{return_as_gg}{Should the plot be returned as a \code{ggplot} object?}
+
+\item{bg_color}{Background color (only set when \code{return_as_gg=FALSE})}
+
+\item{title_color}{Title color (only set when \code{return_as_gg=FALSE})}
 }
 \value{
 No return value. Draws a plot of the H&E images or alternatively, 
