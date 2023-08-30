@@ -29,6 +29,8 @@ NULL
 #' grid
 #' @param mar Margins around each plot. See \code{\link{par}} for details
 #' @param return_as_gg Should the plot be returned as a \code{ggplot} object?
+#' @param bg_color Background color (only set when \code{return_as_gg=FALSE})
+#' @param title_color Title color (only set when \code{return_as_gg=FALSE})
 #'
 #' @importFrom rlang abort %||%
 #' @importFrom graphics layout
@@ -79,7 +81,9 @@ ImagePlot <- function (
     sampleIDs = NULL,
     ncol = NULL,
     mar = c(1, 1, 1, 1),
-    return_as_gg = FALSE
+    return_as_gg = FALSE,
+    bg_color = "white",
+    title_color = "black"
 ) {
 
   # Run checks
@@ -155,10 +159,10 @@ ImagePlot <- function (
     # plot images
     for (i in seq_along(images)) {
       rst <- images[[i]]
-      par(mar = mar)
+      par(mar = mar, bg = bg_color)
       plot(rst)
       if (!is.null(label_by)) {
-        title(main = label_by_vec[i])
+        title(main = label_by_vec[i], col.main = title_color)
       }
     }
   } else {
