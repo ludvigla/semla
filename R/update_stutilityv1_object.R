@@ -25,7 +25,7 @@
 #' 
 #' @examples 
 #' 
-#' \donttest{
+#' \dontrun{
 #' se_old_url <- file.path("https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files",
 #'                         "8f9d3dee-a026-40f0-be66-2df693f9db66/file_downloaded")
 #' 
