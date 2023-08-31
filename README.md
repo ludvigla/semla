@@ -19,29 +19,37 @@ Here you can find documentation of functions together with examples on how to us
 The dev version of the package can be installed through GitHub using;
 
 ````
+install.packages("remotes")
 remotes::install_github("ludvigla/semla")
 ````
 
 
 ## Setting up a conda environment
 
-If you want to run `semla` within a conda environment, you first need to ensure to have anaconda installed. I suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+If you want to run `semla` within a conda environment, you first need to ensure to have anaconda installed. We suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
     conda create -n r-semla r-essentials r-base
-
-There's one R package that might cause a few issues if not configured properly, namely `magick`. I suggest installing it with conda within the environment:
-
-    conda install -c conda-forge r-magick
 
 Now activate the environment
 
     conda activate r-semla
+    
+There's one R package that might cause a few issues if not configured properly, namely `magick`. I suggest installing it with conda within the environment:
 
-Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by running something like:
+    conda install -c conda-forge r-magick
+
+Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by typing something like the following in the terminal:
 
     /Applications/RStudio.app/Contents/MacOS/RStudio
 
-When RStudio is opened, check that the R version is higher than v4.1.
+`semla` requires R v4.1 or higher, so you should double check that you have the correct version installed.
+
+Now you should be able to install `semla` in your conda environment:
+
+````
+install.packages("remotes")
+remotes::install_github("ludvigla/semla")
+````
 
 ## What is semla?
 
