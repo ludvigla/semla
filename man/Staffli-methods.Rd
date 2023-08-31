@@ -11,13 +11,13 @@
 \method{$}{Staffli}(x, i, ...)
 }
 \arguments{
-\item{x, object}{A \code{\link{Staffli}} object}
+\item{x}{A \code{\link{Staffli}} object}
 
 \item{pattern}{ A regular expression.  Only matching names are
     returned.
   }
 
-\item{i, barcodes}{Name of one or more metadata columns}
+\item{i}{Name or index of one or more metadata columns}
 
 \item{...}{Arguments passed to other methods}
 }

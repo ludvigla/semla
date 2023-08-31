@@ -6,7 +6,6 @@
 \usage{
 \S4method{plot}{Staffli,missing}(
   x,
-  y,
   image_use = NULL,
   coords_use = c("raw", "transformed"),
   ncol = NULL,
