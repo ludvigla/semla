@@ -445,6 +445,9 @@ LoadAnnotationCSV <- function (
   paths
 ) {
   
+  # Set global variables to NULL
+  barcode <- NULL
+  
   # Create empty tibble
   ann <- data.frame()
   
@@ -655,7 +658,8 @@ LoadAnnotationCSV <- function (
 #'
 #' # Create a tibble/data.frame with file paths
 #' library(tibble)
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"))
+#' infoTable <- tibble(samples, imgs, spotfiles, json, 
+#'                     sample_id = c("mousebrain", "mousecolon"))
 #'
 #' # Create Seurat object
 #' se <- ReadVisiumData(infoTable = infoTable)
@@ -668,7 +672,8 @@ LoadAnnotationCSV <- function (
 #' annotation_files <- c(NA_character_, annotation_file)
 #' 
 #' # Create a tibble/data.frame with file paths
-#' infoTable <- tibble(samples, imgs, spotfiles, json, sample_id = c("mousebrain", "mousecolon"), annotation_files)
+#' infoTable <- tibble(samples, imgs, spotfiles, json, 
+#'                     sample_id = c("mousebrain", "mousecolon"), annotation_files)
 #' 
 #' se <- ReadVisiumData(infoTable)
 #'

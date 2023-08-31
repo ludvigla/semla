@@ -39,6 +39,7 @@ NULL
 #' @import dplyr
 #' @import tibble
 #' @importFrom magick image_read image_info
+#' @importFrom grDevices dev.off png
 #' 
 #' @examples 
 #' 
@@ -67,6 +68,11 @@ UpdateSeuratForSemla <- function (
     image_type = c("tissue_lowres", "tissue_hires"),
     verbose = TRUE
 ) {
+  
+  # Set global variables to NULL
+  width <- height <- full_width <- full_height <- colorspace <- filesize <- density <- NULL
+  type <- y <- sampleID <- NULL
+  
   # Check object
   if (!inherits(object, what = "Seurat")) abort(glue("Invalid class '{class(object)}'. Expected a 'Seurat' object."))
   if (length(object@images) == 0) abort(glue("No images available in 'Seurat' object."))

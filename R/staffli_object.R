@@ -198,8 +198,8 @@ CreateStaffliObject <- function (
 #' Methods for \code{\link{Staffli}} objects for generics defined in other
 #' packages
 #'
-#' @param x,object A \code{\link{Staffli}} object
-#' @param i,barcodes Name of one or more metadata columns
+#' @param x A \code{\link{Staffli}} object
+#' @param i Name or index of one or more metadata columns
 #' @param ... Arguments passed to other methods
 #'
 #' @name Staffli-methods
@@ -599,6 +599,8 @@ setMethod (
 
 
 #' Show method for \code{Staffli} objects
+#' 
+#' @importFrom methods show
 #'
 #' @rdname show
 #' 
@@ -654,7 +656,7 @@ setMethod (
 setMethod (
   f = "plot",
   signature = c(x = "Staffli", y = "missing"),
-  definition = function(x, y, image_use = NULL, coords_use = c("raw", "transformed"), ncol = NULL, ...) {
+  definition = function(x, image_use = NULL, coords_use = c("raw", "transformed"), ncol = NULL, ...) {
     
     # Set global variables to NULL
     sampleID <- NULL

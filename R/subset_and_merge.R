@@ -63,7 +63,7 @@ MergeSTData <- function (
 ) {
 
   # Set global variables to NULL
-  uniqueID <- barcode <- new_sampleID <- old_names <- sampleID <- NULL
+  uniqueID <- barcode <- new_sampleID <- old_names <- sampleID <- sample_group <- NULL
 
   # Check Seurat object
   .check_seurat_object(x)
