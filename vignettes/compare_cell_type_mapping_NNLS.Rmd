@@ -74,8 +74,8 @@ colors_nnls <- viridis::rocket(8, direction = -1, begin = 0.3)
 ```
 
 ```{r include=FALSE}
-se_brain_spatial <- readRDS("~/10x_data/R_objects/se_brain_spatial")
-se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
+se_brain_spatial <- readRDS("R_objects/se_brain_spatial")
+se_kidney_spatial <- readRDS("R_objects/se_kidney_spatial")
 ```
 
 ```{r eval=FALSE}

@@ -48,10 +48,10 @@ se <- ReadVisiumData(infoTable = infoTable)
 ```
 
 ```{r, include=FALSE}
-samples <- Sys.glob("~/10x_data/*/filtered_feature_bc_matrix.h5")[1:2]
-imgs <- Sys.glob("~/10x_data/*/spatial/tissue_hires_image.png")[1:2]
-spotfiles <- Sys.glob("~/10x_data/*/spatial/tissue_positions_list.csv")[1:2]
-json <- Sys.glob("~/10x_data/*/spatial/scalefactors_json.json")[1:2]
+samples <- Sys.glob("10x_data/*/filtered_feature_bc_matrix.h5")[1:2]
+imgs <- Sys.glob("10x_data/*/spatial/tissue_hires_image.png")[1:2]
+spotfiles <- Sys.glob("10x_data/*/spatial/tissue_positions_list.csv")[1:2]
+json <- Sys.glob("10x_data/*/spatial/scalefactors_json.json")[1:2]
 
 # Create a tibble/data.frame with file paths
 infoTable <- tibble(samples, imgs, spotfiles, 

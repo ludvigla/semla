@@ -160,7 +160,6 @@ fea_results_nmf_1 <- gost(query = gene_set_nmf_1$gene, ordered_query = TRUE, org
 fea_results_nmf_1
 ```
 
-
 <br>
 
 ------------------------------------------------------------------------

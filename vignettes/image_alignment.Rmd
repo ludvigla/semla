@@ -188,7 +188,7 @@ Here you can see that the second image fits the top and bottom of the dashed box
 
 3D visualization requires some additional processing. For each tissue section, the spot coordinates can be defined on completely different scales. In order to place the coordinates on the same scale, we can adjust the coordinates by dividing them with the width/height of the H&E images.
 
-The code below can be used to scale the transformed coordinates to a common coordinate system, in this case they will range from 0 to 1. We can use the `sampleID` as a z-coordinate to create a "z-stack" that can be visualized in 3D. 
+The code below can be used to scale the transformed coordinates to a common coordinate system, in this case they will range from 0 to 1. We can use the `sampleID` as a z-coordinate to create a "z-stack" that can be visualized in 3D.
 
 Below is a simple example showing how to plot sots from stacked and aligned tissue sections in 3D using the [plotly](https://plotly.com/r/) R package. In the example we are just stacking three identical tissue sections, so we can use the default coordinates for the visualization.
 
