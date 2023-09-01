@@ -200,7 +200,7 @@ p2 <- ggplot(tidy_network_adjusted, aes(x, y, color = y_dist)) +
 p1 + p2
 ```
 
-The `x_dist` values, which is arguably the most relevant for regionalization patterns, looks quite good. `y_dist` corresponds to the geodesic distances from the nodes along the shortest path, where negative values indicate that the spots are located outside the shortest path and positive values indicate that the spots are located inside the shortest path. 
+The `x_dist` values, which is arguably the most relevant for regionalization patterns, looks quite good. `y_dist` corresponds to the geodesic distances from the nodes along the shortest path, where negative values indicate that the spots are located outside the shortest path and positive values indicate that the spots are located inside the shortest path.
 
 Now that we have our new coordinate system, we can start looking at regionalization of gene expression along the proximal-distal axis.
 
@@ -243,6 +243,69 @@ pheatmap::pheatmap(binMat, cluster_cols = FALSE, border_color = FALSE,
                    breaks = seq(-1, 1, length.out = 50), 
                    color = scico::scico(palette = "bam", n = 51))
 ```
+
+## Other applications
+
+The tools described here could also be used for other applications. Maybe we are interested in a 
+specific part of a tissue where we want to define an axis. Letäs make a manual selection of the outermost
+layer of the mouse brain and subset the `Seurat` object to contain spots from this layer.
+
+```{r eval=FALSE}
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mbrain <- LoadImages(se_mbrain)
+se_mbrain <- FeatureViewer(se_mbrain)
+se_mbrain_subset <- SubsetSTData(se_mbrain, expression = region == "outer_layer")
+```
+
+```{r fig.asp=1, fig.width=6, eval=FALSE}
+MapLabels(se_mbrain_subset, column_name = "region", image_use = "raw")
+```
+
+```{r include=FALSE, eval=FALSE}
+jpeg(filename = "digital_unrolling/mBrain.jpg", width = 1e3, height = 1e3, res = 200)
+MapLabels(se_mbrain_subset, column_name = "region", image_use = "raw")
+dev.off()
+```
+
+![](digital_unrolling/mBrain.jpg)
+
+Then we can create a spatial network from this layer and modify it a bit to make it 
+compatible with `AdjustTissueCoordinates`:
+
+```{r eval=FALSE}
+spatial_network <- GetSpatialNetwork(se_mbrain_subset)[[1]]
+nodes <- spatial_network |> select(from, x_start, y_start) |> group_by(from) |> 
+  slice_head(n = 1) |> rename(name = from, x = x_start, y = y_start)
+edges <- spatial_network |> select(from, to) |> mutate(keep = TRUE)
+spatial_network <- tidygraph::tbl_graph(nodes = nodes, edges = edges, directed = FALSE)
+```
+
+Now that we have the spatial network, we can run `AdjustTissueCoordinates` to compute 
+distances between the end points of the selected region:
+
+```{r eval=FALSE}
+# Run adjust tissue coordinates
+test <- AdjustTissueCoordinates(full_graph = spatial_network)
+se_mbrain_subset$x_dist <- test[match(test$name, colnames(se_mbrain_subset)), "x_dist", drop = TRUE]
+
+# Plot x_dist
+MapFeatures(se_mbrain_subset, features = "x_dist", image_use = "raw", 
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral"), 
+            override_plot_dims = TRUE, pt_size = 2.5) &
+  theme(plot.title = element_blank())
+
+```
+
+```{r include=FALSE, eval=FALSE}
+jpeg(filename = "digital_unrolling/mBrain_x_dist.jpg", width = 1e3, height = 1e3, res = 200)
+MapFeatures(se_mbrain_subset, features = "x_dist", image_use = "raw", 
+            colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral"), 
+            override_plot_dims = TRUE, pt_size = 2.5) &
+  theme(plot.title = element_blank())
+dev.off()
+```
+
+![](digital_unrolling/mBrain_x_dist.jpg)
 
 <br>
 
