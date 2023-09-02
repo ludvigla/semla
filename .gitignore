@@ -1,7 +1,9 @@
 .Rproj.user
+.Rprofile
 .Rhistory
 .RData
 .Ruserdata
+.renvignore
 notebooks/
 presentations/
 vignettes/mousebrain/
@@ -19,3 +21,4 @@ demo_data/
 manuscript_items/
 stereoscope/
 tests
+renv/
