@@ -48,7 +48,7 @@ To demonstrate the utility of this approach, we have performed a basic compariso
 
     -   Visium: Mouse kidney coronal section data made available by [10x Genomics](https://www.10xgenomics.com/cn/resources/datasets/mouse-kidney-section-coronal-1-standard-1-1-0), processed using the Space Ranger pipeline v1.1.0
 
-The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performace computing servers using default parameter settings.
+The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performance computing servers using default parameter settings.
 
 <br>
 
