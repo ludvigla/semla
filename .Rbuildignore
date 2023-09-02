@@ -21,3 +21,4 @@
 inst/htmlwidgets/paper.js.map
 inst/htmlwidgets/osddu.js.map
 inst/htmlwidgets/ftrviewer.js.map
+.renvignore
