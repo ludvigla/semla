@@ -8,7 +8,7 @@ NULL
 #' you can use \code{AddSemlaToSeurat} to add the required 
 #' data to the \code{Seurat} object. This assumes that 
 #' the \code{Seurat} object contains one or more "VisiumV1" 
-#' object(s) in the \code{images} slot. Alternatviely, you
+#' object(s) in the \code{images} slot. Alternatively, you
 #' can convert a \code{Seurat} object with "SlideSeq" data.
 #' 
 #' @section VisiumV1:

@@ -30,7 +30,7 @@ packages
 }
 \section{Functions}{
 \itemize{
-\item \code{.DollarNames(Staffli)}: Autocompletion for \code{$} access on a
+\item \code{.DollarNames(Staffli)}: Auto completion for \code{$} access on a
 \code{Staffli} object
 
 \item \code{$}: Metadata access for \code{Staffli} objects

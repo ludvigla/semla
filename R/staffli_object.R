@@ -210,7 +210,7 @@ CreateStaffliObject <- function (
 NULL
 
 
-#' @describeIn Staffli-methods Autocompletion for \code{$} access on a
+#' @describeIn Staffli-methods Auto completion for \code{$} access on a
 #' \code{Staffli} object
 #'
 #' @inheritParams utils::.DollarNames
