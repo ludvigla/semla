@@ -58,7 +58,6 @@ Suggests:
     testthat (>= 3.0.0),
     data.table,
     BiocManager (>= 1.30.18),
-    SpatialExperiment (>= 1.6.0),
     MatrixExtra,
     htmlwidgets,
     htmltools,
@@ -69,10 +68,10 @@ Suggests:
     shinyBS,
     ggnewscale,
     ggsci,
-    TabulaMurisSenisData,
     scico,
     ggfittext,
-    hdf5r
+    hdf5r,
+    spelling
 Collate: 
     'checks.R'
     'generics.R'
@@ -123,3 +122,4 @@ Collate:
     'zzz.R'
 URL: https://ludvigla.github.io/semla/
 Config/testthat/edition: 3
+Language: en-US
