@@ -103,7 +103,8 @@ RunLocalG.default <- function (
   if (!is.null(alternative)) {
     alternative <- match.arg(alternative, c("two.sided", "greater", "less"))
     if (verbose) cli_alert_info("Setting alternative hypothesis to '{alternative}'")
-  }
+  } 
+  alternative <- alternative %||% "two.sided"
 
   # Check objects
   if (!inherits(object, what = c("dgRMatrix", "dgCMatrix", "matrix", "data.frame")))
