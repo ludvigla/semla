@@ -52,6 +52,7 @@ NULL
 #' @param container_width,container_height Set height and width of container
 #' @param nCores Number of cores to use for threading passed to \code{\link{TileImage}}. Only used
 #' if \code{datadir} is unavailable.
+#' @param launch.browser Select browser to use. See \code{\link{runApp}} for details
 #' @param verbose Print messages
 #'
 #' @family feature-viewer-methods
@@ -86,6 +87,7 @@ FeatureViewer <- function (
     container_width = 800,
     container_height = 800,
     nCores = detectCores() - 1,
+    launch.browser = TRUE,
     verbose = TRUE
 ) {
 
@@ -618,7 +620,7 @@ FeatureViewer <- function (
   }
 
   # Run application and return network on quit
-  runApp(list(ui = ui, server = server), launch.browser = TRUE)
+  runApp(list(ui = ui, server = server), launch.browser = launch.browser)
   if (verbose) {
     cli_alert_info("Retrieved data from application")
   }
