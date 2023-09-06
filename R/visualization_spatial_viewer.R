@@ -405,7 +405,7 @@ FeatureViewer <- function (
           rv$lastBtn = "feature"
           rv$curFeature = input$feature
           # fetch numeric data with FetchData and pull out the vector
-          rv$values = FetchData(object, cells = rv$curbarcodes, vars = input$feature) |> pull(all_of(input$feature))
+          rv$values = FetchData(object, cells = rv$curbarcodes, slot = slot, vars = input$feature) |> pull(all_of(input$feature))
           if (sum(!is.finite(rv$values)) > 0) {
             cli_alert_danger("Found non-finite values for selected feature '{input$feature}' in sample '{input$sample}'. These will be replaced with a value of 0.")
             rv$values[!is.finite(rv$values)] <- 0
