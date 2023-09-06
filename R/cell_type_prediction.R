@@ -3,6 +3,7 @@
 #'
 NULL
 
+# TODO: fix error when only 2 cell types are provided
 #' @param object A matrix-like object with 10x Visium data
 #' @param singlecell_matrix A matrix-like object with scRNA-seq data
 #' @param groups A character vector of length \code{ncol(singlecell_matrix)}
