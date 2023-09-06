@@ -169,7 +169,7 @@ export_graph <- function (
 #' 
 #' @param network An object of class \code{tbl_graph}
 #' @param sampleID An integer specifying a sample ID
-#' @param outdir A åpath to an output directory
+#' @param outdir A path to an output directory
 #' 
 #' @noRd
 export_tidygraph <- function (
