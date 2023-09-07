@@ -49,7 +49,7 @@ file_server <- function (
     beakr::cors(origin = "*", headers = c("Origin", "X-Requested-With", "Content-Type", "Accept", "Range")) |>
     # Host the directory of static files
     beakr::serveStaticFiles(urlPath = "/", rootPath = hostDir, verbose = FALSE) |>
-    # Start the server on port 25118
+    # Start the server on selected port
     beakr::listen(host = host, port = port, daemon = TRUE)
 
   return(fs)
