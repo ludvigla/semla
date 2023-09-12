@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,103 +93,165 @@
 <h2 id="todo">TODO<a class="anchor" aria-label="anchor" href="#todo"></a></h2>
 <div class="section level3">
 <h3 id="external-data">External data<a class="anchor" aria-label="anchor" href="#external-data"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked>: An external data resource with mouse brain data. Contains spaceranger output files and a prepared Seurat object. These files can be accessed with <code>system.file("extdata/mousebrain", "path_to_file", package = "semla")</code></label></li>
-<li><label><input type="checkbox" checked>: An external data resource with mouse colon data. Contains spaceranger output files and a prepared Seurat object. These files can be accessed with <code>system.file("extdata/mousecolon", "path_to_file", package = "semla")</code></label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked>: An external data resource with mouse brain data. Contains spaceranger output files and a prepared Seurat object. These files can be accessed with <code>system.file("extdata/mousebrain", "path_to_file", package = "semla")</code>
+</li>
+<li>
+<input type="checkbox" disabled checked>: An external data resource with mouse colon data. Contains spaceranger output files and a prepared Seurat object. These files can be accessed with <code>system.file("extdata/mousecolon", "path_to_file", package = "semla")</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="data-loading">Data loading<a class="anchor" aria-label="anchor" href="#data-loading"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>LoadAndMergeMatrices</code> : load and merge gene expression matrices</label></li>
-<li><label><input type="checkbox" checked><code>LoadSpatialCoordinates</code> : load and merge spatial coordinates</label></li>
-<li><label><input type="checkbox" checked><code>ReadVisiumData</code> : wrapper for <code>LoadAndMergeMatrices</code> and <code>LoadSpatialCoordinates</code> to load all data into a Seurat object. Dropped compatibility with “1k” and “2k” arrays. The function is similar to <code>InputFromTable</code>.</label></li>
-<li><label><input type="checkbox" checked><code>LoadImages</code> : load H&amp;E images into Seurat object</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>LoadAndMergeMatrices</code> : load and merge gene expression matrices</li>
+<li>
+<input type="checkbox" disabled checked><code>LoadSpatialCoordinates</code> : load and merge spatial coordinates</li>
+<li>
+<input type="checkbox" disabled checked><code>ReadVisiumData</code> : wrapper for <code>LoadAndMergeMatrices</code> and <code>LoadSpatialCoordinates</code> to load all data into a Seurat object. Dropped compatibility with “1k” and “2k” arrays. The function is similar to <code>InputFromTable</code>.</li>
+<li>
+<input type="checkbox" disabled checked><code>LoadImages</code> : load H&amp;E images into Seurat object</li>
 </ul></div>
 <div class="section level3">
 <h3 id="subset-and-merge">Subset and Merge<a class="anchor" aria-label="anchor" href="#subset-and-merge"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>SubsetSTData</code> : for subsetting <code>Seurat</code> objects created with <code>semla</code></label></li>
-<li><label><input type="checkbox" checked><code>MergeSTData</code> : for merging <code>Seurat</code> objects created with <code>semla</code></label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>SubsetSTData</code> : for subsetting <code>Seurat</code> objects created with <code>semla</code>
+</li>
+<li>
+<input type="checkbox" disabled checked><code>MergeSTData</code> : for merging <code>Seurat</code> objects created with <code>semla</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="on-load">On load<a class="anchor" aria-label="anchor" href="#on-load"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>.onAttach</code> : on load message when loading R package</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>.onAttach</code> : on load message when loading R package</li>
 </ul></div>
 <div class="section level3">
 <h3 id="external-data-1">External data<a class="anchor" aria-label="anchor" href="#external-data-1"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><em>Visium mouse brain dataset</em> : mouse brain test data</label></li>
-<li><label><input type="checkbox" checked><em>Visium mouse colon dataset</em> : mouse colon test data</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><em>Visium mouse brain dataset</em> : mouse brain test data</li>
+<li>
+<input type="checkbox" disabled checked><em>Visium mouse colon dataset</em> : mouse colon test data</li>
 </ul></div>
 <div class="section level3">
 <h3 id="transformations">Transformations<a class="anchor" aria-label="anchor" href="#transformations"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>CoordMirror</code> : mirror coordinates at predefined center</label></li>
-<li><label><input type="checkbox" checked><code>CoordTransform</code> : apply rotations and translations to coordinates around predefined center</label></li>
-<li><label><input type="checkbox" checked><code>ImageTranslate</code> : apply translations to image</label></li>
-<li><label><input type="checkbox" checked><code>ImageTransform</code> : apply rotation and translation to image</label></li>
-<li><label><input type="checkbox" checked><code>CoordAndImageTransform</code> : wrapper for <code>ImageTransform</code> and <code>CoordTransform</code> to apply transformations to paired image and coordinates. Can do rotations, translations and mirroring</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>CoordMirror</code> : mirror coordinates at predefined center</li>
+<li>
+<input type="checkbox" disabled checked><code>CoordTransform</code> : apply rotations and translations to coordinates around predefined center</li>
+<li>
+<input type="checkbox" disabled checked><code>ImageTranslate</code> : apply translations to image</li>
+<li>
+<input type="checkbox" disabled checked><code>ImageTransform</code> : apply rotation and translation to image</li>
+<li>
+<input type="checkbox" disabled checked><code>CoordAndImageTransform</code> : wrapper for <code>ImageTransform</code> and <code>CoordTransform</code> to apply transformations to paired image and coordinates. Can do rotations, translations and mirroring</li>
 </ul></div>
 <div class="section level3">
 <h3 id="image-processing">Image processing<a class="anchor" aria-label="anchor" href="#image-processing"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>MaskImages</code> uses a simple method to identify the tissue section and mask the background implemented with <code>magick</code></label></li>
-<li><label><input type="checkbox" checked><code>RigidTransformImages</code> takes a tibble with transformations and applies these transformations to the H&amp;E images together with the spot coordinates.</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>MaskImages</code> uses a simple method to identify the tissue section and mask the background implemented with <code>magick</code>
+</li>
+<li>
+<input type="checkbox" disabled checked><code>RigidTransformImages</code> takes a tibble with transformations and applies these transformations to the H&amp;E images together with the spot coordinates.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="tissue-viewer">Tissue viewer<a class="anchor" aria-label="anchor" href="#tissue-viewer"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked>make OSD viewer from tile sourse</label></li>
-<li><label><input type="checkbox" checked>draw spots on top of tile source</label></li>
-<li><label><input type="checkbox" checked>lasso selection tool for manual annotation with paper JS</label></li>
-<li><label><input type="checkbox" checked>annotate spots and save selection</label></li>
-<li><label><input type="checkbox" checked>make tile function <code>TileImage</code> compatible with OSD</label></li>
-<li><label><input type="checkbox" checked>send data to OSD viewer from R or read from R on selection?</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked>make OSD viewer from tile sourse</li>
+<li>
+<input type="checkbox" disabled checked>draw spots on top of tile source</li>
+<li>
+<input type="checkbox" disabled checked>lasso selection tool for manual annotation with paper JS</li>
+<li>
+<input type="checkbox" disabled checked>annotate spots and save selection</li>
+<li>
+<input type="checkbox" disabled checked>make tile function <code>TileImage</code> compatible with OSD</li>
+<li>
+<input type="checkbox" disabled checked>send data to OSD viewer from R or read from R on selection?</li>
 </ul></div>
 <div class="section level3">
 <h3 id="tissue-aligner">Tissue aligner<a class="anchor" aria-label="anchor" href="#tissue-aligner"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked>make paper JS tool for image tranformations</label></li>
-<li><label><input type="checkbox" checked>communicate transformations to R</label></li>
-<li><label><input type="checkbox" checked>apply transformations to images in R object with <code>CoordAndImageTransform</code></label></li>
-<li><label><input type="checkbox" checked>add side bar for image selection</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked>make paper JS tool for image tranformations</li>
+<li>
+<input type="checkbox" disabled checked>communicate transformations to R</li>
+<li>
+<input type="checkbox" disabled checked>apply transformations to images in R object with <code>CoordAndImageTransform</code>
+</li>
+<li>
+<input type="checkbox" disabled checked>add side bar for image selection</li>
 </ul></div>
 <div class="section level3">
 <h3 id="digital-unrolling">Digital unrolling<a class="anchor" aria-label="anchor" href="#digital-unrolling"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>CutSpatialNetwork</code> : Open a shiny/react application that can be used for “digital unrolling”</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>CutSpatialNetwork</code> : Open a shiny/react application that can be used for “digital unrolling”</li>
 </ul></div>
 <div class="section level3">
 <h3 id="visualization-tools">Visualization tools<a class="anchor" aria-label="anchor" href="#visualization-tools"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>FeatureOverlay</code> : this function has now been removed and instead we use <code>MapFeatures</code> which now takes an argument <code>image_use</code> to inject images under the plot.</label></li>
-<li><label><input type="checkbox" checked><code>DimOverlay</code> : this function has now been removed and instead we use <code>MapFeatures</code> which now takes an argument <code>image_use</code> to inject images under the plot.</label></li>
-<li><label><input type="checkbox" checked><code>MapFeatures</code> : similar to <code>ST.FeaturePlot</code> and <code>ST.DimPlot</code> but only works with numeric features such as gene expression, PCs, QC metrics etc.</label></li>
-<li><label><input type="checkbox" checked><code>MapLabels</code> : similar to <code>ST.FeaturePlot</code> but only works with categorical features such as clusters, conditions etc.</label></li>
-<li><label><input type="checkbox" checked><code>FactorGeneLoadingPlot</code> : Not sure if needed with the singlet R package available</label></li>
-<li><label><input type="checkbox" checked><code>ImagePlot</code> : plots H&amp;E images stored in a Seurat object</label></li>
-<li><label><input type="checkbox" checked><code>MapFeaturesSummary</code> : create spatial maps with <code>MapFeatures</code> and add a summary plot next to it</label></li>
-<li><label><input type="checkbox" checked><code>MapLabelsSummary</code> : create spatial maps with <code>MapLabels</code> and add a summary plot next to it</label></li>
-<li><label><input type="checkbox" checked><code>AnglePlot</code> : draw a set of arrows on top of a selected region of spots. Mean to be used as a helper for selecting angle intervals in <code>RadialDistance</code></label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>FeatureOverlay</code> : this function has now been removed and instead we use <code>MapFeatures</code> which now takes an argument <code>image_use</code> to inject images under the plot.</li>
+<li>
+<input type="checkbox" disabled checked><code>DimOverlay</code> : this function has now been removed and instead we use <code>MapFeatures</code> which now takes an argument <code>image_use</code> to inject images under the plot.</li>
+<li>
+<input type="checkbox" disabled checked><code>MapFeatures</code> : similar to <code>ST.FeaturePlot</code> and <code>ST.DimPlot</code> but only works with numeric features such as gene expression, PCs, QC metrics etc.</li>
+<li>
+<input type="checkbox" disabled checked><code>MapLabels</code> : similar to <code>ST.FeaturePlot</code> but only works with categorical features such as clusters, conditions etc.</li>
+<li>
+<input type="checkbox" disabled checked><code>FactorGeneLoadingPlot</code> : Not sure if needed with the singlet R package available</li>
+<li>
+<input type="checkbox" disabled checked><code>ImagePlot</code> : plots H&amp;E images stored in a Seurat object</li>
+<li>
+<input type="checkbox" disabled checked><code>MapFeaturesSummary</code> : create spatial maps with <code>MapFeatures</code> and add a summary plot next to it</li>
+<li>
+<input type="checkbox" disabled checked><code>MapLabelsSummary</code> : create spatial maps with <code>MapLabels</code> and add a summary plot next to it</li>
+<li>
+<input type="checkbox" disabled checked><code>AnglePlot</code> : draw a set of arrows on top of a selected region of spots. Mean to be used as a helper for selecting angle intervals in <code>RadialDistance</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="matrix-factorization">Matrix factorization<a class="anchor" aria-label="anchor" href="#matrix-factorization"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><code>RunNMF</code> : no longer needed with the singlet R package available</label></li>
-<li><label><input type="checkbox" checked><code>SeededNMF</code> : seed matrix factorization with a priori information fro single-cell data</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><code>RunNMF</code> : no longer needed with the singlet R package available</li>
+<li>
+<input type="checkbox" disabled checked><code>SeededNMF</code> : seed matrix factorization with a priori information fro single-cell data</li>
 </ul></div>
 <div class="section level3">
 <h3 id="spatial-autocorelation">Spatial autocorelation<a class="anchor" aria-label="anchor" href="#spatial-autocorelation"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked>migrate <code>GetSpatNet</code> from STUtility</label></li>
-<li><label><input type="checkbox" checked>migrate <code>CorSpatialGenes</code> from STUtility and rename it to <code>CorSpatialFeatures</code>. This is a more general function that takes any type of feature as input, not just genes. This could for example be dimensionality reduction results instead.</label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked>migrate <code>GetSpatNet</code> from STUtility</li>
+<li>
+<input type="checkbox" disabled checked>migrate <code>CorSpatialGenes</code> from STUtility and rename it to <code>CorSpatialFeatures</code>. This is a more general function that takes any type of feature as input, not just genes. This could for example be dimensionality reduction results instead.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="spatial-methods">Spatial methods<a class="anchor" aria-label="anchor" href="#spatial-methods"></a></h3>
-<ul><li><label><input type="checkbox" checked>migrate <code>RegionNeighbours</code> from STUtility</label></li>
-<li><label><input type="checkbox" checked><code>RadialDistance</code> : calculates the radial distances from the borders of a region of interest</label></li>
-<li><label><input type="checkbox" checked><code>DisconnectRegions</code> : separates spatially disconnected regions</label></li>
-<li><label><input type="checkbox" checked><code>NeighbourhoodEnrichmentTest</code> : Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).</label></li>
-<li><label><input type="checkbox" checked><code>LabelAssortativityTest</code> : Inspired by Newman’s Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.</label></li>
+<ul><li>
+<input type="checkbox" disabled checked>migrate <code>RegionNeighbours</code> from STUtility</li>
+<li>
+<input type="checkbox" disabled checked><code>RadialDistance</code> : calculates the radial distances from the borders of a region of interest</li>
+<li>
+<input type="checkbox" disabled checked><code>DisconnectRegions</code> : separates spatially disconnected regions</li>
+<li>
+<input type="checkbox" disabled checked><code>NeighbourhoodEnrichmentTest</code> : Pairwise testing of cluster co-occurance. Start with checking nearest neighbors. Later, add possibility of measuring by distance(?).</li>
+<li>
+<input type="checkbox" disabled checked><code>LabelAssortativityTest</code> : Inspired by Newman’s Assortativity. Check whether selection of spots follow a dispersed or clustered spatial pattern.</li>
 <li>[] Add <code>CentralityScore</code> method?</li>
 </ul></div>
 <div class="section level3">
 <h3 id="staffli">Staffli<a class="anchor" aria-label="anchor" href="#staffli"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked>migrate and modify STUtility S4 class object <code>Staffli</code></label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked>migrate and modify STUtility S4 class object <code>Staffli</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="semla-website">semla website<a class="anchor" aria-label="anchor" href="#semla-website"></a></h3>
-<ul class="task-list"><li><label><input type="checkbox" checked><em>getting started</em></label></li>
-<li><label><input type="checkbox" checked><em>visualization</em></label></li>
-<li><label><input type="checkbox" checked><em>spatial methods</em></label></li>
+<ul class="task-list"><li>
+<input type="checkbox" disabled checked><em>getting started</em>
+</li>
+<li>
+<input type="checkbox" disabled checked><em>visualization</em>
+</li>
+<li>
+<input type="checkbox" disabled checked><em>spatial methods</em>
+</li>
 </ul></div>
 </div>
 </div>

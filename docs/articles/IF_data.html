@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Visium + Immunofluorescence data</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 01 September
+            <h4 data-toc-skip class="date">Last compiled: 12 September
 2023</h4>
       
       
@@ -352,7 +352,7 @@ background.</p>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.1.4</li>
+<code>semla</code>: 1.1.5</li>
 </ul></details><details><summary><strong>Session info</strong>
 </summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -367,54 +367,55 @@ background.</p>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
-<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] semla_1.1.4        ggplot2_3.4.3      dplyr_1.1.2        SeuratObject_4.1.3</span></span>
+<span><span class="co">## [1] semla_1.1.5        ggplot2_3.4.3      dplyr_1.1.3        SeuratObject_4.1.3</span></span>
 <span><span class="co">## [5] Seurat_4.3.0.1    </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] Rtsne_0.16             colorspace_2.1-0       deldir_1.0-9          </span></span>
 <span><span class="co">##   [4] ellipsis_0.3.2         ggridges_0.5.4         rprojroot_2.0.3       </span></span>
-<span><span class="co">##   [7] fs_1.6.3               spatstat.data_3.0-1    leiden_0.4.3          </span></span>
-<span><span class="co">##  [10] listenv_0.9.0          ggrepel_0.9.3          fansi_1.0.4           </span></span>
-<span><span class="co">##  [13] codetools_0.2-19       splines_4.2.3          cachem_1.0.8          </span></span>
-<span><span class="co">##  [16] knitr_1.43             zeallot_0.1.0          polyclip_1.10-4       </span></span>
-<span><span class="co">##  [19] jsonlite_1.8.7         ica_1.0-3              cluster_2.1.4         </span></span>
-<span><span class="co">##  [22] png_0.1-8              uwot_0.1.16            spatstat.sparse_3.0-2 </span></span>
-<span><span class="co">##  [25] shiny_1.7.5            sctransform_0.3.5      compiler_4.2.3        </span></span>
-<span><span class="co">##  [28] httr_1.4.7             Matrix_1.6-1           fastmap_1.1.1         </span></span>
-<span><span class="co">##  [31] lazyeval_0.2.2         cli_3.6.1              later_1.3.1           </span></span>
-<span><span class="co">##  [34] htmltools_0.5.6        tools_4.2.3            igraph_1.5.1          </span></span>
-<span><span class="co">##  [37] gtable_0.3.4           glue_1.6.2             RANN_2.6.1            </span></span>
-<span><span class="co">##  [40] reshape2_1.4.4         Rcpp_1.0.11            scattermore_1.2       </span></span>
-<span><span class="co">##  [43] jquerylib_0.1.4        pkgdown_2.0.7          vctrs_0.6.3           </span></span>
-<span><span class="co">##  [46] nlme_3.1-163           spatstat.explore_3.2-1 progressr_0.14.0      </span></span>
-<span><span class="co">##  [49] lmtest_0.9-40          spatstat.random_3.1-5  xfun_0.40             </span></span>
-<span><span class="co">##  [52] stringr_1.5.0          globals_0.16.2         mime_0.12             </span></span>
-<span><span class="co">##  [55] miniUI_0.1.1.1         lifecycle_1.0.3        irlba_2.3.5.1         </span></span>
-<span><span class="co">##  [58] goftest_1.2-3          future_1.33.0          MASS_7.3-60           </span></span>
-<span><span class="co">##  [61] zoo_1.8-12             scales_1.2.1           ragg_1.2.5            </span></span>
-<span><span class="co">##  [64] promises_1.2.1         spatstat.utils_3.0-3   parallel_4.2.3        </span></span>
-<span><span class="co">##  [67] RColorBrewer_1.1-3     yaml_2.3.7             memoise_2.0.1         </span></span>
-<span><span class="co">##  [70] reticulate_1.31        pbapply_1.7-2          gridExtra_2.3         </span></span>
-<span><span class="co">##  [73] sass_0.4.7             stringi_1.7.12         desc_1.4.2            </span></span>
-<span><span class="co">##  [76] rlang_1.1.1            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
-<span><span class="co">##  [79] matrixStats_1.0.0      evaluate_0.21          lattice_0.21-8        </span></span>
-<span><span class="co">##  [82] tensor_1.5             ROCR_1.0-11            purrr_1.0.2           </span></span>
-<span><span class="co">##  [85] patchwork_1.1.3        htmlwidgets_1.6.2      cowplot_1.1.1         </span></span>
-<span><span class="co">##  [88] tidyselect_1.2.0       parallelly_1.36.0      RcppAnnoy_0.0.21      </span></span>
-<span><span class="co">##  [91] plyr_1.8.8             magrittr_2.0.3         R6_2.5.1              </span></span>
-<span><span class="co">##  [94] magick_2.7.4           generics_0.1.3         withr_2.5.0           </span></span>
-<span><span class="co">##  [97] pillar_1.9.0           fitdistrplus_1.1-11    abind_1.4-5           </span></span>
-<span><span class="co">## [100] survival_3.5-7         sp_2.0-0               tibble_3.2.1          </span></span>
-<span><span class="co">## [103] future.apply_1.11.0    KernSmooth_2.23-22     utf8_1.2.3            </span></span>
-<span><span class="co">## [106] spatstat.geom_3.2-4    plotly_4.10.2          rmarkdown_2.24        </span></span>
-<span><span class="co">## [109] grid_4.2.3             data.table_1.14.8      forcats_1.0.0         </span></span>
-<span><span class="co">## [112] digest_0.6.33          xtable_1.8-4           dbscan_1.1-11         </span></span>
-<span><span class="co">## [115] tidyr_1.3.0            httpuv_1.6.11          textshaping_0.3.6     </span></span>
-<span><span class="co">## [118] munsell_0.5.0          viridisLite_0.4.2      bslib_0.5.1           </span></span>
-<span><span class="co">## [121] shinyjs_2.1.0</span></span></code></pre>
+<span><span class="co">##   [7] fs_1.6.3               spatstat.data_3.0-1    rstudioapi_0.15.0     </span></span>
+<span><span class="co">##  [10] leiden_0.4.3           listenv_0.9.0          ggrepel_0.9.3         </span></span>
+<span><span class="co">##  [13] fansi_1.0.4            codetools_0.2-19       splines_4.2.3         </span></span>
+<span><span class="co">##  [16] cachem_1.0.8           knitr_1.43             zeallot_0.1.0         </span></span>
+<span><span class="co">##  [19] polyclip_1.10-4        jsonlite_1.8.7         ica_1.0-3             </span></span>
+<span><span class="co">##  [22] cluster_2.1.4          png_0.1-8              uwot_0.1.16           </span></span>
+<span><span class="co">##  [25] spatstat.sparse_3.0-2  shiny_1.7.5            sctransform_0.3.5     </span></span>
+<span><span class="co">##  [28] BiocManager_1.30.22    compiler_4.2.3         httr_1.4.7            </span></span>
+<span><span class="co">##  [31] Matrix_1.6-1           fastmap_1.1.1          lazyeval_0.2.2        </span></span>
+<span><span class="co">##  [34] cli_3.6.1              later_1.3.1            htmltools_0.5.6       </span></span>
+<span><span class="co">##  [37] tools_4.2.3            igraph_1.5.1           gtable_0.3.4          </span></span>
+<span><span class="co">##  [40] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        </span></span>
+<span><span class="co">##  [43] Rcpp_1.0.11            scattermore_1.2        jquerylib_0.1.4       </span></span>
+<span><span class="co">##  [46] pkgdown_2.0.7          vctrs_0.6.3            nlme_3.1-163          </span></span>
+<span><span class="co">##  [49] spatstat.explore_3.2-1 progressr_0.14.0       lmtest_0.9-40         </span></span>
+<span><span class="co">##  [52] spatstat.random_3.1-5  xfun_0.40              stringr_1.5.0         </span></span>
+<span><span class="co">##  [55] globals_0.16.2         mime_0.12              miniUI_0.1.1.1        </span></span>
+<span><span class="co">##  [58] lifecycle_1.0.3        irlba_2.3.5.1          renv_1.0.2            </span></span>
+<span><span class="co">##  [61] goftest_1.2-3          future_1.33.0          MASS_7.3-60           </span></span>
+<span><span class="co">##  [64] zoo_1.8-12             scales_1.2.1           spatstat.utils_3.0-3  </span></span>
+<span><span class="co">##  [67] ragg_1.2.5             promises_1.2.1         parallel_4.2.3        </span></span>
+<span><span class="co">##  [70] RColorBrewer_1.1-3     yaml_2.3.7             gridExtra_2.3         </span></span>
+<span><span class="co">##  [73] memoise_2.0.1          reticulate_1.31        pbapply_1.7-2         </span></span>
+<span><span class="co">##  [76] sass_0.4.7             stringi_1.7.12         desc_1.4.2            </span></span>
+<span><span class="co">##  [79] rlang_1.1.1            pkgconfig_2.0.3        systemfonts_1.0.4     </span></span>
+<span><span class="co">##  [82] matrixStats_1.0.0      evaluate_0.21          lattice_0.21-8        </span></span>
+<span><span class="co">##  [85] tensor_1.5             ROCR_1.0-11            purrr_1.0.2           </span></span>
+<span><span class="co">##  [88] patchwork_1.1.3        htmlwidgets_1.6.2      cowplot_1.1.1         </span></span>
+<span><span class="co">##  [91] tidyselect_1.2.0       parallelly_1.36.0      RcppAnnoy_0.0.21      </span></span>
+<span><span class="co">##  [94] plyr_1.8.8             magrittr_2.0.3         R6_2.5.1              </span></span>
+<span><span class="co">##  [97] magick_2.7.4           generics_0.1.3         withr_2.5.0           </span></span>
+<span><span class="co">## [100] pillar_1.9.0           fitdistrplus_1.1-11    abind_1.4-5           </span></span>
+<span><span class="co">## [103] survival_3.5-7         sp_2.0-0               tibble_3.2.1          </span></span>
+<span><span class="co">## [106] future.apply_1.11.0    KernSmooth_2.23-22     utf8_1.2.3            </span></span>
+<span><span class="co">## [109] spatstat.geom_3.2-4    plotly_4.10.2          rmarkdown_2.24        </span></span>
+<span><span class="co">## [112] grid_4.2.3             data.table_1.14.8      forcats_1.0.0         </span></span>
+<span><span class="co">## [115] digest_0.6.33          xtable_1.8-4           dbscan_1.1-11         </span></span>
+<span><span class="co">## [118] tidyr_1.3.0            httpuv_1.6.11          textshaping_0.3.6     </span></span>
+<span><span class="co">## [121] munsell_0.5.0          viridisLite_0.4.2      bslib_0.5.1           </span></span>
+<span><span class="co">## [124] shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
 </div>

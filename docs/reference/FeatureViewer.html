@@ -16,7 +16,7 @@ categorical features with a lasso tool."><meta property="og:image" content="http
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,6 +116,7 @@ categorical features with a lasso tool.</p>
 <span>  container_width <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  container_height <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  nCores <span class="op">=</span> <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,</span>
+<span>  launch.browser <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -135,7 +136,8 @@ categorical features with a lasso tool.</p>
 
 
 <dt>selected_features</dt>
-<dd><p>A character vector of features to select for the viewer</p></dd>
+<dd><p>A character vector of features to select for the viewer. These features need to
+be present in the 'default assay' or they can be names of dimensionality reduction vectors.</p></dd>
 
 
 <dt>sampleIDs</dt>
@@ -174,6 +176,10 @@ label of the category.</p></dd>
 if <code>datadir</code> is unavailable.</p></dd>
 
 
+<dt>launch.browser</dt>
+<dd><p>Select browser to use. See <code>runApp</code> for details</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>Print messages</p></dd>
 
@@ -189,18 +195,36 @@ if <code>datadir</code> is unavailable.</p></dd>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The viewer requires a tiled H&amp;E image along with some additional image data to work. By default,
-the function will try to create these files and export them to a temporary directory, but it
+the function will attempt to create these files and export them to a temporary directory, but it
 is also possible to export the files before running the app and provide the path to the
 data directory with <code>datadir</code> (see <code><a href="ExportDataForViewer.html">ExportDataForViewer</a></code>).</p>
 <p>A more detailed tutorial can be found on the <code>semla</code> website. You can also
 get more detailed instructions by pressing the help icon in the app.</p>
     </div>
     <div class="section level2">
+    <h2 id="selecting-features">Selecting features<a class="anchor" aria-label="anchor" href="#selecting-features"></a></h2>
+    
+
+<p><code>FeatureViewer</code> automatically selects the features in the 'default assay' and
+dimensionality reduction vectors. You can override this selection with <code>selected_features</code>,
+but note that these have to be present in the 'default assay' or in the dimensionality reduction
+slot. This is to avoid naming conflicts when multiple assay are present which contains identical 
+identifiers, for instance 'Spatial' and 'SCT'.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="non-finite-values">Non-finite values<a class="anchor" aria-label="anchor" href="#non-finite-values"></a></h2>
+    
+
+<p>If there are non-finite values present, e.g. NA or NaN, a warning will be thrown and these values
+will be replaced with a 0. Alternatively, you can remove spots from the <code>Seurat</code> object
+which contain non-finite values before launching the viewer.</p>
+    </div>
+    <div class="section level2">
     <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
     
 
 <p>A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
-Got to tutorials -&gt; Feature Viewer</p>
+Go to tutorials -&gt; Feature Viewer</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

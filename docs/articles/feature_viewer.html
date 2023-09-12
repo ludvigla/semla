@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interactive Feature Viewer</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 01 September
+            <h4 data-toc-skip class="date">Last compiled: 12 September
 2023</h4>
       
       
@@ -159,7 +159,7 @@ use the <code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></cod
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp9Mygph/temp_libpath5c3d3de4f563/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpUl3wrT/temp_libpath1f501073f3d7/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 541x600 to 400x444 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -332,12 +332,28 @@ specified with <code>sampleIDs</code>.</p>
 <span><span class="va">se_mcolon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousecolon"</span>, <span class="st">"se_mcolon"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/merge.html">MergeSTData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="va">se_mcolon</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="feature-viewer-and-docker">Feature Viewer and docker<a class="anchor" aria-label="anchor" href="#feature-viewer-and-docker"></a>
+</h3>
+<p>The viewer uses image tiles to create interactive maps of tissues
+which are accessed from a static file server hosted locally. By default,
+the server is hosted on <code>127.0.0.1:8080</code> and the viewer can
+fetch the image tiles directly from this address. When using RStudio
+Server via docker, we need to make sure that the port we are using
+(inside the container) is exposed outside the container, otherwise the
+tiles will not be accessible to the viewer which will be blank.</p>
+<p>In the <code>docker run ...</code> command used to start the
+container, we set <code>-p 3030:3030</code> to expose port 3030 inside
+the container to port 3030 outside the container. Now we should be able
+to run the <code>Feature Viewer</code> with:</p>
+<pre><code><span><span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">...</span>, host <span class="op">=</span> <span class="st">"0.0.0.0"</span>, port <span class="op">=</span> <span class="fl">3030</span><span class="op">)</span></span></code></pre>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.1.4</li>
+<code>semla</code>: 1.1.5</li>
 </ul></details><p><br></p>
 </div>
 </div>

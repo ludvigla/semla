@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cell type mapping benchmark</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 01 September
+            <h4 data-toc-skip class="date">Last compiled: 12 September
 2023</h4>
       
       
@@ -147,9 +147,9 @@ brain tissue section).</p>
 data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">se_allen</span>, group.by <span class="op">=</span> <span class="st">"subclass"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/allen_brain_atlas.jpg" alt="1. The reference single-cell data set contains 23 annotated cell types."><div class="figcaption">1. The reference single-cell data set contains
-23 annotated cell types.</div>
+<div class="figure">
+<img src="synthetic_spots/allen_brain_atlas.jpg" alt=""><p class="caption">1. The reference single-cell data set contains 23
+annotated cell types.</p>
 </div>
 </div>
 <div class="section level3">
@@ -328,10 +328,10 @@ size.</p>
 <span>                     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1e4</span>, <span class="fl">1e5</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">50</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/NNLS_computation_time.jpg" alt="2. Computation time for NNLS on synthetic Visium data. The x-axis shows the number of spots and the y-axis shows the run time in seconds."><div class="figcaption">2. Computation time for NNLS on synthetic Visium
+<div class="figure">
+<img src="synthetic_spots/NNLS_computation_time.jpg" alt=""><p class="caption">2. Computation time for NNLS on synthetic Visium
 data. The x-axis shows the number of spots and the y-axis shows the run
-time in seconds.</div>
+time in seconds.</p>
 </div>
 </div>
 </div>
@@ -387,18 +387,18 @@ Core i7, 16GB).</p>
 <span><span class="va">celltypes</span> <span class="op">&lt;-</span> <span class="va">celltypes</span><span class="op">[</span><span class="va">celltypes</span> <span class="op">!=</span> <span class="st">"CR"</span><span class="op">]</span></span>
 <span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"\\/"</span>, replacement <span class="op">=</span> <span class="st">"."</span>, x <span class="op">=</span> <span class="va">celltypes</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">nUMI</span> <span class="op">&lt;-</span> <span class="fu">colSums</span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spacexr/man/Reference.html" class="external-link">Reference</a></span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">cluster</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">nUMI</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu">Reference</span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">cluster</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">nUMI</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set up query with the RCTD function SpatialRNA</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e4</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e4</span>, row.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">1e4</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spacexr/man/SpatialRNA.html" class="external-link">SpatialRNA</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, counts <span class="op">=</span> <span class="va">mini_bulk_umis</span>, nUMI <span class="op">=</span> <span class="fu">colSums</span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">query</span> <span class="op">&lt;-</span> <span class="fu">SpatialRNA</span><span class="op">(</span>coords <span class="op">=</span> <span class="va">coords</span>, counts <span class="op">=</span> <span class="va">mini_bulk_umis</span>, nUMI <span class="op">=</span> <span class="fu">colSums</span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run RCTD</span></span>
 <span><span class="va">ti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">RCTD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spacexr/man/create.RCTD.html" class="external-link">create.RCTD</a></span><span class="op">(</span><span class="va">query</span>, <span class="va">reference</span>, max_cores <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
-<span><span class="va">RCTD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spacexr/man/run.RCTD.html" class="external-link">run.RCTD</a></span><span class="op">(</span><span class="va">RCTD</span>, doublet_mode <span class="op">=</span> <span class="st">'full'</span><span class="op">)</span></span>
+<span><span class="va">RCTD</span> <span class="op">&lt;-</span> <span class="fu">create.RCTD</span><span class="op">(</span><span class="va">query</span>, <span class="va">reference</span>, max_cores <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="va">RCTD</span> <span class="op">&lt;-</span> <span class="fu">run.RCTD</span><span class="op">(</span><span class="va">RCTD</span>, doublet_mode <span class="op">=</span> <span class="st">'full'</span><span class="op">)</span></span>
 <span><span class="va">rctd_stamp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="compute-performance-metrics-1">Compute performance metrics<a class="anchor" aria-label="anchor" href="#compute-performance-metrics-1"></a>
@@ -411,7 +411,7 @@ type on each spot.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">barcodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">RCTD</span><span class="op">@</span><span class="va">spatialRNA</span><span class="op">@</span><span class="va">counts</span><span class="op">)</span></span>
 <span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="va">RCTD</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">weights</span></span>
-<span><span class="va">norm_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/spacexr/man/normalize_weights.html" class="external-link">normalize_weights</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span></span>
+<span><span class="va">norm_weights</span> <span class="op">&lt;-</span> <span class="fu">normalize_weights</span><span class="op">(</span><span class="va">weights</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">norm_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"\\."</span>, replacement <span class="op">=</span> <span class="st">"/"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">norm_weights</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Compare proportions</span></span>
@@ -470,10 +470,10 @@ spots.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotation_logticks.html" class="external-link">annotation_logticks</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">50</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/NNLS_vs_Seurat_computation_time.jpg" alt="3. Computation time for NNLS and Seurat label transfer on synthetic Visium data. The x-axis shows the number of spots and the y-axis shows the run time in seconds (log10 scale)."><div class="figcaption">3. Computation time for NNLS and Seurat label
+<div class="figure">
+<img src="synthetic_spots/NNLS_vs_Seurat_computation_time.jpg" alt=""><p class="caption">3. Computation time for NNLS and Seurat label
 transfer on synthetic Visium data. The x-axis shows the number of spots
-and the y-axis shows the run time in seconds (log10 scale).</div>
+and the y-axis shows the run time in seconds (log10 scale).</p>
 </div>
 </div>
 <div class="section level3">
@@ -512,7 +512,7 @@ GPU.</p>
 <h3 id="compute-performance-metrics-3">Compute performance metrics<a class="anchor" aria-label="anchor" href="#compute-performance-metrics-3"></a>
 </h3>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">stereoscope</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"synthetic_spots/stereoscope/stereoscope_proportions.csv"</span>, sep <span class="op">=</span> <span class="st">","</span>, header <span class="op">=</span> <span class="cn">TRUE</span>, row.names <span class="op">=</span> <span class="fl">1</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">stereoscope</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.table</a></span><span class="op">(</span><span class="st">"synthetic_spots/stereoscope/W.2023-08-17102550.170200.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, header <span class="op">=</span> <span class="cn">TRUE</span>, row.names <span class="op">=</span> <span class="fl">1</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">pred_all</span><span class="op">$</span><span class="va">inf_props_stereoscope</span> <span class="op">&lt;-</span> <span class="va">stereoscope</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_Visium_agg</span><span class="op">@</span><span class="va">assays</span><span class="op">$</span><span class="va">celltypeprops</span><span class="op">)</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -546,12 +546,15 @@ a NVIDIA A100-SMX4-80GB Tensor core GPU.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">method</span>, <span class="va">time</span>, label <span class="op">=</span> <span class="va">time_format</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Deconvolution method"</span>, y <span class="op">=</span> <span class="st">"time in seconds"</span>, title <span class="op">=</span> <span class="st">"Run time for 10,000 spots"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/run_time_comparison_10k.jpg" alt="4. Computation time for 5 methods on synthetic Visium data with 10,000 spots. The y-axis shows the run time in seconds."><div class="figcaption">4. Computation time for 5 methods on synthetic
-Visium data with 10,000 spots. The y-axis shows the run time in
-seconds.</div>
+<div class="figure">
+<img src="synthetic_spots/run_time_comparison_10k.jpg" alt=""><p class="caption">4. Computation time for 5 methods on synthetic Visium
+data with 10,000 spots. The y-axis shows the run time in seconds.</p>
 </div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rmse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_all_long</span> <span class="op">&lt;-</span> <span class="va">pred_all</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inf_props_nnls"</span>, <span class="st">"inf_props_rctd"</span>, <span class="st">"inf_props_seurat"</span>, </span>
 <span>                               <span class="st">"inf_props_stereoscope"</span>, <span class="st">"inf_props_cell2location"</span><span class="op">)</span>, </span>
@@ -569,15 +572,15 @@ seconds.</div>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"RMSE (inferred vs expected proportions)"</span><span class="op">)</span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/performance_metrics.jpg" alt="5. Performance metrics for 5 methods. The pearson correlation scores and RMSE are calculated from the inferred vs expected proportions."><div class="figcaption">5. Performance metrics for 5 methods. The
-pearson correlation scores and RMSE are calculated from the inferred vs
-expected proportions.</div>
+<div class="figure">
+<img src="synthetic_spots/performance_metrics.jpg" alt=""><p class="caption">5. Performance metrics for 5 methods. The pearson
+correlation scores and RMSE are calculated from the inferred vs expected
+proportions.</p>
 </div>
 <div class="section level3">
 <h3 id="scatter-plots">Scatter plots<a class="anchor" aria-label="anchor" href="#scatter-plots"></a>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pred_all_long</span> <span class="op">&lt;-</span> <span class="va">pred_all</span> <span class="op">|&gt;</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"inf_props_nnls"</span>, <span class="st">"inf_props_rctd"</span>, <span class="st">"inf_props_seurat"</span>, </span>
 <span>                                                <span class="st">"inf_props_stereoscope"</span>, <span class="st">"inf_props_cell2location"</span><span class="op">)</span>, </span>
 <span>                                       names_to <span class="op">=</span> <span class="st">"method"</span>, values_to <span class="op">=</span> <span class="st">"inf_props"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -593,20 +596,20 @@ expected proportions.</div>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Expected proportions"</span>, y <span class="op">=</span> <span class="st">"Inferred proportions"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="float">
-<img src="synthetic_spots/scatter_plots_comparison.jpg" alt="6. Scatter plot showing expected vs inferred cell type proportions for 5 methods on 10,000 synthetic Visium spots. The blue line indicates a fitter trend line and the dashed red lines indicate the expected 1 to 1 relationship."><div class="figcaption">6. Scatter plot showing expected vs inferred
-cell type proportions for 5 methods on 10,000 synthetic Visium spots.
-The blue line indicates a fitter trend line and the dashed red lines
-indicate the expected 1 to 1 relationship.</div>
+<div class="figure">
+<img src="synthetic_spots/scatter_plots_comparison.jpg" alt=""><p class="caption">6. Scatter plot showing expected vs inferred cell
+type proportions for 5 methods on 10,000 synthetic Visium spots. The
+blue line indicates a fitter trend line and the dashed red lines
+indicate the expected 1 to 1 relationship.</p>
 </div>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.1.4</p></li>
+<li><p><code>semla</code>: 1.1.5</p></li>
 <li><p><code>RcppML</code>: 0.5.6</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.3 (2023-03-15)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -619,18 +622,21 @@ indicate the expected 1 to 1 relationship.</div>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
-<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] knitr_1.43        magrittr_2.0.3    R6_2.5.1          ragg_1.2.5       </span></span>
-<span><span class="co">##  [5] rlang_1.1.1       fastmap_1.1.1     stringr_1.5.0     tools_4.2.3      </span></span>
-<span><span class="co">##  [9] xfun_0.40         cli_3.6.1         jquerylib_0.1.4   systemfonts_1.0.4</span></span>
-<span><span class="co">## [13] htmltools_0.5.6   yaml_2.3.7        digest_0.6.33     rprojroot_2.0.3  </span></span>
-<span><span class="co">## [17] lifecycle_1.0.3   pkgdown_2.0.7     textshaping_0.3.6 purrr_1.0.2      </span></span>
-<span><span class="co">## [21] sass_0.4.7        vctrs_0.6.3       fs_1.6.3          memoise_2.0.1    </span></span>
-<span><span class="co">## [25] glue_1.6.2        cachem_1.0.8      evaluate_0.21     rmarkdown_2.24   </span></span>
-<span><span class="co">## [29] stringi_1.7.12    compiler_4.2.3    bslib_0.5.1       desc_1.4.2       </span></span>
-<span><span class="co">## [33] jsonlite_1.8.7</span></span></code></pre>
+<span><span class="co">##  [1] rstudioapi_0.15.0   knitr_1.43          magrittr_2.0.3     </span></span>
+<span><span class="co">##  [4] R6_2.5.1            ragg_1.2.5          rlang_1.1.1        </span></span>
+<span><span class="co">##  [7] fastmap_1.1.1       stringr_1.5.0       tools_4.2.3        </span></span>
+<span><span class="co">## [10] xfun_0.40           cli_3.6.1           jquerylib_0.1.4    </span></span>
+<span><span class="co">## [13] systemfonts_1.0.4   htmltools_0.5.6     yaml_2.3.7         </span></span>
+<span><span class="co">## [16] digest_0.6.33       rprojroot_2.0.3     lifecycle_1.0.3    </span></span>
+<span><span class="co">## [19] pkgdown_2.0.7       textshaping_0.3.6   purrr_1.0.2        </span></span>
+<span><span class="co">## [22] BiocManager_1.30.22 vctrs_0.6.3         sass_0.4.7         </span></span>
+<span><span class="co">## [25] fs_1.6.3            memoise_2.0.1       glue_1.6.2         </span></span>
+<span><span class="co">## [28] cachem_1.0.8        evaluate_0.21       rmarkdown_2.24     </span></span>
+<span><span class="co">## [31] stringi_1.7.12      compiler_4.2.3      bslib_0.5.1        </span></span>
+<span><span class="co">## [34] desc_1.4.2          jsonlite_1.8.7      renv_1.0.2</span></span></code></pre>
 </details><p><br></p>
 </div>
 </div>

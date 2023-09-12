@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,30 +121,48 @@
 <!-- badges: end -->
 <p><br></p>
 <p><code>semla</code> is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.</p>
-<p>If you are visiting our Github page, please find more information at our package <a href="https://ludvigla.github.io/semla/">website</a></p>
-<p>Here you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use <code>semla</code> for analysis of 10x Visium data.</p>
+<p>If you are visiting our Github page, please find more information at our package <a href="https://ludvigla.github.io/semla/">website</a>. Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use <code>semla</code> for analysis and visualization of 10x Visium data.</p>
+<p><br></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>The dev version of the package can be installed through GitHub using;</p>
 <pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ludvigla/semla"</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="setting-up-a-conda-environment">Setting up a conda environment<a class="anchor" aria-label="anchor" href="#setting-up-a-conda-environment"></a>
-</h2>
-<p>If you want to run <code>semla</code> within a conda environment, you first need to ensure to have anaconda installed. We suggest using <a href="https://docs.conda.io/en/latest/miniconda.html" class="external-link">miniconda</a></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>conda create <span class="sc">-</span>n r<span class="sc">-</span>semla r<span class="sc">-</span>essentials r<span class="sc">-</span>base</span></code></pre></div>
-<p>Now activate the environment</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>conda activate r<span class="sc">-</span>semla</span></code></pre></div>
-<p>There’s one R package that might cause a few issues if not configured properly, namely <code>magick</code>. I suggest installing it with conda within the environment:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>conda install <span class="sc">-</span>c conda<span class="sc">-</span>forge r<span class="sc">-</span>magick</span></code></pre></div>
-<p>Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by typing something like the following in the terminal:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="sc">/</span>Applications<span class="sc">/</span>RStudio.app<span class="sc">/</span>Contents<span class="sc">/</span>MacOS<span class="sc">/</span>RStudio</span></code></pre></div>
-<p><code>semla</code> requires R v4.1 or higher, so you should double check that you have the correct version installed.</p>
+<p><br></p>
+<div class="section level3">
+<h3 id="setting-up-a-conda-environment">Setting up a conda environment<a class="anchor" aria-label="anchor" href="#setting-up-a-conda-environment"></a>
+</h3>
+<p>If you are using a <a href="https://docs.conda.io/en/latest/miniconda.html" class="external-link">conda</a>, you can follow the steps below:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>conda create <span class="sc">-</span>n r<span class="sc">-</span>semla r<span class="sc">-</span>essentials r<span class="sc">-</span>base</span></code></pre></div>
+<p>Activate the environment:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>conda activate r<span class="sc">-</span>semla</span></code></pre></div>
+<p>Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by typing the path to the RStudio application in the terminal:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span>Applications<span class="sc">/</span>RStudio.app<span class="sc">/</span>Contents<span class="sc">/</span>MacOS<span class="sc">/</span>RStudio</span></code></pre></div>
+<p>Note that <code>semla</code> requires R v4.1 or higher, so you should double check that you have the correct version installed.</p>
 <p>Now you should be able to install <code>semla</code> in your conda environment:</p>
 <pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ludvigla/semla"</span><span class="op">)</span></span></code></pre>
+<p>The <code>magick</code> R package might fail to install in your conda environment and in that case you can install it with conda instead:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>conda install <span class="sc">-</span>c conda<span class="sc">-</span>forge r<span class="sc">-</span>magick</span></code></pre></div>
+<p><br></p>
+</div>
+<div class="section level3">
+<h3 id="renv">Renv<a class="anchor" aria-label="anchor" href="#renv"></a>
+</h3>
+<p>If you are familiar with <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">renv</a>, you can install all necessary R packages (with exact versions) using <code><a href="https://rstudio.github.io/renv/reference/restore.html" class="external-link">renv::restore()</a></code> with the <code>renv.lock</code> file provided in our GitHub repo.</p>
+<p><br></p>
+</div>
+<div class="section level3">
+<h3 id="docker">Docker<a class="anchor" aria-label="anchor" href="#docker"></a>
+</h3>
+<p>As an additional option, we provide a docker image on <a href="https://hub.docker.com/r/ludlar/semla" class="external-link">Docker Hub</a> that you can download to run a container from. The image is based on the <a href="https://hub.docker.com/r/rocker/rstudio" class="external-link">rocker</a> RStudio Server image and comes with RStudio Server pre-installed.</p>
+<p>To access the server we need to publish a port for our container, we’ll use the –publish flag (-p for short) on the docker run command. The format of the –publish command is [host port]:[container port]. So, if we wanted to expose port 8000 inside the container to port 8080 outside the container, we would pass 8080:8000 to the –publish flag. We can also expose multiple ports which will be useful to use some of the interactive features in <code>semla</code> (see our <code>Interactive Viewer</code> section <a href="https://ludvigla.github.io/semla/articles/feature_viewer.html">here</a>).</p>
+<p><code>&lt;YOURPASSWORD&gt;</code> can be any password you want to use for RStudio Server and the default username is <code>rstudio</code>. <code>&lt;SOURCEPATH&gt;</code> should be a path on your local machine which will be accessible from the docker container at <code>/home/rstudio</code>. Use <code>source="$(pwd)"</code> for current working directory.</p>
+<pre><code>sudo docker run -d -p 1337:8787 -p 3030:3030 --name semla -e PASSWORD=&lt;YOURPASSWORD&gt; --memory=16g --mount type=bind,source="&lt;SOURCEPATH&gt;",target=/home/rstudio -e ROOT=TRUE ludlar/semla:latest</code></pre>
+<p>Visit the docker <a href="https://docs.docker.com/language/java/run-containers/" class="external-link">docs</a> for more information on how to run containers.</p>
+<p><br></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="what-is-semla">What is semla?<a class="anchor" aria-label="anchor" href="#what-is-semla"></a>
