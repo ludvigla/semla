@@ -11,9 +11,7 @@
 
 `semla` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 
-If you are visiting our Github page, please find more information at our package [website](https://ludvigla.github.io/semla/)
-
-Here you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis of 10x Visium data.
+If you are visiting our Github page, please find more information at our package [website](https://ludvigla.github.io/semla/). Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis and visualization of 10x Visium data.
 
 ## Installation
 
@@ -25,25 +23,21 @@ remotes::install_github("ludvigla/semla")
 ````
 
 
-## Setting up a conda environment
+### Setting up a conda environment
 
-If you want to run `semla` within a conda environment, you first need to ensure to have anaconda installed. We suggest using [miniconda](https://docs.conda.io/en/latest/miniconda.html)
+If you are using a [conda](https://docs.conda.io/en/latest/miniconda.html), you can follow the steps below:
 
     conda create -n r-semla r-essentials r-base
 
-Now activate the environment
+Activate the environment:
 
     conda activate r-semla
-    
-There's one R package that might cause a few issues if not configured properly, namely `magick`. I suggest installing it with conda within the environment:
 
-    conda install -c conda-forge r-magick
-
-Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by typing something like the following in the terminal:
+Then you can open RStudio from the environment. This should make sure that RStudio uses the R version and packages that are located in the conda environment. On Mac OS, you can open RStudio by typing the path to the RStudio application in the terminal:
 
     /Applications/RStudio.app/Contents/MacOS/RStudio
 
-`semla` requires R v4.1 or higher, so you should double check that you have the correct version installed.
+Note that `semla` requires R v4.1 or higher, so you should double check that you have the correct version installed.
 
 Now you should be able to install `semla` in your conda environment:
 
@@ -52,10 +46,27 @@ install.packages("remotes")
 remotes::install_github("ludvigla/semla")
 ````
 
+The `magick` R package might fail to install in your conda environment and in that case you can install it with conda instead:
 
-# Renv
+    conda install -c conda-forge r-magick
+
+### Renv
 
 If you are familiar with [renv](https://rstudio.github.io/renv/articles/renv.html), you can install all necessary R packages (with exact versions) using `renv::restore()` with the `renv.lock` file provided in our GitHub repo. 
+
+### Docker
+
+As an additional option, we provide a docker image on [Docker Hub](https://hub.docker.com/r/ludlar/semla) that you can download to run a container from. The image is based on the [rocker](https://hub.docker.com/r/rocker/rstudio) RStudio Server image and comes with RStudio Server pre-installed.
+
+To access the server we need to publish a port for our container, we’ll use the --publish flag (-p for short) on the docker run command. The format of the --publish command is [host port]:[container port]. So, if we wanted to expose port 8000 inside the container to port 8080 outside the container, we would pass 8080:8000 to the --publish flag. We can also expose multiple ports which will be useful to use some of the interactive features in `semla` (see our `Interactive Viewer` section [here](https://ludvigla.github.io/semla/articles/feature_viewer.html)). 
+
+`<YOURPASSWORD>` can be any password you want to use for RStudio Server and the default username is `rstudio`. `<SOURCEPATH>` should be a path on your local machine which will be accessible from the docker container at `/home/rstudio`. Use `source="$(pwd)"` for current working directory. 
+
+````
+sudo docker run -d -p 1337:8787 -p 3030:3030 --name semla -e PASSWORD=<YOURPASSWORD> --memory=16g --mount type=bind,source="<SOURCEPATH>",target=/home/rstudio -e ROOT=TRUE ludlar/semla:latest
+````
+
+Visit the docker [docs](https://docs.docker.com/language/java/run-containers/) for more information on how to run containers.
 
 ## What is semla?
 
