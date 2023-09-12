@@ -13,6 +13,8 @@
 
 If you are visiting our Github page, please find more information at our package [website](https://ludvigla.github.io/semla/). Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis and visualization of 10x Visium data.
 
+<br>
+
 ## Installation
 
 The dev version of the package can be installed through GitHub using;
@@ -22,6 +24,7 @@ install.packages("remotes")
 remotes::install_github("ludvigla/semla")
 ````
 
+<br>
 
 ### Setting up a conda environment
 
@@ -49,10 +52,14 @@ remotes::install_github("ludvigla/semla")
 The `magick` R package might fail to install in your conda environment and in that case you can install it with conda instead:
 
     conda install -c conda-forge r-magick
+    
+<br>
 
 ### Renv
 
 If you are familiar with [renv](https://rstudio.github.io/renv/articles/renv.html), you can install all necessary R packages (with exact versions) using `renv::restore()` with the `renv.lock` file provided in our GitHub repo. 
+
+<br>
 
 ### Docker
 
@@ -67,6 +74,8 @@ sudo docker run -d -p 1337:8787 -p 3030:3030 --name semla -e PASSWORD=<YOURPASSW
 ````
 
 Visit the docker [docs](https://docs.docker.com/language/java/run-containers/) for more information on how to run containers.
+
+<br>
 
 ## What is semla?
 
