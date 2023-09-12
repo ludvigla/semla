@@ -1,0 +1,87 @@
+---
+title: "reactR"
+author: "Ludvig Larsson"
+date: "2022-09-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(reactR)
+```
+
+Create R package
+
+```{r}
+
+usethis::create_package("~/react_r_apps/featureviewer/")
+
+```
+
+Inject the widget templating
+
+Dependencies:
+
+1. openseadragon ^3.1.0"
+2. paper ^0.12.17
+3. d3 ^7.6.1
+
+```{r}
+
+withr::with_dir(
+  "~/react_r_apps/ftrviewer/",
+  reactR::scaffoldReactWidget("ftrviewer", list("openseadragon" = "^3.1.0",
+                                                "paper" =  "^0.12.17",
+                                                "d3" = "^7.6.1"), edit = FALSE)
+)
+
+```
+
+The next step is to navigate to the newly-created paper project and run the following R commands:
+
+```{r}
+
+getwd()
+
+system("yarn install")
+system("yarn run webpack")
+
+```
+
+Now that the widget’s JavaScript is compiled, go ahead and install the R package:
+
+```{r}
+
+devtools::document()
+devtools::install(quick = TRUE)
+
+```
+
+Now that the widget’s JavaScript is compiled, and the R package is installed, run app.R to see a demo in action:
+
+```{r}
+
+shiny::runApp()
+
+```
+
+Go for a spin:
+
+```{r warning=FALSE, message=FALSE}
+
+system("yarn install")
+system("yarn cache clean")
+system("yarn run webpack")
+devtools::document()
+devtools::install()
+library(ftrviewer)
+
+```
+
+```{r}
+ftrviewer()
+```
+
