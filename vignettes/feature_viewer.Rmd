@@ -134,6 +134,16 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
 se_merged <- FeatureViewer(se_merged)
 ```
 
+### Feature Viewer and docker
+
+The viewer uses image tiles to create interactive maps of tissues which are accessed from a static file server hosted locally. By default, the server is hosted on `127.0.0.1:8080` and the viewer can fetch the image tiles directly from this address. When using RStudio Server via docker, we need to make sure that the port we are using (inside the container) is exposed outside the container, otherwise the tiles will not be accessible to the viewer which will be blank. 
+
+In the `docker run ...` command used to start the container, we set `-p 3030:3030` to expose port 3030 inside the container to port 3030 outside the container. Now we should be able to run the `Feature Viewer` with:
+
+````
+FeatureViewer(..., host = "0.0.0.0", port = 3030)
+````
+
 <br>
 
 ------------------------------------------------------------------------
