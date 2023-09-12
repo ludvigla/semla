@@ -9,6 +9,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# JS code
+
+The actual javascript code can be found in the `srcjs` folder. Here, you can find code for React components, CSS and other utilities.
+
+# Create R code
+
+This code is adapted from the `reactR` tutorial.
+
 ```{r}
 library(reactR)
 ```
@@ -85,3 +93,34 @@ library(ftrviewer)
 ftrviewer()
 ```
 
+# Comments
+
+In the `app.js` file we can see that a React component called `App` is defined which uses the `OSG` component. The `OSG` component inherits props from `App` which in turn receives input from the R function `ftrviewer` defined in `R/ftrviewer.R`.
+
+The functions in `R/ftrviewer.R` were created using reactR and do not need to be modified, except that you need to specify the correct package name in `ftrviewer()` and `ftrviewerOutput()`. `scaffoldReactWidget` automatically creates a full R package so it can be a good idea to give it a unique name, s.a. `ftrviewer` in this case. However, when we move the code to `semla`, we need to change make these changes. I have commented the two lines of code.
+
+If you need to change the widget `ftrviewer`, you'll have to modify the JS code. If we want to pass more parameters from the `ftrviewer()` R function to the React app, you can add additional arguments. Let's say we add a new argument called `spotsize`, we should the be able to access it from `props.spotsize` in the `App` React component.
+
+## Window size
+
+I have set the container size to be static which means that it will not be rescaled when the browser window is changed. This size is controlled with `container_width/container_height`. This was necessary to avoid a bunch of scaling issues in the app and I would highly recommend keeping it this way.
+
+## File server (host + port)
+
+Use `host+port` to define the address to the static file server created with the `semla` function `file_server()`.
+
+## SampleID
+
+Integer specifying the sample ID. Used to select image tiles and data for selected sample.
+
+## scaleByOpacity
+
+Logical which can be used to scale spot opacity. Same as `scale_alpha` in `MapFeatures`.
+
+## isNumeric
+
+Logical used to switch between numeric and categorical data.
+
+## Levels
+
+Levels for categorical variables used to map colors
