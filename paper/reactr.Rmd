@@ -1,0 +1,239 @@
+---
+title: "reactR"
+author: "Ludvig Larsson"
+date: "2022-09-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(reactR)
+```
+
+Create R package
+
+```{r}
+
+usethis::create_package("~/paper")
+
+```
+
+Inject the widget templating
+
+```{r}
+
+withr::with_dir(
+  "~/paper",
+  reactR::scaffoldReactWidget("paper", list("paper" = "^0.12.15"), edit = FALSE)
+)
+
+```
+
+The next step is to navigate to the newly-created paper project and run the following R commands:
+
+```{r}
+
+getwd()
+
+system("yarn install")
+#system("yarn add url-loader")
+system("yarn run webpack")
+
+```
+
+Now that the widget’s JavaScript is compiled, go ahead and install the R package:
+
+```{r}
+
+devtools::document()
+devtools::install(quick = TRUE)
+
+```
+
+Now that the widget’s JavaScript is compiled, and the R package is installed, run app.R to see a demo in action:
+
+```{r}
+
+shiny::runApp()
+
+```
+
+Go for a spin:
+
+```{r warning=FALSE, message=FALSE}
+
+system("yarn install")
+system("yarn cache clean")
+system("yarn run webpack")
+#devtools::document()
+#devtools::install()
+library(paper)
+
+```
+
+```{r}
+
+#' Function used to prepare image for react app
+#' 
+#' @param path path to image in png or jpeg format
+#' @param width width of image sent to react app
+#' 
+#' @value a list with an array buffer, the image dimensions and
+#' the length of the array buffer
+prep.image <- function (
+  path,
+  width = 256
+) {
+  
+  # Check width
+  if (width < 256) stop("the image width has to be at least 256 pixels.")
+  
+  # Check file path
+  if (!file.exists(path)) stop("Invalid path to image.")
+  file.ext <- tools::file_ext(path)
+  if (!file.ext %in% c("png", "jpg", "jpeg")) stop(sprintf("Invalid file type '.%s'", file.ext))
+  
+  # Read image, scale it to have a specified width and
+  # convert it to an array
+  im <- magick::image_read(path) %>% 
+    magick::image_scale(paste0(width)) %>%
+    magick::image_data() %>%
+    as.integer()
+  
+  # Create an array buffer
+  # ------------------------------------
+  # Each pixel is defined by RGBA values and the values of d
+  # are sorted by pixel, i.e. R1, G1, B1, A1, R2, G2, B2, A2, ...
+  # where 1, 2, ... corresponds to the pixels
+  d <- data.frame(R = as.vector(t(im[, , 1])),
+                  G = as.vector(t(im[, , 2])),
+                  B = as.vector(t(im[, , 3])),
+                  A = 255) %>% 
+    dplyr::mutate(ord = 1:dplyr::n()) %>%
+    tidyr::pivot_longer(c(R, G, B, A), names_to = "key", values_to = "value") %>%
+    dplyr::mutate(key = factor(key, levels = c("R", "G", "B", "A"))) %>%
+    dplyr::arrange(ord, key)
+  
+  # Create a list object containing the array buffer and
+  # some additional properties such as the x, y dimensions and 
+  # the length of the buffer
+  d <- list(data = d$value,
+            dimx = ncol(im),
+            dimy = nrow(im),
+            length = nrow(im)*ncol(im)*4)
+  
+  return(d)
+}
+
+```
+
+And now we can try it out!
+
+```{r}
+
+library(magrittr)
+library(paper)
+
+img.prep1 <- prep.image("~/targeted_vs_untargeted/data_curated/spaceranger_output/mousebrain/V10S29-134_B1/spatial/tissue_hires_image.png", width = 512)
+img.prep2 <- prep.image("~/targeted_vs_untargeted/data_curated/spaceranger_output/mousebrain/V10S29-134_A1/spatial/tissue_hires_image.png", width = 512)
+img.prep <- prep.image("~/paper/srcjs/images/marilyn_uneven.png")
+# paper(data = list(img.prep1, img.prep2, img.prep))
+
+```
+
+```{r}
+
+library(shiny)
+library(shinyjs)
+
+RunAlignment <- function (
+    data.list,
+    width = '800px',
+    height = '650px'
+) {
+
+  jsCode <- "shinyjs.getWindow = function(){Shiny.setInputValue('myVal', window.MyLib)}"
+  
+  ui <- fluidPage(
+    
+    useShinyjs(),
+    extendShinyjs(text = jsCode, functions = c("getWindow")),
+    actionButton("help", "Help"),
+    actionButton("quit", "Quit & Save"),
+    tableOutput("table"),
+    paperOutput("paperWidget", height = height, width = width),
+    uiOutput("HelpBox")
+    
+  )
+  
+  server <- function(input, output, session) {
+    
+    # Fire event every 50ms
+    autoCheck <- reactiveTimer(50)
+    
+    # Observe timer and return latest transformations
+    observe({
+      autoCheck()
+      js$getWindow()
+    })
+    
+    # Send image data to widget 
+    output$paperWidget <- renderPaper({
+        paper(data = data.list)
+    })
+    
+    # Fill table when values are passed from react app
+    output$table <- renderTable(do.call(rbind, lapply(input$myVal, as.data.frame)))
+    
+    # Helpt text
+    output$HelpBox = renderUI({
+      if (input$help %% 2){
+        fluidRow(column(12, helpText(h4("How to use the tool"), hr())),
+                 column(12, helpText(h5(strong("NB:"), " The dashed lines highlight the borders of the canvas area. Only part of images that are inside this area will be kept."))),
+                 column(12, column(3, helpText(p(strong("Select images")))), 
+                        column(9, p("use the blue image buttons above the viewer to select images to show"))),
+                 column(12, column(3, helpText(p(strong("Move to front")))), 
+                        column(9, p("click on an image to move it to the foreground"))),
+                 column(12, column(3, helpText(p(strong("Move")))), 
+                        column(9, p("click & drag to move an image"))),
+                 column(12, column(3, helpText(p(strong("Scale")))), 
+                        column(9, p("hold & drag the top right corner to scale an image"))),
+                 column(12, column(3, helpText(p(strong("Rotate")))), 
+                        column(9, p("hold the ", code("SHIFT"), " key + hold & drag the top right corner to rotate an image"))),
+                 column(12, column(3, helpText(p(strong("Increase transparency")))), 
+                        column(9, p("hold the ", code("q"), " key and click on an image to increase its transparency"))),
+                 column(12, column(3, helpText(p(strong("Decrease transparency")))), 
+                        column(9, p("hold the ", code("w"), " key and click on an image to decrease its transparency"))),
+                 column(12, column(3, helpText(p(strong("Reset image")))), 
+                        column(9, p("hold the ", code("r"), " key and click on an image to reset it back to its original shape"))),
+                 column(12, column(3, helpText(p(strong("Flip horisontally")))), 
+                        column(9, p("hold the ", code("f"), " key and click on an image to flip it horisontally")))
+          )
+      } else {
+        return()
+      }
+    })
+    
+    # Run code on exit
+    observeEvent(input$quit, {
+      stopApp(returnValue = do.call(rbind, lapply(input$myVal, as.data.frame)))
+    })
+      
+  }
+  
+  transformations <- runApp(list(ui = ui, server = server))
+  
+  return(transformations)
+}
+
+# Run shiny app
+transforms <- RunAlignment(data.list = list(img.prep1, img.prep2, img.prep))
+
+```
+
+
+
+
