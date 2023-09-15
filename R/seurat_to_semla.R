@@ -194,7 +194,7 @@ UpdateSeuratForSemla <- function (
                                    image_info = img_info_tibble, 
                                    scalefactors = scalefactors_tibble)
   object@tools$Staffli <- st_object
-  cat_line()
-  cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
+  if (verbose) cat_line()
+  if (verbose) cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
   return(object)
 }
