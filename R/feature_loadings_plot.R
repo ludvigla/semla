@@ -220,6 +220,7 @@ PlotFeatureLoadings <- function (
     # Convert dim to factor
     dimred_data$dim <- factor(dimred_data$dim, levels = dimred_names)
     
+    # Collect top features per dim
     top_features <- dimred_data |>
       group_by(dim) |>
       arrange(-value) |>
@@ -228,12 +229,26 @@ PlotFeatureLoadings <- function (
       unique() |>
       rev()
     
-    # Subset dimred data
+    # Subset dimred data to include top features
     dimred_data_subset <- dimred_data |>
       group_by(dim) |>
       mutate(value_scaled = scales::rescale(value)) |>
       filter(name %in% top_features) |>
       mutate(name = factor(name, levels = top_features))
+    
+    # Final order of genes
+    # Even if a feature is identified as "top" for a certain dim, it might 
+    # have a higher value in another dim. The code below is used to adjust 
+    # the ordering of features so that features appear in the dim where
+    ## it has the highest loading value.
+    top_features_reordered <- dimred_data_subset |> 
+      group_by(name) |> # Group data by feature ID
+      arrange(-value_scaled) |> # Arrange data in each group by decreasing loading value
+      slice_head(n = 1) |> # Keep row with highest value
+      group_by(dim) |> # Regroup by dim
+      arrange(dim, -value_scaled) # Arrange data within each dim group by decreasing loading value
+    
+    dimred_data_subset$name <- factor(dimred_data_subset$name, levels = top_features_reordered$name)
 
     p <- ggplot(dimred_data_subset, aes(dim, name, fill = value_scaled)) +
       geom_tile() +
@@ -241,7 +256,8 @@ PlotFeatureLoadings <- function (
       theme(panel.background = element_blank(), 
             axis.text.y = element_text(colour = "black"), 
             axis.text.x = element_text(colour = "black", angle = 60, hjust = 1)) +
-      labs(x = "", y = "Feature name", fill = "scaled\nFeature\nLoading")
+      labs(x = "", y = "Feature name", fill = "scaled\nFeature\nLoading") +
+      scale_y_discrete(limits = rev)
   }
 
   return(p)
