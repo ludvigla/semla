@@ -35,9 +35,6 @@ Create a Staffli object from a set of images and associated spot coordinates
 \examples{
 
 library(semla)
-library(magick)
-library(jsonlite)
-library(tibble)
 
 # Multiple samples
 # \%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%\%
@@ -61,32 +58,18 @@ jsonfiles <- c(system.file("extdata/mousebrain",
                            "spatial/scalefactors_json.json", 
                            package = "semla"))
 
-# Read coordinates
+# Read coordinates and select relevant columns
 coordinates <- LoadSpatialCoordinates(spotfiles) |> 
-  select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+  select(all_of(c("barcode", "x", "y", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
 
 # Create image_info
-image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
-  he_imgs[i] |> 
-    image_read() |> 
-    image_info() |> 
-    mutate(sampleID = paste0(i))
-}))
+image_info <- LoadImageInfo(he_imgs)
 
 # Read scalefactors
-scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
-  jsonlite::read_json(jsonfiles[i]) |> 
-    as_tibble() |> 
-    mutate(sampleID = paste0(i))
-}))
+scalefactors <- LoadScaleFactors(jsonfiles)
 
 # Add additional columns to image_info using scalefactors
-image_info <- image_info |> 
-  mutate(full_width = width/scalefactors$tissue_lowres_scalef[row_number()],
-         full_height = height/scalefactors$tissue_lowres_scalef[row_number()]) |> 
-  mutate(type = "tissue_lowres") |> 
-  select(format, width, height, full_width, full_height, 
-         colorspace, filesize, density, sampleID, type)
+image_info <- UpdateImageInfo(image_info, scalefactors)
 
 # Create Staffli object
 staffli_object <- CreateStaffliObject(imgs = he_imgs, 
