@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Non-negative matrix factorization</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 12 September
+            <h4 data-toc-skip class="date">Last compiled: 19 September
 2023</h4>
       
       
@@ -136,95 +136,52 @@ this method with <code>semla</code> on spatial data.</p>
 NNMF which handles <code>Seurat</code> objects. <code>singlet</code>
 uses the ultra fast NNMF implementation from <a href="https://zdebruine.github.io/RcppML/" class="external-link">RcppML</a>. Both of these
 packages are developed by Zach DeBruines lab and you can find more
-information about their work and tools at <a href="https://github.com/zdebruine" class="external-link uri">https://github.com/zdebruine</a> and at <a href="https://www.zachdebruine.com/" class="external-link uri">https://www.zachdebruine.com/</a>.</p>
+information about their work and tools at <a href="https://github.com/zdebruine" class="external-link uri">https://github.com/zdebruine</a> and <a href="https://www.zachdebruine.com/" class="external-link uri">https://www.zachdebruine.com/</a>.</p>
 <p><code>RcppML</code> is available on <a href="https://cran.r-project.org/web/packages/RcppML/index.html" class="external-link">CRAN</a>
 and <a href="https://github.com/zdebruine/RcppML" class="external-link">GitHub</a>, and
 singlet can be installed from GitHub with
 <code>devtools::install_github("zdebruine/singlet")</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zdebruine/singlet" class="external-link">singlet</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zdebruine/singlet" class="external-link">singlet</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.satijalab.org/seurat" class="external-link">SeuratData</a></span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <div class="section level2">
 <h2 id="run-nmf">Run NMF<a class="anchor" aria-label="anchor" href="#run-nmf"></a>
 </h2>
-<p>We’ll use our mouse brain test data for the NNMF. The method
-automatically runs cross-validation to find the best rank and to learn a
-model at that rank.</p>
-<p>NB: The mouse brain test data only includes a subset of the entire
-data of 188 unique genes. With the full dataset, we would be able to
-find a higher optimal rank and therefore obtain more factors.</p>
+<p>We’ll use a mouse brain Visium data set provided in
+<code>SeuratData</code> for the NNMF. The method automatically runs
+cross-validation to find the best rank and learns a model at that
+rank.</p>
+<p>The factorization can be computed on all genes, but below we have
+filtered the data to include only the top variable features to speed up
+the computation.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, </span>
-<span>                                 <span class="st">"se_mbrain"</span>, </span>
-<span>                                 package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Here we'll use an example data set provided in SeuratData</span></span>
+<span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/LoadData.html" class="external-link">LoadData</a></span><span class="op">(</span><span class="st">"stxBrain"</span>, type <span class="op">=</span> <span class="st">"anterior1"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Update se_mbrain for compatibility with semla</span></span>
+<span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/UpdateSeuratForSemla.html">UpdateSeuratForSemla</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Normalize data and find top variable features</span></span>
+<span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># OPTIONAL: subset data to improve computational speed</span></span>
+<span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span><span class="op">[</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Set seed for reproducibility</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/singlet/man/RunNMF.html" class="external-link">RunNMF</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## running with sparse optimization</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## REPLICATE  1 / 3 </span></span>
-<span><span class="co">## k = 2 , rep = 1 </span></span>
-<span><span class="co">##    test_error = 1.1605e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 2 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 3 , rep = 1 </span></span>
-<span><span class="co">##    test_error = 1.1045e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 3 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 6 , rep = 1 </span></span>
-<span><span class="co">##    test_error = 1.0272e+00 </span></span>
-<span><span class="co">##    overfit (overfit_score = 1.6480e-04 )</span></span>
-<span><span class="co">##    best rank in replicate = 3 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 4 , rep = 1 </span></span>
-<span><span class="co">##    test_error = 1.0690e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 4 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 5 , rep = 1 </span></span>
-<span><span class="co">##    test_error = 1.0397e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 5 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## REPLICATE  2 / 3 </span></span>
-<span><span class="co">## k = 2 , rep = 2 </span></span>
-<span><span class="co">##    test_error = 1.4538e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 2 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 3 , rep = 2 </span></span>
-<span><span class="co">##    test_error = 1.1493e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 3 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## REPLICATE  3 / 3 </span></span>
-<span><span class="co">## k = 2 , rep = 3 </span></span>
-<span><span class="co">##    test_error = 1.1626e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 2 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## k = 3 , rep = 3 </span></span>
-<span><span class="co">##    test_error = 1.1000e+00 </span></span>
-<span><span class="co">##    not overfit</span></span>
-<span><span class="co">##    best rank in replicate = 3 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Unmasking test set</span></span>
-<span><span class="co">## Fitting final model at k = 3</span></span></code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">@</span><span class="va">reductions</span><span class="op">$</span><span class="va">nmf</span><span class="op">@</span><span class="va">feature.loadings</span><span class="op">)</span></span></code></pre></div>
 <p>We can plot the cross-validation results and find that the optimal
-rank decided by the method is 3 which determines the number of factors
+rank decided by the method is 22, which determines the number of factors
 we obtain from the NMF run.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/singlet/man/RankPlot.html" class="external-link">RankPlot</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NNMF_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<p><img src="NNMF/rank_plot.jpg"></p>
 <p><br></p>
 <div class="section level3">
 <h3 id="spatial-visualization">Spatial visualization<a class="anchor" aria-label="anchor" href="#spatial-visualization"></a>
@@ -232,13 +189,13 @@ we obtain from the NMF run.</p>
 <p>The results are stored as a <code>DimReduc</code> object in our
 <code>Seurat</code> object and we can map the factors spatially with
 <code><a href="../reference/visualize-features.html">MapFeatures()</a></code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
-<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"NMF_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">k</span><span class="op">)</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"NMF_"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">22</span><span class="op">)</span>, </span>
 <span>            override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>            colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NNMF_files/figure-html/unnamed-chunk-6-1.png" width="864"></p>
+<p><img src="NNMF/spatial_plot.jpg"></p>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -248,7 +205,7 @@ we obtain from the NMF run.</p>
 <code><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings()</a></code> which will give us an idea about what
 the top contributing genes for each factor are. Below we can see the top
 30 contributing genes for NMF_1 and NMF_2.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
 <span>                    dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, </span>
 <span>                    reduction <span class="op">=</span> <span class="st">"nmf"</span>, </span>
@@ -256,35 +213,33 @@ the top contributing genes for each factor are. Below we can see the top
 <span>                    mode <span class="op">=</span> <span class="st">"dotplot"</span>, </span>
 <span>                    fill <span class="op">=</span> <span class="st">"darkmagenta"</span>,</span>
 <span>                    pt_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NNMF_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="NNMF/gene_loadings.jpg"></p>
 <p><br></p>
 </div>
 <div class="section level3">
 <h3 id="make-composite-plot">Make composite plot<a class="anchor" aria-label="anchor" href="#make-composite-plot"></a>
 </h3>
 <p>We can also map multiple factors spatially in a single plot with
-<code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/RtmpUl3wrT/temp_libpath1f501073f3d7/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">factor_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#332288"</span>, <span class="st">"#88CCEE"</span>, <span class="st">"#44AA99"</span>, <span class="st">"#117733"</span>, </span>
-<span>                   <span class="st">"#999933"</span>, <span class="st">"#DDCC77"</span>, <span class="st">"#CC6677"</span>, <span class="st">"#882255"</span>, <span class="st">"#AA4499"</span><span class="op">)</span></span>
-<span><span class="va">n_k_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">k</span><span class="op">&lt;</span><span class="fl">9</span>, <span class="va">k</span>, <span class="fl">9</span><span class="op">)</span></span>
+<code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>. Note that the visualization will
+only display the most dominant factor for each spot. See
+<code>?MapMultipleFeatures()</code> for details.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">factor_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'#e6194b'</span>, <span class="st">'#3cb44b'</span>, <span class="st">'#ffe119'</span>, <span class="st">'#4363d8'</span>, <span class="st">'#f58231'</span>, </span>
+<span>                   <span class="st">'#911eb4'</span>, <span class="st">'#46f0f0'</span>, <span class="st">'#f032e6'</span>, <span class="st">'#bcf60c'</span>, <span class="st">'#fabebe'</span>, </span>
+<span>                   <span class="st">'#008080'</span>, <span class="st">'#e6beff'</span>, <span class="st">'#9a6324'</span>, <span class="st">'#fffac8'</span>, <span class="st">'#800000'</span>, <span class="st">'#aaffc3'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Select non-overlapping factors</span></span>
+<span><span class="va">selected_factors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">9</span>, <span class="fl">10</span>, <span class="fl">12</span>, <span class="fl">13</span>, <span class="fl">15</span>, <span class="fl">16</span>, <span class="fl">17</span>, <span class="fl">19</span>, <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
-<span>                    features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"NMF_"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">n_k_plot</span><span class="op">)</span>, </span>
-<span>                    colors <span class="op">=</span> <span class="va">factor_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">n_k_plot</span><span class="op">]</span>, </span>
+<span>                    features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"NMF_"</span>, <span class="va">selected_factors</span><span class="op">)</span>, </span>
+<span>                    colors <span class="op">=</span> <span class="va">factor_colors</span>, </span>
 <span>                    image_use <span class="op">=</span> <span class="st">"raw"</span>, </span>
 <span>                    override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                    pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required namespace: ggnewscale</span></span></code></pre>
-<p><img src="NNMF_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="NNMF/multiple_factors.jpg"></p>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -292,18 +247,14 @@ the top contributing genes for each factor are. Below we can see the top
 </h3>
 <p>Similarly, we can also summarize the top feature loadings for each
 factor with a heatmap:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/PlotFeatureLoadings.html">PlotFeatureLoadings</a></span><span class="op">(</span><span class="va">se_mbrain</span>, </span>
-<span>                    dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">k</span>, </span>
+<span>                    dims <span class="op">=</span> <span class="va">selected_factors</span>, </span>
 <span>                    reduction <span class="op">=</span> <span class="st">"nmf"</span>, </span>
-<span>                    nfeatures <span class="op">=</span> <span class="fl">10</span>, </span>
+<span>                    nfeatures <span class="op">=</span> <span class="fl">30</span>, </span>
 <span>                    mode <span class="op">=</span> <span class="st">"heatmap"</span>, </span>
 <span>                    gradient_colors <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">magma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">11</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="NNMF_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>NB: Although we are able to pick up distinct patterns in our data
-with the factor analysis, our mouse brain dataset only contain a
-fraction of the full dataset which partly explains why the spatial maps
-and gene loadings for some factors are noisy.</p>
+<p><img src="NNMF/multiple_factors_heatmap.jpg"></p>
 </div>
 </div>
 <div class="section level2">
@@ -312,7 +263,7 @@ and gene loadings for some factors are noisy.</p>
 <p>If you want to get the feature loading values for each factor, you
 can extract them from the <code>DimReduc</code> object. This can for
 example be useful to run Functional Enrichment Analysis (FEA).</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># fetch feature.loadings from DimReduc object</span></span>
 <span><span class="va">nmf_loadings</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span><span class="op">[[</span><span class="st">"nmf"</span><span class="op">]</span><span class="op">]</span><span class="op">@</span><span class="va">feature.loadings</span></span>
 <span></span>
@@ -329,23 +280,23 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co"># Extract top 10 genes per factor</span></span>
 <span><span class="va">gene_loadings_sorted</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 30 × 3</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># Groups:   fctr [3]</span></span></span>
-<span><span class="co">##    gene   fctr  loading</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Nrgn   NMF_1  0.035<span style="text-decoration: underline;">5</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Cck    NMF_1  0.031<span style="text-decoration: underline;">2</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Olfm1  NMF_1  0.030<span style="text-decoration: underline;">9</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Tmsb4x NMF_1  0.030<span style="text-decoration: underline;">0</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Snap25 NMF_1  0.029<span style="text-decoration: underline;">8</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Egr1   NMF_1  0.029<span style="text-decoration: underline;">3</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Rtn1   NMF_1  0.028<span style="text-decoration: underline;">3</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Arc    NMF_1  0.027<span style="text-decoration: underline;">2</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Uchl1  NMF_1  0.026<span style="text-decoration: underline;">2</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> Lamp5  NMF_1  0.024<span style="text-decoration: underline;">0</span></span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 20 more rows</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 220 × 3</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># Groups:   fctr [22]</span></span></span>
+<span><span class="co">##    gene    fctr  loading</span></span>
+<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> Penk    NMF_1 0.007<span style="text-decoration: underline;">57</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> Pcp4    NMF_1 0.007<span style="text-decoration: underline;">53</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> Ppp1r1b NMF_1 0.007<span style="text-decoration: underline;">21</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> Gpr88   NMF_1 0.006<span style="text-decoration: underline;">50</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> Hpca    NMF_1 0.006<span style="text-decoration: underline;">39</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> Ppp3ca  NMF_1 0.006<span style="text-decoration: underline;">08</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> Pde1b   NMF_1 0.006<span style="text-decoration: underline;">08</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> Arpp21  NMF_1 0.005<span style="text-decoration: underline;">98</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> Nrgn    NMF_1 0.005<span style="text-decoration: underline;">85</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> Pde10a  NMF_1 0.005<span style="text-decoration: underline;">82</span></span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 210 more rows</span></span></span></code></pre>
 <p>Run functional enrichment analysis on top 10 genes from factor 1:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gprofiler2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get gene sets</span></span>
@@ -358,39 +309,30 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Look at results</span></span>
-<span><span class="va">fea_results_nmf_1</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 17 × 14</span></span></span>
-<span><span class="co">##    query   significant  p_value term_size query_size intersection_size precision</span></span>
-<span><span class="co">##    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> query_1 TRUE         1.40<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       324          8                 5     0.625</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> query_1 TRUE         2.38<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       360          8                 5     0.625</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> query_1 TRUE         4.05<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       760          9                 6     0.667</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> query_1 TRUE         9.48<span style="color: #949494;">e</span><span style="color: #BB0000;">-5</span>       163          8                 4     0.5  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> query_1 TRUE         1.68<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       188          8                 4     0.5  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> query_1 TRUE         2.44<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>        44          8                 3     0.375</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> query_1 TRUE         9.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-4</span>       120          5                 3     0.6  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> query_1 TRUE         2.51<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span>       370          8                 4     0.5  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> query_1 TRUE         2.71<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span>      <span style="text-decoration: underline;">3</span>244          8                 7     0.875</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">10</span> query_1 TRUE         2.79<span style="color: #949494;">e</span><span style="color: #BB0000;">-3</span>       941          8                 5     0.625</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">11</span> query_1 TRUE         1.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>      <span style="text-decoration: underline;">1</span>110          9                 5     0.556</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">12</span> query_1 TRUE         2.59<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>      <span style="text-decoration: underline;">1</span>266          9                 5     0.556</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">13</span> query_1 TRUE         3.06<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>       697          8                 4     0.5  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">14</span> query_1 TRUE         3.08<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>       698          8                 4     0.5  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">15</span> query_1 TRUE         3.94<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>       643          9                 4     0.444</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">16</span> query_1 TRUE         4.45<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>       247          8                 3     0.375</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">17</span> query_1 TRUE         4.96<span style="color: #949494;">e</span><span style="color: #BB0000;">-2</span>      <span style="text-decoration: underline;">2</span>555          9                 6     0.667</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 7 more variables: recall &lt;dbl&gt;, term_id &lt;chr&gt;, source &lt;chr&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   term_name &lt;chr&gt;, effective_domain_size &lt;int&gt;, source_order &lt;int&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   parents &lt;list&gt;</span></span></span></code></pre>
+<span><span class="va">fea_results_nmf_1</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">p_value</span>, <span class="va">term_size</span>, <span class="va">query_size</span>, <span class="va">intersection_size</span>, <span class="va">term_name</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 23 × 5</span></span></span>
+<span><span class="co">##      p_value term_size query_size intersection_size term_name                   </span></span>
+<span><span class="co">##        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 1</span> 0.000<span style="text-decoration: underline;">082</span>5        36          7                 3 response to amphetamine     </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 2</span> 0.000<span style="text-decoration: underline;">265</span>        250          7                 4 locomotory behavior         </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 3</span> 0.000<span style="text-decoration: underline;">301</span>        188          9                 4 learning                    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 4</span> 0.000<span style="text-decoration: underline;">302</span>         55          7                 3 response to amine           </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 5</span> 0.000<span style="text-decoration: underline;">384</span>       <span style="text-decoration: underline;">1</span>329          8                 6 response to abiotic stimulus</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 6</span> 0.000<span style="text-decoration: underline;">885</span>        417          6                 4 response to salt            </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 7</span> 0.002<span style="text-decoration: underline;">14</span>         760          9                 5 behavior                    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 8</span> 0.002<span style="text-decoration: underline;">64</span>         324          9                 4 learning or memory          </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;"> 9</span> 0.003<span style="text-decoration: underline;">42</span>         475          7                 4 response to radiation       </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">10</span> 0.004<span style="text-decoration: underline;">01</span>         360          9                 4 cognition                   </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 13 more rows</span></span></span></code></pre>
 <p><br></p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.1.5</p></li>
+<li><p><code>semla</code>: 1.1.6</p></li>
 <li><p><code>RcppML</code>: 0.5.6</p></li>
 <li><p><code>singlet</code>: 0.99.27</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.3 (2023-03-15)</span></span>
 <span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
@@ -406,20 +348,23 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] gprofiler2_0.2.2   singlet_0.99.27    RcppML_0.5.6       semla_1.1.5       </span></span>
-<span><span class="co">## [5] ggplot2_3.4.3      dplyr_1.1.3        SeuratObject_4.1.3 Seurat_4.3.0.1    </span></span>
+<span><span class="co">## [1] stxBrain.SeuratData_0.1.1 SeuratData_0.2.2         </span></span>
+<span><span class="co">## [3] singlet_0.99.27           RcppML_0.5.6             </span></span>
+<span><span class="co">## [5] semla_1.1.6               ggplot2_3.4.3            </span></span>
+<span><span class="co">## [7] dplyr_1.1.3               SeuratObject_4.1.3       </span></span>
+<span><span class="co">## [9] Seurat_4.3.0.1           </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] fastmatch_1.1-4        systemfonts_1.0.4      plyr_1.8.8            </span></span>
 <span><span class="co">##   [4] igraph_1.5.1           lazyeval_0.2.2         sp_2.0-0              </span></span>
 <span><span class="co">##   [7] splines_4.2.3          BiocParallel_1.32.6    listenv_0.9.0         </span></span>
 <span><span class="co">##  [10] scattermore_1.2        digest_0.6.33          htmltools_0.5.6       </span></span>
-<span><span class="co">##  [13] viridis_0.6.4          magick_2.7.4           fansi_1.0.4           </span></span>
-<span><span class="co">##  [16] magrittr_2.0.3         memoise_2.0.1          tensor_1.5            </span></span>
-<span><span class="co">##  [19] cluster_2.1.4          ROCR_1.0-11            limma_3.54.2          </span></span>
-<span><span class="co">##  [22] globals_0.16.2         matrixStats_1.0.0      pkgdown_2.0.7         </span></span>
-<span><span class="co">##  [25] spatstat.sparse_3.0-2  colorspace_2.1-0       ggrepel_0.9.3         </span></span>
-<span><span class="co">##  [28] textshaping_0.3.6      xfun_0.40              RCurl_1.98-1.12       </span></span>
+<span><span class="co">##  [13] magick_2.7.4           fansi_1.0.4            magrittr_2.0.3        </span></span>
+<span><span class="co">##  [16] memoise_2.0.1          tensor_1.5             cluster_2.1.4         </span></span>
+<span><span class="co">##  [19] ROCR_1.0-11            limma_3.54.2           globals_0.16.2        </span></span>
+<span><span class="co">##  [22] matrixStats_1.0.0      pkgdown_2.0.7          spatstat.sparse_3.0-2 </span></span>
+<span><span class="co">##  [25] colorspace_2.1-0       rappdirs_0.3.3         ggrepel_0.9.3         </span></span>
+<span><span class="co">##  [28] textshaping_0.3.6      xfun_0.40              crayon_1.5.2          </span></span>
 <span><span class="co">##  [31] jsonlite_1.8.7         progressr_0.14.0       spatstat.data_3.0-1   </span></span>
 <span><span class="co">##  [34] zeallot_0.1.0          survival_3.5-7         zoo_1.8-12            </span></span>
 <span><span class="co">##  [37] glue_1.6.2             polyclip_1.10-4        gtable_0.3.4          </span></span>
@@ -428,34 +373,32 @@ example be useful to run Functional Enrichment Analysis (FEA).</p>
 <span><span class="co">##  [46] miniUI_0.1.1.1         Rcpp_1.0.11            viridisLite_0.4.2     </span></span>
 <span><span class="co">##  [49] xtable_1.8-4           reticulate_1.31        htmlwidgets_1.6.2     </span></span>
 <span><span class="co">##  [52] httr_1.4.7             fgsea_1.24.0           RColorBrewer_1.1-3    </span></span>
-<span><span class="co">##  [55] ellipsis_0.3.2         ica_1.0-3              farver_2.1.1          </span></span>
-<span><span class="co">##  [58] pkgconfig_2.0.3        sass_0.4.7             uwot_0.1.16           </span></span>
-<span><span class="co">##  [61] deldir_1.0-9           utf8_1.2.3             labeling_0.4.3        </span></span>
-<span><span class="co">##  [64] tidyselect_1.2.0       rlang_1.1.1            reshape2_1.4.4        </span></span>
-<span><span class="co">##  [67] later_1.3.1            munsell_0.5.0          tools_4.2.3           </span></span>
-<span><span class="co">##  [70] cachem_1.0.8           cli_3.6.1              dbscan_1.1-11         </span></span>
-<span><span class="co">##  [73] generics_0.1.3         ggridges_0.5.4         evaluate_0.21         </span></span>
-<span><span class="co">##  [76] stringr_1.5.0          fastmap_1.1.1          yaml_2.3.7            </span></span>
-<span><span class="co">##  [79] ragg_1.2.5             goftest_1.2-3          babelgene_22.9        </span></span>
-<span><span class="co">##  [82] knitr_1.43             fs_1.6.3               fitdistrplus_1.1-11   </span></span>
-<span><span class="co">##  [85] purrr_1.0.2            RANN_2.6.1             pbapply_1.7-2         </span></span>
-<span><span class="co">##  [88] future_1.33.0          nlme_3.1-163           mime_0.12             </span></span>
-<span><span class="co">##  [91] compiler_4.2.3         rstudioapi_0.15.0      plotly_4.10.2         </span></span>
-<span><span class="co">##  [94] png_0.1-8              spatstat.utils_3.0-3   tibble_3.2.1          </span></span>
-<span><span class="co">##  [97] bslib_0.5.1            stringi_1.7.12         highr_0.10            </span></span>
-<span><span class="co">## [100] desc_1.4.2             forcats_1.0.0          lattice_0.21-8        </span></span>
-<span><span class="co">## [103] Matrix_1.6-1           shinyjs_2.1.0          vctrs_0.6.3           </span></span>
-<span><span class="co">## [106] pillar_1.9.0           lifecycle_1.0.3        BiocManager_1.30.22   </span></span>
-<span><span class="co">## [109] spatstat.geom_3.2-4    lmtest_0.9-40          jquerylib_0.1.4       </span></span>
-<span><span class="co">## [112] RcppAnnoy_0.0.21       bitops_1.0-7           data.table_1.14.8     </span></span>
-<span><span class="co">## [115] cowplot_1.1.1          irlba_2.3.5.1          httpuv_1.6.11         </span></span>
-<span><span class="co">## [118] patchwork_1.1.3        R6_2.5.1               promises_1.2.1        </span></span>
-<span><span class="co">## [121] renv_1.0.2             KernSmooth_2.23-22     gridExtra_2.3         </span></span>
-<span><span class="co">## [124] parallelly_1.36.0      codetools_0.2-19       MASS_7.3-60           </span></span>
-<span><span class="co">## [127] rprojroot_2.0.3        withr_2.5.0            sctransform_0.3.5     </span></span>
-<span><span class="co">## [130] parallel_4.2.3         grid_4.2.3             tidyr_1.3.0           </span></span>
-<span><span class="co">## [133] rmarkdown_2.24         Rtsne_0.16             ggnewscale_0.4.9      </span></span>
-<span><span class="co">## [136] spatstat.explore_3.2-1 shiny_1.7.5</span></span></code></pre>
+<span><span class="co">##  [55] ellipsis_0.3.2         ica_1.0-3              pkgconfig_2.0.3       </span></span>
+<span><span class="co">##  [58] sass_0.4.7             uwot_0.1.16            deldir_1.0-9          </span></span>
+<span><span class="co">##  [61] utf8_1.2.3             tidyselect_1.2.0       rlang_1.1.1           </span></span>
+<span><span class="co">##  [64] reshape2_1.4.4         later_1.3.1            munsell_0.5.0         </span></span>
+<span><span class="co">##  [67] tools_4.2.3            cachem_1.0.8           cli_3.6.1             </span></span>
+<span><span class="co">##  [70] dbscan_1.1-11          generics_0.1.3         ggridges_0.5.4        </span></span>
+<span><span class="co">##  [73] evaluate_0.21          stringr_1.5.0          fastmap_1.1.1         </span></span>
+<span><span class="co">##  [76] yaml_2.3.7             ragg_1.2.5             goftest_1.2-3         </span></span>
+<span><span class="co">##  [79] babelgene_22.9         knitr_1.43             fs_1.6.3              </span></span>
+<span><span class="co">##  [82] fitdistrplus_1.1-11    purrr_1.0.2            RANN_2.6.1            </span></span>
+<span><span class="co">##  [85] pbapply_1.7-2          future_1.33.0          nlme_3.1-163          </span></span>
+<span><span class="co">##  [88] mime_0.12              compiler_4.2.3         rstudioapi_0.15.0     </span></span>
+<span><span class="co">##  [91] plotly_4.10.2          png_0.1-8              spatstat.utils_3.0-3  </span></span>
+<span><span class="co">##  [94] tibble_3.2.1           bslib_0.5.1            stringi_1.7.12        </span></span>
+<span><span class="co">##  [97] desc_1.4.2             forcats_1.0.0          lattice_0.21-8        </span></span>
+<span><span class="co">## [100] Matrix_1.6-1           shinyjs_2.1.0          vctrs_0.6.3           </span></span>
+<span><span class="co">## [103] pillar_1.9.0           lifecycle_1.0.3        BiocManager_1.30.22   </span></span>
+<span><span class="co">## [106] spatstat.geom_3.2-4    lmtest_0.9-40          jquerylib_0.1.4       </span></span>
+<span><span class="co">## [109] RcppAnnoy_0.0.21       data.table_1.14.8      cowplot_1.1.1         </span></span>
+<span><span class="co">## [112] irlba_2.3.5.1          httpuv_1.6.11          patchwork_1.1.3       </span></span>
+<span><span class="co">## [115] R6_2.5.1               promises_1.2.1         renv_1.0.2            </span></span>
+<span><span class="co">## [118] KernSmooth_2.23-22     gridExtra_2.3          parallelly_1.36.0     </span></span>
+<span><span class="co">## [121] codetools_0.2-19       MASS_7.3-60            rprojroot_2.0.3       </span></span>
+<span><span class="co">## [124] withr_2.5.0            sctransform_0.3.5      parallel_4.2.3        </span></span>
+<span><span class="co">## [127] grid_4.2.3             tidyr_1.3.0            rmarkdown_2.24        </span></span>
+<span><span class="co">## [130] Rtsne_0.16             spatstat.explore_3.2-1 shiny_1.7.5</span></span></code></pre>
 </details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
