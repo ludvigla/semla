@@ -760,6 +760,8 @@ ReadVisiumData <- function (
   coordinates <- LoadSpatialCoordinates(coordinatefiles = infoTable$spotfiles,
                                         remove_spots_outside_tissue = remove_spots_outside_tissue,
                                         verbose = verbose)
+  coordinates <- coordinates |>
+    select(all_of(c("barcode", "x", "y", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
 
   # Create Seurat meta data
   if (!is.null(additionalMetaData)) {
@@ -826,9 +828,7 @@ ReadVisiumData <- function (
 
   # Create a Staffli object
   staffli_object <- CreateStaffliObject(imgs = infoTable$imgs,
-                                        meta_data = coordinates |>
-                                          ungroup() |> 
-                                          select(all_of(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID"))),
+                                        meta_data = coordinates |> ungroup(),
                                         image_info = image_info,
                                         scalefactors = scalefactors)
   if (verbose) cli_alert_info("Created `Staffli` object")
