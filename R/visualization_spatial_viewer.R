@@ -3,7 +3,7 @@
 #'
 NULL
 
-
+# TODO: disable sample switch when lasso tool is active
 #' Interactive spatial feature viewer
 #'
 #' \code{FeatureViewer} opens up an interactive shiny application where
