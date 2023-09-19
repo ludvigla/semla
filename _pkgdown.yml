@@ -189,6 +189,7 @@ reference:
 - contents:
   - UpdateSTUtilityV1Object
   - UpdateSeuratForSemla
+  - UpdateSeuratFromSemla
   - file_server
   - icp
   - kabsch
