@@ -1,3 +1,8 @@
+#' @include checks.R
+#'
+NULL
+
+
 #' Find array transformation for Visium coordinates
 #' 
 #' The Visium coordinates are either defined by their array position in a 
