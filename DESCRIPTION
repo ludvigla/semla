@@ -86,6 +86,7 @@ Collate:
     'feature_loadings_plot.R'
     'file_server.R'
     'ftrviewer.R'
+    'get_array_rotation.R'
     'icp.R'
     'load_data.R'
     'staffli_object.R'
