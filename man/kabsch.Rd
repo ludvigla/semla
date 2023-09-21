@@ -7,7 +7,7 @@
 kabsch(pm, qm)
 }
 \arguments{
-\item{pm}{n x 2 matrix of points to align to to \code{qm}.}
+\item{pm}{n x 2 matrix of points to align to \code{qm}.}
 
 \item{qm}{n x 2 matrix of reference points.}
 }
