@@ -293,6 +293,7 @@ FeatureViewer <- function (
       fluidRow(),
       selectizeInput("sample", "Sample", selected = sampleIDs[1], choices = sampleIDs),
       fastSliderInput("opacity", "Opacity", min = 0, max = 1, value = 1, step = 0.05), # Slider for opacity values
+      fastSliderInput("spotsize", "Spot size", min = 0.5, max = 5, value = 3, step = 0.1), # Slider for spot size
       selectizeInput("feature", label = "Feature", selected = selected_features[1], choices = NULL), # numeric features
 
       # This panel only opens up if a numeric feature is selected
@@ -570,7 +571,8 @@ FeatureViewer <- function (
                   colors = rv$colors |> unname(),
                   isNumeric = rv$isNumeric,
                   useLasso = rv$lasso,
-                  opacity = input$opacity)
+                  opacity = input$opacity,
+                  spot_size = input$spotsize/1000)
       }
     })
 
