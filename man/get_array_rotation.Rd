@@ -55,8 +55,10 @@ se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "s
 # for VisiumV1 data since the grid is arranged in a hexagonal pattern
 coords <- GetCoordinates(se_mcolon) |> 
   mutate(y = y*sqrt(3)) # Scale y values for hexaognal grids
-p1 <- ggplot(coords, aes(x, y)) + geom_point() + scale_y_reverse() + coord_fixed()
-p2 <- ggplot(coords, aes(pxl_col_in_fullres, pxl_row_in_fullres)) + geom_point() + scale_y_reverse() + coord_fixed()
+p1 <- ggplot(coords, aes(x, y)) + geom_point() + 
+   scale_y_reverse() + coord_fixed()
+p2 <- ggplot(coords, aes(pxl_col_in_fullres, pxl_row_in_fullres)) + 
+   geom_point() + scale_y_reverse() + coord_fixed()
 p1 + p2
 
 # The rotation between the two sets of coordinates is sutble,
