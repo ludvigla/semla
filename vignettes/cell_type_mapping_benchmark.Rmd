@@ -31,8 +31,8 @@ Load single-cell data (Allen Brain atlas) and Visium data (mouse brain tissue se
 ## Load data
 
 ```{r include=FALSE, eval=FALSE}
-se_allen <- readRDS("~/10x_data/R_objects/allen_brain")
-se_brain_spatial <- readRDS("~/10x_data/R_objects/se_brain_spatial")
+se_allen <- readRDS("R_objects/allen_brain")
+se_brain_spatial <- readRDS("R_objects/se_brain_spatial")
 ```
 
 We have access to 23 annotated cell types in the single-cell data.
@@ -115,19 +115,19 @@ mini_bulk_umis <- do.call(cbind, batches)
 
 ```{r eval=FALSE, include=FALSE}
 # Export sampled labels
-saveRDS(sampled_indices, "../../manuscript/synthetic_data/sampled_indices")
+saveRDS(sampled_indices, "synthetic_spots/sampled_indices")
 
 # Export label matrix
-saveRDS(label_matrix, "../../manuscript/synthetic_data/label_matrix")
+saveRDS(label_matrix, "synthetic_spots/label_matrix")
 
 # Export sampled counts
-saveRDS(sampled_counts, "../../manuscript/synthetic_data/sampled_counts")
+saveRDS(sampled_counts, "synthetic_spots/sampled_counts")
 
 # Exsport synthetic count matrix
-data.table::fwrite(mini_bulk_umis %>% t() %>% as.data.frame(), file = "../../manuscript/synthetic_data/mini_bulk_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+data.table::fwrite(mini_bulk_umis |> t() |> as.data.frame(), file = "synthetic_spots/mini_bulk_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
 ```
 
-## Export allen brain atlas data for cell2location and stereoscope
+## Export Allen brain atlas data for cell2location and stereoscope
 
 Here we'll export a subset of the single-cell data including 250 randomly selected cells per cell type. If a cell type has less than 250 cells, all cells will be selected. Only cell types with more than 10 cells are kept.
 
@@ -149,11 +149,11 @@ keep <- names(cells_per_celltype)[cells_per_celltype > 10]
 barcodes <- barcodes |> filter(group %in% keep)
 
 # Export matrices and tables
-dir.create("wynthetic_data")
-data.table::fwrite(GetAssayData(se_allen, slot = "counts")[, barcodes$barcode] %>% t() %>% as.data.frame(), file = "synthetic_data/allen_brain_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
-writeLines(rownames(se_allen), con = "../../manuscript/synthetic_data/variable_genes.txt")
-data.table::fwrite(se_allen@meta.data[barcodes$barcode, ] %>% select(subclass), file = "../../manuscript/synthetic_data/metadata.tsv", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
-data.table::fwrite(GetAssayData(se_Visium_agg, slot = "counts") %>% t() %>% as.data.frame(), file = "../../manuscript/synthetic_data/Visium_synthetic_spots_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+dir.create("synthetic_spots")
+data.table::fwrite(GetAssayData(se_allen, slot = "counts")[, barcodes$barcode] |> t() |> as.data.frame(), file = "synthetic_spots/allen_brain_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
+writeLines(rownames(se_allen), con = "synthetic_spots/variable_genes.txt")
+data.table::fwrite(se_allen@meta.data[barcodes$barcode, ] |> select(subclass), file = "synthetic_spots/metadata.tsv", sep = "\t", quote = FALSE, row.names = TRUE, col.names = TRUE)
+data.table::fwrite(GetAssayData(se_Visium_agg, slot = "counts") |> t() |> as.data.frame(), file = "synthetic_spots/Visium_synthetic_spots_umis.tsv", quote = FALSE, sep = "\t", row.names = TRUE, col.names = TRUE)
 ```
 
 ### Create a Seurat object from the synthetic count matrix
@@ -161,11 +161,6 @@ data.table::fwrite(GetAssayData(se_Visium_agg, slot = "counts") %>% t() %>% as.d
 Each synthetic spot will be named "barcode1", barcode2", ...
 
 For downstream steps, we need to normalize the data and select a set of top 5,000 variable genes.
-
-```{r eval=FALSE, include=FALSE}
-mini_bulk_umis <- data.table::fread("../../manuscript/synthetic_data/mini_bulk_umis.tsv.gz") |> 
-  data.frame(row.names = 1) |> t()
-```
 
 ```{r eval=FALSE}
 colnames(mini_bulk_umis) <- paste0("barcode", 1:num_samples)
@@ -217,7 +212,7 @@ nnls_stamps <- do.call(bind_rows, nnls_results)
 Now we can plot the average computation times for each data set size.
 
 ```{r eval=FALSE}
-p <- ggplot(nnls_stamps %>% group_by(n) %>% summarize(mean = mean(stamp), sd = sd(stamp)), 
+p <- ggplot(nnls_stamps |> group_by(n) |> summarize(mean = mean(stamp), sd = sd(stamp)), 
        aes(x = n, y = mean, ymin = mean - sd, ymax = mean + sd)) + 
   geom_errorbar(width = 0) +
   geom_point() +
@@ -268,7 +263,8 @@ props <- props[, colnames(props) != "CR"]
 props <- props[, rownames(se_Visium_agg)]
 
 # Compare proportions
-pred_all <- tibble(inf_props_nnls = GetAssayData(se_Visium_agg, slot = "data") |> t() |> as.numeric(),
+pred_all <- tibble(inf_props_nnls = GetAssayData(se_Visium_agg, slot = "data") |> 
+                     as.matrix() |> t() |> as.numeric(),
              exp_props = props |> as.numeric(), 
              celltype = rep(rownames(se_Visium_agg), each = 1e4))
 ```
@@ -402,7 +398,7 @@ For deconvolution with stereoscope, we used the scvi implementation, following t
 ## Compute performance metrics
 
 ```{r eval=FALSE}
-stereoscope <- read.table("synthetic_data/stereoscope/stereoscope_proportions.csv", sep = ",", header = TRUE, row.names = 1, check.names = FALSE)
+stereoscope <- read.table("synthetic_spots/stereoscope/W.2023-08-17102550.170200.tsv", sep = "\t", header = TRUE, row.names = 1, check.names = FALSE)
 pred_all$inf_props_stereoscope <- stereoscope[, rownames(se_Visium_agg@assays$celltypeprops)] |> as.matrix() |> as.numeric()
 ```
 
@@ -415,7 +411,7 @@ For deconvolution with cell2location, we followed the tutorial ['Mapping human l
 Load cell2location cell abundances.
 
 ```{r eval=FALSE}
-cell2location <- read.table("synthetic_data/cell2location/q05_cell_abundance_w_sf.csv", sep = ",", header = TRUE, row.names = 1, check.names = FALSE)
+cell2location <- read.table("synthetic_spots/cell2location/q05_cell_abundance_w_sf.csv", sep = ",", header = TRUE, row.names = 1, check.names = FALSE)
 cell2location_props <- prop.table(cell2location |> as.matrix(), margin = 1)
 colnames(cell2location_props) <- gsub(pattern = "q05cell_abundance_w_sf_", replacement = "", x = colnames(cell2location_props))
 pred_all$inf_props_cell2location <- cell2location_props[, rownames(se_Visium_agg@assays$celltypeprops)] |> as.matrix() |> as.numeric()
@@ -424,7 +420,7 @@ pred_all$inf_props_cell2location <- cell2location_props[, rownames(se_Visium_agg
 # Run time for 10k spots
 
 ```{r include=FALSE, eval=FALSE}
-run_time <- readRDS("synthetic_spots/results/run_time")
+run_time <- readRDS("synthetic_spots/results/run_time.rds")
 ```
 
 ```{r eval=FALSE}
@@ -443,6 +439,12 @@ dev.off()
 ```
 
 ![4. Computation time for 5 methods on synthetic Visium data with 10,000 spots. The y-axis shows the run time in seconds.](synthetic_spots/run_time_comparison_10k.jpg)
+
+```{r eval=FALSE}
+rmse <- function(x, y) {
+  sqrt(mean((x - y)^2))
+}
+```
 
 ```{r fig.asp=0.5, fig.width=10, eval=FALSE}
 pred_all_long <- pred_all |> 
@@ -464,6 +466,11 @@ p2 <- ggplot(pred_all_long, aes(method, rmse)) +
 p1 + p2
 ```
 
+```{r include=FALSE, eval=FALSE}
+# Export all predicted values
+saveRDS(pred_all, file = "synthetic_spots/results/predicted_proportions_10k.rds")
+```
+
 ```{r eval=FALSE, include=FALSE}
 jpeg(filename = "synthetic_spots/performance_metrics.jpg", width = 2e3, height = 8e2, res = 200)
 print(p1 + p2)
@@ -473,6 +480,10 @@ dev.off()
 ![5. Performance metrics for 5 methods. The pearson correlation scores and RMSE are calculated from the inferred vs expected proportions.](synthetic_spots/performance_metrics.jpg)
 
 ## Scatter plots
+
+```{r include=FALSE, eval=FALSE}
+pred_all <- readRDS("synthetic_spots/results/predicted_proportions_10k.rds")
+```
 
 ```{r fig.width=7, fig.height=30, eval=FALSE}
 pred_all_long <- pred_all |> tidyr::pivot_longer(cols = c("inf_props_nnls", "inf_props_rctd", "inf_props_seurat", 
@@ -487,7 +498,8 @@ p <- ggplot(pred_all_long,
   scale_x_continuous(limits = c(0, 1)) +
   scale_y_continuous(limits = c(0, 1)) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  labs(x = "Expected proportions", y = "Inferred proportions")
+  labs(x = "Expected proportions", y = "Inferred proportions") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 p
 ```
 
@@ -497,7 +509,7 @@ p
 dev.off()
 
 jpeg(filename = "synthetic_spots/scatter_plots_comparison_1.jpg", width = 2e3, height = 1e3, res = 200)
-ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg)[1:11]), 
+ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg@assays$celltypeprops)[1:11]), 
        aes(exp_props, inf_props)) +
   geom_point(size = 0.5) +
   facet_grid(method~celltype) +
@@ -505,11 +517,12 @@ ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg)[1:11]),
   scale_x_continuous(limits = c(0, 1)) +
   scale_y_continuous(limits = c(0, 1)) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  labs(x = "Expected proportions", y = "Inferred proportions")
+  labs(x = "Expected proportions", y = "Inferred proportions") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 dev.off()
 
 jpeg(filename = "synthetic_spots/scatter_plots_comparison_2.jpg", width = 2e3, height = 1e3, res = 200)
-ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg)[11:22]), 
+ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg@assays$celltypeprops)[12:22]), 
        aes(exp_props, inf_props)) +
   geom_point(size = 0.5) +
   facet_grid(method~celltype) +
@@ -517,11 +530,12 @@ ggplot(pred_all_long |> filter(celltype %in% rownames(se_Visium_agg)[11:22]),
   scale_x_continuous(limits = c(0, 1)) +
   scale_y_continuous(limits = c(0, 1)) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
-  labs(x = "Expected proportions", y = "Inferred proportions")
+  labs(x = "Expected proportions", y = "Inferred proportions") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 dev.off()
 ```
 
-![6. Scatter plot showing expected vs inferred cell type porportions for 5 methods on 10,000 synthetic Visium spots. The blue line indicates a fitter trend line and the dashed red lines indicate the expected 1 to 1 relationship.](synthetic_spots/scatter_plots_comparison.jpg)
+![6. Scatter plot showing expected vs inferred cell type proportions for 5 methods on 10,000 synthetic Visium spots. The blue line indicates a fitter trend line and the dashed red lines indicate the expected 1 to 1 relationship.](synthetic_spots/scatter_plots_comparison.jpg)
 
 <br>
 

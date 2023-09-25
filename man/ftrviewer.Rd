@@ -20,6 +20,7 @@ ftrviewer(
   colors = rev(RColorBrewer::brewer.pal(n = 9, name = "Spectral")),
   container_width = 800,
   container_height = 800,
+  spot_size = 0.003,
   elementId = NULL
 )
 }
@@ -52,6 +53,8 @@ ftrviewer(
 \item{colors}{A character vector of colors}
 
 \item{container_width, container_height}{Container width/height in pixels}
+
+\item{spot_size}{A numeric value specifying the spot radius}
 
 \item{elementId}{The id of the viewer element}
 }

@@ -11,8 +11,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In this article, we'll demonstrate how to load Slide-Seq data with `semla`. First, we need to load a `Seurat` object with 
-Slide-Seq data. Here we'll use a prepared `Seurat` object that can be install with the `SeuratData` R package. 
+In this article, we'll demonstrate how to load Slide-Seq data with `semla`. First, we need to load a `Seurat` object with Slide-Seq data. Here we'll use a prepared `Seurat` object that can be install with the `SeuratData` R package.
 
 See `?ReadSlideSeq` for more information on how to load raw data.
 
@@ -26,9 +25,7 @@ InstallData("ssHippo")
 slide_seq <- LoadData("ssHippo")
 ```
 
-Next, we can convert the `Seurat` object to make it compatible with `semla` using the `UpdateSeuratForSemla` function.
-Note that the Slide-Seq data doesn't contain H&E images and therefore, all image related functionality of `semla` 
-will be inaccessible. This includes the Feature Viewer and image alignment tools which requires H&E images to work.
+Next, we can convert the `Seurat` object to make it compatible with `semla` using the `UpdateSeuratForSemla` function. Note that the Slide-Seq data doesn't contain H&E images and therefore, all image related functionality of `semla` will be inaccessible. This includes the Feature Viewer and image alignment tools which requires H&E images to work.
 
 ```{r eval=FALSE}
 slide_seq_semla <- UpdateSeuratForSemla(slide_seq)

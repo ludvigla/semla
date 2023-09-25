@@ -136,7 +136,7 @@ Alternatively, use the `LoadAndMergeMatrices` function from `semla`:
 mergedExprMat <- LoadAndMergeMatrices(samplefiles = expr_matrix_files, verbose = FALSE)
 
 # Create Seurat object
-se <- CreateSeuratObject(counts = mergedExprMat)
+se <- SeuratObject::CreateSeuratObject(counts = mergedExprMat)
 ```
 
 Rearrange `Staffli` object to match `Seurat` object. If the barcode are mismatched, make sure to subset the two object to contain intersecting barcodes.

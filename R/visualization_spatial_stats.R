@@ -461,7 +461,7 @@ MapLabelsSummary <- function (
           axis.title = element_blank(),
           panel.grid = element_blank(),
           panel.border = element_blank(),
-          axis.line.y.right = element_line(size = 0.25),
+          axis.line.y.right = element_line(linewidth = 0.25),
           plot.margin = unit(c(0, 40, 0, 0), "pt"))
   return(p_stat_base)
 }
@@ -474,7 +474,7 @@ MapLabelsSummary <- function (
 #' @param features Selected features
 #' @param fill_color Fill color for boxplot
 #'
-#' @importFrom ggplot2 geom_boxplot aes_string xlim scale_y_continuous
+#' @importFrom ggplot2 geom_boxplot xlim scale_y_continuous
 #'
 #' @return a `ggplot` object
 #'
@@ -486,7 +486,7 @@ MapLabelsSummary <- function (
   fill_color
 ) {
   p_stat <- p_stat_base +
-    geom_boxplot(data = x, mapping = aes_string(x = "1", y = features),
+    geom_boxplot(data = x, mapping = aes(x = 1, y = .data[[features]]),
                  outlier.size = 0.5,
                  fill = fill_color) +
     xlim(0.5, 1.75) +
@@ -502,7 +502,7 @@ MapLabelsSummary <- function (
 #' @param features Selected features
 #' @param fill_color Fill color for violin plot
 #'
-#' @importFrom ggplot2 geom_violin aes_string xlim scale_y_continuous
+#' @importFrom ggplot2 geom_violin xlim scale_y_continuous
 #'
 #' @return a `ggplot` object
 #'
@@ -514,7 +514,7 @@ MapLabelsSummary <- function (
     fill_color
 ) {
   p_stat <- p_stat_base +
-    geom_violin(data = x, mapping = aes_string(x = "1", y = features),
+    geom_violin(data = x, mapping = aes(x = 1, y = .data[[features]]),
                 fill = fill_color,
                 draw_quantiles = 0.5) +
     xlim(0.25,1.75) +
@@ -530,7 +530,7 @@ MapLabelsSummary <- function (
 #' @param features Selected features
 #' @param fill_color Fill color for histogram
 #'
-#' @importFrom ggplot2 geom_histogram aes_string coord_flip scale_x_continuous scale_y_reverse
+#' @importFrom ggplot2 geom_histogram coord_flip scale_x_continuous scale_y_reverse
 #'
 #' @return a `ggplot` object
 #'
@@ -542,7 +542,7 @@ MapLabelsSummary <- function (
     fill_color
 ) {
   p_stat <- p_stat_base +
-    geom_histogram(data = x, mapping = aes_string(x = features),
+    geom_histogram(data = x, mapping = aes(x = .data[[features]]),
                  bins = 50,
                  fill = fill_color) +
     coord_flip() +
@@ -558,7 +558,7 @@ MapLabelsSummary <- function (
 #' @param features Selected features
 #' @param fill_color Fill color for density histogram
 #'
-#' @importFrom ggplot2 geom_density aes_string coord_flip scale_x_continuous scale_y_reverse
+#' @importFrom ggplot2 geom_density coord_flip scale_x_continuous scale_y_reverse
 #'
 #' @return a `ggplot` object
 #'
@@ -570,7 +570,7 @@ MapLabelsSummary <- function (
     fill_color
 ) {
   p_stat <- p_stat_base +
-    geom_density(data = x, mapping = aes_string(x = features),
+    geom_density(data = x, mapping = aes(x = .data[[features]]),
                  color = fill_color,
                  fill = fill_color,
                  alpha = 0.6) +

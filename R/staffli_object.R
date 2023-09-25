@@ -4,7 +4,7 @@ NULL
 
 #' The Staffli Class
 #'
-#' The Staffli object is designed to hold information about the spatial data generated in a 10x
+#' The \code{Staffli} object is designed to hold information about the spatial data generated in a 10x
 #' Visium SRT experiment. This includes paths to images, spot coordinates as well as loaded images
 #' in \code{raster} format and additional information about these images.
 #'
@@ -67,9 +67,6 @@ Staffli <- setClass (
 #' @examples 
 #' 
 #' library(semla)
-#' library(magick)
-#' library(jsonlite)
-#' library(tibble)
 #' 
 #' # Multiple samples
 #' # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -93,32 +90,18 @@ Staffli <- setClass (
 #'                            "spatial/scalefactors_json.json", 
 #'                            package = "semla"))
 #' 
-#' # Read coordinates
+#' # Read coordinates and select relevant columns
 #' coordinates <- LoadSpatialCoordinates(spotfiles) |> 
-#'   select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+#'   select(all_of(c("barcode", "x", "y", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
 #' 
 #' # Create image_info
-#' image_info <- do.call(bind_rows, lapply(seq_along(he_imgs), function(i) {
-#'   he_imgs[i] |> 
-#'     image_read() |> 
-#'     image_info() |> 
-#'     mutate(sampleID = paste0(i))
-#' }))
+#' image_info <- LoadImageInfo(he_imgs)
 #' 
 #' # Read scalefactors
-#' scalefactors <- do.call(bind_rows, lapply(seq_along(jsonfiles), function(i) {
-#'   jsonlite::read_json(jsonfiles[i]) |> 
-#'     as_tibble() |> 
-#'     mutate(sampleID = paste0(i))
-#' }))
+#' scalefactors <- LoadScaleFactors(jsonfiles)
 #' 
 #' # Add additional columns to image_info using scalefactors
-#' image_info <- image_info |> 
-#'   mutate(full_width = width/scalefactors$tissue_lowres_scalef[row_number()],
-#'          full_height = height/scalefactors$tissue_lowres_scalef[row_number()]) |> 
-#'   mutate(type = "tissue_lowres") |> 
-#'   select(format, width, height, full_width, full_height, 
-#'          colorspace, filesize, density, sampleID, type)
+#' image_info <- UpdateImageInfo(image_info, scalefactors)
 #' 
 #' # Create Staffli object
 #' staffli_object <- CreateStaffliObject(imgs = he_imgs, 
@@ -137,13 +120,15 @@ CreateStaffliObject <- function (
     scalefactors
 ) {
   
-  # Set global variables to NULL
-  barcode <- pxl_col_in_fullres <- pxl_row_in_fullres <- sampleID <- NULL
-  
   # Check meta_data
   if (!all(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID") %in% colnames(meta_data))) abort("Invalid meta_data.")
-  meta_data <- meta_data |> 
-    select(barcode, pxl_col_in_fullres, pxl_row_in_fullres, sampleID)
+  if (all(c("x", "y") %in% colnames(meta_data))) {
+    meta_data <- meta_data |> 
+      select(all_of(c("barcode", "x", "y", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
+  } else {
+    meta_data <- meta_data |> 
+      select(all_of(c("barcode", "pxl_col_in_fullres", "pxl_row_in_fullres", "sampleID")))
+  }
   checks <- sapply(meta_data, class)
   if (!checks["barcode"] == "character")
     abort(glue("Invalid class '{checks['barcode']}' for barcode. Expected a 'character' vector."))
@@ -210,7 +195,7 @@ CreateStaffliObject <- function (
 NULL
 
 
-#' @describeIn Staffli-methods Autocompletion for \code{$} access on a
+#' @describeIn Staffli-methods Auto completion for \code{$} access on a
 #' \code{Staffli} object
 #'
 #' @inheritParams utils::.DollarNames

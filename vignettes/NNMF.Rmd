@@ -9,47 +9,65 @@ editor_options:
 
 Non-negative matrix factorization (NNMF or NMF) can be a useful technique to deconvolve 10x Visium data, in particular when a reference single-cell RNA-seq data is not available to conduct cell type deconvolution. In this vignette we will demonstrate how you can apply this method with `semla` on spatial data.
 
-We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and at <https://www.zachdebruine.com/>.
+We recommend using the [singlet](https://zdebruine.github.io/singlet/) R package for NNMF which handles `Seurat` objects. `singlet` uses the ultra fast NNMF implementation from [RcppML](https://zdebruine.github.io/RcppML/). Both of these packages are developed by Zach DeBruines lab and you can find more information about their work and tools at <https://github.com/zdebruine> and <https://www.zachdebruine.com/>.
 
 `RcppML` is available on [CRAN](https://cran.r-project.org/web/packages/RcppML/index.html) and [GitHub](https://github.com/zdebruine/RcppML), and singlet can be installed from GitHub with `devtools::install_github("zdebruine/singlet")`.
 
 ```{r include=FALSE, eval=FALSE}
 devtools::install_github("zdebruine/RcppML")
-# devtools::install_github("zdebruine/singlet", force = T)
 ```
 
 ```{r message=FALSE, warning=FALSE}
 library(semla)
 library(singlet)
+library(SeuratData)
 ```
 
 <br>
 
 ## Run NMF
 
-We'll use our mouse brain test data for the NNMF. The method automatically runs cross-validation to find the best rank and to learn a model at that rank.
+We'll use a mouse brain Visium data set provided in `SeuratData` for the NNMF. The method automatically runs cross-validation to find the best rank and learns a model at that rank.
 
-NB: The mouse brain test data only includes a subset of the entire data of 188 unique genes. With the full dataset, we would be able to find a higher optimal rank and therefore obtain more factors.
+The factorization can be computed on all genes, but below we have filtered the data to include only the top variable features to speed up the computation.
 
-```{r}
-se_mbrain <- readRDS(system.file("extdata/mousebrain", 
-                                 "se_mbrain", 
-                                 package = "semla"))
+```{r eval=FALSE}
+# Here we'll use an example data set provided in SeuratData
+se_mbrain <- LoadData("stxBrain", type = "anterior1")
+
+# Update se_mbrain for compatibility with semla
+se_mbrain <- UpdateSeuratForSemla(se_mbrain)
+
+# Normalize data and find top variable features
+se_mbrain <- se_mbrain |> 
+  NormalizeData() |> 
+  FindVariableFeatures()
+
+# OPTIONAL: subset data to improve computational speed
+se_mbrain <- se_mbrain[VariableFeatures(se_mbrain), ]
 
 # Set seed for reproducibility
 set.seed(42)
 se_mbrain <- RunNMF(se_mbrain)
 ```
 
-```{r}
+```{r eval=FALSE}
 k <- ncol(se_mbrain@reductions$nmf@feature.loadings)
 ```
 
-We can plot the cross-validation results and find that the optimal rank decided by the method is `r toString(k)` which determines the number of factors we obtain from the NMF run.
+We can plot the cross-validation results and find that the optimal rank decided by the method is 22, which determines the number of factors we obtain from the NMF run.
 
-```{r}
+```{r fig.asp=0.5, eval=FALSE}
 RankPlot(se_mbrain)
 ```
+
+```{r eval=FALSE, include=FALSE}
+jpeg("NNMF/rank_plot.jpg", width = 1.2e3, height = 6e2, res = 150)
+RankPlot(se_mbrain)
+dev.off()
+```
+
+![](NNMF/rank_plot.jpg)
 
 <br>
 
@@ -57,13 +75,25 @@ RankPlot(se_mbrain)
 
 The results are stored as a `DimReduc` object in our `Seurat` object and we can map the factors spatially with `MapFeatures()`.
 
-```{r fig.asp=1.2, fig.width=9}
+```{r fig.asp=1.2, fig.width=9, eval=FALSE}
 MapFeatures(se_mbrain, 
-            features = paste0("NMF_", 1:k), 
+            features = paste0("NMF_", 1:22), 
             override_plot_dims = TRUE, 
             colors = viridis::magma(n = 11, direction = -1)) &
   theme(plot.title = element_blank())
 ```
+
+```{r eval=FALSE, include=FALSE}
+jpeg("NNMF/spatial_plot.jpg", width = 2e3, height = 3e3, res = 150)
+MapFeatures(se_mbrain, 
+            features = paste0("NMF_", 1:22), 
+            override_plot_dims = TRUE, 
+            colors = viridis::magma(n = 11, direction = -1)) &
+  theme(plot.title = element_blank())
+dev.off()
+```
+
+![](NNMF/spatial_plot.jpg)
 
 <br>
 
@@ -71,7 +101,7 @@ MapFeatures(se_mbrain,
 
 We can also investigate the gene loadings for each factor with `PlotFeatureLoadings()` which will give us an idea about what the top contributing genes for each factor are. Below we can see the top 30 contributing genes for NMF_1 and NMF_2.
 
-```{r}
+```{r eval=FALSE}
 PlotFeatureLoadings(se_mbrain, 
                     dims = 1:2, 
                     reduction = "nmf", 
@@ -81,26 +111,56 @@ PlotFeatureLoadings(se_mbrain,
                     pt_size = 3)
 ```
 
+```{r eval=FALSE, include=FALSE}
+jpeg("NNMF/gene_loadings.jpg", width = 1.2e3, height = 8e2, res = 150)
+PlotFeatureLoadings(se_mbrain, 
+                    dims = 1:2, 
+                    reduction = "nmf", 
+                    nfeatures = 30,
+                    mode = "dotplot", 
+                    fill = "darkmagenta",
+                    pt_size = 3)
+dev.off()
+```
+
+![](NNMF/gene_loadings.jpg)
+
 <br>
 
 ### Make composite plot
 
-We can also map multiple factors spatially in a single plot with `MapMultipleFeatures()`:
+We can also map multiple factors spatially in a single plot with `MapMultipleFeatures()`. Note that the visualization will only display the most dominant factor for each spot. See `?MapMultipleFeatures()` for details.
 
-```{r}
+```{r eval=FALSE}
 se_mbrain <- LoadImages(se_mbrain)
 
-factor_colors <- c("#332288", "#88CCEE", "#44AA99", "#117733", 
-                   "#999933", "#DDCC77", "#CC6677", "#882255", "#AA4499")
-n_k_plot <- ifelse(k<9, k, 9)
+factor_colors <- c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', 
+                   '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', 
+                   '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3')
+
+# Select non-overlapping factors
+selected_factors <- c(1, 2, 3, 4, 5, 6, 7, 9, 10, 12, 13, 15, 16, 17, 19, 20)
 
 MapMultipleFeatures(se_mbrain, 
-                    features = paste0("NMF_", 1:n_k_plot), 
-                    colors = factor_colors[1:n_k_plot], 
+                    features = paste0("NMF_", selected_factors), 
+                    colors = factor_colors, 
                     image_use = "raw", 
                     override_plot_dims = TRUE, 
                     pt_size = 2)
 ```
+
+```{r eval=FALSE, include=FALSE}
+jpeg("NNMF/multiple_factors.jpg", width = 1.4e3, height = 1e3, res = 150)
+MapMultipleFeatures(se_mbrain, 
+                    features = paste0("NMF_", selected_factors), 
+                    colors = factor_colors, 
+                    image_use = "raw", 
+                    override_plot_dims = TRUE, 
+                    pt_size = 3)
+dev.off()
+```
+
+![](NNMF/multiple_factors.jpg)
 
 <br>
 
@@ -108,22 +168,33 @@ MapMultipleFeatures(se_mbrain,
 
 Similarly, we can also summarize the top feature loadings for each factor with a heatmap:
 
-```{r fig.asp=1}
+```{r fig.asp=1.4, eval=FALSE}
 PlotFeatureLoadings(se_mbrain, 
-                    dims = 1:k, 
+                    dims = selected_factors, 
                     reduction = "nmf", 
-                    nfeatures = 10, 
+                    nfeatures = 30, 
                     mode = "heatmap", 
                     gradient_colors = viridis::magma(n = 11, direction = -1))
 ```
 
-NB: Although we are able to pick up distinct patterns in our data with the factor analysis, our mouse brain dataset only contain a fraction of the full dataset which partly explains why the spatial maps and gene loadings for some factors are noisy.
+```{r eval=FALSE, include=FALSE}
+jpeg("NNMF/multiple_factors_heatmap.jpg", width = 1.4e3, height = 2e3, res = 150)
+PlotFeatureLoadings(se_mbrain, 
+                    dims = selected_factors, 
+                    reduction = "nmf", 
+                    nfeatures = 30, 
+                    mode = "heatmap", 
+                    gradient_colors = viridis::magma(n = 11, direction = -1))
+dev.off()
+```
+
+![](NNMF/multiple_factors_heatmap.jpg)
 
 ## FEA
 
 If you want to get the feature loading values for each factor, you can extract them from the `DimReduc` object. This can for example be useful to run Functional Enrichment Analysis (FEA).
 
-```{r}
+```{r eval=FALSE}
 # fetch feature.loadings from DimReduc object
 nmf_loadings <- se_mbrain[["nmf"]]@feature.loadings
 
@@ -142,9 +213,19 @@ gene_loadings_sorted |>
   slice_head(n = 10)
 ```
 
+```{r eval=FALSE, include=FALSE}
+saveRDS(gene_loadings_sorted, file = "NNMF/gene_loadings_sorted")
+```
+
+```{r echo=FALSE}
+gene_loadings_sorted <- readRDS("NNMF/gene_loadings_sorted")
+gene_loadings_sorted |> 
+  slice_head(n = 10)
+```
+
 Run functional enrichment analysis on top 10 genes from factor 1:
 
-```{r}
+```{r eval=FALSE}
 library(gprofiler2)
 
 # Get gene sets
@@ -157,7 +238,16 @@ fea_results_nmf_1 <- gost(query = gene_set_nmf_1$gene, ordered_query = TRUE, org
   as_tibble()
 
 # Look at results
-fea_results_nmf_1
+fea_results_nmf_1 |> select(p_value, term_size, query_size, intersection_size, term_name)
+```
+
+```{r eval=FALSE, include=FALSE}
+saveRDS(fea_results_nmf_1, file = "NNMF/fea_results_nmf_1")
+```
+
+```{r echo=FALSE}
+fea_results_nmf_1 <- readRDS("NNMF/fea_results_nmf_1")
+fea_results_nmf_1 |> select(p_value, term_size, query_size, intersection_size, term_name)
 ```
 
 

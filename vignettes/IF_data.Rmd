@@ -17,10 +17,9 @@ library(semla)
 
 In this article, we'll demonstrate how to load Immunoflurescence (IF) data with `semla`.
 
-You can download example data from 10x Genomics website. Here we'll use a Breast Cancer data set called "Visium CytAssist Gene and Protein Expression Library of Human Breast Cancer, IF, 6.5mm (FFPE)". 
+You can download example data from 10x Genomics website. Here we'll use a Breast Cancer data set called "Visium CytAssist Gene and Protein Expression Library of Human Breast Cancer, IF, 6.5mm (FFPE)".
 
-Assuming that you have downloaded the data (filtered_feature_bc_matrix.h5 and the spatial/ folder) 
-into your current working directory, you can load the data into a Seurat object:
+Assuming that you have downloaded the data (filtered_feature_bc_matrix.h5 and the spatial/ folder) into your current working directory, you can load the data into a Seurat object:
 
 ```{r eval=FALSE}
 samples <- "filtered_feature_bc_matrix.h5"
@@ -32,33 +31,35 @@ infoTable <- tibble(samples, imgs, spotfiles, json)
 hBrCa <- ReadVisiumData(infoTable)
 ```
 
-```{r include=FALSE, echo=TRUE}
-samples <- "~/10x_data/hBrCa_IF/filtered_feature_bc_matrix.h5"
-imgs <- "~/10x_data/hBrCa_IF/spatial/tissue_hires_image.png"
-spotfiles <- "~/10x_data/hBrCa_IF/spatial/tissue_positions.csv"
-json <- "~/10x_data/hBrCa_IF/spatial/scalefactors_json.json"
+Now we have access to both gene expression counts stored in the 'Spatial' assay and antibody capture measurements stored in the 'AbCapture' assay.
 
-infoTable <- tibble(samples, imgs, spotfiles, json)
-hBrCa <- ReadVisiumData(infoTable)
-```
-
-Now we have access to both gene expression counts stored in the 'Spatial' assay and antibody capture
-measurements stored in the 'AbCapture' assay.
-
-```{r}
+```{r eval=FALSE}
 hBrCa
 ```
 
+```{r echo=FALSE}
+cat("An object of class Seurat 
+18120 features across 4169 samples within 2 assays 
+Active assay: Spatial (18085 features, 0 variable features)
+ 1 other assay present: AbCapture")
+```
 
 This data set comes with a immunofluorescence image that we can use as a background for our plots.
 
-```{r fig.asp=0.98}
+```{r fig.asp=0.98, eval=FALSE}
 hBrCa <- LoadImages(hBrCa, image_height = 1900)
 ImagePlot(hBrCa, mar = c(0, 0, 0, 0))
 ```
 
-Now we can plot both RNA expression values and antibody capture measurements with `semla`. 
-But first, let's normalize the expression values.
+```{r include=FALSE, eval=FALSE}
+jpeg(filename = "IF_data/raw_image.jpg", height = 1900, width = 1944, res = 300)
+ImagePlot(hBrCa, mar = c(0, 0, 0, 0))
+dev.off()
+```
+
+![](IF_data/raw_image.jpg)
+
+Now we can plot both RNA expression values and antibody capture measurements with `semla`. But first, let's normalize the expression values.
 
 ```{r eval=FALSE}
 DefaultAssay(hBrCa) <- "Spatial"
@@ -89,8 +90,7 @@ dev.off()
 
 ![](IF_data/MS4A1_no_HE.jpg)
 
-If we include the immunofluorescence image as the background for our plots, we might want to modify 
-the plots to have a black theme.
+If we include the immunofluorescence image as the background for our plots, we might want to modify the plots to have a black theme.
 
 ```{r fig.asp=0.5, fig.width=8, eval=FALSE}
 
@@ -123,8 +123,7 @@ dev.off()
 
 ![](IF_data/MS4A1_IF_bg.jpg)
 
-With this global visualization, it's quite difficult to see the immunofluorescence image in the background. If we 
-zoom in on a smaller area, it become slightly easier to compare the expression values with the background image.
+With this global visualization, it's quite difficult to see the immunofluorescence image in the background. If we zoom in on a smaller area, it become slightly easier to compare the expression values with the background image.
 
 The plots below show a zoom in view of the bottom right corner.
 
@@ -161,11 +160,9 @@ dev.off()
 
 # Change background image for visualization
 
-We can also easily switch the images in `semla`. The only requirement is that the alternative 
-image is aligned with the spots and has the same aspect ratio as the original image used for Space Ranger.
+We can also easily switch the images in `semla`. The only requirement is that the alternative image is aligned with the spots and has the same aspect ratio as the original image used for Space Ranger.
 
-The code below illustrated how one can select the red and green color channels from the immunofluorescence image
-and reload them for visualization with `semla`.
+The code below illustrated how one can select the red and green color channels from the immunofluorescence image and reload them for visualization with `semla`.
 
 ```{r eval=FALSE}
 library(magick)
@@ -210,8 +207,7 @@ im |>
 
 ## Use green channel (PCNA) as background
 
-In order to switch the image in the Seurat object, we can just replace the path to the image using `ReplaceImagePaths` 
-and then reload the image to desired size with `LoadImages`.
+In order to switch the image in the Seurat object, we can just replace the path to the image using `ReplaceImagePaths` and then reload the image to desired size with `LoadImages`.
 
 ```{r eval=FALSE}
 hBrCa <- ReplaceImagePaths(hBrCa, paths = "IF_data/normalized_image_green.png")
@@ -290,7 +286,6 @@ hBrCa <- LoadImages(hBrCa, image_height = 1957)
 ImgePlot(hBrCa)
 ```
 
-
 ```{r eval=FALSE, include=FALSE}
 jpeg(filename = "IF_data/norm_IF.jpg", width = 2e3, height = 2e3, res = 200)
 ImagePlot(hBrCa)
@@ -330,8 +325,6 @@ dev.off()
 
 -   `semla`: `r packageVersion("semla")`
 
--   `RcppML`: `r packageVersion("RcppML")`
-
 </details>
 
 <details>
@@ -345,4 +338,3 @@ sessionInfo()
 </details>
 
 <br>
-

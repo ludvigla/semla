@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-08-30">
+<meta name="dcterms.date" content="2023-08-31">
 
 <title>Visium + Immunofluorescence data</title>
 <style>
@@ -115,7 +115,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 30, 2023</p>
+      <p class="date">August 31, 2023</p>
     </div>
   </div>
     
@@ -142,6 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Now we have access to both gene expression counts stored in the ‘Spatial’ assay and antibody capture measurements stored in the ‘AbCapture’ assay.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hBrCa</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>An object of class Seurat 
 18120 features across 4169 samples within 2 assays 
@@ -151,96 +153,73 @@ Active assay: Spatial (18085 features, 0 variable features)
 </div>
 <p>This data set comes with a immunofluorescence image that we can use as a background for our plots.</p>
 <div class="cell" data-fig.asp="0.98">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1900</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>! White space will be added to H&amp;E images to fit all spots on the images</code></pre>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1900</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(hBrCa, <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Loading H&amp;E images ──</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code></code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ℹ Loading image from ~/10x_data/hBrCa_IF/spatial/tissue_hires_image.png</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ℹ Scaled image from 1957x2000 to 1900x1944 pixels</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>ℹ Saving loaded H&amp;E images as 'rasters' in Seurat object</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(hBrCa, <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="IF_data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+<p><img src="IF_data/raw_image.jpg" class="img-fluid"></p>
 <p>Now we can plot both RNA expression values and antibody capture measurements with <code>semla</code>. But first, let’s normalize the expression values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> hBrCa <span class="sc">|&gt;</span> <span class="fu">NormalizeData</span>()</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> hBrCa <span class="sc">|&gt;</span> <span class="fu">NormalizeData</span>(<span class="at">normalization.method =</span> <span class="st">"CLR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> hBrCa <span class="sc">|&gt;</span> <span class="fu">NormalizeData</span>()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> hBrCa <span class="sc">|&gt;</span> <span class="fu">NormalizeData</span>(<span class="at">normalization.method =</span> <span class="st">"CLR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plot expression values:</p>
 <div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression (normalized)"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression (normalized)"</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression (normalized)"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression (normalized)"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/MS4A1_no_HE.jpg" class="img-fluid"></p>
 <p>If we include the immunofluorescence image as the background for our plots, we might want to modify the plots to have a black theme.</p>
 <div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dark_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">color =</span> <span class="st">"black"</span>),</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>))</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression"</span>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression"</span>)</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dark_theme <span class="ot">&lt;-</span> <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">color =</span> <span class="st">"black"</span>),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, <span class="at">override_plot_dims =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression"</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/MS4A1_IF_bg.jpg" class="img-fluid"></p>
 <p>With this global visualization, it’s quite difficult to see the immunofluorescence image in the background. If we zoom in on a smaller area, it become slightly easier to compare the expression values with the background image.</p>
 <p>The plots below show a zoom in view of the bottom right corner.</p>
 <div class="cell" data-fig.asp="0.7">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">pt_size =</span> <span class="dv">2</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>)) <span class="sc">&amp;</span> </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, </span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>)) <span class="sc">&amp;</span> </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression"</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">design =</span> <span class="fu">c</span>(<span class="fu">area</span>(<span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">2</span>),</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">area</span>(<span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">r =</span> <span class="dv">3</span>),</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">area</span>(<span class="at">t =</span> <span class="dv">2</span>, <span class="at">l =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">3</span>))) <span class="sc">&amp;</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1"</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">pt_size =</span> <span class="dv">2</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>)) <span class="sc">&amp;</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p1, <span class="at">titles =</span> <span class="st">"Gene expression"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"MS4A1.1"</span>, </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">pt_size =</span> <span class="dv">2</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">11</span>)) <span class="sc">&amp;</span> </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(<span class="at">p =</span> p2, <span class="at">titles =</span> <span class="st">"Protein expression"</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">crop_area =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.65</span>, <span class="fl">0.85</span>, <span class="dv">1</span>), <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="sc">+</span> p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">design =</span> <span class="fu">c</span>(<span class="fu">area</span>(<span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">2</span>),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">area</span>(<span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">r =</span> <span class="dv">3</span>),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">area</span>(<span class="at">t =</span> <span class="dv">2</span>, <span class="at">l =</span> <span class="dv">3</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">r =</span> <span class="dv">3</span>))) <span class="sc">&amp;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/MS4A1_IF_bg_zoom.jpg" class="img-fluid"></p>
 <section id="change-background-image-for-visualization" class="level1">
@@ -248,114 +227,114 @@ Active assay: Spatial (18085 features, 0 variable features)
 <p>We can also easily switch the images in <code>semla</code>. The only requirement is that the alternative image is aligned with the spots and has the same aspect ratio as the original image used for Space Ranger.</p>
 <p>The code below illustrated how one can select the red and green color channels from the immunofluorescence image and reload them for visualization with <code>semla</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the path to the immunofluoresence (IF) image</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>impath <span class="ot">&lt;-</span> <span class="fu">GetStaffli</span>(hBrCa)<span class="sc">@</span>imgs</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load IF image</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="at">path =</span> impath)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract channels. Here we only select the red and green channels, </span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># but we could of course also use the DAPI stain in the blue channel</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>)</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">&lt;-</span> <span class="fu">lapply</span>(cols, <span class="cf">function</span>(col) {</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_channel</span>(im, <span class="at">channel =</span> col)</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="at">nm =</span> cols)</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply simple background correction to reduce autofluorescence</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that this code is just for demonstration. </span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">&lt;-</span> <span class="fu">lapply</span>(channels, <span class="cf">function</span>(ch) {</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  im_blurred <span class="ot">&lt;-</span> <span class="fu">image_median</span>(ch, <span class="at">radius =</span> <span class="dv">20</span>)</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  im_composite <span class="ot">&lt;-</span> <span class="fu">image_composite</span>(im_blurred, ch, <span class="at">operator =</span> <span class="st">"Minus"</span>)</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(im_composite)</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Export images</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>channels<span class="sc">$</span>green <span class="sc">|&gt;</span> </span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image_green.png"</span>, </span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>channels<span class="sc">$</span>red <span class="sc">|&gt;</span> </span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image_red.png"</span>, </span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>im <span class="sc">|&gt;</span> </span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image.png"</span>, </span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the path to the immunofluoresence (IF) image</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>impath <span class="ot">&lt;-</span> <span class="fu">GetStaffli</span>(hBrCa)<span class="sc">@</span>imgs</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load IF image</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>im <span class="ot">&lt;-</span> <span class="fu">image_read</span>(<span class="at">path =</span> impath)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract channels. Here we only select the red and green channels, </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># but we could of course also use the DAPI stain in the blue channel</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">&lt;-</span> <span class="fu">lapply</span>(cols, <span class="cf">function</span>(col) {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_channel</span>(im, <span class="at">channel =</span> col)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="at">nm =</span> cols)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply simple background correction to reduce autofluorescence</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that this code is just for demonstration. </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>channels <span class="ot">&lt;-</span> <span class="fu">lapply</span>(channels, <span class="cf">function</span>(ch) {</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  im_blurred <span class="ot">&lt;-</span> <span class="fu">image_median</span>(ch, <span class="at">radius =</span> <span class="dv">20</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  im_composite <span class="ot">&lt;-</span> <span class="fu">image_composite</span>(im_blurred, ch, <span class="at">operator =</span> <span class="st">"Minus"</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(im_composite)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Export images</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>channels<span class="sc">$</span>green <span class="sc">|&gt;</span> </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image_green.png"</span>, </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>channels<span class="sc">$</span>red <span class="sc">|&gt;</span> </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image_red.png"</span>, </span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>im <span class="sc">|&gt;</span> </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_normalize</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">image_write</span>(<span class="at">path =</span> <span class="st">"IF_data/normalized_image.png"</span>, </span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">format =</span> <span class="st">"png"</span>, <span class="at">quality =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="use-green-channel-pcna-as-background" class="level2">
 <h2 class="anchored" data-anchor-id="use-green-channel-pcna-as-background">Use green channel (PCNA) as background</h2>
 <p>In order to switch the image in the Seurat object, we can just replace the path to the image using <code>ReplaceImagePaths</code> and then reload the image to desired size with <code>LoadImages</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image_green.png"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image_green.png"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now we can make plots with <code>semla</code> using the new image as background.</p>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"PCNA.1"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p1, <span class="at">titles =</span> <span class="st">"Protein expression (raw values)"</span>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"PCNA"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p2, <span class="at">titles =</span> <span class="st">"RNA expression (UMI counts)"</span>)</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p3, <span class="at">titles =</span> <span class="st">"IF signal (corrected)"</span>)</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">&amp;</span> dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"PCNA.1"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p1, <span class="at">titles =</span> <span class="st">"Protein expression (raw values)"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"PCNA"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p2, <span class="at">titles =</span> <span class="st">"RNA expression (UMI counts)"</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p3, <span class="at">titles =</span> <span class="st">"IF signal (corrected)"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">&amp;</span> dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/PCNA_composite.jpg" class="img-fluid"></p>
 </section>
 <section id="use-red-channel-vim-as-background" class="level2">
 <h2 class="anchored" data-anchor-id="use-red-channel-vim-as-background">Use red channel (VIM) as background</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image_red.png"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image_red.png"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-fig.asp="1">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"VIM.1"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p1, <span class="at">titles =</span> <span class="st">"Protein expression (raw values)"</span>)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"VIM"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p2, <span class="at">titles =</span> <span class="st">"RNA expression (UMI counts)"</span>)</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p3, <span class="at">titles =</span> <span class="st">"IF signal (corrected)"</span>)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">&amp;</span> dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"VIM.1"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p1, <span class="at">titles =</span> <span class="st">"Protein expression (raw values)"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="st">"VIM"</span>, <span class="at">image_use =</span> <span class="st">"raw"</span>, <span class="at">slot =</span> <span class="st">"counts"</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">pt_size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"orange"</span>), <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p2, <span class="at">titles =</span> <span class="st">"RNA expression (UMI counts)"</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ImagePlot</span>(hBrCa, <span class="at">return_as_gg =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ModifyPatchworkTitles</span>(p3, <span class="at">titles =</span> <span class="st">"IF signal (corrected)"</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">&amp;</span> dark_theme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/VIM_composite.jpg" class="img-fluid"></p>
 </section>
 <section id="use-normalized-if-image-as-background" class="level2">
 <h2 class="anchored" data-anchor-id="use-normalized-if-image-as-background">Use normalized IF image as background</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image.png"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">ReplaceImagePaths</span>(hBrCa, <span class="at">paths =</span> <span class="st">"IF_data/normalized_image.png"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>hBrCa <span class="ot">&lt;-</span> <span class="fu">LoadImages</span>(hBrCa, <span class="at">image_height =</span> <span class="dv">1957</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ImgePlot</span>(hBrCa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ImgePlot</span>(hBrCa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/norm_IF.jpg" class="img-fluid"></p>
 <div class="cell" data-fig.asp="0.5">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"PCNA.1"</span>, <span class="st">"VIM.1"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">slot =</span> <span class="st">"counts"</span>, <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"yellow"</span>), <span class="at">pt_size =</span> <span class="fl">1.7</span>, </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme <span class="sc">&amp;</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(hBrCa) <span class="ot">&lt;-</span> <span class="st">"AbCapture"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">MapFeatures</span>(hBrCa, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"PCNA.1"</span>, <span class="st">"VIM.1"</span>), <span class="at">image_use =</span> <span class="st">"raw"</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">slot =</span> <span class="st">"counts"</span>, <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"yellow"</span>), <span class="at">pt_size =</span> <span class="fl">1.7</span>, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">scale_alpha =</span> <span class="cn">TRUE</span>, <span class="at">max_cutoff =</span> <span class="fl">0.99</span>) <span class="sc">&amp;</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ThemeLegendRight</span>() <span class="sc">&amp;</span> dark_theme <span class="sc">&amp;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="IF_data/norm_IF_and_expr.jpg" class="img-fluid"></p>
 <p><br></p>
@@ -365,7 +344,7 @@ Active assay: Spatial (18085 features, 0 variable features)
 <strong>Package versions</strong>
 </summary>
 <ul>
-<li><p><code>semla</code>: 1.1.3</p></li>
+<li><p><code>semla</code>: 1.1.4</p></li>
 <li><p><code>RcppML</code>: 0.3.7</p></li>
 </ul>
 </details>
@@ -374,7 +353,7 @@ Active assay: Spatial (18085 features, 0 variable features)
 <strong>Session info</strong>
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.2.3 (2023-03-15)
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
@@ -390,48 +369,47 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] semla_1.1.3        ggplot2_3.4.3      dplyr_1.1.2        SeuratObject_4.1.3
+[1] semla_1.1.4        ggplot2_3.4.3      dplyr_1.1.2        SeuratObject_4.1.3
 [5] Seurat_4.3.0.1    
 
 loaded via a namespace (and not attached):
   [1] Rtsne_0.16             colorspace_2.1-0       deldir_1.0-9          
   [4] ellipsis_0.3.2         ggridges_0.5.4         rstudioapi_0.15.0     
   [7] spatstat.data_3.0-1    leiden_0.4.3           listenv_0.9.0         
- [10] bit64_4.0.5            ggrepel_0.9.3          fansi_1.0.4           
- [13] codetools_0.2-19       splines_4.2.3          knitr_1.43            
- [16] zeallot_0.1.0          polyclip_1.10-4        jsonlite_1.8.7        
- [19] ica_1.0-3              cluster_2.1.4          png_0.1-8             
- [22] uwot_0.1.16            shiny_1.7.5            sctransform_0.3.5     
- [25] spatstat.sparse_3.0-2  compiler_4.2.3         httr_1.4.7            
- [28] Matrix_1.6-1           fastmap_1.1.1          lazyeval_0.2.2        
- [31] cli_3.6.1              later_1.3.1            htmltools_0.5.6       
- [34] tools_4.2.3            igraph_1.5.1           gtable_0.3.4          
- [37] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        
- [40] Rcpp_1.0.11            scattermore_1.2        vctrs_0.6.3           
- [43] spatstat.explore_3.2-1 nlme_3.1-163           progressr_0.14.0      
- [46] lmtest_0.9-40          spatstat.random_3.1-5  xfun_0.40             
- [49] stringr_1.5.0          globals_0.16.2         mime_0.12             
- [52] miniUI_0.1.1.1         lifecycle_1.0.3        irlba_2.3.5.1         
- [55] goftest_1.2-3          future_1.33.0          MASS_7.3-60           
- [58] zoo_1.8-12             scales_1.2.1           promises_1.2.1        
- [61] spatstat.utils_3.0-3   parallel_4.2.3         RColorBrewer_1.1-3    
- [64] yaml_2.3.7             reticulate_1.31        pbapply_1.7-2         
- [67] gridExtra_2.3          stringi_1.7.12         rlang_1.1.1           
- [70] pkgconfig_2.0.3        matrixStats_1.0.0      evaluate_0.21         
- [73] lattice_0.21-8         ROCR_1.0-11            purrr_1.0.2           
- [76] tensor_1.5             patchwork_1.1.3        htmlwidgets_1.6.2     
- [79] bit_4.0.5              cowplot_1.1.1          tidyselect_1.2.0      
- [82] parallelly_1.36.0      RcppAnnoy_0.0.21       plyr_1.8.8            
- [85] magrittr_2.0.3         R6_2.5.1               magick_2.7.4          
- [88] generics_0.1.3         pillar_1.9.0           withr_2.5.0           
- [91] fitdistrplus_1.1-11    survival_3.5-7         abind_1.4-5           
- [94] sp_2.0-0               tibble_3.2.1           future.apply_1.11.0   
- [97] hdf5r_1.3.8            KernSmooth_2.23-22     utf8_1.2.3            
-[100] spatstat.geom_3.2-4    plotly_4.10.2          rmarkdown_2.24        
-[103] grid_4.2.3             data.table_1.14.8      forcats_1.0.0         
-[106] digest_0.6.33          xtable_1.8-4           dbscan_1.1-11         
-[109] tidyr_1.3.0            httpuv_1.6.11          munsell_0.5.0         
-[112] viridisLite_0.4.2      shinyjs_2.1.0         </code></pre>
+ [10] ggrepel_0.9.3          fansi_1.0.4            codetools_0.2-19      
+ [13] splines_4.2.3          knitr_1.43             zeallot_0.1.0         
+ [16] polyclip_1.10-4        jsonlite_1.8.7         ica_1.0-3             
+ [19] cluster_2.1.4          png_0.1-8              uwot_0.1.16           
+ [22] shiny_1.7.5            sctransform_0.3.5      spatstat.sparse_3.0-2 
+ [25] compiler_4.2.3         httr_1.4.7             Matrix_1.6-1          
+ [28] fastmap_1.1.1          lazyeval_0.2.2         cli_3.6.1             
+ [31] later_1.3.1            htmltools_0.5.6        tools_4.2.3           
+ [34] igraph_1.5.1           gtable_0.3.4           glue_1.6.2            
+ [37] RANN_2.6.1             reshape2_1.4.4         Rcpp_1.0.11           
+ [40] scattermore_1.2        vctrs_0.6.3            spatstat.explore_3.2-1
+ [43] nlme_3.1-163           progressr_0.14.0       lmtest_0.9-40         
+ [46] spatstat.random_3.1-5  xfun_0.40              stringr_1.5.0         
+ [49] globals_0.16.2         mime_0.12              miniUI_0.1.1.1        
+ [52] lifecycle_1.0.3        irlba_2.3.5.1          goftest_1.2-3         
+ [55] future_1.33.0          MASS_7.3-60            zoo_1.8-12            
+ [58] scales_1.2.1           promises_1.2.1         spatstat.utils_3.0-3  
+ [61] parallel_4.2.3         RColorBrewer_1.1-3     yaml_2.3.7            
+ [64] reticulate_1.31        pbapply_1.7-2          gridExtra_2.3         
+ [67] stringi_1.7.12         rlang_1.1.1            pkgconfig_2.0.3       
+ [70] matrixStats_1.0.0      evaluate_0.21          lattice_0.21-8        
+ [73] ROCR_1.0-11            purrr_1.0.2            tensor_1.5            
+ [76] patchwork_1.1.3        htmlwidgets_1.6.2      cowplot_1.1.1         
+ [79] tidyselect_1.2.0       parallelly_1.36.0      RcppAnnoy_0.0.21      
+ [82] plyr_1.8.8             magrittr_2.0.3         R6_2.5.1              
+ [85] magick_2.7.5           generics_0.1.3         pillar_1.9.0          
+ [88] withr_2.5.0            fitdistrplus_1.1-11    survival_3.5-7        
+ [91] abind_1.4-5            sp_2.0-0               tibble_3.2.1          
+ [94] future.apply_1.11.0    KernSmooth_2.23-22     utf8_1.2.3            
+ [97] spatstat.geom_3.2-4    plotly_4.10.2          rmarkdown_2.24        
+[100] grid_4.2.3             data.table_1.14.8      forcats_1.0.0         
+[103] digest_0.6.33          xtable_1.8-4           dbscan_1.1-11         
+[106] tidyr_1.3.0            httpuv_1.6.11          munsell_0.5.0         
+[109] viridisLite_0.4.2      shinyjs_2.1.0         </code></pre>
 </div>
 </div>
 </details>

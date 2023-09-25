@@ -8,7 +8,7 @@ NULL
 #' you can use \code{AddSemlaToSeurat} to add the required 
 #' data to the \code{Seurat} object. This assumes that 
 #' the \code{Seurat} object contains one or more "VisiumV1" 
-#' object(s) in the \code{images} slot. Alternatviely, you
+#' object(s) in the \code{images} slot. Alternatively, you
 #' can convert a \code{Seurat} object with "SlideSeq" data.
 #' 
 #' @section VisiumV1:
@@ -194,7 +194,7 @@ UpdateSeuratForSemla <- function (
                                    image_info = img_info_tibble, 
                                    scalefactors = scalefactors_tibble)
   object@tools$Staffli <- st_object
-  cat_line()
-  cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
+  if (verbose) cat_line()
+  if (verbose) cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
   return(object)
 }

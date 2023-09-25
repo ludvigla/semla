@@ -165,6 +165,12 @@ TileImage <- function (
     results <- lapply(names(tiles), function(tileName) {
       image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
     })
+  } 
+  if (Sys.info()['sysname'] == "Linux") {
+    if (verbose) cli_alert_danger("  Threading not supported on Linux")
+    results <- lapply(names(tiles), function(tileName) {
+      image_write(tiles[[tileName]], path = paste0(outpath_tiles, "/", tileName, ".jpg"))
+    })
   } else {
     if (nCores == 1) {
       results <- lapply(names(tiles), function(tileName) {

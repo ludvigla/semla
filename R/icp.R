@@ -19,7 +19,7 @@
 #' @returns A list with the rotation matrix "um", the aligned coordinates "qm"
 #' and the target coordinates "pm"
 #'
-#' @param pm n x 2 matrix of points to align to to \code{qm}.
+#' @param pm n x 2 matrix of points to align to \code{qm}.
 #' @param qm n x 2 matrix of reference points.
 #'
 #' @references

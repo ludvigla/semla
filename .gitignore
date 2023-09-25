@@ -1,7 +1,9 @@
 .Rproj.user
+.Rprofile
 .Rhistory
 .RData
 .Ruserdata
+.renvignore
 notebooks/
 presentations/
 vignettes/mousebrain/
@@ -14,8 +16,10 @@ vignettes/R_objects/
 vignettes/demo_data/
 vignettes/synthetic_spots/
 vignettes/IF_data/
+vignettes/10x_data
 BC_data/
 demo_data/
 manuscript_items/
 stereoscope/
-tests
+renv/
+Dockerfile

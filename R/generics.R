@@ -324,7 +324,7 @@ RunAlignment <- function(object, ...) {
 #' Got to tutorials -> Cell type mapping
 #'
 #' @references
-#' \doi{https://doi.org/10.1101/2021.09.01.458620)}
+#' \doi{https://doi.org/10.1101/2021.09.01.458620}
 #' [RcppML GitHub page](https://github.com/zdebruine/RcppML)
 #'
 #' @param object An object

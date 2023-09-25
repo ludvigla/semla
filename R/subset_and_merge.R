@@ -147,7 +147,7 @@ MergeSTData <- function (
   # Check that all objects have images
   imgs_class <- sapply(st_objects, function(x) class(x@imgs))
   if (all(imgs_class == "character")) {
-    imgs <- sapply(st_objects, function(x) x@imgs) |> unlist()
+    imgs <- lapply(st_objects, function(x) x@imgs) |> unlist()
   } else {
     imgs <- NULL
   }

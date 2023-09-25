@@ -40,11 +40,11 @@ label displays a clustered or dispersed spatial pattern.
 This analysis is inspired by the Newman's Assortativity measure by looking at the
 average degree of spots belonging to the same class or label (specified with \code{column_name}).
 The hypothesis that we want to address is that spots of the same label will lie next
-to each other in an aggregated fashion, as compared to being randomly dispered throughout
+to each other in an aggregated fashion, as compared to being randomly dispersed throughout
 the tissue. As the average degree within a label may change based on the total number of
 observations, we scale it towards the maximum average degree (k) possible in the network (for
 Visium, the theoretical max avg k is 6) and the minimum avg k you would expect to see if spots
-are randomly dispered. With the \code{n_permutations} argument, you can specify the number of
+are randomly dispersed. With the \code{n_permutations} argument, you can specify the number of
 iterations for generating a mean of the minimum avg k for each label.
 The output of this function is a tibble table with entries for each label corresponding to
 the observed avg k (\code{avg_k}), the mean of the randomized avg k (\code{min_avg_k_mean}), the standard

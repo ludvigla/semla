@@ -39,7 +39,7 @@ centroid_angles_plot <- function (
              x = cos(seq(0, 2*pi, length.out = 100)),
              y = sin(seq(0, 2*pi, length.out = 100))) +
     geom_segment(data = arrows, aes(x = 0, xend = x, y = 0, yend = y),
-                 arrow = arrow(type = "closed", angle = 20, length = unit(0.05, "npc")), size = 0.5) +
+                 arrow = arrow(type = "closed", angle = 20, length = unit(0.05, "npc")), linewidth = 0.5) +
     geom_text(data = arrows[-nbreaks, ], aes(x_lab, y_lab, label = paste0(angle, "\u00b0")),
               size = 4, color = "black", fontface = "bold") +
     geom_point(aes(0, 0, fill = "center"),

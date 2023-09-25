@@ -3,7 +3,7 @@
 #'
 NULL
 
-
+# TODO: disable sample switch when lasso tool is active
 #' Interactive spatial feature viewer
 #'
 #' \code{FeatureViewer} opens up an interactive shiny application where
@@ -12,21 +12,34 @@ NULL
 #' categorical features with a lasso tool.
 #'
 #' The viewer requires a tiled H&E image along with some additional image data to work. By default,
-#' the function will try to create these files and export them to a temporary directory, but it
+#' the function will attempt to create these files and export them to a temporary directory, but it
 #' is also possible to export the files before running the app and provide the path to the
 #' data directory with \code{datadir} (see \code{\link{ExportDataForViewer}}).
 #'
 #' A more detailed tutorial can be found on the \code{semla} website. You can also
 #' get more detailed instructions by pressing the help icon in the app.
 #' 
+#' @section Selecting features:
+#' \code{FeatureViewer} automatically selects the features in the 'default assay' and
+#' dimensionality reduction vectors. You can override this selection with \code{selected_features},
+#' but note that these have to be present in the 'default assay' or in the dimensionality reduction
+#' slot. This is to avoid naming conflicts when multiple assay are present which contains identical 
+#' identifiers, for instance 'Spatial' and 'SCT'.
+#' 
+#' @section Non-finite values:
+#' If there are non-finite values present, e.g. NA or NaN, a warning will be thrown and these values
+#' will be replaced with a 0. Alternatively, you can remove spots from the \code{Seurat} object
+#' which contain non-finite values before launching the viewer.
+#' 
 #' @section Examples:
 #' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
-#' Got to tutorials -> Feature Viewer
+#' Go to tutorials -> Feature Viewer
 #'
 #' @param object A \code{Seurat} object created with \code{semla}
 #' @param slot A slot to use for Assay data
 #' @param datadir A directory containing spatial data and image tiles (see \code{\link{ExportDataForViewer}})
-#' @param selected_features A character vector of features to select for the viewer
+#' @param selected_features A character vector of features to select for the viewer. These features need to
+#' be present in the 'default assay' or they can be names of dimensionality reduction vectors.
 #' @param sampleIDs An integer vector of section IDs to use include in the viewer. All sections
 #' will be used by default. Note that if you have exported the data with \code{\link{ExportDataForViewer}},
 #' you need to make sure that the sampleIDs for \code{FeatureViewers} matches the sampleIDs
@@ -39,6 +52,7 @@ NULL
 #' @param container_width,container_height Set height and width of container
 #' @param nCores Number of cores to use for threading passed to \code{\link{TileImage}}. Only used
 #' if \code{datadir} is unavailable.
+#' @param launch.browser Select browser to use. See \code{\link{runApp}} for details
 #' @param verbose Print messages
 #'
 #' @family feature-viewer-methods
@@ -73,6 +87,7 @@ FeatureViewer <- function (
     container_width = 800,
     container_height = 800,
     nCores = detectCores() - 1,
+    launch.browser = TRUE,
     verbose = TRUE
 ) {
 
@@ -163,19 +178,19 @@ FeatureViewer <- function (
   # Check if image has been padded
   if ("pad" %in% colnames(image_info)) {
     pad <- strsplit(image_info[image_info$sampleID %in% sampleIDs, ]$pad, "x") |> lapply(as.integer)
-    spatial_coords <- GetStaffli(object)@meta_data |> 
+    spatial_coords_list <- GetStaffli(object)@meta_data |> 
       group_by(sampleID) |> 
       group_split()
-    spatial_coords <- lapply(seq_along(spatial_coords), function(i) {
+    spatial_coords_list <- lapply(seq_along(spatial_coords_list), function(i) {
       max_imwidth <- image_info[image_info$sampleID == i, ]$full_width
       max_imheight <- image_info[image_info$sampleID == i, ]$full_height
-      spatial_coords[[i]] |> 
+      spatial_coords_list[[i]] |> 
         mutate(pxl_col_in_fullres = pxl_col_in_fullres - pad[[i]][1]) |> 
         mutate(pxl_row_in_fullres = pxl_row_in_fullres - pad[[i]][3]) |> 
         filter(between(x = pxl_col_in_fullres, left = 0, right = max_imwidth - (pad[[i]][1] + pad[[i]][2]))) |> 
         filter(between(x = pxl_row_in_fullres, left = 0, right = max_imheight - (pad[[i]][3] + pad[[i]][4])))
     })
-    spatial_coords <- do.call(bind_rows, spatial_coords)
+    spatial_coords <- do.call(bind_rows, spatial_coords_list)
     .categorical_data <- .categorical_data[spatial_coords$barcode, ]
   } else {
     spatial_coords <- GetStaffli(object)@meta_data
@@ -278,6 +293,7 @@ FeatureViewer <- function (
       fluidRow(),
       selectizeInput("sample", "Sample", selected = sampleIDs[1], choices = sampleIDs),
       fastSliderInput("opacity", "Opacity", min = 0, max = 1, value = 1, step = 0.05), # Slider for opacity values
+      fastSliderInput("spotsize", "Spot size", min = 0.5, max = 5, value = 3, step = 0.1), # Slider for spot size
       selectizeInput("feature", label = "Feature", selected = selected_features[1], choices = NULL), # numeric features
 
       # This panel only opens up if a numeric feature is selected
@@ -392,7 +408,11 @@ FeatureViewer <- function (
           rv$lastBtn = "feature"
           rv$curFeature = input$feature
           # fetch numeric data with FetchData and pull out the vector
-          rv$values = FetchData(object, cells = rv$curbarcodes, vars = input$feature) |> pull(all_of(input$feature))
+          rv$values = FetchData(object, cells = rv$curbarcodes, slot = slot, vars = input$feature) |> pull(all_of(input$feature))
+          if (sum(!is.finite(rv$values)) > 0) {
+            cli_alert_danger("Found non-finite values for selected feature '{input$feature}' in sample '{input$sample}'. These will be replaced with a value of 0.")
+            rv$values[!is.finite(rv$values)] <- 0
+          }
           # Redefine the range of the color bar when centerzero is active
           if (input$centerzero) {
             maxAbsVal <- max(abs(rv$values))
@@ -551,7 +571,8 @@ FeatureViewer <- function (
                   colors = rv$colors |> unname(),
                   isNumeric = rv$isNumeric,
                   useLasso = rv$lasso,
-                  opacity = input$opacity)
+                  opacity = input$opacity,
+                  spot_size = input$spotsize/1000)
       }
     })
 
@@ -601,7 +622,7 @@ FeatureViewer <- function (
   }
 
   # Run application and return network on quit
-  runApp(list(ui = ui, server = server), launch.browser = TRUE)
+  runApp(list(ui = ui, server = server), launch.browser = launch.browser)
   if (verbose) {
     cli_alert_info("Retrieved data from application")
   }

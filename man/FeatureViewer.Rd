@@ -17,6 +17,7 @@ FeatureViewer(
   container_width = 800,
   container_height = 800,
   nCores = detectCores() - 1,
+  launch.browser = TRUE,
   verbose = TRUE
 )
 }
@@ -27,7 +28,8 @@ FeatureViewer(
 
 \item{datadir}{A directory containing spatial data and image tiles (see \code{\link{ExportDataForViewer}})}
 
-\item{selected_features}{A character vector of features to select for the viewer}
+\item{selected_features}{A character vector of features to select for the viewer. These features need to
+be present in the 'default assay' or they can be names of dimensionality reduction vectors.}
 
 \item{sampleIDs}{An integer vector of section IDs to use include in the viewer. All sections
 will be used by default. Note that if you have exported the data with \code{\link{ExportDataForViewer}},
@@ -51,6 +53,8 @@ label of the category.}
 \item{nCores}{Number of cores to use for threading passed to \code{\link{TileImage}}. Only used
 if \code{datadir} is unavailable.}
 
+\item{launch.browser}{Select browser to use. See \code{\link{runApp}} for details}
+
 \item{verbose}{Print messages}
 }
 \value{
@@ -64,17 +68,33 @@ categorical features with a lasso tool.
 }
 \details{
 The viewer requires a tiled H&E image along with some additional image data to work. By default,
-the function will try to create these files and export them to a temporary directory, but it
+the function will attempt to create these files and export them to a temporary directory, but it
 is also possible to export the files before running the app and provide the path to the
 data directory with \code{datadir} (see \code{\link{ExportDataForViewer}}).
 
 A more detailed tutorial can be found on the \code{semla} website. You can also
 get more detailed instructions by pressing the help icon in the app.
 }
+\section{Selecting features}{
+
+\code{FeatureViewer} automatically selects the features in the 'default assay' and
+dimensionality reduction vectors. You can override this selection with \code{selected_features},
+but note that these have to be present in the 'default assay' or in the dimensionality reduction
+slot. This is to avoid naming conflicts when multiple assay are present which contains identical 
+identifiers, for instance 'Spatial' and 'SCT'.
+}
+
+\section{Non-finite values}{
+
+If there are non-finite values present, e.g. NA or NaN, a warning will be thrown and these values
+will be replaced with a 0. Alternatively, you can remove spots from the \code{Seurat} object
+which contain non-finite values before launching the viewer.
+}
+
 \section{Examples}{
 
 A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
-Got to tutorials -> Feature Viewer
+Go to tutorials -> Feature Viewer
 }
 
 \seealso{

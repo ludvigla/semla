@@ -21,6 +21,7 @@
 #' @param categories A character vector with the categories available
 #' @param colors A character vector of colors
 #' @param container_width,container_height Container width/height in pixels
+#' @param spot_size A numeric value specifying the spot radius
 #' @param elementId The id of the viewer element
 #' 
 #' @return A \code{htmlwidget} to be used in a \code{shiny} application
@@ -66,6 +67,7 @@ ftrviewer <- function (
     colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev(),
     container_width = 800,
     container_height = 800,
+    spot_size = 0.003,
     elementId = NULL
 ) {
 
@@ -89,7 +91,8 @@ ftrviewer <- function (
     inherits(categories, what = "character"),
     inherits(colors, what = "character"),
     inherits(container_width, what = c("numeric", "integer")) & length(container_width) == 1,
-    inherits(container_height, what = c("numeric", "integer")) & length(container_height) == 1
+    inherits(container_height, what = c("numeric", "integer")) & length(container_height) == 1,
+    inherits(spot_size, what = "numeric") & length(spot_size) == 1
   )
 
   # describe a React component to send to the browser for rendering.
@@ -110,7 +113,8 @@ ftrviewer <- function (
       categories = as.list(categories),
       colors = as.list(colors),
       useLasso = useLasso,
-      opacity = opacity
+      opacity = opacity,
+      size = spot_size
     )
   )
   component <- reactR::reactMarkup(content)

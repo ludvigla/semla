@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-Here we'll have a quick look at how you can mask H&E images with `semla`. Masking means removing the background from the tissue section and is mostly useful for aesthetic purposes. 
+Here we'll have a quick look at how you can mask H&E images with `semla`. Masking means removing the background from the tissue section and is mostly useful for aesthetic purposes.
 
 ```{r warning=FALSE, message=FALSE}
 library(semla)
@@ -56,7 +56,7 @@ MapFeatures(se_merged, features = c("Th", "Il22ra2"), image_use = "raw",
             override_plot_dims = TRUE, colors = RColorBrewer::brewer.pal(n = 9, name = "Spectral") |> rev())
 ```
 
-If you want to use the original H&E images, you can simply reload them with `LoadImages`. 
+If you want to use the original H&E images, you can simply reload them with `LoadImages`.
 
 ```{r warning=FALSE, message=FALSE}
 # Reload images from source files
