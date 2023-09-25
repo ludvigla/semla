@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
@@ -19,3 +21,10 @@
 inst/htmlwidgets/paper.js.map
 inst/htmlwidgets/osddu.js.map
 inst/htmlwidgets/ftrviewer.js.map
+.renvignore
+Dockerfile
+.Rprofile
+^ftrviewer$
+^osddu$
+^paper$
+^manuscript_items$
