@@ -93,8 +93,7 @@ RunLocalG.default <- function (
   spatnet,
   alternative = c("two.sided", "greater", "less"),
   return_as_tibble = TRUE,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 ) {
 
   # Set global variables to NULL
@@ -149,6 +148,12 @@ RunLocalG.default <- function (
 
     wide_spatial_network <- wide_spatial_networks[[nm]]
     data_subset <- object[match(rownames(wide_spatial_network), rownames(object)), drop = FALSE, ]
+    
+    # Check if non-finite values are present
+    if (sum(!is.finite(data_subset)) > 0) {
+      cli_alert_warning("Found non-finite values. Replacing with 0 values.")
+      data_subset[!is.finite(data_subset)] <- 0
+    }
 
     # Number of observations
     n <- nrow(data_subset)
@@ -306,7 +311,7 @@ RunLocalG.Seurat <- function (
   .check_seurat_object(object)
 
   # Get a spatial network
-  spatnet <- GetSpatialNetwork(object)
+  spatnet <- GetSpatialNetwork(object, ...)
 
   # Get data
   if (!inherits(features, what = "character"))
@@ -321,8 +326,7 @@ RunLocalG.Seurat <- function (
                       spatnet = spatnet,
                       alternative = alternative,
                       return_as_tibble = TRUE,
-                      verbose = verbose,
-                      ... = ...)
+                      verbose = verbose)
 
   # Return in meta data if store_in_metadata = TRUE
   if (store_in_metadata) {
