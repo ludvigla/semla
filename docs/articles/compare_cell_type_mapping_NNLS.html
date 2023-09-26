@@ -82,9 +82,9 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
     <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
     <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
   </div>
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Comparison of cell type mapping with NNLS</h1>
             
-            <h4 data-toc-skip class="date">Posted: 19 September
+            <h4 data-toc-skip class="date">Posted: 26 September
 2023</h4>
       
       
@@ -203,14 +203,16 @@ settings.</p>
 <div class="section level2">
 <h2 id="mouse-brain">Mouse brain<a class="anchor" aria-label="anchor" href="#mouse-brain"></a>
 </h2>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>The results of each cell type mapping approach is stored as an
 <em>Assay</em> within the <code>semla</code> object, and the spot-wise
 Pearson correlation values are computed using the <code><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor()</a></code>
 function in R. The results are visualized as heatmaps using
 <code>ggplot2</code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_tile()</a></code>, where the fill color
 corresponds to the strength of the correlation.</p>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-16-1.png" width="1248"></p>
+<div class="figure">
+<img src="compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg" alt=""><p class="caption">1. Correlation plots of cell type mapping results in
+mouse brain dataset.</p>
+</div>
 <p><br></p>
 <p>In general, we can see that the correlation between mapped cell types
 values is high between the NNLS method and the other two tested
@@ -221,7 +223,10 @@ results closest to the true cell type proportions in each spot.</p>
 between matching cell types, to better view if the NNLS method seems to
 share a higher concordance with a specific method for certain cell
 types.</p>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
+<div class="figure">
+<img src="compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg" alt=""><p class="caption">2. Comparison of correlation values against NNLS for
+cell types in mouse brain dataset.</p>
+</div>
 <p><br></p>
 <p>Here, we can for instance more easily spot a large difference in the
 correlation values between the NNLS:stereoscope an NNLS:cell2location
@@ -282,91 +287,91 @@ three approaches spatially.</p>
 <div class="tab-content">
 <div class="active  tab-pane" id="astro" role="tabpanel" aria-labelledby="astro-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-1.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-1.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="endo" role="tabpanel" aria-labelledby="endo-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-2.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-2.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l23-it" role="tabpanel" aria-labelledby="l23-it-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-3.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-3.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l4" role="tabpanel" aria-labelledby="l4-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-4.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-4.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l5-it" role="tabpanel" aria-labelledby="l5-it-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-5.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-5.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l5-pt" role="tabpanel" aria-labelledby="l5-pt-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-6.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-6.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l6-ct" role="tabpanel" aria-labelledby="l6-ct-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-7.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-7.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l6-it" role="tabpanel" aria-labelledby="l6-it-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-8.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-8.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="l6b" role="tabpanel" aria-labelledby="l6b-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-9.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-9.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="lamp5" role="tabpanel" aria-labelledby="lamp5-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-10.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-10.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="macrophage" role="tabpanel" aria-labelledby="macrophage-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-11.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-11.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="meis2" role="tabpanel" aria-labelledby="meis2-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-12.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-12.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="np" role="tabpanel" aria-labelledby="np-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-13.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-13.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="oligo" role="tabpanel" aria-labelledby="oligo-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-14.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-14.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="peri" role="tabpanel" aria-labelledby="peri-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-15.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-15.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="pvalb" role="tabpanel" aria-labelledby="pvalb-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-16.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-16.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="serpinf1" role="tabpanel" aria-labelledby="serpinf1-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-17.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-17.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="smc" role="tabpanel" aria-labelledby="smc-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-18.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-18.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="sncg" role="tabpanel" aria-labelledby="sncg-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-19.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-19.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="sst" role="tabpanel" aria-labelledby="sst-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-20.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-20.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="vip" role="tabpanel" aria-labelledby="vip-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-21.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-21.png" width="1248"></p>
 </div>
 <div class="tab-pane" id="vlmc" role="tabpanel" aria-labelledby="vlmc-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-20-22.png" width="1248"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-22.png" width="1248"></p>
 </div>
 </div>
 </div>
@@ -374,13 +379,18 @@ three approaches spatially.</p>
 <div class="section level2">
 <h2 id="mouse-kidney">Mouse kidney<a class="anchor" aria-label="anchor" href="#mouse-kidney"></a>
 </h2>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <p>The same comparison approach as for the mouse brain data is applied
 to study the results for the mouse kidney sample, producing spot-wise
 correlation values between the cell type mapping results using the three
 different methods included for the comparison.</p>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-26-1.png" width="1728"></p>
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-27-1.png" width="960"></p>
+<div class="figure">
+<img src="compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg" alt=""><p class="caption">3. Correlation plots of cell type mapping results in
+mouse kidney dataset.</p>
+</div>
+<div class="figure">
+<img src="compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg" alt=""><p class="caption">4. Comparison of correlation values against NNLS for
+cell types in mouse kidney dataset.</p>
+</div>
 <p>Also for this data set, there is an overall high cell-cell
 correlation between the NNLS results and those produced by stereoscope
 and cell2location. However, we can for instance see that all three
@@ -425,63 +435,63 @@ results.</p>
 <div class="tab-content">
 <div class="active  tab-pane" id="b-cell" role="tabpanel" aria-labelledby="b-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-1.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-1.png" width="672"></p>
 </div>
 <div class="tab-pane" id="brush-cell" role="tabpanel" aria-labelledby="brush-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-2.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-2.png" width="672"></p>
 </div>
 <div class="tab-pane" id="fenestrated-capillary-endothelial" role="tabpanel" aria-labelledby="fenestrated-capillary-endothelial-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-3.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-3.png" width="672"></p>
 </div>
 <div class="tab-pane" id="fibroblast" role="tabpanel" aria-labelledby="fibroblast-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-4.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-4.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-capillary-endothelial-cell" role="tabpanel" aria-labelledby="kidney-capillary-endothelial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-5.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-5.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-collecting-duct-principal-cell" role="tabpanel" aria-labelledby="kidney-collecting-duct-principal-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-6.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-6.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-cortex-artery-cell" role="tabpanel" aria-labelledby="kidney-cortex-artery-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-7.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-7.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-distal-convoluted-tubule-epithelial-cell" role="tabpanel" aria-labelledby="kidney-distal-convoluted-tubule-epithelial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-8.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-8.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-mesangial-cell" role="tabpanel" aria-labelledby="kidney-mesangial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-9.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-9.png" width="672"></p>
 </div>
 <div class="tab-pane" id="kidney-proximal-convoluted-tubule-epithelial-cell" role="tabpanel" aria-labelledby="kidney-proximal-convoluted-tubule-epithelial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-10.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-10.png" width="672"></p>
 </div>
 <div class="tab-pane" id="macrophage-1" role="tabpanel" aria-labelledby="macrophage-1-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-11.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-11.png" width="672"></p>
 </div>
 <div class="tab-pane" id="podocyte" role="tabpanel" aria-labelledby="podocyte-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-12.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-12.png" width="672"></p>
 </div>
 <div class="tab-pane" id="proximal-tube-epithelial-cell" role="tabpanel" aria-labelledby="proximal-tube-epithelial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-13.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-13.png" width="672"></p>
 </div>
 <div class="tab-pane" id="t-cell" role="tabpanel" aria-labelledby="t-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-14.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-14.png" width="672"></p>
 </div>
 <div class="tab-pane" id="thick-ascending-tube-s-epithelial-cell" role="tabpanel" aria-labelledby="thick-ascending-tube-s-epithelial-cell-tab">
 
-<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-30-15.png" width="672"></p>
+<p><img src="compare_cell_type_mapping_NNLS_files/figure-html/unnamed-chunk-32-15.png" width="672"></p>
 </div>
 </div>
 </div>
@@ -512,11 +522,12 @@ approach.</p>
 <code>semla</code>: 1.1.6</li>
 </ul></details><details><summary><strong>Session info</strong>
 </summary><pre><code><span><span class="co">## R version 4.2.3 (2023-03-15)</span></span>
-<span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
+<span><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
 <span><span class="co">## Running under: macOS Big Sur ... 10.16</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS/LAPACK: /Users/ludviglarsson/miniconda3/envs/r-semla/lib/libopenblasp-r0.3.20.dylib</span></span>
+<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib</span></span>
+<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -529,48 +540,48 @@ approach.</p>
 <span><span class="co">## [5] ggplot2_3.4.3      dplyr_1.1.3        SeuratObject_4.1.3 Seurat_4.3.0.1    </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] systemfonts_1.0.4      plyr_1.8.8             igraph_1.5.1          </span></span>
-<span><span class="co">##   [4] lazyeval_0.2.2         sp_2.0-0               splines_4.2.3         </span></span>
-<span><span class="co">##   [7] listenv_0.9.0          scattermore_1.2        digest_0.6.33         </span></span>
-<span><span class="co">##  [10] htmltools_0.5.6        viridis_0.6.4          magick_2.7.4          </span></span>
-<span><span class="co">##  [13] fansi_1.0.4            magrittr_2.0.3         memoise_2.0.1         </span></span>
-<span><span class="co">##  [16] tensor_1.5             cluster_2.1.4          ROCR_1.0-11           </span></span>
-<span><span class="co">##  [19] globals_0.16.2         matrixStats_1.0.0      pkgdown_2.0.7         </span></span>
-<span><span class="co">##  [22] spatstat.sparse_3.0-2  colorspace_2.1-0       ggrepel_0.9.3         </span></span>
-<span><span class="co">##  [25] textshaping_0.3.6      xfun_0.40              jsonlite_1.8.7        </span></span>
-<span><span class="co">##  [28] progressr_0.14.0       spatstat.data_3.0-1    zeallot_0.1.0         </span></span>
-<span><span class="co">##  [31] survival_3.5-7         zoo_1.8-12             glue_1.6.2            </span></span>
-<span><span class="co">##  [34] polyclip_1.10-4        gtable_0.3.4           leiden_0.4.3          </span></span>
-<span><span class="co">##  [37] future.apply_1.11.0    abind_1.4-5            scales_1.2.1          </span></span>
-<span><span class="co">##  [40] spatstat.random_3.1-5  miniUI_0.1.1.1         Rcpp_1.0.11           </span></span>
-<span><span class="co">##  [43] viridisLite_0.4.2      xtable_1.8-4           reticulate_1.31       </span></span>
-<span><span class="co">##  [46] htmlwidgets_1.6.2      httr_1.4.7             RColorBrewer_1.1-3    </span></span>
-<span><span class="co">##  [49] ellipsis_0.3.2         ica_1.0-3              pkgconfig_2.0.3       </span></span>
-<span><span class="co">##  [52] farver_2.1.1           sass_0.4.7             uwot_0.1.16           </span></span>
-<span><span class="co">##  [55] deldir_1.0-9           utf8_1.2.3             tidyselect_1.2.0      </span></span>
-<span><span class="co">##  [58] labeling_0.4.3         rlang_1.1.1            reshape2_1.4.4        </span></span>
-<span><span class="co">##  [61] later_1.3.1            munsell_0.5.0          tools_4.2.3           </span></span>
-<span><span class="co">##  [64] cachem_1.0.8           cli_3.6.1              dbscan_1.1-11         </span></span>
-<span><span class="co">##  [67] generics_0.1.3         ggridges_0.5.4         evaluate_0.21         </span></span>
-<span><span class="co">##  [70] stringr_1.5.0          fastmap_1.1.1          yaml_2.3.7            </span></span>
-<span><span class="co">##  [73] ragg_1.2.5             goftest_1.2-3          knitr_1.43            </span></span>
-<span><span class="co">##  [76] fs_1.6.3               fitdistrplus_1.1-11    purrr_1.0.2           </span></span>
-<span><span class="co">##  [79] RANN_2.6.1             pbapply_1.7-2          future_1.33.0         </span></span>
-<span><span class="co">##  [82] nlme_3.1-163           mime_0.12              compiler_4.2.3        </span></span>
-<span><span class="co">##  [85] rstudioapi_0.15.0      plotly_4.10.2          png_0.1-8             </span></span>
-<span><span class="co">##  [88] spatstat.utils_3.0-3   bslib_0.5.1            stringi_1.7.12        </span></span>
-<span><span class="co">##  [91] highr_0.10             desc_1.4.2             forcats_1.0.0         </span></span>
-<span><span class="co">##  [94] lattice_0.21-8         Matrix_1.6-1           shinyjs_2.1.0         </span></span>
-<span><span class="co">##  [97] vctrs_0.6.3            pillar_1.9.0           lifecycle_1.0.3       </span></span>
-<span><span class="co">## [100] BiocManager_1.30.22    spatstat.geom_3.2-4    lmtest_0.9-40         </span></span>
-<span><span class="co">## [103] jquerylib_0.1.4        RcppAnnoy_0.0.21       data.table_1.14.8     </span></span>
-<span><span class="co">## [106] cowplot_1.1.1          irlba_2.3.5.1          httpuv_1.6.11         </span></span>
-<span><span class="co">## [109] R6_2.5.1               promises_1.2.1         renv_1.0.2            </span></span>
-<span><span class="co">## [112] KernSmooth_2.23-22     gridExtra_2.3          parallelly_1.36.0     </span></span>
-<span><span class="co">## [115] codetools_0.2-19       MASS_7.3-60            rprojroot_2.0.3       </span></span>
-<span><span class="co">## [118] withr_2.5.0            sctransform_0.3.5      parallel_4.2.3        </span></span>
-<span><span class="co">## [121] grid_4.2.3             rmarkdown_2.24         Rtsne_0.16            </span></span>
-<span><span class="co">## [124] spatstat.explore_3.2-1 shiny_1.7.5</span></span></code></pre>
+<span><span class="co">##   [1] Rtsne_0.16             colorspace_2.1-0       deldir_1.0-9          </span></span>
+<span><span class="co">##   [4] ellipsis_0.3.2         ggridges_0.5.4         rprojroot_2.0.3       </span></span>
+<span><span class="co">##   [7] fs_1.6.3               spatstat.data_3.0-1    farver_2.1.1          </span></span>
+<span><span class="co">##  [10] leiden_0.4.3           listenv_0.9.0          ggrepel_0.9.3         </span></span>
+<span><span class="co">##  [13] fansi_1.0.4            codetools_0.2-19       splines_4.2.3         </span></span>
+<span><span class="co">##  [16] cachem_1.0.8           knitr_1.43             zeallot_0.1.0         </span></span>
+<span><span class="co">##  [19] polyclip_1.10-4        jsonlite_1.8.7         ica_1.0-3             </span></span>
+<span><span class="co">##  [22] cluster_2.1.4          png_0.1-8              uwot_0.1.16           </span></span>
+<span><span class="co">##  [25] spatstat.sparse_3.0-2  shiny_1.7.5            sctransform_0.3.5     </span></span>
+<span><span class="co">##  [28] BiocManager_1.30.22    compiler_4.2.3         httr_1.4.7            </span></span>
+<span><span class="co">##  [31] Matrix_1.5-1           fastmap_1.1.1          lazyeval_0.2.2        </span></span>
+<span><span class="co">##  [34] cli_3.6.1              later_1.3.1            htmltools_0.5.6       </span></span>
+<span><span class="co">##  [37] tools_4.2.3            igraph_1.5.1           gtable_0.3.4          </span></span>
+<span><span class="co">##  [40] glue_1.6.2             RANN_2.6.1             reshape2_1.4.4        </span></span>
+<span><span class="co">##  [43] Rcpp_1.0.11            scattermore_1.2        jquerylib_0.1.4       </span></span>
+<span><span class="co">##  [46] pkgdown_2.0.7          vctrs_0.6.3            nlme_3.1-163          </span></span>
+<span><span class="co">##  [49] spatstat.explore_3.2-1 progressr_0.14.0       lmtest_0.9-40         </span></span>
+<span><span class="co">##  [52] spatstat.random_3.1-5  xfun_0.40              stringr_1.5.0         </span></span>
+<span><span class="co">##  [55] globals_0.16.2         mime_0.12              miniUI_0.1.1.1        </span></span>
+<span><span class="co">##  [58] lifecycle_1.0.3        irlba_2.3.5.1          renv_1.0.2            </span></span>
+<span><span class="co">##  [61] goftest_1.2-3          future_1.33.0          MASS_7.3-60           </span></span>
+<span><span class="co">##  [64] zoo_1.8-12             scales_1.2.1           spatstat.utils_3.0-3  </span></span>
+<span><span class="co">##  [67] ragg_1.2.5             promises_1.2.1         parallel_4.2.3        </span></span>
+<span><span class="co">##  [70] RColorBrewer_1.1-3     yaml_2.3.7             memoise_2.0.1         </span></span>
+<span><span class="co">##  [73] reticulate_1.31        pbapply_1.7-2          gridExtra_2.3         </span></span>
+<span><span class="co">##  [76] sass_0.4.7             stringi_1.7.12         highr_0.10            </span></span>
+<span><span class="co">##  [79] desc_1.4.2             rlang_1.1.1            pkgconfig_2.0.3       </span></span>
+<span><span class="co">##  [82] systemfonts_1.0.4      matrixStats_1.0.0      evaluate_0.21         </span></span>
+<span><span class="co">##  [85] lattice_0.21-8         tensor_1.5             ROCR_1.0-11           </span></span>
+<span><span class="co">##  [88] purrr_1.0.2            labeling_0.4.3         htmlwidgets_1.6.2     </span></span>
+<span><span class="co">##  [91] cowplot_1.1.1          tidyselect_1.2.0       parallelly_1.36.0     </span></span>
+<span><span class="co">##  [94] RcppAnnoy_0.0.21       plyr_1.8.8             magrittr_2.0.3        </span></span>
+<span><span class="co">##  [97] R6_2.5.1               magick_2.7.4           generics_0.1.3        </span></span>
+<span><span class="co">## [100] withr_2.5.0            pillar_1.9.0           fitdistrplus_1.1-11   </span></span>
+<span><span class="co">## [103] abind_1.4-5            survival_3.5-7         sp_2.0-0              </span></span>
+<span><span class="co">## [106] future.apply_1.11.0    KernSmooth_2.23-22     utf8_1.2.3            </span></span>
+<span><span class="co">## [109] spatstat.geom_3.2-4    plotly_4.10.2          rmarkdown_2.24        </span></span>
+<span><span class="co">## [112] viridis_0.6.4          grid_4.2.3             data.table_1.14.8     </span></span>
+<span><span class="co">## [115] forcats_1.0.0          digest_0.6.33          xtable_1.8-4          </span></span>
+<span><span class="co">## [118] dbscan_1.1-11          httpuv_1.6.11          textshaping_0.3.6     </span></span>
+<span><span class="co">## [121] munsell_0.5.0          viridisLite_0.4.2      bslib_0.5.1           </span></span>
+<span><span class="co">## [124] shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -61,9 +61,9 @@ are determined from the automatically."><meta property="og:image" content="https
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
     <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
     <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
   </div>
@@ -164,14 +164,7 @@ are determined from the automatically.</p>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/magick/" class="external-link">magick</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘leaflet’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:SeuratObject’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     JS</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:Seurat’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     JS</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in library(leaflet):</span> there is no package called ‘leaflet’</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Download hires image</span></span></span>
 <span class="r-in"><span><span class="va">he_img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"https://data.mendeley.com/public-files/datasets/kj3ntnt6vb/files"</span>,</span></span>
@@ -184,23 +177,24 @@ are determined from the automatically.</p>
 <span class="r-in"><span><span class="va">tile_res</span> <span class="op">&lt;-</span> <span class="fu">TileImage</span><span class="op">(</span><span class="va">im</span>, outpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, nCores <span class="op">=</span> <span class="fl">1</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Got an image of dimensions 2000x1882 for sample 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Tiling image into 3 zoom levels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp3XtKIy/viewer_data/tiles1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/91/twz8ld_x3f98sr9yc2hq9xpn47blx2/T/Rtmp4vm41m/viewer_data/tiles1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Creating tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting meta data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/zb/1fj07x_5343fvs_k28gnm1z80002xs/T/Rtmp3XtKIy/viewer_data/image_info_1.json</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/91/twz8ld_x3f98sr9yc2hq9xpn47blx2/T/Rtmp4vm41m/viewer_data/image_info_1.json</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a simple viewer with leaflet</span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-shiny.html" class="external-link">leafletOutput</a></span><span class="op">(</span><span class="st">"map"</span>, height <span class="op">=</span> <span class="fl">512</span>, width <span class="op">=</span> <span class="fl">512</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">leafletOutput</span><span class="op">(</span><span class="st">"map"</span>, height <span class="op">=</span> <span class="fl">512</span>, width <span class="op">=</span> <span class="fl">512</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in leafletOutput("map", height = 512, width = 512):</span> could not find function "leafletOutput"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"mytiles"</span>, <span class="va">tile_res</span><span class="op">$</span><span class="va">tilepath</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-shiny.html" class="external-link">renderLeaflet</a></span><span class="op">(</span><span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span>options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leafletOptions</a></span><span class="op">(</span>preferCanvas <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addTiles</a></span><span class="op">(</span>urlTemplate <span class="op">=</span> <span class="st">"/mytiles/{z}/{x}_{y}.jpg"</span>,</span></span>
-<span class="r-in"><span>               options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-options.html" class="external-link">tileOptions</a></span><span class="op">(</span>continuousWorld <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu">renderLeaflet</span><span class="op">(</span><span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="fu">leaflet</span><span class="op">(</span>options <span class="op">=</span> <span class="fu">leafletOptions</span><span class="op">(</span>preferCanvas <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu">addTiles</span><span class="op">(</span>urlTemplate <span class="op">=</span> <span class="st">"/mytiles/{z}/{x}_{y}.jpg"</span>,</span></span>
+<span class="r-in"><span>               options <span class="op">=</span> <span class="fu">tileOptions</span><span class="op">(</span>continuousWorld <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                                     tileSize <span class="op">=</span> <span class="st">"256"</span>,</span></span>
 <span class="r-in"><span>                                     minZoom <span class="op">=</span> <span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                                     maxZoom <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>

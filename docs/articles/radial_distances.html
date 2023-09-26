@@ -82,9 +82,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">cell type mapping comparison</a>
     <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">cell type mapping benchmark</a>
+    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
+    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
     <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
     <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
   </div>
@@ -118,7 +118,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Radial distances</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 19 September
+            <h4 data-toc-skip class="date">Last compiled: 26 September
 2023</h4>
       
       
@@ -189,11 +189,11 @@ processing/analysis workflow:</p>
 <pre><code><span><span class="co">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Number of nodes: 3813</span></span>
-<span><span class="co">## Number of edges: 141040</span></span>
+<span><span class="co">## Number of edges: 140757</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Running Louvain algorithm...</span></span>
-<span><span class="co">## Maximum modularity in 10 random starts: 0.8711</span></span>
-<span><span class="co">## Number of communities: 13</span></span>
+<span><span class="co">## Maximum modularity in 10 random starts: 0.8713</span></span>
+<span><span class="co">## Number of communities: 12</span></span>
 <span><span class="co">## Elapsed time: 0 seconds</span></span></code></pre>
 <p>Now that we have identified clusters in our data based on the spot
 expression profiles, we can plot these clusters spatially with
@@ -238,11 +238,11 @@ purpose, we can use <code>DisconnectRegions</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/disconnect-regions.html">DisconnectRegions</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, selected_groups <span class="op">=</span> <span class="st">"9"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting disconnected components for group '9'</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 176 spots</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Detecting disconnected regions for 180 spots</span></span></code></pre>
 <pre><code><span><span class="co">## Loading required namespace: tidygraph</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Found 5 disconnected graph(s) in data</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Sorting disconnected regions by decreasing size</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Found 2 singletons in data</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Found 3 singletons in data</span></span></code></pre>
 <pre><code><span><span class="co">## →   These will be labeled as 'singletons'</span></span></code></pre>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-labels.html">MapLabels</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"9_split"</span>, override_plot_dims <span class="op">=</span> <span class="cn">TRUE</span>, </span>
@@ -280,11 +280,11 @@ the computation.</p>
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/radial-distance.html">RadialDistance</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, selected_groups <span class="op">=</span> <span class="st">"3"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Calculating radial distances for group '3'</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 3 spots with 0 neighbors.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 428 spots</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 78 spots on borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 428 spots inside borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 3385 spots outside borders</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 429 spots</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 77 spots on borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 429 spots inside borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 3384 spots outside borders</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 <p>We can illustrate the results by coloring the spots based on the
 radial distances from cluster “3”:</p>
@@ -318,11 +318,11 @@ least some spots are adjacent in the dataset.</p>
 <span>                     selected_groups <span class="op">=</span> <span class="st">"3"</span>, convert_to_microns <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Calculating radial distances for group '3'</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 3 spots with 0 neighbors.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 428 spots</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 78 spots on borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 428 spots inside borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 3385 spots outside borders</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 429 spots</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 77 spots on borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 429 spots inside borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 3384 spots outside borders</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -410,11 +410,11 @@ the radial distances from the tumor (cluster 3) center.</p>
 <span>                     angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">240</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Calculating radial distances for group '3'</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 3 spots with 0 neighbors.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 428 spots</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 78 spots on borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 428 spots inside borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 3385 spots outside borders</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 429 spots</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 77 spots on borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 429 spots inside borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 3384 spots outside borders</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting search area between 200 and 240 degrees from region center</span></span></code></pre>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
@@ -429,11 +429,11 @@ degrees and split it into 6 even slices.</p>
 <span>                    angles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">320</span><span class="op">)</span>, angles_nbreaks <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Running calculations for sample 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Calculating radial distances for group '3'</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 3 spots with 0 neighbors.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 428 spots</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 78 spots on borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 428 spots inside borders</span></span></code></pre>
-<pre><code><span><span class="co">## →   Detected 3385 spots outside borders</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Removing 2 spots with 0 neighbors.</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Extracting border spots from a region with 429 spots</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 77 spots on borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 429 spots inside borders</span></span></code></pre>
+<pre><code><span><span class="co">## →   Detected 3384 spots outside borders</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning radial distances</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting search area between 120 and 320 degrees from region center</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Splitting search area into 6 interval(s)</span></span></code></pre>
@@ -505,11 +505,12 @@ to adapt to many different scenarios.</p>
 </summary><div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.2.3 (2023-03-15)</span></span>
-<span><span class="co">## Platform: x86_64-apple-darwin13.4.0 (64-bit)</span></span>
+<span><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
 <span><span class="co">## Running under: macOS Big Sur ... 10.16</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS/LAPACK: /Users/ludviglarsson/miniconda3/envs/r-semla/lib/libopenblasp-r0.3.20.dylib</span></span>
+<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib</span></span>
+<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -540,7 +541,7 @@ to adapt to many different scenarios.</p>
 <span><span class="co">##  [43] viridisLite_0.4.2      xtable_1.8-4           reticulate_1.31       </span></span>
 <span><span class="co">##  [46] bit_4.0.5              htmlwidgets_1.6.2      httr_1.4.7            </span></span>
 <span><span class="co">##  [49] RColorBrewer_1.1-3     ellipsis_0.3.2         ica_1.0-3             </span></span>
-<span><span class="co">##  [52] farver_2.1.1           pkgconfig_2.0.3        sass_0.4.7            </span></span>
+<span><span class="co">##  [52] pkgconfig_2.0.3        farver_2.1.1           sass_0.4.7            </span></span>
 <span><span class="co">##  [55] uwot_0.1.16            deldir_1.0-9           utf8_1.2.3            </span></span>
 <span><span class="co">##  [58] labeling_0.4.3         tidyselect_1.2.0       rlang_1.1.1           </span></span>
 <span><span class="co">##  [61] reshape2_1.4.4         later_1.3.1            munsell_0.5.0         </span></span>
@@ -552,21 +553,20 @@ to adapt to many different scenarios.</p>
 <span><span class="co">##  [79] tidygraph_1.2.3        fitdistrplus_1.1-11    purrr_1.0.2           </span></span>
 <span><span class="co">##  [82] RANN_2.6.1             pbapply_1.7-2          future_1.33.0         </span></span>
 <span><span class="co">##  [85] nlme_3.1-163           mime_0.12              hdf5r_1.3.8           </span></span>
-<span><span class="co">##  [88] compiler_4.2.3         rstudioapi_0.15.0      plotly_4.10.2         </span></span>
-<span><span class="co">##  [91] png_0.1-8              spatstat.utils_3.0-3   bslib_0.5.1           </span></span>
-<span><span class="co">##  [94] stringi_1.7.12         highr_0.10             desc_1.4.2            </span></span>
-<span><span class="co">##  [97] forcats_1.0.0          lattice_0.21-8         Matrix_1.6-1          </span></span>
-<span><span class="co">## [100] shinyjs_2.1.0          vctrs_0.6.3            pillar_1.9.0          </span></span>
-<span><span class="co">## [103] lifecycle_1.0.3        BiocManager_1.30.22    spatstat.geom_3.2-4   </span></span>
-<span><span class="co">## [106] lmtest_0.9-40          jquerylib_0.1.4        RcppAnnoy_0.0.21      </span></span>
-<span><span class="co">## [109] data.table_1.14.8      cowplot_1.1.1          irlba_2.3.5.1         </span></span>
-<span><span class="co">## [112] httpuv_1.6.11          R6_2.5.1               promises_1.2.1        </span></span>
-<span><span class="co">## [115] renv_1.0.2             KernSmooth_2.23-22     gridExtra_2.3         </span></span>
-<span><span class="co">## [118] parallelly_1.36.0      codetools_0.2-19       MASS_7.3-60           </span></span>
-<span><span class="co">## [121] rprojroot_2.0.3        withr_2.5.0            sctransform_0.3.5     </span></span>
-<span><span class="co">## [124] mgcv_1.9-0             parallel_4.2.3         grid_4.2.3            </span></span>
-<span><span class="co">## [127] rmarkdown_2.24         Rtsne_0.16             spatstat.explore_3.2-1</span></span>
-<span><span class="co">## [130] shiny_1.7.5</span></span></code></pre>
+<span><span class="co">##  [88] compiler_4.2.3         plotly_4.10.2          png_0.1-8             </span></span>
+<span><span class="co">##  [91] spatstat.utils_3.0-3   bslib_0.5.1            stringi_1.7.12        </span></span>
+<span><span class="co">##  [94] highr_0.10             desc_1.4.2             forcats_1.0.0         </span></span>
+<span><span class="co">##  [97] lattice_0.21-8         Matrix_1.5-1           shinyjs_2.1.0         </span></span>
+<span><span class="co">## [100] vctrs_0.6.3            pillar_1.9.0           lifecycle_1.0.3       </span></span>
+<span><span class="co">## [103] BiocManager_1.30.22    spatstat.geom_3.2-4    lmtest_0.9-40         </span></span>
+<span><span class="co">## [106] jquerylib_0.1.4        RcppAnnoy_0.0.21       data.table_1.14.8     </span></span>
+<span><span class="co">## [109] cowplot_1.1.1          irlba_2.3.5.1          httpuv_1.6.11         </span></span>
+<span><span class="co">## [112] R6_2.5.1               promises_1.2.1         renv_1.0.2            </span></span>
+<span><span class="co">## [115] KernSmooth_2.23-22     gridExtra_2.3          parallelly_1.36.0     </span></span>
+<span><span class="co">## [118] codetools_0.2-19       MASS_7.3-60            rprojroot_2.0.3       </span></span>
+<span><span class="co">## [121] withr_2.5.0            sctransform_0.3.5      mgcv_1.9-0            </span></span>
+<span><span class="co">## [124] parallel_4.2.3         grid_4.2.3             rmarkdown_2.24        </span></span>
+<span><span class="co">## [127] Rtsne_0.16             spatstat.explore_3.2-1 shiny_1.7.5</span></span></code></pre>
 </details><p><br></p>
 </div>
 </div>
