@@ -84,11 +84,11 @@ navbar:
     articles: 
       text: Articles
       menu:
-      - text: cell type mapping comparison
-        href: articles/compare_cell_type_mapping_NNLS.html
       - text: Create a Staffli object
         href: articles/create_object.html
-      - text: cell type mapping benchmark
+      - text: Cell type mapping comparison
+        href: articles/compare_cell_type_mapping_NNLS.html
+      - text: Cell type mapping benchmark
         href: articles/cell_type_mapping_benchmark.html
       - text: Slide-Seq data
         href: articles/slide-seq.html
