@@ -77,7 +77,7 @@ RunNNLS.default <- function (
   if (!requireNamespace("RcppML"))
     abort("Package 'RcppML' is required.") # compile dev version
   if ((packageVersion("RcppML") |> as.character()) != "0.3.7")
-    warn(c("The NNLS function might break if using a dev version of RcppML is used. ",
+    warn(c("The NNLS function might break if a dev version of RcppML is used. ",
            "If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML."))
 
   # Prepare data
