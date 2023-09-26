@@ -356,7 +356,7 @@ se_kidney_singlecell <- se_kidney_singlecell |>
 # Load prepared kidney data
 se_kidney_singlecell <- readRDS("R_objects/se_kidney_singlecell")
 se_kidney_spatial <- readRDS("R_objects/se_kidney_spatial")
-
+DefaultAssay(se_kidney_spatial) <- "Spatial"
 ```
 
 ### Run NNLS

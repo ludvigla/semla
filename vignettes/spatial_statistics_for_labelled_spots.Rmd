@@ -45,7 +45,7 @@ untar(tarfile = file.path(targetdir, "spatial.tar.gz"),
 file.remove(file.path(targetdir, "spatial.tar.gz"))
 ```
 
-```{r}
+```{r eval=FALSE}
 # Read data
 samples <- file.path(targetdir, "filtered_feature_bc_matrix.h5")
 imgs <- file.path(targetdir, "spatial", "tissue_lowres_image.png")
@@ -54,6 +54,11 @@ json <- file.path(targetdir, "spatial", "scalefactors_json.json")
 
 infoTable <- tibble::tibble(samples, imgs, spotfiles, json)
 se <- ReadVisiumData(infoTable)
+```
+
+```{r include=FALSE}
+se <- readRDS("R_objects/se_kidney_spatial")
+DefaultAssay(se_kidney_spatial) <- "Spatial"
 ```
 
 ```{r}
