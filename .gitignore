@@ -1,1 +1,9 @@
 vignettes
+.Rhistory
+.Rprofile
+.Rproj.user/
+BC_data/
+demo_data/
+manuscript_items/
+notebooks/
+renv/
