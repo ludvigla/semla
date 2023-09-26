@@ -190,7 +190,7 @@ dev.off()
 
 ![](NNMF/multiple_factors_heatmap.jpg)
 
-## FEA
+## Functional Enrichment Analysis (FEA)
 
 If you want to get the feature loading values for each factor, you can extract them from the `DimReduc` object. This can for example be useful to run Functional Enrichment Analysis (FEA).
 
@@ -249,7 +249,6 @@ saveRDS(fea_results_nmf_1, file = "NNMF/fea_results_nmf_1")
 fea_results_nmf_1 <- readRDS("NNMF/fea_results_nmf_1")
 fea_results_nmf_1 |> select(p_value, term_size, query_size, intersection_size, term_name)
 ```
-
 
 <br>
 

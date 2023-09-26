@@ -19,7 +19,7 @@ In this article, we'll demonstrate how to load Immunoflurescence (IF) data with 
 
 You can download example data from 10x Genomics website. Here we'll use a Breast Cancer data set called "Visium CytAssist Gene and Protein Expression Library of Human Breast Cancer, IF, 6.5mm (FFPE)".
 
-Assuming that you have downloaded the data (filtered_feature_bc_matrix.h5 and the spatial/ folder) into your current working directory, you can load the data into a Seurat object:
+Assuming that you have downloaded the data (\`filtered_feature_bc_matrix.h5\` and the \`spatial/\` folder) into your current working directory, you can load the data into a Seurat object:
 
 ```{r eval=FALSE}
 samples <- "filtered_feature_bc_matrix.h5"
@@ -283,7 +283,7 @@ hBrCa <- LoadImages(hBrCa, image_height = 1957)
 ```
 
 ```{r eval=FALSE}
-ImgePlot(hBrCa)
+ImagePlot(hBrCa)
 ```
 
 ```{r eval=FALSE, include=FALSE}

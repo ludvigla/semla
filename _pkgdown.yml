@@ -149,6 +149,7 @@ reference:
 - contents:
   - CoordMirror
   - CoordTransform
+  - get_array_rotation
 - subtitle: Spatial methods
 - contents:
   - GetSpatialNetwork

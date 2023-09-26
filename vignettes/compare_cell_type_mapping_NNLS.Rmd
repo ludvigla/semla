@@ -88,7 +88,7 @@ se_brain_spatial <- LoadImages(se_brain_spatial)
 se_kidney_spatial <- LoadImages(se_kidney_spatial)
 ```
 
-```{r eval=FALSE}
+```{r eval=FALSE, include=FALSE}
 # Replace with paths to local files
 se_brain_spatial[["celltypeprops"]] <-
   readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
@@ -101,7 +101,7 @@ se_brain_spatial[["cell2location"]] <-
                         "comparison/mousebrain/cell2location?raw=true")))
 ```
 
-```{r eval=FALSE}
+```{r eval=FALSE, include=FALSE}
 # Replace with paths to local files
 se_kidney_spatial[["celltypeprops"]] <-
   readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
@@ -128,13 +128,9 @@ se_kidney_spatial[["cell2location"]] <- readRDS(file = "../vignettes/comparison/
 
 ## Mouse brain
 
-```{r fig.height=3}
-ImagePlot(se_brain_spatial)
-```
-
 The results of each cell type mapping approach is stored as an *Assay* within the `semla` object, and the spot-wise Pearson correlation values are computed using the `cor()` function in R. The results are visualized as heatmaps using `ggplot2` and `geom_tile()`, where the fill color corresponds to the strength of the correlation.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_brain_spatial, assay = "celltypeprops") |> as.matrix() |> t(), 
               GetAssayData(se_brain_spatial, assay = "stereoscope") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -142,7 +138,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 corMat_nnls_ss <- corMat
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_brain_spatial, assay = "celltypeprops") |> as.matrix() |> t(), 
               GetAssayData(se_brain_spatial, assay = "cell2location") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -150,7 +146,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 corMat_nnls_c2l <- corMat
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_brain_spatial, assay = "stereoscope") |> as.matrix() |> t(), 
               GetAssayData(se_brain_spatial, assay = "cell2location") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -158,7 +154,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 corMat_ss_c2l <- corMat
 ```
 
-```{r class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, class.source = 'fold-hide'}
 gg_nnls_ss <- corMat_nnls_ss |>
   data.frame(check.names = FALSE) |> 
   rownames_to_column(var = "NNLS") |> 
@@ -184,7 +180,7 @@ gg_ss_c2l <- corMat_ss_c2l |>
                       values_to = "correlation")
 ```
 
-```{r fig.show='show', fig.width=13, fig.height=5.5, class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, fig.show='show', fig.width=13, fig.height=5.5, class.source = 'fold-hide'}
 p1 <- ggplot(gg_nnls_ss, aes(NNLS, stereoscope, fill = correlation)) + geom_tile()
 p2 <- ggplot(gg_nnls_c2l, aes(NNLS, cell2location, fill = correlation)) + geom_tile()
 p3 <- ggplot(gg_ss_c2l, aes(stereoscope, cell2location, fill = correlation)) + geom_tile()
@@ -200,9 +196,12 @@ p_comp_brain <- (p1|p2|p3) +
         axis.title = element_text(face = "bold", size = 14), 
         legend.position = "bottom", plot.margin = margin(4,10,4,10))
 
+jpeg(filename = "compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg", width = 13*150, height = 5.5*150, res = 150)
 p_comp_brain + patchwork::plot_annotation(title = "Correlation between cell type mapping results in mouse brain", 
                                           theme = theme(plot.title = element_text(hjust=0.5, size=16, face = "bold")))
+dev.off()
 ```
+![1. Correlation plots of cell type mapping results in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg)
 
 <br>
 
@@ -210,7 +209,7 @@ In general, we can see that the correlation between mapped cell types values is 
 
 We can also summarize the results by looking at the correlation between matching cell types, to better view if the NNLS method seems to share a higher concordance with a specific method for certain cell types.
 
-```{r fig.width=10, fig.height=4, class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, fig.width=10, fig.height=4, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
   gg_nnls_ss |> filter(NNLS==stereoscope) |> mutate(cell_type = NNLS, comparison = "stereoscope") |> select(cell_type, comparison, correlation),
   gg_nnls_c2l |> filter(NNLS==cell2location) |> mutate(cell_type = NNLS, comparison = "cell2location") |> select(cell_type, comparison, correlation)
@@ -219,7 +218,8 @@ gg_bar$cell_type <- factor(gg_bar$cell_type,
                            levels = gg_bar |> 
                              group_by(cell_type) |> summarise(max_cor = max(correlation)) |> 
                              arrange(desc(max_cor)) |> select(cell_type) |> unlist() |> as.character())
-ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
+
+p_bars <- ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
   geom_bar(stat = "identity", position = 'dodge', colour="grey30", linewidth = 0.25, width = 0.7) +
   geom_hline(yintercept = 0, colour="grey30", linewidth = 0.25) +
   labs(fill = "Method compared against NNLS: ") +
@@ -230,7 +230,12 @@ ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
         axis.title.x = element_blank(),
         axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
         legend.position = "top")
+
+jpeg(filename = "compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg", width = 10*150, height = 4*150, res = 150)
+p_bars
+dev.off()
 ```
+![2. Comparison of correlation values against NNLS for cell types in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg)
 
 <br>
 
@@ -247,7 +252,7 @@ brain_selected_cells <-
   )
 ```
 
-```{r class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, class.source = 'fold-hide'}
 plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
     DefaultAssay(se_brain_spatial) <- "celltypeprops"
     p1 <- MapFeatures(se_brain_spatial,
@@ -287,6 +292,14 @@ plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
 }) |> setNames(nm = brain_selected_cells)
 ```
 
+```{r eval=FALSE, include=FALSE}
+saveRDS(plots_comp, "compare_cell_type_mapping_NNLS/mbrain_spatial_map_plots.rds")
+```
+```{r include=FALSE}
+plots_comp <- readRDS("compare_cell_type_mapping_NNLS/mbrain_spatial_map_plots.rds")
+```
+
+
 ### Spatial cell type mapping {.tabset}
 
 ```{r results='asis', echo=FALSE, fig.show='show', fig.width=13, fig.height=3.5}
@@ -300,13 +313,9 @@ for(i in seq_along(brain_selected_cells)){
 
 ## Mouse kidney
 
-```{r fig.height=3}
-ImagePlot(se_kidney_spatial)
-```
-
 The same comparison approach as for the mouse brain data is applied to study the results for the mouse kidney sample, producing spot-wise correlation values between the cell type mapping results using the three different methods included for the comparison.
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_kidney_spatial, assay = "celltypeprops") |> as.matrix() |> t(), 
               GetAssayData(se_kidney_spatial, assay = "stereoscope") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -314,7 +323,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 kdn_corMat_nnls_ss <- corMat
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_kidney_spatial, assay = "celltypeprops") |> as.matrix() |> t(), 
               GetAssayData(se_kidney_spatial, assay = "cell2location") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -322,7 +331,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 kdn_corMat_nnls_c2l <- corMat
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 corMat <- cor(GetAssayData(se_kidney_spatial, assay = "stereoscope") |> as.matrix() |> t(), 
               GetAssayData(se_kidney_spatial, assay = "cell2location") |> as.matrix() |> t())
 corMat <- corMat[intersect(rownames(corMat), colnames(corMat)), 
@@ -330,7 +339,7 @@ corMat <- corMat[intersect(rownames(corMat), colnames(corMat)),
 kdn_corMat_ss_c2l <- corMat
 ```
 
-```{r class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, class.source = 'fold-hide'}
 kdn_gg_nnls_ss <- kdn_corMat_nnls_ss |>
   data.frame(check.names = FALSE) |> 
   rownames_to_column(var = "NNLS") |> 
@@ -356,7 +365,7 @@ kdn_gg_ss_c2l <- kdn_corMat_ss_c2l |>
                       values_to = "correlation")
 ```
 
-```{r fig.show='show', fig.width=18, fig.height=7, class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, fig.show='show', fig.width=18, fig.height=7, class.source = 'fold-hide'}
 p1 <- ggplot(kdn_gg_nnls_ss, aes(NNLS, stereoscope, fill = correlation)) + geom_tile()
 p2 <- ggplot(kdn_gg_nnls_c2l, aes(NNLS, cell2location, fill = correlation)) + geom_tile()
 p3 <- ggplot(kdn_gg_ss_c2l, aes(stereoscope, cell2location, fill = correlation)) + geom_tile()
@@ -372,11 +381,15 @@ p_comp_kidney <- (p1|p2|p3) +
         axis.title = element_text(face = "bold", size = 14), 
         legend.position = "bottom", plot.margin = margin(4,10,4,10))
 
+jpeg(filename = "compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg", width = 18*150, height = 7*150, res = 150)
 p_comp_kidney + patchwork::plot_annotation(title = "Correlation between cell type mapping results in mouse kidney", 
                                           theme = theme(plot.title = element_text(hjust=0.5, size=16, face = "bold")))
+dev.off()
 ```
+![3. Correlation plots of cell type mapping results in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg)
 
-```{r fig.width=10, fig.height=5.5, class.source = 'fold-hide'}
+
+```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=5.5, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
   kdn_gg_nnls_ss |> filter(NNLS==stereoscope) |> mutate(cell_type = NNLS, comparison = "stereoscope") |> select(cell_type, comparison, correlation),
   kdn_gg_nnls_c2l |> filter(NNLS==cell2location) |> mutate(cell_type = NNLS, comparison = "cell2location") |> select(cell_type, comparison, correlation)
@@ -385,7 +398,8 @@ gg_bar$cell_type <- factor(gg_bar$cell_type,
                            levels = gg_bar |> 
                              group_by(cell_type) |> summarise(max_cor = max(correlation)) |> 
                              arrange(desc(max_cor)) |> select(cell_type) |> unlist() |> as.character())
-ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
+
+p_bars_kidney <- ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
   geom_bar(stat = "identity", position = 'dodge', colour="grey30", linewidth = 0.25, width = 0.7) +
   geom_hline(yintercept = 0, colour="grey30", linewidth = 0.25) +
   labs(fill = "Method compared against NNLS: ") +
@@ -394,9 +408,14 @@ ggplot(gg_bar, aes(x = cell_type, y = correlation, fill = comparison)) +
   theme_light() +
   theme(panel.grid.minor.y = element_blank(), 
         axis.title.x = element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+        axis.text.x = element_text(angle = 90, hjust = 1, size = 10),
         legend.position = "top")
+
+jpeg(filename = "compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg", width = 8*150, height = 5.5*150, res = 150)
+p_bars_kidney
+dev.off()
 ```
+![4. Comparison of correlation values against NNLS for cell types in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg)
 
 Also for this data set, there is an overall high cell-cell correlation between the NNLS results and those produced by stereoscope and cell2location. However, we can for instance see that all three methods seem to have difficulties correctly mapping B cells, as there seem to be very little concordance across the method mapping results.
 
@@ -409,7 +428,7 @@ kidney_selected_cells <-
   )
 ```
 
-```{r class.source = 'fold-hide'}
+```{r eval=FALSE, include=FALSE, class.source = 'fold-hide'}
 kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
     DefaultAssay(se_kidney_spatial) <- "celltypeprops"
     p1 <- MapFeatures(se_kidney_spatial, 
@@ -441,6 +460,13 @@ kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
     (p1 | p2 | p3) & patchwork::plot_annotation(title=stringr::str_to_title(kidney_selected_cells[i]), 
                                     theme = theme(plot.title = element_text(hjust=0.5, face = "bold")))
 }) |> setNames(nm = kidney_selected_cells)
+```
+
+```{r eval=FALSE, include=FALSE}
+saveRDS(kdn_plots_comp, "compare_cell_type_mapping_NNLS/mkidney_spatial_map_plots.rds")
+```
+```{r include=FALSE}
+kdn_plots_comp <- readRDS("compare_cell_type_mapping_NNLS/mkidney_spatial_map_plots.rds")
 ```
 
 ### Spatial cell type mapping {.tabset}

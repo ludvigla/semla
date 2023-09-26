@@ -354,8 +354,8 @@ se_kidney_singlecell <- se_kidney_singlecell |>
 
 ```{r include=FALSE}
 # Load prepared kidney data
-se_kidney_singlecell <- readRDS("~/10x_data/R_objects/se_kidney_singlecell")
-se_kidney_spatial <- readRDS("~/10x_data/R_objects/se_kidney_spatial")
+se_kidney_singlecell <- readRDS("R_objects/se_kidney_singlecell")
+se_kidney_spatial <- readRDS("R_objects/se_kidney_spatial")
 
 ```
 
@@ -414,8 +414,8 @@ for(i in 1:length(selected_celltypes)){
 ```
 
 ```{r eval=FALSE, include=FALSE}
-saveRDS(se_kidney_singlecell, file = "~/10x_data/R_objects/se_kidney_singlecell")
-saveRDS(se_kidney_spatial, file = "~/10x_data/R_objects/se_kidney_spatial")
+saveRDS(se_kidney_singlecell, file = "R_objects/se_kidney_singlecell")
+saveRDS(se_kidney_spatial, file = "R_objects/se_kidney_spatial")
 ```
 
 ### Visualize multiple cell types
