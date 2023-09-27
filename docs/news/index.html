@@ -88,7 +88,108 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.6" id="semla-116">semla 1.1.6<a class="anchor" aria-label="anchor" href="#semla-116"></a></h2>
+<p><em>2023-09-19</em></p>
+<div class="section level3">
+<h3 id="bug-fixes-1-1-6">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-1-6"></a></h3>
+<ul><li>Fixed bug in <code>RunLocalG</code> when <code>store_in_metadata = FALSE</code> and no alternative hypothesis is provided.</li>
+<li>Fixed bug in <code>TileImage</code> when using multiple threads on linux.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-1-6">Changes<a class="anchor" aria-label="anchor" href="#changes-1-1-6"></a></h3>
+<ul><li>Modified behaviour of <code>mode = "heatmap"</code> in <code>PlotFeatureLoadings</code> to make sure that features are ordered by their highest dimensionality reduction value.</li>
+<li>Updated NNMF vignette with a new data set.</li>
+<li>Changed deprecated <code>ggplot2</code> function arguments in <code>AnglePlot</code> and <code>MapFeaturesSummary</code>.</li>
+<li>Changed example <code>Seurat</code> object to contain basic array coordinates.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="added-1-1-6">Added<a class="anchor" aria-label="anchor" href="#added-1-1-6"></a></h3>
+<ul><li>Option to set <code>launch.browser</code> in <code>FeatureViewer</code>. For instance, users can se <code>launch.browser = getOption("viewer")</code> in <code>FeatureViewer</code> to launch the app in the RStudio viewer window.</li>
+<li>
+<code>CreateStaffliObject</code> now accepts basic array coordinates to be stored in <code>meta_data</code> slot. These coordinates are defined on the capture array grid of a 10x Genomics Visium slide and do not match the H&amp;E images.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.5" id="semla-115">semla 1.1.5<a class="anchor" aria-label="anchor" href="#semla-115"></a></h2>
+<p><em>2023-09-06</em></p>
+<div class="section level3">
+<h3 id="bug-fixes-1-1-5">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-1-5"></a></h3>
+<ul><li>Added check for non-finite values when visualizing numeric data in <code>FeatureViewer</code> to avoid crash</li>
+<li>Fixed bug in <code>FeatureViewer</code> when a slot other than ‘data’ is selected</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.4" id="semla-114">semla 1.1.4<a class="anchor" aria-label="anchor" href="#semla-114"></a></h2>
+<p><em>2023-09-04</em></p>
+<div class="section level3">
+<h3 id="bug-fixes-1-1-4">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-1-4"></a></h3>
+<ul><li>Fixed bug in <code>LoadScaleFactors</code>
+</li>
+<li>Fixed bug in <code>FeatureViewer</code> when handling data sets with spots located outside the H&amp;E image</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-1-4">Changes<a class="anchor" aria-label="anchor" href="#changes-1-1-4"></a></h3>
+<ul><li>Improved function documentation</li>
+</ul></div>
+<div class="section level3">
+<h3 id="added-1-1-4">Added<a class="anchor" aria-label="anchor" href="#added-1-1-4"></a></h3>
+<ul><li>Added support for conversion of <code>Seurat</code> objects with Slide-seq data in <code>UpdateSeuratForSemla</code>
+</li>
+<li>Added option to color background and titles in <code>ImagePlot</code>
+</li>
+<li>Added support for Visium + IF data in <code>LoadAndMergeMatrices</code> and <code>ReadVisiumData</code>
+</li>
+<li>Added <code>renv.lock</code> file for installing semla and its dependencies with <code>renv</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="website-1-1-4">Website<a class="anchor" aria-label="anchor" href="#website-1-1-4"></a></h3>
+<ul><li>Updated image alignment vignette</li>
+<li>Updated Staffli objects article</li>
+<li>Added cell type deconvolution benchmark article</li>
+<li>Added Visium + IF data vignette</li>
+<li>Added example to digital unrolling vignette</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="semla-110">semla 1.1.0<a class="anchor" aria-label="anchor" href="#semla-110"></a></h2>
+<p><em>2023-08-14</em></p>
+<div class="section level3">
+<h3 id="added-1-1-0">Added<a class="anchor" aria-label="anchor" href="#added-1-1-0"></a></h3>
+<ul><li>Added helper function for <code>Staffli</code> objects:
+<ul><li>
+<code>GetScaleFactors</code> to fetch <code>tibble</code> with scale factor related information</li>
+</ul></li>
+<li>
+<code>GetImages</code> to fetch images</li>
+<li>
+<code>GetImageInfo</code> to fetch <code>tibble</code> with image related information</li>
+<li>
+<code>ReplaceImagePaths</code> to validate and update image paths</li>
+<li>Added <code>UpdateSeuratForSemla</code> to make <code>Seurat</code> objects with VisiumV1 data compatible with <code>semla</code>
+</li>
+<li>Added <code>LoadAnnotationCSV</code> to load annotations exported from Loupe Browser</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-1-0">Changes<a class="anchor" aria-label="anchor" href="#changes-1-1-0"></a></h3>
+<ul><li>Improved verbosity</li>
+<li>Reduced size of example data</li>
+<li>Updated function documentation</li>
+<li>Updated function examples</li>
+<li>Added option to load images from URL instead of local path (<code>LoadImages</code> and <code>ReplaceImagePaths</code>)</li>
+<li>Added option to use multiple cores for <code>ExportDataForViewer</code>
+</li>
+<li>Fixed bug in <code>RadialDistance</code> when no spots are available after removing singletons</li>
+<li>Fixed bug in <code>MergeSTData</code> when merging two or more objects containing multiple tissue sections</li>
+<li>Fixed bug in <code>MapMultipleFeatures</code> when NA values are present</li>
+<li>Updated data loaders for increased compatibility with CytAssist data. Minor bug fixes for edge cases when spots are located outside of the H&amp;E image</li>
+<li>Fixed bug in <code>LoadAndMergeMatrices</code> when loading data from a data folder output by Space Ranger</li>
+<li>Changed output of <code>AdjustTissueCoordinates</code> which now returns unadjusted y-axis values</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="semla-100">semla 1.0.0<a class="anchor" aria-label="anchor" href="#semla-100"></a></h2>
+<p><em>2023-03-24</em></p>
 <p>We are excited to announce the first release of our R package, <code>semla</code>.</p>
 <p>The package is designed to process, analyze and visualize Spatially Resolved Transcriptomics (SRT) data.</p>
 <p>Key features of this release include:</p>
@@ -104,9 +205,11 @@
 </ul><p>We would like to express our gratitude to <a href="https://github.com/jemorlanes" class="external-link">Javier Morlanes</a> and <a href="https://github.com/mabreumac" class="external-link">Marcos Machado</a> who contributed to this release. We appreciate your feedback, suggestions, and bug reports.</p>
 <p>We invite users to download and install the development version of the package from our GitHub <a href="https://github.com/ludvigla/semla" class="external-link">repo</a> and explore the features and functionality. Please feel free to provide feedback and suggestions for future improvements.</p>
 <p>Thank you for your support and we look forward to continuing to enhance and improve this package.</p>
-<p>Sincerely, Ludvig Larsson and Lovisa Franzén</p>
+<p><em>Sincerely,</em></p>
+<p><em>Ludvig Larsson and Lovisa Franzén</em></p>
 </div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
