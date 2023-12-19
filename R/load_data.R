@@ -235,10 +235,19 @@ LoadSpatialCoordinates <- function (
   # Load coordinates
   if (verbose) cli_alert_info("Loading coordinates:")
   coordDF <- do.call(bind_rows, lapply(seq_along(coordinatefiles), function(i) {
-    #bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
-    # New format since Space Ranger 2.0.0
-    #use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
-    coords <- read.csv(file = coordinatefiles[i], header = TRUE) 
+    term <- sub(x = coordinatefiles[i], pattern = ".*\\.", replacement = "")
+    if (term == "csv"){
+      #bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
+      # New format since Space Ranger 2.0.0
+      #use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
+      coords <- read.csv(file = coordinatefiles[i], header = TRUE) 
+    } else if (term == "parquet"){
+      if (!requireNamespace("arrow", quietly = TRUE)) {
+        abort(glue("Package {cli::col_br_magenta('arrow')} is required. Please install it with: \n",
+                   "install.packages('arrow')"))
+      }
+      coords <- arrow::read_parquet(file = coordinatefiles[i], as_data_frame = TRUE, mmap = TRUE)
+    }
     if (!c("barcode") %in% colnames(coords)) {
       coords <- read.csv(file = coordinatefiles[i], header = FALSE) 
     }
