@@ -12,6 +12,7 @@ CorSpatialFeatures(object, ...)
   object,
   spatnet,
   across_all = FALSE,
+  calculate_pvalue = FALSE,
   nCores = NULL,
   verbose = TRUE,
   ...
@@ -23,6 +24,7 @@ CorSpatialFeatures(object, ...)
   assay_use = NULL,
   slot_use = "data",
   across_all = FALSE,
+  calculate_pvalue = FALSE,
   nCores = NULL,
   verbose = TRUE,
   ...
@@ -36,7 +38,11 @@ CorSpatialFeatures(object, ...)
 \item{spatnet}{A list of spatial networks created with \code{\link{GetSpatialNetwork}}. The spots in these
 networks should match the spots in the feature matrix.}
 
-\item{across_all}{Should the autocorrelation scores be calculated across all samples?}
+\item{across_all}{Boolean specifying if autocorrelation scores be calculated across all samples (default
+FALSE).}
+
+\item{calculate_pvalue}{Boolean specifying if p-values should be calculated for each correlation value
+(default FALSE). Raw and BH-adjusted p-values provided.}
 
 \item{nCores}{Number of cores to use for the spatial autocorrelation calculation}
 
