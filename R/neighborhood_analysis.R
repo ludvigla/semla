@@ -274,6 +274,10 @@ RegionNeighbors.Seurat <- function (
 
   # Add data to Seurat object
   nbs_rearranged <- do.call(bind_cols, lapply(column_labels, function(lbl) {
+    if (grepl("\\s", lbl)) {
+      new_lbl <- gsub(" ", "\\.", lbl)
+      cli_alert_warning("Blankspaces detected among column labels. New column name set to '{new_lbl}'.")
+    }
     left_join(x = GetStaffli(object)@meta_data |>
                 select(barcode) |>
                 bind_cols(object[[]] |> select(all_of(column_name))),
@@ -282,10 +286,10 @@ RegionNeighbors.Seurat <- function (
       select(-barcode) |>
       setNames(nm = c("var1", "var2")) |>
       mutate_if(is.factor, as.character) |>
-      mutate(var2 = case_when((!is.na(var2)) & (var1 != var2) ~ paste0(column_key, lbl),
+      mutate(var2 = case_when((!is.na(var2)) & (var1 != var2) ~ paste0(column_key, gsub(" ", "\\.", lbl)),
                               TRUE ~ var2)) |>
       select(var2) |>
-      setNames(nm = paste0(column_key, lbl))
+      setNames(nm = paste0(column_key, gsub(" ", "\\.", lbl)))
   }))
 
   # Remove columns from meta data and add results
