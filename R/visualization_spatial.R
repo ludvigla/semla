@@ -417,12 +417,12 @@ MapFeatures.Seurat <- function (
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features, slot = slot) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
 
   # Add label_by column if present
   if (!is.null(label_by)) {
     data_use <- data_use |>
-      bind_cols(FetchData(object, vars = label_by))
+      bind_cols(FetchData(object, vars = label_by, clean = FALSE))
   }
 
   # Subset by section number
@@ -871,7 +871,7 @@ MapLabels.Seurat <- function (
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = column_name) |> as_tibble())
+    bind_cols(FetchData(object, vars = column_name, clean = FALSE) |> as_tibble())
 
   # Convert label column to factor
   data_use <- data_use |>
@@ -883,7 +883,7 @@ MapLabels.Seurat <- function (
       abort(glue("{col_br_magenta('column_name')} should not be the same as {col_br_magenta('label_by')}"))
     }
     data_use <- data_use |>
-      bind_cols(FetchData(object, vars = label_by))
+      bind_cols(FetchData(object, vars = label_by, clean = FALSE))
   }
 
   # Get images if image_use is provided
