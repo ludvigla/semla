@@ -245,8 +245,9 @@ LoadSpatialCoordinates <- function (
       if (!requireNamespace("arrow", quietly = TRUE)) {
         abort(glue("Package {cli::col_br_magenta('arrow')} is required. Please install it with: \n",
                    "install.packages('arrow')"))
+      } else if (requireNamespace("arrow", quietly = TRUE)) {
+        coords <- arrow::read_parquet(file = coordinatefiles[i], as_data_frame = TRUE, mmap = TRUE)
       }
-      coords <- arrow::read_parquet(file = coordinatefiles[i], as_data_frame = TRUE, mmap = TRUE)
     }
     if (!c("barcode") %in% colnames(coords)) {
       coords <- read.csv(file = coordinatefiles[i], header = FALSE) 
