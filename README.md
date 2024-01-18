@@ -13,7 +13,7 @@
 
 If you are visiting our Github page, please find more information at our package [website](https://ludvigla.github.io/semla/). Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis and visualization of 10x Visium data.
 
-For a more scientific description of the package, check out our associated publication "<i>Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization</i>" in Bioinformatics ([DOI:10.1093/bioinformatics/btad626](https://doi.org/10.1093/bioinformatics/btad626)). Please cite this article if you use `semla` in your studies, and we'd be very greatful!
+For a more scientific description of the package, check out our associated publication "<i>Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization</i>" in Bioinformatics ([DOI:10.1093/bioinformatics/btad626](https://doi.org/10.1093/bioinformatics/btad626)). Please cite this article if you use `semla` in your studies, and we'd be very grateful!
 
 <br>
 

@@ -231,7 +231,7 @@ RunNNLS.Seurat <- function (
 #'
 #' @import glue
 #' @import cli
-#' @importFrom Seurat CreateDimReducObject CreateAssayObject DefaultAssay `DefaultAssay<-`
+#' @importFrom Seurat CreateDimReducObject CreateAssayObject DefaultAssay
 #'
 #' @noRd
 .return_as <- function (
