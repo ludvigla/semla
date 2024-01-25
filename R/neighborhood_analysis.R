@@ -247,7 +247,7 @@ RegionNeighbors.Seurat <- function (
     abort(glue("Invalid class '{class(column_labels)}', expected a 'character'"))
   if (!all(column_labels %in% (object[[]] |> pull(all_of(column_name)))))
     abort(glue("Some 'column_labels' are not present in '{column_name}'"))
-  if (any(TRUE, grepl(" ", column_labels)))
+  if (any(grepl(" ", column_labels)))
     abort(glue("Some 'column_labels' in '{column_name}' contain blank spaces which is not permitted. Remove/replace blankspaces before proceeding."))
   
   # Select spots
