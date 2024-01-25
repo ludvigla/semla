@@ -247,7 +247,9 @@ RegionNeighbors.Seurat <- function (
     abort(glue("Invalid class '{class(column_labels)}', expected a 'character'"))
   if (!all(column_labels %in% (object[[]] |> pull(all_of(column_name)))))
     abort(glue("Some 'column_labels' are not present in '{column_name}'"))
-
+  if (any(TRUE, grepl(" ", column_labels)))
+    abort(glue("Some 'column_labels' in '{column_name}' contain blank spaces which is not permitted. Remove/replace blankspaces before proceeding."))
+  
   # Select spots
   spots_list <- lapply(column_labels, function(lbl) {
     spots <- GetStaffli(object)@meta_data |>
@@ -274,10 +276,6 @@ RegionNeighbors.Seurat <- function (
 
   # Add data to Seurat object
   nbs_rearranged <- do.call(bind_cols, lapply(column_labels, function(lbl) {
-    if (grepl("\\s", lbl)) {
-      new_lbl <- gsub(" ", "\\.", lbl)
-      cli_alert_warning("Blankspaces detected among column labels. New column name set to '{new_lbl}'.")
-    }
     left_join(x = GetStaffli(object)@meta_data |>
                 select(barcode) |>
                 bind_cols(object[[]] |> select(all_of(column_name))),
@@ -286,10 +284,10 @@ RegionNeighbors.Seurat <- function (
       select(-barcode) |>
       setNames(nm = c("var1", "var2")) |>
       mutate_if(is.factor, as.character) |>
-      mutate(var2 = case_when((!is.na(var2)) & (var1 != var2) ~ paste0(column_key, gsub(" ", "\\.", lbl)),
+      mutate(var2 = case_when((!is.na(var2)) & (var1 != var2) ~ paste0(column_key, lbl),
                               TRUE ~ var2)) |>
       select(var2) |>
-      setNames(nm = paste0(column_key, gsub(" ", "\\.", lbl)))
+      setNames(nm = paste0(column_key, lbl))
   }))
 
   # Remove columns from meta data and add results
