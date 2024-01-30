@@ -232,7 +232,7 @@ DisconnectRegions <- function(object, ...) {
 #' NB: This function only calculates G, not G star.
 #'
 #' @param object An object
-#' @param ... Parameters passed to \code{\link{GetSpatialNework}}
+#' @param ... Parameters passed to \code{\link{GetSpatialNetwork}}
 #'
 #' @family spatial methods
 #' @rdname local-G

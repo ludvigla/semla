@@ -120,6 +120,10 @@ The selection of genes boils down to what you are trying to achieve with your an
 
 <br>
 
+It is also possible to compute p-values for each correlation score by passing the argument `calculate_pvalue = TRUE` to the `CorSpatialFeatures()` function (*semla* v. ≥1.1.7). P-values and adjusted p-values will appear in the results table as separate columns (`pval`, `adj.pval`), where the adjusted p-value is obtained using the Benjamini & Hochberg (BH) method, also know as FDR.
+
+<br>
+
 ------------------------------------------------------------------------
 
 <details open>

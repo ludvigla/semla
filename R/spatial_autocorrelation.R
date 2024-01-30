@@ -53,7 +53,10 @@ NULL
 #' 
 #' @param spatnet A list of spatial networks created with \code{\link{GetSpatialNetwork}}. The spots in these
 #' networks should match the spots in the feature matrix.
-#' @param across_all Should the autocorrelation scores be calculated across all samples?
+#' @param across_all Boolean specifying if autocorrelation scores be calculated across all samples (default 
+#' FALSE).
+#' @param calculate_pvalue Boolean specifying if p-values should be calculated for each correlation value 
+#' (default FALSE). Raw and BH-adjusted p-values provided.
 #' @param nCores Number of cores to use for the spatial autocorrelation calculation
 #' @param verbose Print messages
 #'
@@ -61,7 +64,7 @@ NULL
 #'
 #' @importFrom stats cor
 #' @importFrom parallel detectCores
-#' @importFrom tibble tibble
+#' @importFrom tibble tibble add_column
 #' @importFrom Matrix rowSums
 #' @importFrom tidyr pivot_wider
 #' @import dplyr
@@ -109,6 +112,7 @@ CorSpatialFeatures.default <- function (
     object,
     spatnet,
     across_all = FALSE,
+    calculate_pvalue = FALSE,
     nCores = NULL,
     verbose = TRUE,
     ...
@@ -197,9 +201,19 @@ CorSpatialFeatures.default <- function (
 
     if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
 
+    if (calculate_pvalue) {
+      pvals <- .corPValues(cor_values = spatial_autocorrelation, x = x_subset, ...)
+      if (verbose) cli_alert("  Computed p-values for spatial autocorrelation scores")
+    }
+    
     # Summarize results
-    results <- tibble(gene = names(spatial_autocorrelation), cor = spatial_autocorrelation) |>
-      arrange(-cor)
+    results <- tibble(gene = names(spatial_autocorrelation), cor = spatial_autocorrelation)
+    if (calculate_pvalue) {
+      results <- results |> 
+        add_column(pval = pvals) |> 
+        add_column(adj.pval = p.adjust(pvals, method = "BH"))
+    }
+    results <- results |> arrange(-cor)
   })
 
   # If across_all is set, calculate autocorrelations across all samples instead
@@ -224,9 +238,20 @@ CorSpatialFeatures.default <- function (
     }
 
     if (verbose) cli_alert("  Computed feature spatial autocorrelation scores")
+    
+    if (calculate_pvalue) {
+      pvals <- .corPValues(cor_values = spatial_autocorrelation, x = object[rownames(lagMat), ], ...)
+      if (verbose) cli_alert("  Computed p-values for spatial autocorrelation scores")
+    }
+    
     # Summarize results
-    results <- tibble(gene = colnames(object), cor = spatial_autocorrelation) |>
-      arrange(-cor)
+    results <- tibble(gene = colnames(object), cor = spatial_autocorrelation)
+    if (calculate_pvalue) {
+      results <- results |> 
+        add_column(pval = pvals) |> 
+        add_column(adj.pval = p.adjust(pvals, method = "BH"))
+    }
+    results <- results |> arrange(-cor)
   }
 
   if (verbose) cli_alert_success("  Returning results")
@@ -305,6 +330,7 @@ CorSpatialFeatures.Seurat <- function (
     assay_use = NULL,
     slot_use = "data",
     across_all = FALSE,
+    calculate_pvalue = FALSE,
     nCores = NULL,
     verbose = TRUE,
     ...
@@ -333,7 +359,7 @@ CorSpatialFeatures.Seurat <- function (
   spatnet <- GetSpatialNetwork(object)
 
   # Compute spatial autocorrelation
-  spatfeatures <- CorSpatialFeatures(featureMat, spatnet, across_all, nCores, verbose, ...)
+  spatfeatures <- CorSpatialFeatures(featureMat, spatnet, across_all, calculate_pvalue, nCores, verbose, ...)
 
   return(spatfeatures)
 }
@@ -356,3 +382,41 @@ CorSpatialFeatures.Seurat <- function (
   cor = colSums(x*y) / sqrt(colSums(x*x)*colSums(y*y))
   return(cor)
 }
+
+
+#' Calculate p-values from correlations using Student t dist
+#'
+#' @param cor_values Numeric vector with correlation scores
+#' @param x Numeric matrix
+#' @param alternative String specifying alternative hypothesis for p-value calculation. 
+#' Must be one of "two.sided" (default), "greater" or "less".
+#'
+#' @importFrom stats pt
+#'
+#' @return A numeric vector with p-values
+#'
+#' @noRd
+.corPValues = function(cor_values, 
+                       x, 
+                       alternative = "two.sided") {
+  
+  alternative <- rlang::arg_match0(alternative, c("two.sided", "less", "greater"))
+  
+  pvals <- lapply(seq_along(cor_values), function(i){
+    r <- cor_values[i]
+    n <- nrow(x)
+    df <- n - 2L
+    STATISTIC <- c(t = sqrt(df) * r/sqrt(1 - r^2))
+    PVAL <- switch(EXPR = alternative, 
+                   less = pt(STATISTIC, df), 
+                   greater = pt(STATISTIC, df, lower.tail = FALSE), 
+                   two.sided = 2 * min(pt(STATISTIC, df), pt(STATISTIC, 
+                                                             df, lower.tail = FALSE)))
+    return(PVAL)
+  }) |> 
+    unlist() |> 
+    setNames(nm=names(cor_values))
+  
+  return(pvals)
+}
+

@@ -76,3 +76,44 @@ test_that("CorSpatialFeatures returns the correct number of rows when across_all
   expect_equal(nrow(result), ncol(featureMat))
   expect_equal(nrow(result_seurat), ncol(featureMat))
 })
+
+# Test when calculate_pvalue = TRUE
+result <- CorSpatialFeatures(featureMat, spatnet, nCores = 1, calculate_pvalue = TRUE, verbose = FALSE)
+result_seurat <- CorSpatialFeatures(se_mbrain, features = VariableFeatures(se_mbrain)[1:100], calculate_pvalue = TRUE, verbose = FALSE)
+
+# Test for valid output type when calculate_pvalue = TRUE and across_all = FALSE
+test_that("CorSpatialFeatures returns a list of tibbles when calculate_pvalue = TRUE", {
+  expect_type(result, "list")
+  expect_s3_class(result[[1]], "tbl_df")
+  expect_type(result_seurat, "list")
+  expect_s3_class(result_seurat[[1]], "tbl_df")
+})
+
+# Test for valid output size when calculate_pvalue = TRUE
+test_that("CorSpatialFeatures returns the correct number of rows when calculate_pvalue = TRUE", {
+  expect_equal(nrow(result[[1]]), ncol(featureMat))
+  expect_equal(nrow(result_seurat[[1]]), ncol(featureMat))
+})
+
+# Test for valid column names
+test_that("CorSpatialFeatures returns the correct column names when calculate_pvalue = TRUE", {
+  expect_identical(colnames(result[[1]]), c("gene", "cor", "pval", "adj.pval"))
+  expect_identical(colnames(result_seurat[[1]]), c("gene", "cor", "pval", "adj.pval"))
+})
+
+# Test when calculate_pvalue = TRUE and across_all = TRUE
+result <- CorSpatialFeatures(featureMat, spatnet, nCores = 1, across_all = TRUE, calculate_pvalue = TRUE, verbose = FALSE)
+result_seurat <- CorSpatialFeatures(se_mbrain, features = VariableFeatures(se_mbrain)[1:100], across_all = TRUE, calculate_pvalue = TRUE, verbose = FALSE)
+
+# Test for valid output type when calculate_pvalue = TRUE and across_all = TRUE
+test_that("CorSpatialFeatures returns a tibble when calculate_pvalue = TRUE and across_all = TRUE", {
+  expect_s3_class(result, "tbl_df")
+  expect_s3_class(result_seurat, "tbl_df")
+})
+
+# Test for valid column names
+test_that("CorSpatialFeatures returns the correct column names when calculate_pvalue = TRUE and across_all = TRUE", {
+  expect_identical(colnames(result), c("gene", "cor", "pval", "adj.pval"))
+  expect_identical(colnames(result_seurat), c("gene", "cor", "pval", "adj.pval"))
+})
+

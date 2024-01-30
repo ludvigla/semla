@@ -1,15 +1,16 @@
 library(testthat)
 library(semla)
 
+# Define test data
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
 
-# Generate clusters
 se_mcolon <- se_mcolon |>
   ScaleData(verbose = FALSE) |>
   RunPCA(verbose = FALSE) |>
   FindNeighbors(reduction = "pca", dims = 1:30, verbose = FALSE) |>
   FindClusters(verbose = FALSE)
 
+# Test
 test_that("RadialDistance function returns valid results", {
 
   # Run Label Assortativity Analysis

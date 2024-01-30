@@ -13,8 +13,7 @@ RunLocalG(object, ...)
   spatnet,
   alternative = c("two.sided", "greater", "less"),
   return_as_tibble = TRUE,
-  verbose = TRUE,
-  ...
+  verbose = TRUE
 )
 
 \method{RunLocalG}{Seurat}(
@@ -30,7 +29,7 @@ RunLocalG(object, ...)
 \arguments{
 \item{object}{An object}
 
-\item{...}{Arguments passed to other methods}
+\item{...}{Parameters passed to \code{\link{GetSpatialNetwork}}}
 
 \item{spatnet}{A list of tibbles containing spatial networks generated with
 \code{\link{GetSpatialNetwork}}}
