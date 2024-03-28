@@ -238,19 +238,24 @@ LoadSpatialCoordinates <- function (
     term <- sub(x = coordinatefiles[i], pattern = ".*\\.", replacement = "")
     if (term == "csv"){
       #bn <- gsub(basename(coordinatefiles[i]), pattern = ".csv", replacement = "")
-      # New format since Space Ranger 2.0.0
       #use_header <- ifelse(bn == "tissue_positions", TRUE, FALSE)
-      coords <- read.csv(file = coordinatefiles[i], header = TRUE) 
-    } else if (term == "parquet"){
+      coords <- read.csv(file = coordinatefiles[i], header = TRUE) # New format since Space Ranger 2.0.0: headers in tissue_positions.csv
+      if (!c("barcode") %in% colnames(coords)) { # if old format, with missing headers (tissue_positions_list.csv)
+        coords <- read.csv(file = coordinatefiles[i], header = FALSE) 
+      }
+      
+    } else if (term == "parquet"){ # New format since Visium HD
       if (!requireNamespace("arrow", quietly = TRUE)) {
         abort(glue("Package {cli::col_br_magenta('arrow')} is required. Please install it with: \n",
                    "install.packages('arrow')"))
       }
       coords <- arrow::read_parquet(file = coordinatefiles[i], as_data_frame = TRUE, mmap = TRUE)
     }
-    if (!c("barcode") %in% colnames(coords)) {
-      coords <- read.csv(file = coordinatefiles[i], header = FALSE) 
-    }
+    
+    if(ncol(coords) != 8){
+      cli::cli_alert_warning(glue::glue("Coordinate file contains the wrong number of columns ({ncol(coords)} instead of 6). Please double-check input files."))
+      }
+    
     coords <- coords |>
       as_tibble() |>
       setNames(nm = c("barcode", "selected", "y", "x", "pxl_row_in_fullres", "pxl_col_in_fullres")) |>
