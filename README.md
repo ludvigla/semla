@@ -14,6 +14,8 @@ If you are visiting our Github page, please find more information at our package
 
 For a more scientific description of the package, check out our associated publication "<i>Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization</i>" in Bioinformatics ([DOI:10.1093/bioinformatics/btad626](https://doi.org/10.1093/bioinformatics/btad626)). Please cite this article if you use `semla` in your studies, and we'd be very grateful!
 
+<br>
+
 > [!NOTE]\
 > Regarding [Seurat v5](https://satijalab.org/seurat/), most `semla` functionalities should work as expected, however, we have not tested compatibility with new Seurat v5 functions and many other packages built upon Seurat have not yet been made compatible with v5. You may therefore experience unexpected issues when using Seurat v5.
 
@@ -86,6 +88,13 @@ sudo docker run -d -p 1337:8787 -p 3030:3030 --name semla -e PASSWORD=<YOURPASSW
 ```
 
 Visit the docker [docs](https://docs.docker.com/language/java/run-containers/) for more information on how to run containers.
+
+<br>
+
+## Citing *semla*
+
+Larsson L, Franzén L, Ståhl PL, Lundeberg J. Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization. Bioinformatics. 2023 Oct 3;39(10):btad626. doi: 10.1093/bioinformatics/btad626. PMID: 37846051; PMCID: PMC10597621.
+https://academic.oup.com/bioinformatics/article/39/10/btad626/7319366 
 
 <br>
 
