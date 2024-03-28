@@ -252,7 +252,7 @@ LoadSpatialCoordinates <- function (
       coords <- arrow::read_parquet(file = coordinatefiles[i], as_data_frame = TRUE, mmap = TRUE)
     }
     
-    if(ncol(coords) != 8){
+    if(ncol(coords) != 6){
       cli::cli_alert_warning(glue::glue("Coordinate file contains the wrong number of columns ({ncol(coords)} instead of 6). Please double-check input files."))
       }
     
