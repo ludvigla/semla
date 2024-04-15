@@ -499,7 +499,7 @@ MapFeatures.Seurat <- function (
   }
 
   # Set coords_columns
-  coords_columns <- .get_coords_column(image_use, coords_use)
+  coords_columns <- .get_coords_column(image_use, coords_use, shape)
 
   # Filter data to remove all redundant meta data columns
   data_use <- data_use |>
@@ -951,7 +951,7 @@ MapLabels.Seurat <- function (
   }
 
   # Set coords_columns
-  coords_columns <- .get_coords_column(image_use, coords_use)
+  coords_columns <- .get_coords_column(image_use, coords_use, shape)
 
   # Filter data to remove all redundant meta data columns
   data_use <- data_use |>
@@ -1420,7 +1420,8 @@ MapLabels.Seurat <- function (
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
   
   # Check if the image has been derotated
-  if(all(grepl("transformed", coords_columns))){
+  print(coords_columns)
+  if(all(grepl("transformed", coords_columns)) | all(grepl("x|y", coords_columns))){
   } else {
     warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
   }
@@ -1442,6 +1443,7 @@ MapLabels.Seurat <- function (
       select(all_of(coords_columns))
   }
   
+  print(head(gg))
   # Get opacity values if scale_alpha = TRUE and encoded colors are not present
   if (scale_alpha & !encoded_cols_present) {
     alpha_values <- gg |>
@@ -2295,22 +2297,28 @@ MapLabels.Seurat <- function (
 #'
 #' @param image_use A string specifying image type to use
 #' @param coords_use A string specifying coordinate type to use
+#' @param shape A string specifying which spot shape to be used
 #'
 #' @return A character vector with column names for spot coordinates
 #'
 #' @noRd
 .get_coords_column <- function (
     image_use,
-    coords_use
+    coords_use,
+    shape
 ) {
   if (!is.null(image_use)) {
     coords_use <- image_use
-  }
+  } 
   if (coords_use == "raw") {
     coords_columns <- c("pxl_col_in_fullres", "pxl_row_in_fullres")
   } else if (coords_use == "transformed") {
     coords_columns <- c("pxl_col_in_fullres_transformed", "pxl_row_in_fullres_transformed")
   }
+  if (is.null(image_use) & shape == "raster"){
+    coords_columns <- c("x", "y")
+  }
+
   return(coords_columns)
 }
 
