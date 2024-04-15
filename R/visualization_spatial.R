@@ -19,11 +19,18 @@ NULL
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
 #' @param pt_stroke A numeric specifying the point stroke width
+<<<<<<< HEAD
 #' @param shape A string specifying the shape to plot. Options are: 
 #' \code{c("point", "raster", "tile")}.
 #' @param spot_side A numeric value or vector of values specifying the size of the spots in pixels
 #' in the fullres image. Relevant for tile shape. Will default to each section's value  
 #' retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.
+=======
+#' @param shape A string specifying the shape to plot. Options are: \code{c(raster, tile)}.
+#' @param spot_side A numeric value specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Can be retrieved via 
+#' GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
 #' @param scale_alpha Logical specifying if the spot colors should be scaled together with
 #' the feature values. This can be useful when you want to highlight regions with higher
 #' feature values while making the background tissue visible.
@@ -198,6 +205,10 @@ MapFeatures.default <- function (
 
     # Default for plotting points
     if (shape == "point"){
+<<<<<<< HEAD
+=======
+      print("aga")
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
       # Default plotting for each feature when blend = FALSE
       if (!blend) {
         feature_plots <- lapply(features, function(ftr) {
@@ -232,6 +243,7 @@ MapFeatures.default <- function (
           pt_alpha = pt_alpha,
           pt_stroke = pt_stroke,
           scale_alpha = scale_alpha,
+<<<<<<< HEAD
           cur_label = cur_label,
           coords_columns = coords_columns,
           drop_na = drop_na,
@@ -278,11 +290,58 @@ MapFeatures.default <- function (
           pt_alpha = pt_alpha,
           scale_alpha = scale_alpha,
           coords_columns = coords_columns,
+=======
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
           cur_label = cur_label,
+          coords_columns = coords_columns,
           drop_na = drop_na,
           center_zero = center_zero
         )
       }
+<<<<<<< HEAD
+=======
+    }
+    # Option for plotting tiles/raster
+    if (shape %in% c("tile", "raster")){
+      # Default plotting for each feature when blend = FALSE
+      if (!blend) {
+        feature_plots <- lapply(features, function(ftr) {
+          .spatial_feature_grid_plot(
+            gg = gg,
+            nm = nm,
+            ftr = ftr,
+            feature_limits = feature_limits,
+            colors = colors,
+            dims = dims,
+            shape = shape,
+            spot_side = spot_side,
+            pt_alpha = pt_alpha,
+            scale_alpha = scale_alpha,
+            coords_columns = coords_columns,
+            cur_label = cur_label,
+            drop_na = drop_na,
+            center_zero = center_zero
+          )
+        })
+        # Add names to feature_plots
+        p <- setNames(feature_plots, nm = features)
+      } else {
+        p <- .spatial_feature_grid_plot(
+          gg = gg,
+          nm = nm,
+          colors = colors,
+          dims = dims,
+          all_features = features,
+          extreme_colors = extreme_colors,
+          pt_alpha = pt_alpha,
+          scale_alpha = scale_alpha,
+          cur_label = cur_label,
+          coords_columns = coords_columns,
+          drop_na = drop_na,
+          center_zero = center_zero
+        )
+      }
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     }
     return(p)
   }), nm = names(data))
@@ -439,7 +498,11 @@ MapFeatures.Seurat <- function (
     pt_stroke = 0,
     scale_alpha = FALSE,
     shape = "point",
+<<<<<<< HEAD
     spot_side = NULL,
+=======
+    spot_side,
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     section_number = NULL,
     label_by = NULL,
     ncol = NULL,
@@ -1420,11 +1483,19 @@ MapLabels.Seurat <- function (
 #' @param ftr A feature name
 #' @param feature_limits A list of tibbles containing information about
 #' the feature value range
+<<<<<<< HEAD
 #' @param shape A string specifying the shape to plot. Options are 
 #' \code{c("point", "tile", "raster")}
 #' @param spot_side A numeric value specifying the size of the spots in pixels
 #' in the fullres image. Relevant for tile shape. Can be retrieved via 
 #' GetScaleFactors (\code{GetScaleFactors()$spot_diameter_fullres}).
+=======
+#' @param shape A string specifying the shape to plot. Options are -raster- and
+#' -tile-
+#' @param spot_side A numeric value specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Can be retrieved via 
+#' GetScaleFactors (GetScaleFactors()$spot_diameter_fullres).
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
 #' @param smoothen Boolean indicating if the raster should be smoothen or not.
 #' Relevant for raster shape.
 #' @param colors A character vector of colors to use for scale bar
@@ -1458,7 +1529,10 @@ MapLabels.Seurat <- function (
     shape,
     spot_side,
     smoothen = FALSE,
+<<<<<<< HEAD
     image_use,
+=======
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     colors,
     dims,
     all_features = NULL,
@@ -1474,6 +1548,7 @@ MapLabels.Seurat <- function (
   # Set global variables to NULL
   encoded_cols <- value <- alpha <- x <- y <- color <- NULL
   
+<<<<<<< HEAD
   # Check that if raster, no HE image
   if (shape == "raster") {
     if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
@@ -1487,6 +1562,8 @@ MapLabels.Seurat <- function (
     }
   }
   
+=======
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
   # Should NA values be dropped?
   if (drop_na) {
     gg <- gg |> filter(if_all(all_of(ftr), ~ !is.na(.x)))
@@ -1496,6 +1573,15 @@ MapLabels.Seurat <- function (
   encoded_cols_present <- "encoded_cols" %in% colnames(gg)
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
   
+<<<<<<< HEAD
+=======
+  # Check if the image has been derotated
+  if(all(grepl("transformed", coords_columns))){
+  } else {
+    warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
+  }
+  
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
   # Get opacity values if plotting tiles and if scale_alpha = TRUE and encoded colors are present
   if (shape == "tile" & scale_alpha & encoded_cols_present) {
     alpha_values <- gg$alpha
@@ -1529,9 +1615,12 @@ MapLabels.Seurat <- function (
   ## check for geometry
   if (shape %in% c("tile", "raster")){
     if (shape == "tile"){
+<<<<<<< HEAD
       if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
         spot_side <- 1
       }
+=======
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
       p <-
         ggplot() +
         {
@@ -1540,7 +1629,11 @@ MapLabels.Seurat <- function (
               x = !!sym(coords_columns[1]),
               y = !!sym(coords_columns[2]),
               width = spot_side,
+<<<<<<< HEAD
               height = spot_side
+=======
+              height = spot_side,
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
             ),
             fill = color_vec, # If blended colors are provided, add custom colors outside aesthetic
             alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
@@ -1558,6 +1651,7 @@ MapLabels.Seurat <- function (
           }
         }
     } else if (shape == "raster") {
+<<<<<<< HEAD
       p <-
         ggplot() +
         {
@@ -1654,6 +1748,33 @@ MapLabels.Seurat <- function (
                         labels = seq(0, 1, length.out = 11) |> paste0())
       }
     } +
+=======
+      p <- ggplot() + 
+        geom_raster(data = gg, aes(
+        x = !!sym(coords_columns[1]),
+        y = !!sym(coords_columns[2]),
+        fill = color_vec # If blended colors are provided, add  colors outside aesthetic
+      ),
+      interpolate = smoothen,
+      alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
+      )
+    }
+  } else {
+    abort("Available plotting shapes are -tile- or -raster-")
+  }
+  p <- p +
+    # Set plot dimensions (reverse y axis)
+    scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                  dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       expand = c(0, 0),
+                       breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], length.out = 11),
+                       labels = seq(0, 1, length.out = 11) |> paste0()) +
+    scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                               dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                    expand = c(0, 0),
+                    breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], length.out = 11),
+                    labels = seq(0, 1, length.out = 11) |> paste0()) +
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     # Add themes
     theme_void() +
     theme(legend.position = "top",
@@ -1706,6 +1827,7 @@ MapLabels.Seurat <- function (
 #' @param gg tibble with spatial coordinates and a label column
 #' @param nm sample ID
 #' @param lbl label column name
+<<<<<<< HEAD
 #' @param shape A string specifying the shape to plot. Options are 
 #' \code{c("point", "tile", "raster")}
 #' @param spot_side A numeric value specifying the size of the spots in pixels
@@ -1718,6 +1840,15 @@ MapLabels.Seurat <- function (
 #' of the plotting area
 #' @param pt_alpha point opacity ranging from 0 to 1 passed to geom_point.
 #' 0 = fully transparent, 1 = fully opaque
+=======
+#' @param colors a character vector of colors IDs
+#' @param dims tibble containing information about the dimensions
+#' of the plotting area
+#' @param pt_size point size passed to geom_point
+#' @param pt_alpha point opacity ranging from 0 to 1 passed to geom_point.
+#' 0 = fully transparent, 1 = fully opaque
+#' @param pt_stroke point stroke width
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
 #' @param coords_columns character vector of length 2 specifying names of
 #' columns in which the spatial coordinates are stored
 #' @param cur_label string with a title
@@ -1735,12 +1866,20 @@ MapLabels.Seurat <- function (
     gg,
     nm,
     lbl,
+<<<<<<< HEAD
     shape,
     spot_side,
     smoothen = FALSE,
     colors,
     dims,
     pt_alpha = 1,
+=======
+    colors,
+    dims,
+    pt_size = 1,
+    pt_alpha = 1,
+    pt_stroke = 0,
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     coords_columns,
     cur_label,
     drop_na = FALSE
@@ -1749,6 +1888,7 @@ MapLabels.Seurat <- function (
   # Set global variables to NULL
   variable <- NULL
   
+<<<<<<< HEAD
   # Check that if raster, no HE image
   if (shape == "raster") {
     if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
@@ -1762,6 +1902,8 @@ MapLabels.Seurat <- function (
     }
   }
 
+=======
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
   # Create input data.frame for ggplot
   gg <- gg |>
     select(all_of(c(coords_columns, lbl))) |>
@@ -1788,6 +1930,7 @@ MapLabels.Seurat <- function (
     colors <- colors[levels(gg$variable)]
   }
   
+<<<<<<< HEAD
   # Check for geometry and draw plot
   p <- ggplot(data = gg, aes(x = !!sym(coords_columns[1]),
                              y = !!sym(coords_columns[2]),
@@ -1889,6 +2032,33 @@ MapLabels.Seurat <- function (
                         labels = seq(0, 1, length.out = 11) |> paste0())
       }
     } +
+=======
+  # Draw plot
+  p <-
+    ggplot(
+      data = gg, aes(
+        x = !! sym(coords_columns[1]),
+        y = !! sym(coords_columns[2]),
+        fill = variable)
+    ) +
+    geom_point(
+      size = pt_size,
+      alpha = pt_alpha,
+      shape = 21,
+      stroke = pt_stroke
+    ) +
+    # Set plot dimensions (reverse y axis)
+    scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                  dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                       expand = c(0, 0),
+                       breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], length.out = 11),
+                       labels = seq(0, 1, length.out = 11) |> paste0()) +
+    scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                               dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                    expand = c(0, 0),
+                    breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], length.out = 11),
+                    labels = seq(0, 1, length.out = 11) |> paste0()) +
+>>>>>>> f55695a (Initial commit of grid plots for MapFeatures using pxl coords)
     # Add themes
     theme_void() +
     theme(legend.position = "top",
