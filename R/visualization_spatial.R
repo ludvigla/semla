@@ -197,7 +197,7 @@ MapFeatures.default <- function (
 
     # Default for plotting points
     if (shape == "point"){
-      print("aga")
+      # print("aga")
       # Default plotting for each feature when blend = FALSE
       if (!blend) {
         feature_plots <- lapply(features, function(ftr) {
@@ -1420,7 +1420,7 @@ MapLabels.Seurat <- function (
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
   
   # Check if the image has been derotated
-  print(coords_columns)
+  # print(coords_columns)
   if(all(grepl("transformed", coords_columns)) | all(grepl("x|y", coords_columns))){
   } else {
     warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
@@ -1443,7 +1443,7 @@ MapLabels.Seurat <- function (
       select(all_of(coords_columns))
   }
   
-  print(head(gg))
+  # print(head(gg))
   # Get opacity values if scale_alpha = TRUE and encoded colors are not present
   if (scale_alpha & !encoded_cols_present) {
     alpha_values <- gg |>
@@ -1486,31 +1486,87 @@ MapLabels.Seurat <- function (
           }
         }
     } else if (shape == "raster") {
-      p <- ggplot() + 
-        geom_raster(data = gg, aes(
-        x = !!sym(coords_columns[1]),
-        y = !!sym(coords_columns[2]),
-        fill = color_vec # If blended colors are provided, add  colors outside aesthetic
-      ),
-      interpolate = smoothen,
-      alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
-      )
+      p <-
+        ggplot() +
+        {
+          if (encoded_cols_present) {
+            geom_raster(data = gg, aes(
+              x = !!sym(coords_columns[1]),
+              y = !!sym(coords_columns[2])
+            ),
+            fill = color_vec, # If blended colors are provided, add custom colors outside aesthetic
+            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
+            )
+          } else {
+            geom_raster(data = gg, aes(
+              x = !!sym(coords_columns[1]),
+              y = !!sym(coords_columns[2]),
+              fill = value # If blended colors are provided, add color outside aesthetic
+            ),
+            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
+            ) 
+          }
+        }
     }
   } else {
     abort("Available plotting shapes are -tile- or -raster-")
   }
+  
+  # print(dim(gg))
+  # aga <<- gg
+  # print(dims)
   p <- p +
+    {
+      if(shape == "raster" & all(grepl("x|y", coords_columns))){
+        # Set plot dimensions (adjust for array coordinates)
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      127 + 1), #127 is the max array index in 6.5mm slides for x axis
+                           expand = c(0, 0),
+                           breaks = seq(0, 127, 
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      } else {
+        # Set plot dimensions
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                           expand = c(0, 0),
+                           breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE],
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
+    {
+      if(shape == "raster" & all(grepl("x|y", coords_columns))){
+        # Set plot dimensions (adjust for array coordinates and flip y axis)
+        scale_y_reverse(limits = c(77 + 1, # 77 is the max array index for 6.5mm slides for y axis
+                                   dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                        expand = c(0, 0),
+                        breaks = seq(0, 77, 
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
+      } else {
+        # Set plot dimension (flip y axis)
+        scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                   dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                        expand = c(0, 0),
+                        breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
     # Set plot dimensions (reverse y axis)
-    scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                  dims[dims$sampleID == nm, "full_width", drop = TRUE]),
-                       expand = c(0, 0),
-                       breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], length.out = 11),
-                       labels = seq(0, 1, length.out = 11) |> paste0()) +
-    scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
-                               dims[dims$sampleID == nm, "y_start", drop = TRUE]),
-                    expand = c(0, 0),
-                    breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], length.out = 11),
-                    labels = seq(0, 1, length.out = 11) |> paste0()) +
+    # scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+    #                               dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+    #                    expand = c(0, 0),
+    #                    breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], 
+    #                                 length.out = 11),
+    #                    labels = seq(0, 1, length.out = 11) |> paste0()) +
+    # scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+    #                            dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+    #                 expand = c(0, 0),
+    #                 breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], 
+    #                              length.out = 11),
+    #                 labels = seq(0, 1, length.out = 11) |> paste0()) +
     # Add themes
     theme_void() +
     theme(legend.position = "top",
