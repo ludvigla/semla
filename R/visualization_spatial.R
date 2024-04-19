@@ -1554,19 +1554,6 @@ MapLabels.Seurat <- function (
                         labels = seq(0, 1, length.out = 11) |> paste0())
       }
     } +
-    # Set plot dimensions (reverse y axis)
-    # scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
-    #                               dims[dims$sampleID == nm, "full_width", drop = TRUE]),
-    #                    expand = c(0, 0),
-    #                    breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], 
-    #                                 length.out = 11),
-    #                    labels = seq(0, 1, length.out = 11) |> paste0()) +
-    # scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
-    #                            dims[dims$sampleID == nm, "y_start", drop = TRUE]),
-    #                 expand = c(0, 0),
-    #                 breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], 
-    #                              length.out = 11),
-    #                 labels = seq(0, 1, length.out = 11) |> paste0()) +
     # Add themes
     theme_void() +
     theme(legend.position = "top",
