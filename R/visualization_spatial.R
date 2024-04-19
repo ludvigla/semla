@@ -140,7 +140,7 @@ MapFeatures.default <- function (
     group_by(sampleID) |>
     group_split() |>
     setNames(nm = unique(object$sampleID))
-
+  
   # Check section number and subset data
   if (!is.null(section_number)) {
     if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for",
@@ -187,7 +187,8 @@ MapFeatures.default <- function (
 
     # Get data for plotting
     gg <- data[[nm]]
-
+    print(nm)
+    
     # Create an appropriate plot title
     if (!is.null(label_by)) {
       cur_label <- unique(gg |> pull(all_of(label_by))) |> as.character()
@@ -241,6 +242,7 @@ MapFeatures.default <- function (
     }
     # Option for plotting tiles/raster
     if (shape %in% c("tile", "raster")){
+      # print(head(gg))
       # Default plotting for each feature when blend = FALSE
       if (!blend) {
         feature_plots <- lapply(features, function(ftr) {
@@ -252,7 +254,7 @@ MapFeatures.default <- function (
             colors = colors,
             dims = dims,
             shape = shape,
-            spot_side = spot_side,
+            spot_side = spot_side[[nm]],
             pt_alpha = pt_alpha,
             scale_alpha = scale_alpha,
             coords_columns = coords_columns,
@@ -271,10 +273,12 @@ MapFeatures.default <- function (
           dims = dims,
           all_features = features,
           extreme_colors = extreme_colors,
+          shape = shape,
+          spot_side = spot_side[[nm]],
           pt_alpha = pt_alpha,
           scale_alpha = scale_alpha,
-          cur_label = cur_label,
           coords_columns = coords_columns,
+          cur_label = cur_label,
           drop_na = drop_na,
           center_zero = center_zero
         )
@@ -468,10 +472,15 @@ MapFeatures.Seurat <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
-  # fetch data from Seurat object
+  # fetch data from Seurat object. Retrieve scalefactors if needed for tiles
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
-
+  
+  if (shape == "tile") {
+    spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+                          as.character(unique(data_use$sampleID)))
+  }
+  
   # Add label_by column if present
   if (!is.null(label_by)) {
     data_use <- data_use |>
@@ -1513,16 +1522,18 @@ MapLabels.Seurat <- function (
   }
   
   # print(dim(gg))
-  # aga <<- gg
-  # print(dims)
+  # print(head(dims))
   p <- p +
     {
       if(shape == "raster" & all(grepl("x|y", coords_columns))){
-        # Set plot dimensions (adjust for array coordinates)
+        # Set plot dimensions (adjust for array coordinates used in raster)
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                      127 + 1), #127 is the max array index in 6.5mm slides for x axis
+                                      max(gg$y) * (dims[dims$sampleID == nm, 
+                                                        "full_width", drop = TRUE] / dims[dims$sampleID == nm, 
+                                                                                          "full_height", drop = TRUE])),
+                                      # max(gg$x) + 1), # max array x-index + 1 to avoid cropping out
                            expand = c(0, 0),
-                           breaks = seq(0, 127, 
+                           breaks = seq(0, max(gg$x),
                                         length.out = 11),
                            labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
@@ -1537,11 +1548,14 @@ MapLabels.Seurat <- function (
     } +
     {
       if(shape == "raster" & all(grepl("x|y", coords_columns))){
-        # Set plot dimensions (adjust for array coordinates and flip y axis)
-        scale_y_reverse(limits = c(77 + 1, # 77 is the max array index for 6.5mm slides for y axis
+        # Set plot dimensions (adjust for array coordinates used in raster and flip y axis). Try to keep coord relationship that we see in the HE
+        scale_y_reverse(limits = c(max(gg$x) * (dims[dims$sampleID == nm, 
+                                         "full_height", drop = TRUE] / dims[dims$sampleID == nm, 
+                                                                           "full_width", drop = TRUE]),
+          # max(gg$y) + 1, # max array y-index + 1
                                    dims[dims$sampleID == nm, "y_start", drop = TRUE]),
                         expand = c(0, 0),
-                        breaks = seq(0, 77, 
+                        breaks = seq(0, max(gg$y), 
                                      length.out = 11),
                         labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
