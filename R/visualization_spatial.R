@@ -187,7 +187,7 @@ MapFeatures.default <- function (
 
     # Get data for plotting
     gg <- data[[nm]]
-    print(nm)
+    # print(nm)
     
     # Create an appropriate plot title
     if (!is.null(label_by)) {
@@ -1430,7 +1430,8 @@ MapLabels.Seurat <- function (
   
   # Check if the image has been derotated
   # print(coords_columns)
-  if(all(grepl("transformed", coords_columns)) | all(grepl("x|y", coords_columns))){
+  if(all(grepl("transformed", coords_columns)) | "xy" %in% paste(coords_columns, collapse = "")){
+    # print("coooooo")
   } else {
     warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
   }
@@ -1504,7 +1505,8 @@ MapLabels.Seurat <- function (
               y = !!sym(coords_columns[2])
             ),
             fill = color_vec, # If blended colors are provided, add custom colors outside aesthetic
-            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
+            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values),
+            interpolate = smoothen
             )
           } else {
             geom_raster(data = gg, aes(
@@ -1512,7 +1514,8 @@ MapLabels.Seurat <- function (
               y = !!sym(coords_columns[2]),
               fill = value # If blended colors are provided, add color outside aesthetic
             ),
-            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
+            alpha = switch(scale_alpha + 1, pt_alpha, alpha_values),
+            interpolate = smoothen
             ) 
           }
         }
@@ -1523,17 +1526,22 @@ MapLabels.Seurat <- function (
   
   # print(dim(gg))
   # print(head(dims))
+  # print(max(gg$x))
   p <- p +
     {
       if(shape == "raster" & all(grepl("x|y", coords_columns))){
         # Set plot dimensions (adjust for array coordinates used in raster)
+        if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
+          x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
+        } else if(max(gg$x) <= 127) { # 11x11 mm arrays, max y coord is 127
+          x_lim <- 223 + 1 # 11x11 mm arrays, max x coord is 223
+        } else {
+          x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
+        }
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                      max(gg$y) * (dims[dims$sampleID == nm, 
-                                                        "full_width", drop = TRUE] / dims[dims$sampleID == nm, 
-                                                                                          "full_height", drop = TRUE])),
-                                      # max(gg$x) + 1), # max array x-index + 1 to avoid cropping out
+                                      x_lim),
                            expand = c(0, 0),
-                           breaks = seq(0, max(gg$x),
+                           breaks = seq(0, x_lim,
                                         length.out = 11),
                            labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
@@ -1548,16 +1556,40 @@ MapLabels.Seurat <- function (
     } +
     {
       if(shape == "raster" & all(grepl("x|y", coords_columns))){
-        # Set plot dimensions (adjust for array coordinates used in raster and flip y axis). Try to keep coord relationship that we see in the HE
-        scale_y_reverse(limits = c(max(gg$x) * (dims[dims$sampleID == nm, 
-                                         "full_height", drop = TRUE] / dims[dims$sampleID == nm, 
-                                                                           "full_width", drop = TRUE]),
-          # max(gg$y) + 1, # max array y-index + 1
-                                   dims[dims$sampleID == nm, "y_start", drop = TRUE]),
-                        expand = c(0, 0),
-                        breaks = seq(0, max(gg$y), 
-                                     length.out = 11),
-                        labels = seq(0, 1, length.out = 11) |> paste0())
+        # print(dims)
+        # print(x_lim)
+        # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
+        if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
+          # print("co")
+          y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else if(x_lim == 223 + 1) {
+          # print("duba")
+          y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else {
+          # print("aga")
+          y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_continuous(limits = c(y_min, y_max),
+                             expand = c(0, 0),
+                             breaks = seq(0, max(y_min, y_max), 
+                                          length.out = 11),
+                             labels = seq(0, 1, length.out = 11) |> paste0())
+        }
       } else {
         # Set plot dimension (flip y axis)
         scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
