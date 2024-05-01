@@ -692,7 +692,7 @@ MapLabels.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- sampleID <- NULL
+  barcode <- sampleID <- shape <- NULL
 
   # Check data
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
@@ -911,6 +911,7 @@ MapLabels.Seurat <- function (
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
