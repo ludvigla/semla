@@ -187,8 +187,7 @@ MapFeatures.default <- function (
 
     # Get data for plotting
     gg <- data[[nm]]
-    # print(nm)
-    
+
     # Create an appropriate plot title
     if (!is.null(label_by)) {
       cur_label <- unique(gg |> pull(all_of(label_by))) |> as.character()
@@ -198,7 +197,6 @@ MapFeatures.default <- function (
 
     # Default for plotting points
     if (shape == "point"){
-      # print("aga")
       # Default plotting for each feature when blend = FALSE
       if (!blend) {
         feature_plots <- lapply(features, function(ftr) {
@@ -242,7 +240,6 @@ MapFeatures.default <- function (
     }
     # Option for plotting tiles/raster
     if (shape %in% c("tile", "raster")){
-      # print(head(gg))
       # Default plotting for each feature when blend = FALSE
       if (!blend) {
         feature_plots <- lapply(features, function(ftr) {
@@ -253,6 +250,7 @@ MapFeatures.default <- function (
             feature_limits = feature_limits,
             colors = colors,
             dims = dims,
+            image_use = image_use,
             shape = shape,
             spot_side = spot_side[[nm]],
             pt_alpha = pt_alpha,
@@ -271,6 +269,7 @@ MapFeatures.default <- function (
           nm = nm,
           colors = colors,
           dims = dims,
+          image_use = image_use,
           all_features = features,
           extreme_colors = extreme_colors,
           shape = shape,
@@ -1404,6 +1403,7 @@ MapLabels.Seurat <- function (
     shape,
     spot_side,
     smoothen = FALSE,
+    image_use,
     colors,
     dims,
     all_features = NULL,
@@ -1429,9 +1429,7 @@ MapLabels.Seurat <- function (
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
   
   # Check if the image has been derotated
-  # print(coords_columns)
   if(all(grepl("transformed", coords_columns)) | "xy" %in% paste(coords_columns, collapse = "")){
-    # print("coooooo")
   } else {
     warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
   }
@@ -1453,7 +1451,6 @@ MapLabels.Seurat <- function (
       select(all_of(coords_columns))
   }
   
-  # print(head(gg))
   # Get opacity values if scale_alpha = TRUE and encoded colors are not present
   if (scale_alpha & !encoded_cols_present) {
     alpha_values <- gg |>
@@ -1470,6 +1467,9 @@ MapLabels.Seurat <- function (
   ## check for geometry
   if (shape %in% c("tile", "raster")){
     if (shape == "tile"){
+      if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
+        spot_side <- 1
+      }
       p <-
         ggplot() +
         {
@@ -1524,12 +1524,9 @@ MapLabels.Seurat <- function (
     abort("Available plotting shapes are -tile- or -raster-")
   }
   
-  # print(dim(gg))
-  # print(head(dims))
-  # print(max(gg$x))
   p <- p +
     {
-      if(shape == "raster" & all(grepl("x|y", coords_columns))){
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
         # Set plot dimensions (adjust for array coordinates used in raster)
         if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
           x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
@@ -1555,12 +1552,9 @@ MapLabels.Seurat <- function (
       }
     } +
     {
-      if(shape == "raster" & all(grepl("x|y", coords_columns))){
-        # print(dims)
-        # print(x_lim)
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
         # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
         if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
-          # print("co")
           y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
           y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
           
@@ -1570,7 +1564,6 @@ MapLabels.Seurat <- function (
                           breaks = seq(0, y_max, length.out = 11),
                           labels = seq(0, 1, length.out = 11) |> paste0())
         } else if(x_lim == 223 + 1) {
-          # print("duba")
           y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
           y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
           
@@ -1580,7 +1573,6 @@ MapLabels.Seurat <- function (
                           breaks = seq(0, y_max, length.out = 11),
                           labels = seq(0, 1, length.out = 11) |> paste0())
         } else {
-          # print("aga")
           y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
           y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
           
@@ -2404,7 +2396,7 @@ MapLabels.Seurat <- function (
   } else if (coords_use == "transformed") {
     coords_columns <- c("pxl_col_in_fullres_transformed", "pxl_row_in_fullres_transformed")
   }
-  if (is.null(image_use) & shape == "raster"){
+  if (is.null(image_use) & (shape == "raster" | shape == "tile")){
     coords_columns <- c("x", "y")
   }
 
