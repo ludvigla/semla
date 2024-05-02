@@ -19,10 +19,11 @@ NULL
 #' to \code{geom_point}. A value of 0 will make the points completely transparent
 #' and a value of 1 will make the points completely opaque.
 #' @param pt_stroke A numeric specifying the point stroke width
-#' @param shape A string specifying the shape to plot. Options are: \code{c(raster, tile)}.
-#' @param spot_side A numeric value specifying the size of the spots in pixels
-#' in the fullres image. Relevant for tile shape. Can be retrieved via 
-#' GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.
+#' @param shape A string specifying the shape to plot. Options are: 
+#' \code{c("point", "raster", "tile")}.
+#' @param spot_side A numeric value or vector of values specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Will default to each section's value  
+#' retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.
 #' @param scale_alpha Logical specifying if the spot colors should be scaled together with
 #' the feature values. This can be useful when you want to highlight regions with higher
 #' feature values while making the background tissue visible.
@@ -438,7 +439,7 @@ MapFeatures.Seurat <- function (
     pt_stroke = 0,
     scale_alpha = FALSE,
     shape = "point",
-    spot_side,
+    spot_side = NULL,
     section_number = NULL,
     label_by = NULL,
     ncol = NULL,
@@ -471,13 +472,23 @@ MapFeatures.Seurat <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
-  # fetch data from Seurat object. Retrieve scalefactors if needed for tiles
+  # fetch data from Seurat object. 
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
   
+  # Retrieve scalefactors if needed for tiles size
   if (shape == "tile") {
-    spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+    true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
                           as.character(unique(data_use$sampleID)))
+    if (is.null(spot_side)) {
+      spot_side <- true_spot_side
+    } else {
+      dif <- abs(length(spot_side) - length(unique(data_use$sampleID)))
+      if (dif > 0) abort(glue("Missing/too many spot side dimensions for {dif} section/s"))
+      if (dif == 0) spot_side <- setNames(spot_side, 
+                                          as.character(unique(data_use$sampleID)))
+      if (!any(true_spot_side == spot_side)) warning("Inputted spot side is different from the real-life dimensions, spot representation might be inaccurate") 
+    }
   }
   
   # Add label_by column if present
@@ -485,7 +496,7 @@ MapFeatures.Seurat <- function (
     data_use <- data_use |>
       bind_cols(FetchData(object, vars = label_by, clean = FALSE))
   }
-
+  
   # Subset by section number
   if (!is.null(section_number)) {
     if (!is.numeric(section_number)) abort(glue("Invalid class '{class(section_number)}' for 'section_number, expected an integer"))
@@ -1366,11 +1377,11 @@ MapLabels.Seurat <- function (
 #' @param ftr A feature name
 #' @param feature_limits A list of tibbles containing information about
 #' the feature value range
-#' @param shape A string specifying the shape to plot. Options are -raster- and
-#' -tile-
+#' @param shape A string specifying the shape to plot. Options are 
+#' \code{c("point", "tile", "raster")}
 #' @param spot_side A numeric value specifying the size of the spots in pixels
 #' in the fullres image. Relevant for tile shape. Can be retrieved via 
-#' GetScaleFactors (GetScaleFactors()$spot_diameter_fullres).
+#' GetScaleFactors (\code{GetScaleFactors()$spot_diameter_fullres}).
 #' @param smoothen Boolean indicating if the raster should be smoothen or not.
 #' Relevant for raster shape.
 #' @param colors A character vector of colors to use for scale bar
@@ -1645,10 +1656,16 @@ MapLabels.Seurat <- function (
 #' @param gg tibble with spatial coordinates and a label column
 #' @param nm sample ID
 #' @param lbl label column name
+#' @param shape A string specifying the shape to plot. Options are 
+#' \code{c("point", "tile", "raster")}
+#' @param spot_side A numeric value specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Can be retrieved via 
+#' GetScaleFactors (\code{GetScaleFactors()$spot_diameter_fullres}).
+#' @param smoothen Boolean indicating if the raster should be smoothen or not.
+#' Relevant for raster shape.
 #' @param colors a character vector of colors IDs
 #' @param dims tibble containing information about the dimensions
 #' of the plotting area
-#' @param pt_size point size passed to geom_point
 #' @param pt_alpha point opacity ranging from 0 to 1 passed to geom_point.
 #' 0 = fully transparent, 1 = fully opaque
 #' @param pt_stroke point stroke width
@@ -1669,9 +1686,12 @@ MapLabels.Seurat <- function (
     gg,
     nm,
     lbl,
+    shape,
+    spot_side,
+    spot_side,
+    smoothen = FALSE,
     colors,
     dims,
-    pt_size = 1,
     pt_alpha = 1,
     pt_stroke = 0,
     coords_columns,
