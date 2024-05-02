@@ -645,6 +645,11 @@ MapFeatures.Seurat <- function (
 #' labels that can be used to provide a title for each subplot. This column should have
 #' 1 label per tissue section. This can be useful when you need to provide more detailed
 #' information about your tissue sections.
+#' @param shape A string specifying the shape to plot. Options are: 
+#' \code{c("point", "raster", "tile")}.
+#' @param spot_side A numeric value or vector of values specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Will default to each section's value  
+#' retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.
 #' @param ncol An integer value specifying the number of columns in the output patchwork.
 #' @param colors A character vector of colors to use for the color scale. The number of
 #' colors should match the number of labels present.
@@ -686,6 +691,8 @@ MapLabels.default <- function (
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side,
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -703,7 +710,7 @@ MapLabels.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- sampleID <- shape <- NULL
+  barcode <- sampleID <- NULL
 
   # Check data
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
@@ -764,7 +771,6 @@ MapLabels.default <- function (
   if (!is.null(crop_area)) {
     c(dims, data) %<-% .crop_dims(dims, crop_area, data, coords_columns)
   }
-
   # Plot features on spatial coordinates for each sample
   sample_plots <- setNames(lapply(names(data), function(nm) {
 
@@ -782,20 +788,39 @@ MapLabels.default <- function (
     if (split_labels) {
       cur_label <- paste0("label: ", nm)
     }
-
-    p <- .spatial_label_plot(
-      gg = gg,
-      nm = nm,
-      lbl = label,
-      colors = colors,
-      dims = dims,
-      pt_size = pt_size,
-      pt_alpha = pt_alpha,
-      pt_stroke = pt_stroke,
-      coords_columns = coords_columns,
-      cur_label = cur_label,
-      drop_na = drop_na
-    )
+    
+    # Plotting point spots
+    if (shape == "point") {
+      p <- .spatial_label_plot(
+        gg = gg,
+        nm = nm,
+        lbl = label,
+        colors = colors,
+        dims = dims,
+        pt_size = pt_size,
+        pt_alpha = pt_alpha,
+        pt_stroke = pt_stroke,
+        coords_columns = coords_columns,
+        cur_label = cur_label,
+        drop_na = drop_na
+      )
+    }
+    # Plotting tiles or raster
+    if (shape %in% c("tile", "raster")) {
+      p <- .spatial_label_grid_plot(
+        gg = gg,
+        nm = nm,
+        lbl = label,
+        shape = shape,
+        spot_side = spot_side[[nm]],
+        colors = colors,
+        dims = dims,
+        pt_alpha = pt_alpha,
+        coords_columns = coords_columns,
+        cur_label = cur_label,
+        drop_na = drop_na
+      )
+    }
 
     return(p)
   }), nm = names(data))
@@ -923,6 +948,7 @@ MapLabels.Seurat <- function (
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
+  spot_side = NULL,  
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -947,6 +973,21 @@ MapLabels.Seurat <- function (
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = column_name, clean = FALSE) |> as_tibble())
+  
+  # Retrieve scalefactors if needed for tiles size
+  if (shape == "tile") {
+    true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+                               as.character(unique(data_use$sampleID)))
+    if (is.null(spot_side)) {
+      spot_side <- true_spot_side
+    } else {
+      dif <- abs(length(spot_side) - length(unique(data_use$sampleID)))
+      if (dif > 0) abort(glue("Missing/too many spot side dimensions for {dif} section/s"))
+      if (dif == 0) spot_side <- setNames(spot_side, 
+                                          as.character(unique(data_use$sampleID)))
+      if (!any(true_spot_side == spot_side)) warning("Inputted spot side is different from the real-life dimensions, spot representation might be inaccurate") 
+    }
+  }
 
   # Convert label column to factor
   data_use <- data_use |>
@@ -1037,6 +1078,8 @@ MapLabels.Seurat <- function (
     pt_size = pt_size,
     pt_alpha = pt_alpha,
     pt_stroke = pt_stroke,
+    shape = shape,
+    spot_side = spot_side,
     section_number = section_number,
     label_by = label_by,
     split_labels = split_labels,
@@ -1431,6 +1474,19 @@ MapLabels.Seurat <- function (
   # Set global variables to NULL
   encoded_cols <- value <- alpha <- x <- y <- color <- NULL
   
+  # Check that if raster, no HE image
+  if (shape == "raster") {
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+  }
+  
+  # Check if the image has been derotated for tiles
+  if (shape == "tile"){
+    if(all(grepl("transformed", coords_columns)) | "xy" == paste(coords_columns, collapse = "")){
+    } else {
+      warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
+    }
+  }
+  
   # Should NA values be dropped?
   if (drop_na) {
     gg <- gg |> filter(if_all(all_of(ftr), ~ !is.na(.x)))
@@ -1439,12 +1495,6 @@ MapLabels.Seurat <- function (
   # Check if encoded colors are present after setting blend = TRUE
   encoded_cols_present <- "encoded_cols" %in% colnames(gg)
   color_vec <- switch(encoded_cols_present + 1, NULL, gg |> pull(encoded_cols))
-  
-  # Check if the image has been derotated
-  if(all(grepl("transformed", coords_columns)) | "xy" %in% paste(coords_columns, collapse = "")){
-  } else {
-    warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
-  }
   
   # Get opacity values if plotting tiles and if scale_alpha = TRUE and encoded colors are present
   if (shape == "tile" & scale_alpha & encoded_cols_present) {
@@ -1668,7 +1718,6 @@ MapLabels.Seurat <- function (
 #' of the plotting area
 #' @param pt_alpha point opacity ranging from 0 to 1 passed to geom_point.
 #' 0 = fully transparent, 1 = fully opaque
-#' @param pt_stroke point stroke width
 #' @param coords_columns character vector of length 2 specifying names of
 #' columns in which the spatial coordinates are stored
 #' @param cur_label string with a title
@@ -1688,12 +1737,10 @@ MapLabels.Seurat <- function (
     lbl,
     shape,
     spot_side,
-    spot_side,
     smoothen = FALSE,
     colors,
     dims,
     pt_alpha = 1,
-    pt_stroke = 0,
     coords_columns,
     cur_label,
     drop_na = FALSE
@@ -1702,6 +1749,19 @@ MapLabels.Seurat <- function (
   # Set global variables to NULL
   variable <- NULL
   
+  # Check that if raster, no HE image
+  if (shape == "raster") {
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+  }
+  
+  # Check if the image has been derotated for tiles
+  if (shape == "tile"){
+    if(all(grepl("transformed", coords_columns)) | "xy" == paste(coords_columns, collapse = "")){
+    } else {
+      warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
+    }
+  }
+
   # Create input data.frame for ggplot
   gg <- gg |>
     select(all_of(c(coords_columns, lbl))) |>
@@ -1728,31 +1788,105 @@ MapLabels.Seurat <- function (
     colors <- colors[levels(gg$variable)]
   }
   
-  # Draw plot
-  p <-
-    ggplot(
-      data = gg, aes(
-        x = !! sym(coords_columns[1]),
-        y = !! sym(coords_columns[2]),
-        fill = variable)
-    ) +
-    geom_point(
-      size = pt_size,
-      alpha = pt_alpha,
-      shape = 21,
-      stroke = pt_stroke
-    ) +
-    # Set plot dimensions (reverse y axis)
-    scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                  dims[dims$sampleID == nm, "full_width", drop = TRUE]),
-                       expand = c(0, 0),
-                       breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE], length.out = 11),
-                       labels = seq(0, 1, length.out = 11) |> paste0()) +
-    scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
-                               dims[dims$sampleID == nm, "y_start", drop = TRUE]),
-                    expand = c(0, 0),
-                    breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE], length.out = 11),
-                    labels = seq(0, 1, length.out = 11) |> paste0()) +
+  # Check for geometry and draw plot
+  p <- ggplot(data = gg, aes(x = !!sym(coords_columns[1]),
+                             y = !!sym(coords_columns[2]),
+                             fill = variable))
+  p <- p +
+    {
+      if (shape == "tile"){
+        if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
+          spot_side <- 1
+        }
+
+        geom_tile(aes(
+          width = spot_side,
+          height = spot_side,
+          fill = variable
+        ), 
+        inherit.aes = TRUE,
+        alpha = pt_alpha)
+        
+      } else if (shape == "raster") {
+        geom_raster(aes(
+          x = !!sym(coords_columns[1]),
+          y = !!sym(coords_columns[2]),
+          fill = variable
+        ),
+        alpha = pt_alpha,
+        interpolate = smoothen
+        )
+      }
+    } 
+  # Set plot dimensions (the dimensions will depend on if we are plotting the HE image too or not)
+  p <- p +
+    {
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+        # Set plot dimensions (adjust for array coordinates used in raster)
+        if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
+          x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
+        } else if(max(gg$x) <= 127) { # 11x11 mm arrays, max y coord is 127
+          x_lim <- 223 + 1 # 11x11 mm arrays, max x coord is 223
+        } else {
+          x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
+        }
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      x_lim),
+                           expand = c(0, 0),
+                           breaks = seq(0, x_lim,
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      } else {
+        # Set plot dimensions
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                           expand = c(0, 0),
+                           breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE],
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
+    {
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+        # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
+        if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
+          y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else if(x_lim == 223 + 1) {
+          y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else {
+          y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_continuous(limits = c(y_min, y_max),
+                             expand = c(0, 0),
+                             breaks = seq(0, max(y_min, y_max), 
+                                          length.out = 11),
+                             labels = seq(0, 1, length.out = 11) |> paste0())
+        }
+      } else {
+        # Set plot dimension (flip y axis)
+        scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                   dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                        expand = c(0, 0),
+                        breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
     # Add themes
     theme_void() +
     theme(legend.position = "top",
