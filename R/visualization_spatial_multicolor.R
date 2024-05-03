@@ -12,7 +12,7 @@ NULL
 #' Each spot is assigned one color determined by the dominant feature in that spot. For instance,
 #' if cell type proportions are selected for the visualization, each cell type will be assigned a 
 #' specific color. Then, the cell type with the highest proportion value will determine the spot color
-#' with a spot opacity equal to the proportion value.
+# with a spot opacity equal to the proportion value.
 #' 
 #' The values of the selected features will be rescaled for the visualization
 #' depending on the choice of \code{scale}. If \code{scale="free"}, each numeric feature
@@ -72,6 +72,8 @@ MapMultipleFeatures.default <- function (
     scale = c("shared", "free"),
     crop_area = NULL,
     pt_size = 1,
+    shape = "point",
+    spot_side,
     pt_stroke = 0,
     section_number = NULL,
     label_by = NULL,
@@ -167,33 +169,65 @@ MapMultipleFeatures.default <- function (
   }
 
   # Plot features on spatial coordinates for each sample
-  sample_plots <- setNames(lapply(names(data), function(nm) {
-
-    # Get data for plotting
-    gg <- data[[nm]]
-
-    # Create an appropriate plot title
-    if (!is.null(label_by)) {
-      cur_label <- unique(gg |> pull(all_of(label_by)))
-    } else {
-      cur_label <- paste0("section ", nm)
-    }
-
-    p <- .spatial_feature_plot_multiple(
-      gg = gg,
-      nm = nm,
-      features = features,
-      colors = colors,
-      dims = dims,
-      pt_size = pt_size,
-      pt_stroke = pt_stroke,
-      cur_label = cur_label,
-      coords_columns = coords_columns,
-      drop_na = TRUE,
-      use_text = add_colorscale_text
-    )
-    return(p)
-  }), nm = names(data))
+  ## Plotting for point shape
+  if (shape == "point") {
+    sample_plots <- setNames(lapply(names(data), function(nm) {
+      
+      # Get data for plotting
+      gg <- data[[nm]]
+      
+      # Create an appropriate plot title
+      if (!is.null(label_by)) {
+        cur_label <- unique(gg |> pull(all_of(label_by)))
+      } else {
+        cur_label <- paste0("section ", nm)
+      }
+      
+      p <- .spatial_feature_plot_multiple(
+        gg = gg,
+        nm = nm,
+        features = features,
+        colors = colors,
+        dims = dims,
+        pt_size = pt_size,
+        pt_stroke = pt_stroke,
+        cur_label = cur_label,
+        coords_columns = coords_columns,
+        drop_na = TRUE,
+        use_text = add_colorscale_text
+      )
+      return(p)
+    }), nm = names(data))    
+  } 
+  ## Plotting for tiles and raster
+  if (shape %in% c("tile", "raster")) {
+    sample_plots <- setNames(lapply(names(data), function(nm) {
+      
+      # Get data for plotting
+      gg <- data[[nm]]
+      # Create an appropriate plot title
+      if (!is.null(label_by)) {
+        cur_label <- unique(gg |> pull(all_of(label_by)))
+      } else {
+        cur_label <- paste0("section ", nm)
+      }
+      
+      p <- .spatial_feature_plot_multiple_grid(
+        gg = gg,
+        nm = nm,
+        features = features,
+        shape = shape,
+        spot_side = spot_side[[nm]],
+        colors = colors,
+        dims = dims,
+        cur_label = cur_label,
+        coords_columns = coords_columns,
+        drop_na = TRUE,
+        use_text = add_colorscale_text
+      )
+      return(p)
+    }), nm = names(data))
+  }
 
   # Create final patchwork
   if (!return_plot_list) {
@@ -209,6 +243,7 @@ MapMultipleFeatures.default <- function (
 
 
 #'
+#' @param scale A string specifying a scaling mode. See details below
 #' @import dplyr
 #' @importFrom tibble as_tibble
 #' @importFrom Seurat FetchData
@@ -258,6 +293,8 @@ MapMultipleFeatures.Seurat <- function (
     crop_area = NULL,
     pt_size = 1,
     pt_stroke = 0,
+    shape = "point",
+    spot_side = NULL,
     section_number = NULL,
     label_by = NULL,
     ncol = NULL,
@@ -283,6 +320,21 @@ MapMultipleFeatures.Seurat <- function (
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features, slot = slot) |> as_tibble())
+  
+  # Retrieve scalefactors if needed for tiles size
+  if (shape == "tile") {
+    true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+                               as.character(unique(data_use$sampleID)))
+    if (is.null(spot_side)) {
+      spot_side <- true_spot_side
+    } else {
+      dif <- abs(length(spot_side) - length(unique(data_use$sampleID)))
+      if (dif > 0) abort(glue("Missing/too many spot side dimensions for {dif} section/s"))
+      if (dif == 0) spot_side <- setNames(spot_side, 
+                                          as.character(unique(data_use$sampleID)))
+      if (!any(true_spot_side == spot_side)) warning("Inputted spot side is different from the real-life dimensions, spot representation might be inaccurate") 
+    }
+  }
 
   # Add label_by column if present
   if (!is.null(label_by)) {
@@ -311,7 +363,7 @@ MapMultipleFeatures.Seurat <- function (
   }
 
   # Set coords_columns
-  coords_columns <- .get_coords_column(image_use, coords_use)
+  coords_columns <- .get_coords_column(image_use, coords_use, shape)
 
   # Filter data to remove all redundant meta data columns
   data_use <- data_use |>
@@ -356,6 +408,8 @@ MapMultipleFeatures.Seurat <- function (
     crop_area = crop_area,
     pt_size = pt_size,
     pt_stroke = pt_stroke,
+    shape = shape,
+    spot_side = spot_side,
     section_number = NULL,
     label_by = label_by,
     ncol = ncol,
@@ -524,5 +578,256 @@ MapMultipleFeatures.Seurat <- function (
                                                    label = ifelse(i == length(features) & use_text, use_text, FALSE)))
   }
 
+  return(p)
+}
+
+#' Plot multiple numeric features in 2D
+#'
+#' @param gg tibble with spatial coordinates and feature values
+#' @param nm sample ID
+#' @param features A character vector with feature IDs
+#' @param shape A string specifying the shape to plot. Options are 
+#' \code{c("point", "tile", "raster")}
+#' @param spot_side A numeric value specifying the size of the spots in pixels
+#' in the fullres image. Relevant for tile shape. Can be retrieved via 
+#' GetScaleFactors (\code{GetScaleFactors()$spot_diameter_fullres}).
+#' @param smoothen Boolean indicating if the raster should be smoothen or not.
+#' Relevant for raster shape.
+#' @param colors a character vector of colors to use for scale bar
+#' @param dims tibble containing information about the dimensions
+#' of the plotting area
+#' @param cur_label string to use as title
+#' @param coords_columns a character vector of length 2 specifying names of
+#' columns in which spatial coordinates are located
+#' @param drop_na should NA values be dropped from the data?
+#' @param use_text Logical specifying if values should be added to the color scales
+#'
+#' @import ggplot2
+#' @import dplyr
+#'
+#' @return A \code{ggplot} object with a spatial plot
+#'
+#' @noRd
+.spatial_feature_plot_multiple_grid <- function (
+    gg,
+    nm,
+    features = NULL,
+    colors,
+    shape,
+    spot_side,
+    smoothen = FALSE,
+    dims,
+    cur_label = NULL,
+    coords_columns,
+    drop_na = TRUE,
+    use_text = FALSE
+) {
+  
+  # Set global variables to NULL
+  value <- alpha <- x <- y <- color <- NULL
+  
+  # require ggnewscale
+  if (!requireNamespace("ggnewscale")) {
+    abort(glue("Package {cli::col_br_magenta('ggnewscale')} is required. Please install it with: \n",
+               "install.packages('ggnewscale')"))
+  }
+  
+  # Check that if raster, no HE image
+  if (shape == "raster") {
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+  }
+  
+  # Check if the image has been derotated for tiles
+  if (shape == "tile"){
+    if(all(grepl("transformed", coords_columns)) | "xy" == paste(coords_columns, collapse = "")){
+    } else {
+      warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
+    }
+  }
+  
+  # Should NA values be dropped?
+  # This will only filter out rows where all features are NA
+  if (drop_na) {
+    gg <- gg |> filter(if_any(all_of(features), ~ !is.na(.x)))
+  }
+  
+  # Create input data.frame for ggplot
+  gg <- gg |>
+    select(all_of(c(coords_columns, features)))
+  
+  # Get opacity values
+  alpha_values <- gg |>
+    select(all_of(features)) |>
+    apply(1, function(x) {
+      y <- x[!is.na(x)]
+      y <- ifelse(length(y) == 0, 0, y)
+      return(y)
+    })
+  gg$alpha <- alpha_values
+  
+  # Split data by feature
+  gg_split <- lapply(features, function(ftr) {
+    gg |>
+      filter(!is.na(!! sym(ftr)))
+  }) |>
+    setNames(nm = features)
+  
+  # Draw plot
+  p <- ggplot() +
+    {
+      if (shape == "tile"){
+        if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
+          spot_side <- 1
+        }
+        geom_tile(data = gg_split[[features[1]]], aes(
+          x = !!sym(coords_columns[1]),
+          y = !!sym(coords_columns[2]),
+          width = spot_side,
+          height = spot_side,
+          fill = !!sym(features[1]), # If blended colors are provided, add color outside aesthetic
+          alpha = alpha
+        ), 
+        inherit.aes = TRUE)
+        
+      } else if (shape == "raster") {
+        geom_raster(data = gg_split[[features[1]]], aes(
+          x = !!sym(coords_columns[1]),
+          y = !!sym(coords_columns[2]),
+          fill = !!sym(features[1]), # If blended colors are provided, add color outside aesthetic
+          alpha = alpha
+        ),
+        interpolate = smoothen
+        )
+      } else {
+        abort(glue("Available plotting shapes are {col_br_green('raster')} or {col_br_green('tile')}"))
+      }
+    } 
+  # Set plot dimensions (the dimensions will depend on if we are plotting the HE image too or not)
+  p <- p +
+    {
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+        # Set plot dimensions (adjust for array coordinates used in raster)
+        if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
+          x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
+        } else if(max(gg$x) <= 127) { # 11x11 mm arrays, max y coord is 127
+          x_lim <- 223 + 1 # 11x11 mm arrays, max x coord is 223
+        } else {
+          x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
+        }
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      x_lim),
+                           expand = c(0, 0),
+                           breaks = seq(0, x_lim,
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      } else {
+        # Set plot dimensions
+        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+                                      dims[dims$sampleID == nm, "full_width", drop = TRUE]),
+                           expand = c(0, 0),
+                           breaks = seq(0, dims[dims$sampleID == nm, "full_width", drop = TRUE],
+                                        length.out = 11),
+                           labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
+    {
+      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+        # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
+        if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
+          y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else if(x_lim == 223 + 1) {
+          y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+        } else {
+          y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
+          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+          
+          scale_y_continuous(limits = c(y_min, y_max),
+                             expand = c(0, 0),
+                             breaks = seq(0, max(y_min, y_max), 
+                                          length.out = 11),
+                             labels = seq(0, 1, length.out = 11) |> paste0())
+        }
+      } else {
+        # Set plot dimension (flip y axis)
+        scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                   dims[dims$sampleID == nm, "y_start", drop = TRUE]),
+                        expand = c(0, 0),
+                        breaks = seq(0, dims[dims$sampleID == nm, "full_height", drop = TRUE],
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
+      }
+    } +
+    # Add themes    
+    theme_void() +
+    guides(alpha = "none") +
+    # Add color gradient for first feature
+    scale_fill_gradientn(colours = c("white", colors[1]), limits = c(0, 1),
+                         guide = guide_colourbar(title.position = "right",
+                                                 order = 1,
+                                                 frame.colour = "black",
+                                                 frame.linewidth = 1,
+                                                 draw.ulim = FALSE,
+                                                 draw.llim = FALSE,
+                                                 label = FALSE)) +
+    theme(legend.position = "right",
+          legend.direction = "horizontal",
+          legend.title.align = 0,
+          legend.margin = margin(0, 0, 0, 0),
+          plot.margin = margin(0, 10, 20, 10),
+          legend.title = element_text(vjust = 0.8)) +
+    # Create a title
+    labs(title = ifelse(!is.null(cur_label), cur_label, NA)) +
+    # Fix coordinates so that plot cannot be stretched
+    coord_fixed()
+  
+  # Add new color scales
+  for (i in 2:length(features)) {
+    p <- p +
+      ggnewscale::new_scale_fill() +
+      {
+        if (shape == "tile") {
+          geom_tile(data = gg_split[[features[i]]], aes(
+            x = !!sym(coords_columns[1]),
+            y = !!sym(coords_columns[2]),
+            width = spot_side,
+            height = spot_side,
+            fill = !!sym(features[i]), # If blended colors are provided, add color outside aesthetic 
+            alpha = alpha
+          ))
+        } else if (shape == "raster") {
+          geom_raster(data = gg_split[[features[i]]], aes(
+            x = !!sym(coords_columns[1]),
+            y = !!sym(coords_columns[2]),
+            fill = !!sym(features[i]), # If blended colors are provided, add color outside 
+            alpha = alpha
+          ),
+          interpolate = smoothen)
+        } else {}
+      } +
+      guides(alpha = "none") +
+      scale_fill_gradientn(colours = c("white", colors[i]), limits = c(0, 1),
+                           guide = guide_colourbar(title.position = "right",
+                                                   order = i,
+                                                   frame.colour = "black",
+                                                   frame.linewidth = 1,
+                                                   draw.ulim = FALSE,
+                                                   draw.llim = FALSE,
+                                                   label = ifelse(i == length(features) & use_text, use_text, FALSE)))
+  }
+  
   return(p)
 }
