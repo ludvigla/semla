@@ -1540,7 +1540,7 @@ MapLabels.Seurat <- function (
               x = !!sym(coords_columns[1]),
               y = !!sym(coords_columns[2]),
               width = spot_side,
-              height = spot_side,
+              height = spot_side
             ),
             fill = color_vec, # If blended colors are provided, add custom colors outside aesthetic
             alpha = switch(scale_alpha + 1, pt_alpha, alpha_values)
@@ -1583,7 +1583,7 @@ MapLabels.Seurat <- function (
         }
     }
   } else {
-    abort("Available plotting shapes are -tile- or -raster-")
+    abort(glue("Available plotting shapes are {col_br_green('raster')} or {col_br_green('tile')}"))
   }
   
   p <- p +
@@ -1816,6 +1816,8 @@ MapLabels.Seurat <- function (
         alpha = pt_alpha,
         interpolate = smoothen
         )
+      } else {
+        abort(glue("Available plotting shapes are {col_br_green('raster')} or {col_br_green('tile')}"))
       }
     } 
   # Set plot dimensions (the dimensions will depend on if we are plotting the HE image too or not)
