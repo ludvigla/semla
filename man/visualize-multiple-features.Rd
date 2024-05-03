@@ -15,6 +15,8 @@ MapMultipleFeatures(object, ...)
   scale = c("shared", "free"),
   crop_area = NULL,
   pt_size = 1,
+  shape = "point",
+  spot_side,
   pt_stroke = 0,
   section_number = NULL,
   label_by = NULL,
@@ -36,6 +38,8 @@ MapMultipleFeatures(object, ...)
   crop_area = NULL,
   pt_size = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side = NULL,
   section_number = NULL,
   label_by = NULL,
   ncol = NULL,
@@ -69,6 +73,13 @@ effects as the point sizes will remain constant. In this case it is better to ge
 separate plots for different tissue sections.}
 
 \item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
+
+\item{shape}{A string specifying the shape to plot. Options are: 
+\code{c("point", "raster", "tile")}.}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for tile shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
 
@@ -139,7 +150,6 @@ a way that they are mutually exclusive, i.e. expressed in different spatial loca
 Each spot is assigned one color determined by the dominant feature in that spot. For instance,
 if cell type proportions are selected for the visualization, each cell type will be assigned a 
 specific color. Then, the cell type with the highest proportion value will determine the spot color
-with a spot opacity equal to the proportion value.
 
 The values of the selected features will be rescaled for the visualization
 depending on the choice of \code{scale}. If \code{scale="free"}, each numeric feature
@@ -213,19 +223,19 @@ Other spatial-visualization-methods:
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()}
 
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()}
 }
 \author{
 Ludvig Larsson

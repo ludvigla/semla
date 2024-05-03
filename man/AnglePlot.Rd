@@ -112,10 +112,10 @@ AnglePlot(se_mcolon, column_name = "GALT_split", selected_group = "S1_region1", 
 Other spatial-visualization-methods: 
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
+\code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{

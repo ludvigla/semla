@@ -14,6 +14,8 @@ MapFeatures(object, ...)
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side,
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -46,6 +48,8 @@ MapFeatures(object, ...)
   pt_alpha = 1,
   pt_stroke = 0,
   scale_alpha = FALSE,
+  shape = "point",
+  spot_side = NULL,
   section_number = NULL,
   label_by = NULL,
   ncol = NULL,
@@ -88,6 +92,13 @@ to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
+
+\item{shape}{A string specifying the shape to plot. Options are: 
+\code{c("point", "raster", "tile")}.}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for tile shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{scale_alpha}{Logical specifying if the spot colors should be scaled together with
 the feature values. This can be useful when you want to highlight regions with higher
@@ -277,8 +288,8 @@ Other spatial-visualization-methods:
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 
 Other spatial-visualization-methods: 
@@ -286,8 +297,8 @@ Other spatial-visualization-methods:
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{
