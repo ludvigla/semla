@@ -14,6 +14,8 @@ MapLabels(object, ...)
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side,
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -39,6 +41,8 @@ MapLabels(object, ...)
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side = NULL,
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -75,6 +79,13 @@ to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
+
+\item{shape}{A string specifying the shape to plot. Options are: 
+\code{c("point", "raster", "tile")}.}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for tile shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{section_number}{An integer select a tissue section number to subset data by}
 
