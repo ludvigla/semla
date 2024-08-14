@@ -92,10 +92,10 @@ ImagePlot(se_merged, crop_area = c(0.45, 0.55, 0.65, 0.7), sampleIDs = 2, mar = 
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
+\code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{

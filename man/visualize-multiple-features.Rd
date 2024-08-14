@@ -213,19 +213,19 @@ Other spatial-visualization-methods:
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()}
 
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
-\code{\link{MapLabels}()}
+\code{\link{MapFeaturesSummary}()},
+\code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()}
 }
 \author{
 Ludvig Larsson

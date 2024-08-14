@@ -203,8 +203,8 @@ Other spatial-visualization-methods:
 \code{\link{AnglePlot}()},
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
+\code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
