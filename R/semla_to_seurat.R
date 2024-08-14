@@ -30,6 +30,22 @@ NULL
 #' # Use Seurat functions
 #' SpatialFeaturePlot(se_merged, features = "Nrgn")
 #' 
+#' # Transform images in object
+#' se_merged <- LoadImages(se_merged)
+#' rotation_angle <- get_array_rotation(se, grid_pattern = "hexagonal")
+#' transforms <- rbind(generate_rigid_transform(sampleID = 1L, angle = rotation_angle$`1`),
+#'                     generate_rigid_transform(sampleID = 2L, angle = 12))
+#' se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+#' 
+#' # Update object
+#' se_raw <- UpdateSeuratFromSemla(se_merged, image_use = "transformed")
+#' se_transformed <- UpdateSeuratFromSemla(se_merged, image_use = "raw")
+#' 
+#' # Use Seurat functions
+#' p1 <- SpatialFeaturePlot(se_raw, features = "Nrgn")
+#' p2 <- SpatialFeaturePlot(se_transformed, features = "Nrgn")
+#' p1 | p2
+#' 
 #' @export
 UpdateSeuratFromSemla <- function (
     object,
@@ -51,17 +67,16 @@ UpdateSeuratFromSemla <- function (
   
   # Get Staffli object
   st_object <- GetStaffli(object)
-  print(st_object)
-  
-  # Check if the transformed image exists
-  if (!image_use %in% names(st_object@rasterlists))
-    abort(glue("Transformed images are not available in this object."))
-  
+
   # Add step for test data
   if (any(st_object@imgs %in% c("mousebrain", "mousecolon"))) {
     object <- LoadImages(object, verbose = FALSE)
     st_object <- GetStaffli(object)
   }
+  
+  # Check if the transformed image exists
+  if (!image_use %in% names(st_object@rasterlists))
+    abort(glue("Transformed images are not available in this object."))
   
   # Check image paths
   for (impath in st_object@imgs) {
