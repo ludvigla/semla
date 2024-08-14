@@ -277,8 +277,8 @@ Other spatial-visualization-methods:
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 
 Other spatial-visualization-methods: 
@@ -286,8 +286,8 @@ Other spatial-visualization-methods:
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeaturesSummary}()},
-\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{

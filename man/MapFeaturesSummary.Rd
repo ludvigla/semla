@@ -142,8 +142,8 @@ Other spatial-visualization-methods:
 \code{\link{FeatureViewer}()},
 \code{\link{ImagePlot}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{

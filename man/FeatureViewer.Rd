@@ -106,10 +106,10 @@ Other feature-viewer-methods:
 Other spatial-visualization-methods: 
 \code{\link{AnglePlot}()},
 \code{\link{ImagePlot}()},
-\code{\link{MapFeaturesSummary}()},
 \code{\link{MapFeatures}()},
-\code{\link{MapLabelsSummary}()},
+\code{\link{MapFeaturesSummary}()},
 \code{\link{MapLabels}()},
+\code{\link{MapLabelsSummary}()},
 \code{\link{MapMultipleFeatures}()}
 }
 \author{
