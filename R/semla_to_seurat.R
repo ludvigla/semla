@@ -41,7 +41,7 @@ UpdateSeuratFromSemla <- function (
   if (verbose) cat_line()
   
   # Set global variables to NULL
-  pxl_row_in_fullres <- pxl_col_in_fullres <- sampleID <- NULL
+  pxl_row_in_fullres <- pxl_col_in_fullres <- sampleID <- pxl_row_in_fullres_transformed <- pxl_col_in_fullres_transformed <- NULL
   
   # Check object
   if (!inherits(object, what = "Seurat")) abort(glue("Invalid class '{class(object)}'. Expected a 'Seurat' object."))
@@ -49,12 +49,13 @@ UpdateSeuratFromSemla <- function (
   
   image_use <- match.arg(image_use, choices = c("raw", "transformed"))
   
+  # Get Staffli object
+  st_object <- GetStaffli(object)
+  print(st_object)
+  
   # Check if the transformed image exists
   if (!image_use %in% names(st_object@rasterlists))
     abort(glue("Transformed images are not available in this object."))
-  
-  # Get Staffli object
-  st_object <- GetStaffli(object)
   
   # Add step for test data
   if (any(st_object@imgs %in% c("mousebrain", "mousecolon"))) {
@@ -120,10 +121,10 @@ UpdateSeuratFromSemla <- function (
     scalefactors <- GetScaleFactors(object) |> 
       cbind(GetImageInfo(object) |> dplyr::select(!sampleID)) |>
       mutate(sampleID = as.integer(sampleID)) |> 
+      mutate(t_max = sapply(imgs, function(x) max(dim(x)))) |> # retrieve the max dimension of the transformed image
       group_by(sampleID) |> 
       mutate(f_max = max(full_width, full_height),
-             h_max = max(width, height),
-             t_max = sapply(imgs, function(x) max(dim(x))),
+             # h_max = max(width, height),
              tissue_hires_scalef = t_max / f_max, # if you are working with the transformed image, we only need one scalefactor, but since I dont know how seurat decides which one to use, I am providing both scalef with the same value
              tissue_lowres_scalef = t_max / f_max) |>
       select(all_of(colnames(GetScaleFactors(object)))) |>
