@@ -4,10 +4,12 @@
 \alias{UpdateSeuratFromSemla}
 \title{Update a Seurat object created with \code{semla} for compatibility with \code{Seurat}'s spatial functions}
 \usage{
-UpdateSeuratFromSemla(object, verbose = TRUE)
+UpdateSeuratFromSemla(object, image_use = "raw", verbose = TRUE)
 }
 \arguments{
 \item{object}{An object of class \code{Seurat} with Visium data, created with \code{semla}}
+
+\item{image_use}{Strig specifying image type to use, either "raw" or "transformed"}
 
 \item{verbose}{Print messages}
 }
@@ -31,5 +33,21 @@ se_merged <- UpdateSeuratFromSemla(se_merged)
 
 # Use Seurat functions
 SpatialFeaturePlot(se_merged, features = "Nrgn")
+
+# Transform images in object
+se_merged <- LoadImages(se_merged)
+rotation_angle <- get_array_rotation(se, grid_pattern = "hexagonal")
+transforms <- rbind(generate_rigid_transform(sampleID = 1L, angle = rotation_angle$`1`),
+                    generate_rigid_transform(sampleID = 2L, angle = 12))
+se_merged <- RigidTransformImages(se_merged, transforms = transforms)
+
+# Update object
+se_raw <- UpdateSeuratFromSemla(se_merged, image_use = "transformed")
+se_transformed <- UpdateSeuratFromSemla(se_merged, image_use = "raw")
+
+# Use Seurat functions
+p1 <- SpatialFeaturePlot(se_raw, features = "Nrgn")
+p2 <- SpatialFeaturePlot(se_transformed, features = "Nrgn")
+p1 | p2
 
 }
