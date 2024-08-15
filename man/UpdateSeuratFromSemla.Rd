@@ -9,7 +9,7 @@ UpdateSeuratFromSemla(object, image_use = "raw", verbose = TRUE)
 \arguments{
 \item{object}{An object of class \code{Seurat} with Visium data, created with \code{semla}}
 
-\item{image_use}{Strig specifying image type to use, either "raw" or "transformed"}
+\item{image_use}{String specifying image type to use, either "raw" or "transformed"}
 
 \item{verbose}{Print messages}
 }
