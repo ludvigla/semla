@@ -623,6 +623,9 @@ MapMultipleFeatures.Seurat <- function (
 #' columns in which spatial coordinates are located
 #' @param drop_na should NA values be dropped from the data?
 #' @param use_text Logical specifying if values should be added to the color scales
+#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
+#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
+#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @import dplyr

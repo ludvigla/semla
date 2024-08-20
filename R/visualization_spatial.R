@@ -68,6 +68,9 @@ NULL
 #' visible in small plots.
 #' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
 #' relative to the plot area. Default is to place it in the top right corner.
+#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
+#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
+#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -694,6 +697,9 @@ MapFeatures.Seurat <- function (
 #' visible in small plots.
 #' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
 #' relative to the plot area. Default is to place it in the top right corner.
+#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
+#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
+#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -1490,6 +1496,8 @@ MapLabels.Seurat <- function (
 #' columns in which spatial coordinates are located
 #' @param drop_na Should NA values be dropped from the data?
 #' @param center_zero A logical specifying whether color scale should be centered at 0
+#' @param tech A string indicating which technology the data comes from. Defaults to \code{NULL} and will detect
+#' the technology automatically from the data. Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -1790,6 +1798,8 @@ MapLabels.Seurat <- function (
 #' columns in which the spatial coordinates are stored
 #' @param cur_label string with a title
 #' @param drop_na logical specifying whether NA values should be dropped
+#' @param tech A string indicating which technology the data comes from. Defaults to \code{NULL} and will detect
+#' the technology automatically from the data. Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @importFrom stats na.omit

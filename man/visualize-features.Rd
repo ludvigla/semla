@@ -34,6 +34,7 @@ MapFeatures(object, ...)
   scalebar_gg = NULL,
   scalebar_height = 0.05,
   scalebar_position = c(0.8, 0.8),
+  tech = NULL,
   ...
 )
 
@@ -68,6 +69,7 @@ MapFeatures(object, ...)
   scalebar_height = 0.05,
   scalebar_gg = scalebar(x = 500, text_height = 5),
   scalebar_position = c(0.8, 0.7),
+  tech = NULL,
   ...
 )
 }
@@ -97,7 +99,7 @@ and a value of 1 will make the points completely opaque.}
 \code{c("point", "raster", "tile")}.}
 
 \item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
-in the fullres image. Relevant for tile shape. Will default to each section's value  
+in the fullres image. Relevant for \code{"tile"} shape. Will default to each section's value  
 retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{scale_alpha}{Logical specifying if the spot colors should be scaled together with
@@ -162,6 +164,10 @@ visible in small plots.}
 
 \item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.}
+
+\item{tech}{Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
+Defaults to \code{NULL} and will detect the technology automatically from the data. 
+Possible values are \code{c("vis", "vishd")}}
 
 \item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
