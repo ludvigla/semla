@@ -739,9 +739,10 @@ MapLabels.default <- function (
   .prep_data_for_plotting(object = object, label_by = label_by, coords_columns = coords_columns)
 
   # get label column
-  label <- object |>
-    select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-    colnames()
+  label <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
+  # label <- object |>
+  #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+  #   colnames()
 
   # Check if label column only contains NA values
   if (object |> pull(all_of(label)) |> is.na() |> all()) abort(glue("Selected feature only contains NA values."))
@@ -791,9 +792,12 @@ MapLabels.default <- function (
   }
 
   # Edit dims of a crop area is provided
-  if (!is.null(crop_area)) {
+  if (!is.null(crop_area) & shape == "point") {
     c(dims, data) %<-% .crop_dims(dims, crop_area, data, coords_columns)
-  }
+  } else if (!is.null(crop_area) & shape != "point") {
+    c(dims, data) %<-% .crop_array(dims, crop_area, data, coords_columns)
+  } 
+  
   # Plot features on spatial coordinates for each sample
   sample_plots <- setNames(lapply(names(data), function(nm) {
 
@@ -1043,26 +1047,38 @@ MapLabels.Seurat <- function (
 
   # Set coords_columns
   coords_columns <- .get_coords_column(image_use, coords_use, shape)
-
-  # Filter data to remove all redundant meta data columns
-  data_use <- data_use |>
-    select(all_of("barcode"),
-           all_of(coords_columns),
-           all_of("sampleID"),
-           all_of(column_name),
-           contains(label_by %||% character(0)))
-
+  
   # Create crop area if override_plot_dims = TRUE
-  if (override_plot_dims) {
+  if (override_plot_dims & paste(coords_columns, collapse = "") != "xy") {
     # Split data by sampleID
     image_dims <- GetStaffli(object)@image_info
+    if (!is.null(section_number)) {
+      image_dims <- image_dims[image_dims$sampleID == section_number, ]
+    }
     new_dims <- .get_limits(data_use, coords_columns)
     crop_area <- c(min(new_dims$x_start/image_dims$full_width),
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
                    max(new_dims$full_height/image_dims$full_height))
   }
-
+  
+  # Filter data to remove all redundant meta data columns.
+  if (paste(coords_columns, collapse = "") == "xy" & !is.null(crop_area)) { # if we are cropping xy array, we still need the pxl coordinates
+    data_use <- data_use |>
+      select(all_of("barcode"),
+             all_of(coords_columns),
+             all_of(c("pxl_col_in_fullres", "pxl_row_in_fullres")),
+             all_of("sampleID"),
+             all_of(column_name),
+             contains(label_by %||% character(0)))   
+  } else {
+    data_use <- data_use |>
+      select(all_of("barcode"),
+             all_of(coords_columns),
+             all_of("sampleID"),
+             all_of(column_name),
+             contains(label_by %||% character(0)))
+  }
 
   # Check crop_area
   if (!is.null(crop_area)) {
@@ -2019,18 +2035,28 @@ MapLabels.Seurat <- function (
 
   # Check that features are valid
   if (!missing(colors)) {
+    remain <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
     checks <- object |>
-      select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+      select(all_of(remain)) |>
       sapply(is.numeric)
+    # checks <- object |>
+    #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+    #   sapply(is.numeric)
     if (any(!checks)) abort(glue("Features have to be numeric/integer. \n",
                                  "The following features are not valid: \n {paste(names(checks[!checks]))}"))
   } else {
     if (!multi_color) {
+      remain <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
       checks <- object |>
-        select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+        select(all_of(remain)) |>
         sapply(function(x) {
           is.character(x) | is.factor(x)
         })
+      # checks <- object |>
+      #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+      #   sapply(function(x) {
+      #     is.character(x) | is.factor(x)
+      #   })
       if (length(checks) > 1) abort("Only 1 meta.data column for a categorical variable is allowed.")
       if (!checks) abort(glue("Categorical variables have to be a character/factor."))
     }
