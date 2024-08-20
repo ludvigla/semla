@@ -82,6 +82,7 @@ MapMultipleFeatures.default <- function (
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
     add_colorscale_text = FALSE,
+    tech = NULL,
     ...
 ) {
 
@@ -96,9 +97,10 @@ MapMultipleFeatures.default <- function (
                           coords_columns = coords_columns, multi_color = TRUE)
 
   # get features
-  features <- object |>
-    select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-    colnames()
+  features <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
+  # features <- object |>
+  #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
+  #   colnames()
 
   # Check features
   if (!length(features) > 1) abort(glue("Expected at least 2 features, got {length(features)}"))
@@ -164,9 +166,11 @@ MapMultipleFeatures.default <- function (
   dims <- .get_dims(dims)
 
   # Edit dims of a crop area is provided
-  if (!is.null(crop_area)) {
+  if (!is.null(crop_area) & shape == "point") {
     c(dims, data) %<-% .crop_dims(dims, crop_area, data, coords_columns)
-  }
+  } else if (!is.null(crop_area) & shape != "point") {
+    c(dims, data) %<-% .crop_array(dims, crop_area, data, coords_columns)
+  } 
 
   # Plot features on spatial coordinates for each sample
   ## Plotting for point shape
@@ -223,7 +227,8 @@ MapMultipleFeatures.default <- function (
         cur_label = cur_label,
         coords_columns = coords_columns,
         drop_na = TRUE,
-        use_text = add_colorscale_text
+        use_text = add_colorscale_text,
+        tech = tech
       )
       return(p)
     }), nm = names(data))
@@ -304,6 +309,7 @@ MapMultipleFeatures.Seurat <- function (
     min_cutoff = NULL,
     return_plot_list = FALSE,
     add_colorscale_text = FALSE,
+    tech = NULL,
     ...
 ) {
 
@@ -316,6 +322,11 @@ MapMultipleFeatures.Seurat <- function (
 
   # Check Seurat object
   .check_seurat_object(object)
+  
+  # get what technology we are using
+  if (is.null(tech)) {
+    tech <- .get_tech(object)
+  }
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
@@ -365,16 +376,8 @@ MapMultipleFeatures.Seurat <- function (
   # Set coords_columns
   coords_columns <- .get_coords_column(image_use, coords_use, shape)
 
-  # Filter data to remove all redundant meta data columns
-  data_use <- data_use |>
-    select(all_of("barcode"),
-           all_of(coords_columns),
-           all_of("sampleID"),
-           all_of(features),
-           contains(label_by %||% character(0)))
-
   # Create crop area if override_plot_dims = TRUE
-  if (override_plot_dims) {
+  if (override_plot_dims & paste(coords_columns, collapse = "") != "xy") {
     # Split data by sampleID
     image_dims <- GetStaffli(object)@image_info
     if (!is.null(section_number)) {
@@ -385,6 +388,24 @@ MapMultipleFeatures.Seurat <- function (
                    min(new_dims$y_start/image_dims$full_height),
                    max(new_dims$full_width/image_dims$full_width),
                    max(new_dims$full_height/image_dims$full_height))
+  }
+  
+  # Filter data to remove all redundant meta data columns.
+  if (paste(coords_columns, collapse = "") == "xy" & !is.null(crop_area)) { # if we are cropping xy array, we still need the pxl coordinates
+    data_use <- data_use |>
+      select(all_of("barcode"),
+             all_of(coords_columns),
+             all_of(c("pxl_col_in_fullres", "pxl_row_in_fullres")),
+             all_of("sampleID"),
+             all_of(features),
+             contains(label_by %||% character(0)))   
+  } else {
+    data_use <- data_use |>
+      select(all_of("barcode"),
+             all_of(coords_columns),
+             all_of("sampleID"),
+             all_of(features),
+             contains(label_by %||% character(0)))
   }
 
   # crop images if a crop_area is set
@@ -416,7 +437,8 @@ MapMultipleFeatures.Seurat <- function (
     colors = colors,
     coords_columns = coords_columns,
     return_plot_list = (!is.null(image_use)) | return_plot_list,
-    add_colorscale_text = add_colorscale_text
+    add_colorscale_text = add_colorscale_text,
+    tech = tech
   )
 
   # Inject images if image_use is provided
@@ -620,7 +642,8 @@ MapMultipleFeatures.Seurat <- function (
     cur_label = NULL,
     coords_columns,
     drop_na = TRUE,
-    use_text = FALSE
+    use_text = FALSE,
+    tech = NULL
 ) {
   
   # Set global variables to NULL
@@ -705,19 +728,13 @@ MapMultipleFeatures.Seurat <- function (
   # Set plot dimensions (the dimensions will depend on if we are plotting the HE image too or not)
   p <- p +
     {
-      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+      if ((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")) {
         # Set plot dimensions (adjust for array coordinates used in raster)
-        if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
-          x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
-        } else if(max(gg$x) <= 127) { # 11x11 mm arrays, max y coord is 127
-          x_lim <- 223 + 1 # 11x11 mm arrays, max x coord is 223
-        } else {
-          x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
-        }
-        scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
+        x_lim <- max(gg$x) + 1
+        scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
                                       x_lim),
                            expand = c(0, 0),
-                           breaks = seq(0, x_lim,
+                           breaks = seq(0,  x_lim,
                                         length.out = 11),
                            labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
@@ -731,33 +748,24 @@ MapMultipleFeatures.Seurat <- function (
       }
     } +
     {
-      if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
+      if ((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")) {
         # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
-        if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
-          y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
-          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+        if (tech == "vis") {
+          y_max <- max(gg$y)
+          y_min <- min(gg$y)
           
           scale_y_reverse(limits = c(y_max,
                                      y_min),
                           expand = c(0, 0),
                           breaks = seq(0, y_max, length.out = 11),
                           labels = seq(0, 1, length.out = 11) |> paste0())
-        } else if(x_lim == 223 + 1) {
-          y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
-          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
-          
-          scale_y_reverse(limits = c(y_max,
-                                     y_min),
-                          expand = c(0, 0),
-                          breaks = seq(0, y_max, length.out = 11),
-                          labels = seq(0, 1, length.out = 11) |> paste0())
-        } else {
-          y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
-          y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
+        } else if (tech == "vishd") {
+          y_max <- max(gg$y)
+          y_min <- min(gg$y)
           
           scale_y_continuous(limits = c(y_min, y_max),
                              expand = c(0, 0),
-                             breaks = seq(0, max(y_min, y_max), 
+                             breaks = seq(0, max(y_min, y_max),
                                           length.out = 11),
                              labels = seq(0, 1, length.out = 11) |> paste0())
         }
