@@ -183,7 +183,7 @@ MapFeatures.default <- function (
     if (!crop_area[2] < crop_area[4]) abort("'top' value needs to be lower that 'bottom' value")
   }
 
-  # Edit dims of a crop area is provided
+  # Edit dims of a crop area if provided
   if (!is.null(crop_area) & shape == "point") {
     c(dims, data) %<-% .crop_dims(dims, crop_area, data, coords_columns)
   } else if (!is.null(crop_area) & shape != "point") {
@@ -288,7 +288,8 @@ MapFeatures.default <- function (
           coords_columns = coords_columns,
           cur_label = cur_label,
           drop_na = drop_na,
-          center_zero = center_zero
+          center_zero = center_zero,
+          tech = tech
         )
       }
     }
@@ -296,7 +297,7 @@ MapFeatures.default <- function (
   }), nm = names(data))
 
   # Add scalebar
-  if (add_scalebar) {
+  if (add_scalebar & all(coords_columns != c("x", "y"))) {
     if (!requireNamespace("dbscan")) {
       abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
                  "install.packages('dbscan')"))
@@ -324,6 +325,8 @@ MapFeatures.default <- function (
         }) |> setNames(nm = names(plots))
       }
     }) |> setNames(nm = names(sample_plots))
+  } else if (add_scalebar & all(coords_columns == c("x", "y"))) {
+    abort(glue("For shape {col_br_green({shape})} without HE, no scalebar can be produced. Try setting {col_br_magenta('image_use')} to {col_br_green({'raw'})} or {col_br_green({'transformed'})}"))
   }
 
   # Create final patchwork
@@ -490,21 +493,6 @@ MapFeatures.Seurat <- function (
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
   
-  # Retrieve scalefactors if needed for tiles size
-  if (shape == "tile") {
-    true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
-                          as.character(unique(data_use$sampleID)))
-    if (is.null(spot_side)) {
-      spot_side <- true_spot_side
-    } else {
-      dif <- abs(length(spot_side) - length(unique(data_use$sampleID)))
-      if (dif > 0) abort(glue("Missing/too many spot side dimensions for {dif} section/s"))
-      if (dif == 0) spot_side <- setNames(spot_side, 
-                                          as.character(unique(data_use$sampleID)))
-      if (!any(true_spot_side == spot_side)) warning("Inputted spot side is different from the real-life dimensions, spot representation might be inaccurate") 
-    }
-  }
-  
   # Add label_by column if present
   if (!is.null(label_by)) {
     data_use <- data_use |>
@@ -533,6 +521,26 @@ MapFeatures.Seurat <- function (
 
   # Set coords_columns
   coords_columns <- .get_coords_column(image_use, coords_use, shape)
+  
+  # Retrieve scalefactors if needed for tiles size
+  if (shape == "tile") {
+    if ("xy" == paste(coords_columns, collapse = "")) { # if we are plotting without the HE, the "true side" should be 1
+      true_spot_side <- setNames(rep(x = 1, times = length(unique(data_use$sampleID))),
+                                 as.character(unique(data_use$sampleID)))
+    } else {
+      true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+                                 as.character(unique(data_use$sampleID))) 
+    }
+    if (is.null(spot_side)) {
+      spot_side <- true_spot_side
+    } else {
+      dif <- abs(length(spot_side) - length(unique(data_use$sampleID)))
+      if (dif > 0) abort(glue("Missing/too many spot side dimensions for {dif} section/s"))
+      if (dif == 0) spot_side <- setNames(spot_side, 
+                                          as.character(unique(data_use$sampleID)))
+      if (!any(true_spot_side == spot_side)) warning("Inputted spot side is different from the real-life dimensions, spot representation might be inaccurate") 
+    }
+  }
 
   # Create crop area if override_plot_dims = TRUE
   if (override_plot_dims & paste(coords_columns, collapse = "") != "xy") {
@@ -1542,7 +1550,7 @@ MapLabels.Seurat <- function (
       warning("Image has not been de-rotated. Tiles might not accurately describe spot layout.")
     }
   }
-  
+
   # Should NA values be dropped?
   if (drop_na) {
     gg <- gg |> filter(if_all(all_of(ftr), ~ !is.na(.x)))
@@ -1580,14 +1588,11 @@ MapLabels.Seurat <- function (
       )) |>
       pull(alpha)
   }
-  
+
   # Draw plot.
   ## check for geometry
   if (shape %in% c("tile", "raster")){
     if (shape == "tile"){
-      if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
-        spot_side <- 1
-      }
       p <-
         ggplot() +
         {
@@ -2669,7 +2674,7 @@ MapLabels.Seurat <- function (
 .get_coords_column <- function (
     image_use,
     coords_use,
-    shape
+    shape = "point"
 ) {
   if (!is.null(image_use)) {
     coords_use <- image_use

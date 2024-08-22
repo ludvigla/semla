@@ -13,69 +13,218 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |>
 
 # Define a test case
 test_that("MapFeatures works as expected", {
-  # Test basic functionality
+  # Point shape
+  ## Test basic functionality
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip")), "patchwork")
   
-  # Test slot parameter
+  ## Test slot parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data"), "patchwork")
   
-  # Test image_use parameter
+  ## Test image_use parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "raw"), "patchwork")
   
-  # Test coords_use parameter
+  ## Test coords_use parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), coords_use = "transformed"), "patchwork")
   
-  # Test crop_area parameter
+  ## Test crop_area parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9)), "patchwork")
   
-  # Test pt_size parameter
+  ## Test pt_size parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_size = 2), "patchwork")
   
-  # Test pt_alpha parameter
+  ## Test pt_alpha parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5), "patchwork")
   
-  # Test pt_stroke parameter
+  ## Test pt_stroke parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_stroke = 0.5), "patchwork")
   
-  # Test scale_alpha parameter
+  ## Test scale_alpha parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE), "patchwork")
   
-  # Test section_number parameter
+  ## Test section_number parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2), "patchwork")
   
-  # Test label_by parameter
+  ## Test label_by parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id"), "patchwork")
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id")
   lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
   expect_true(all(lbls == c("mousecolon", "mousebrain")))
   
-  # Test ncol parameter
+  ## Test ncol parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), ncol = 2), "patchwork")
   
-  # Test blend parameter
+  ## Test blend parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE), "patchwork")
   
-  # Test scalebar parameters
+  ## Test scalebar parameters
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000)), "patchwork")
   
-  # Test colors parameter
+  ## Test colors parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1)), "patchwork")
   
-  # Test that the correct samples and features are plotted
+  ## Test that the correct samples and features are plotted
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), return_plot_list = TRUE)
   
-  # Test that the list contains correct classes
+  ## Test that the list contains correct classes
   expect_true(all(sapply(p, class) == "list"))
   expect_true(all(sapply(p[[1]], function(p) class(p)[1]) == "gg"))
   
-  # Test that the correct features are plotted
+  ## Test that the correct features are plotted
   expect_true(all(c("1", "2") == names(p)))
   expect_true(all(c("Clu", "Slc6a3", "Vip") == names(p[[1]])))
   
-  # Test that the expected number of plots are produced
+  ## Test that the expected number of plots are produced
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"))
   expect_equal(p$patches$layout$ncol, 3)
+  
+  # Tile shape
+  ## Test image_use parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "raw", shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "transformed", shape = "tile"), "patchwork")
+  
+  ## Test basic functionality
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = NULL), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test slot parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = NULL), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test coords_use parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), coords_use = "transformed", shape = "tile"), "patchwork")
+  
+  ## Test crop_area parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test spot_side parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(2, 4), shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test pt_alpha parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test scale_alpha parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test section_number parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test label_by parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id"), "patchwork")
+  p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id", shape = "tile")
+  lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
+  expect_true(all(lbls == c("mousecolon", "mousebrain")))
+  
+  ## Test ncol parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), ncol = 2, shape = "tile"), "patchwork")
+  
+  ## Test blend parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test scalebar parameters
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test colors parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile", image_use = "transformed"), "patchwork")
+  
+  ## Test that the correct samples and features are plotted
+  p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE)
+  p2 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE, image_use = "raw")
+  p3 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE, image_use = "transformed")
+  
+  ## Test that the list contains correct classes
+  expect_true(all(sapply(p1, class) == "list"))
+  expect_true(all(sapply(p1[[1]], function(p) class(p)[1]) == "gg"))
+  expect_true(all(sapply(p2, class) == "list"))
+  expect_true(all(sapply(p2[[1]], function(p) class(p)[5]) == "gg"))
+  expect_true(all(sapply(p3, class) == "list"))
+  expect_true(all(sapply(p3[[1]], function(p) class(p)[5]) == "gg"))
+  
+  ## Test that the correct features are plotted
+  expect_true(all(c("1", "2") == names(p1)))
+  expect_true(all(c("Clu", "Slc6a3", "Vip") == names(p1[[1]])))
+  expect_true(all(c("1", "2") == names(p2)))
+  expect_true(all(c("Clu", "Slc6a3", "Vip") == names(p2[[1]])))
+  expect_true(all(c("1", "2") == names(p3)))
+  expect_true(all(c("Clu", "Slc6a3", "Vip") == names(p3[[1]])))
+  
+  ## Test that the expected number of plots are produced
+  p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile")
+  p2 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw")
+  p3 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "transformed")
+  expect_equal(p1$patches$layout$ncol, 3)
+  expect_equal(p2$patches$layout$ncol, 3)
+  expect_equal(p3$patches$layout$ncol, 3)
+  
+  # Raster shape
+  ## Test basic functionality
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "raster", image_use = NULL), "patchwork")
+
+  ## Test slot parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "raster", image_use = NULL), "patchwork")
+
+  ## Test coords_use parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), coords_use = "transformed", shape = "raster"), "patchwork")
+  
+  ## Test crop_area parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "raster"), "patchwork")
+
+  ## Test pt_alpha parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "raster"), "patchwork")
+
+  ## Test scale_alpha parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "raster"), "patchwork")
+
+  ## Test section_number parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "raster"), "patchwork")
+  
+  ## Test label_by parameter
+  p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id", shape = "raster")
+  lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
+  expect_true(all(lbls == c("mousecolon", "mousebrain")))
+  
+  ## Test ncol parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), ncol = 2, shape = "raster"), "patchwork")
+  
+  ## Test blend parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "raster"), "patchwork")
+
+  ## Test colors parameter
+  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "raster"), "patchwork")
+
+  ## Test that the correct samples and features are plotted
+  p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "raster", return_plot_list = TRUE)
+
+  ## Test that the list contains correct classes
+  expect_true(all(sapply(p1, class) == "list"))
+  expect_true(all(sapply(p1[[1]], function(p) class(p)[1]) == "gg"))
+
+  ## Test that the correct features are plotted
+  expect_true(all(c("1", "2") == names(p1)))
+  expect_true(all(c("Clu", "Slc6a3", "Vip") == names(p1[[1]])))
+  
+  ## Test that the expected number of plots are produced
+  p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "raster")
+  expect_equal(p1$patches$layout$ncol, 3)
 })
 
 
@@ -128,4 +277,11 @@ test_that("MapFeatures throws appropriate errors for invalid arguments", {
                "Invalid length for 'crop_area', expected a 'numeric' vector of length 4")
   expect_error(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = TRUE),
                "Invalid class 'logical' for 'crop_area', expected 'numeric'")
+  
+  # Test error when asking for raster and HE
+  expect_error(MapFeatures(se_merged, features = "Clu", image_use = "raw", shape = "raster"))
+  
+  # Test error for scalebar with tiles/raster and no HE
+  expect_error(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile"))
+  expect_error(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "raster"))
 })
