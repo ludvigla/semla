@@ -31,12 +31,12 @@ packageVersion("semla")
 
 ## Authors
 
-The package is written by *Ludvig Larsson* and *Lovisa Franzén* who are both part of the [Spatial Research lab](https://www.spatialresearch.org/) at [SciLifeLab](https://www.scilifelab.se/) in Stockholm.
+The package is written by *Ludvig Larsson* and *Lovisa Franzén* who are both part of the [Spatial Research lab](https://www.spatialresearch.org/) at [SciLifeLab](https://www.scilifelab.se/) in Stockholm. It is moreover maintained by *Javier Escudero Morlanes*.
 
 ## Publication
 
 If you use `semla` in published research, please cite the following article:
 
-*TBD*
+> Larsson L, Franzén L, Ståhl PL, Lundeberg J. Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization. *Bioinformatics*. 2023;39(10):btad626. doi:10.1093/bioinformatics/btad626
 
 <br>
