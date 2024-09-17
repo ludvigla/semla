@@ -1,9 +1,7 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
-  IF_data: IF_data.html
-  NNMF: NNMF.html
   advanced_visualization: advanced_visualization.html
   categorical_features: categorical_features.html
   cell_type_mapping_benchmark: cell_type_mapping_benchmark.html
@@ -13,9 +11,11 @@ articles:
   digital_unrolling: digital_unrolling.html
   feature_viewer: feature_viewer.html
   getting_started: getting_started.html
+  IF_data: IF_data.html
   image_alignment: image_alignment.html
   images_and_coordinates: images_and_coordinates.html
   mask_images: mask_images.html
+  NNMF: NNMF.html
   numeric_features: numeric_features.html
   radial_distances: radial_distances.html
   region_neighbors: region_neighbors.html
@@ -24,8 +24,7 @@ articles:
   spatial_autocorrelation: spatial_autocorrelation.html
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
-last_built: 2023-09-26T13:22Z
+last_built: 2024-09-17T14:17Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles
-
