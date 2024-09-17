@@ -121,12 +121,12 @@ entire tissue section.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Parameters passed to <code>CreateSeuratObject</code></p></dd>
+<dd><p>Parameters passed to <code><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>Seurat</code> object with additional spatial information stored in
+    <p>A <code><a href="https://satijalab.org/seurat/reference/Seurat-package.html" class="external-link">Seurat</a></code> object with additional spatial information stored in
 a <code>Staffli</code> object</p>
     </div>
     <div class="section level2">
@@ -163,7 +163,7 @@ and set <code>remove_spots_outside_tissue = FALSE</code>.</p>
 
 
 <p>If you want to filter out spots and features, you can pass the <code>min.cells</code> and
-<code>min.features</code> parameters (see <code>CreateSeuratObject</code> for more details);
+<code>min.features</code> parameters (see <code><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></code> for more details);
 however, it is recommended to use the <code><a href="subset.html">SubsetSTData</a></code> function for filtering
 after the object has been created.</p>
     </div>
@@ -174,7 +174,7 @@ after the object has been created.</p>
 <p>You can add a column named 'annotation_files' with paths to CSV files containing
 annotations. These files should have the same structure as the CSV the files exported
 by Loupe Browser. One column with the barcode IDs and one column with the annotation labels.
-The annotations will be added to the <code>meta.data</code> slot of the returned <code>Seurat</code> object.</p>
+The annotations will be added to the <code>meta.data</code> slot of the returned <code><a href="https://satijalab.org/seurat/reference/Seurat-package.html" class="external-link">Seurat</a></code> object.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

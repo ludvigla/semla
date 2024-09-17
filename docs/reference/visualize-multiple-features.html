@@ -311,7 +311,7 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Construct tibble with coordinates and feature values</span></span></span>
 <span class="r-in"><span><span class="va">data_use</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="fu"><a href="GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">@</span><span class="va">meta_data</span>, </span></span>
-<span class="r-in"><span>                      <span class="fu">FetchData</span><span class="op">(</span><span class="va">se_mbrain</span>, vars <span class="op">=</span> <span class="va">selected_features</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                      <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, vars <span class="op">=</span> <span class="va">selected_features</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Construct a dims tibble</span></span></span>
 <span class="r-in"><span><span class="va">dims</span> <span class="op">&lt;-</span> <span class="fu"><a href="GetStaffli.html">GetStaffli</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">@</span><span class="va">image_info</span></span></span>

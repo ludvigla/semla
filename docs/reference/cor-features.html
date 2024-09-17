@@ -142,7 +142,7 @@ FALSE).</p></dd>
 
 <dt id="arg-features">features<a class="anchor" aria-label="anchor" href="#arg-features"></a></dt>
 <dd><p>A character vector with features present in <code>Seurat</code> object. These
-features need to be accessible with <code>FetchData</code></p></dd>
+features need to be accessible with <code><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html" class="external-link">FetchData</a></code></p></dd>
 
 
 <dt id="arg-assay-use">assay_use<a class="anchor" aria-label="anchor" href="#arg-assay-use"></a></dt>
@@ -234,7 +234,7 @@ a list with one <code>tibble</code> per sample.</p>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>,</span></span>
 <span class="r-in"><span>                                 <span class="st">"se_mbrain"</span>,</span></span>
 <span class="r-in"><span>                                 package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">featureMat</span> <span class="op">&lt;-</span> <span class="fu">FetchData</span><span class="op">(</span><span class="va">se_mbrain</span>, vars <span class="op">=</span> <span class="fu">VariableFeatures</span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">featureMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">coordfile</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain/spatial"</span>,</span></span>
@@ -280,8 +280,8 @@ a list with one <code>tibble</code> per sample.</p>
 <span class="r-in"><span>                                 <span class="st">"se_mbrain"</span>,</span></span>
 <span class="r-in"><span>                                 package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">ScaleData</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">RunPCA</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Centering and scaling data matrix</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> PC_ 1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Positive:  Nrgn, Olfm1, Cck, Nptxr, Rtn1, Snca, Nov, Tmsb4x, Lamp5, Egr1 </span>
@@ -321,7 +321,7 @@ a list with one <code>tibble</code> per sample.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Compute spatial autocorrelation for variable features</span></span></span>
 <span class="r-in"><span><span class="va">spatgenes</span> <span class="op">&lt;-</span> <span class="fu">CorSpatialFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>,</span></span>
-<span class="r-in"><span>                                features <span class="op">=</span> <span class="fu">VariableFeatures</span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                                nCores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Computing spatial autocorrelation</span> ──</span>
@@ -347,7 +347,7 @@ a list with one <code>tibble</code> per sample.</p>
 <span class="r-in"><span><span class="co"># Note that the top variable genes are blood related (hemoglobin genes)</span></span></span>
 <span class="r-in"><span><span class="co"># These genes have lower spatial autocorrelation since blood vessels</span></span></span>
 <span class="r-in"><span><span class="co"># typically only cover a few spots and more randomly dispersed throughput the tissue</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">VariableFeatures</span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Hbb-bs" "Hba-a1" "Hba-a2" "Hbb-bt" "Slc6a3" "Th"    </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -382,10 +382,10 @@ a list with one <code>tibble</code> per sample.</p>
 <span class="r-in"><span>                                 <span class="st">"se_mcolon"</span>,</span></span>
 <span class="r-in"><span>                                 package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">se_merged</span> <span class="op">&lt;-</span> <span class="fu"><a href="merge.html">MergeSTData</a></span><span class="op">(</span><span class="va">se_mbrain</span>, <span class="va">se_mcolon</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">FindVariableFeatures</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">spatgenes</span> <span class="op">&lt;-</span> <span class="fu">CorSpatialFeatures</span><span class="op">(</span><span class="va">se_merged</span>,</span></span>
-<span class="r-in"><span>                                features <span class="op">=</span> <span class="fu">VariableFeatures</span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_merged</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                                nCores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Computing spatial autocorrelation</span> ──</span>
