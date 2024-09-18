@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="semla">
 <title>Cell type mapping benchmark • semla</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -14,100 +13,82 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Cell type mapping benchmark">
-<meta property="og:description" content="semla">
-<meta property="og:image" content="https://ludvigla.github.io/semla/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.6</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/semla.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/semla.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <h6 class="dropdown-header" data-toc-skip>Intro</h6>
-    <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
-    <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
-    <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
-    <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
-    <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
-    <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
-    <a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a>
-    <a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a>
-    <a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Analysis</h6>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a>
-    <a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a>
-    <a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
-    <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
-    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
-    <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+<li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
+    <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
+    <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
+    <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
+    <li><a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a></li>
+    <li><a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a></li>
+    <li><a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial methods</h6></li>
+    <li><a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a></li>
+    <li><a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Analysis</h6></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a></li>
+    <li><a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a></li>
+    <li><a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Image processing</h6></li>
+    <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
+    <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
+    <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+  </ul>
 </li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
-    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
-    <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a></li>
+    <li><a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a></li>
+    <li><a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a></li>
+    <li><a class="dropdown-item" href="../articles/IF_data.html">IF data</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub">
-    <span class="fa fa-github"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -118,10 +99,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cell type mapping benchmark</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 26 September
-2023</h4>
+            <h4 data-toc-skip class="date">Last compiled: 18 September
+2024</h4>
       
-      
+
       <div class="d-none name"><code>cell_type_mapping_benchmark.Rmd</code></div>
     </div>
 
@@ -147,9 +128,9 @@ brain tissue section).</p>
 data.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">se_allen</span>, group.by <span class="op">=</span> <span class="st">"subclass"</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/allen_brain_atlas.jpg" alt=""><p class="caption">1. The reference single-cell data set contains 23
-annotated cell types.</p>
+<div class="float">
+<img src="synthetic_spots/allen_brain_atlas.jpg" alt="1. The reference single-cell data set contains 23 annotated cell types."><div class="figcaption">1. The reference single-cell data set contains
+23 annotated cell types.</div>
 </div>
 </div>
 <div class="section level3">
@@ -177,8 +158,8 @@ matrix.</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_allen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">se_allen</span>, nfeatures <span class="op">=</span> <span class="fl">5e3</span><span class="op">)</span></span>
-<span><span class="va">se_allen</span> <span class="op">&lt;-</span> <span class="va">se_allen</span><span class="op">[</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, <span class="op">]</span></span>
-<span><span class="va">umis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span></span>
+<span><span class="va">se_allen</span> <span class="op">&lt;-</span> <span class="va">se_allen</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">umis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 1. Down sample UMIs</span></span>
 <span><span class="va">bins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
@@ -253,10 +234,10 @@ cell2location in a separate environment.</p>
 <span></span>
 <span><span class="co"># Export matrices and tables</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"synthetic_spots"</span><span class="op">)</span></span>
-<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/allen_brain_umis.tsv"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/allen_brain_umis.tsv"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, con <span class="op">=</span> <span class="st">"synthetic_spots/variable_genes.txt"</span><span class="op">)</span></span>
-<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">@</span><span class="va">meta.data</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span>, <span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subclass</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/metadata.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/Visium_synthetic_spots_umis.tsv"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">@</span><span class="va">meta.data</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span>, <span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">subclass</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/metadata.tsv"</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fwrite.html" class="external-link">fwrite</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"synthetic_spots/Visium_synthetic_spots_umis.tsv"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span>, col.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="create-a-seurat-object-from-the-synthetic-count-matrix">Create a Seurat object from the synthetic count matrix<a class="anchor" aria-label="anchor" href="#create-a-seurat-object-from-the-synthetic-count-matrix"></a>
 </h4>
@@ -265,7 +246,7 @@ cell2location in a separate environment.</p>
 of top 5,000 variable genes.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="fl">1</span><span class="op">:</span><span class="va">num_samples</span><span class="op">)</span></span>
-<span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">mini_bulk_umis</span>, assay <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
+<span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">mini_bulk_umis</span>, assay <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="va">se_Visium_agg</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -292,7 +273,7 @@ object 10 times.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Merge Seurat object to have 100k spots</span></span>
 <span><span class="va">se_Visium_agg_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span>, <span class="va">se_Visium_agg</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span><span class="va">se_Visium_agg_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span>, nfeatures <span class="op">=</span> <span class="fl">5e3</span><span class="op">)</span></span></code></pre></div>
 <p>Since the NNLS method runs in a matter of seconds, we’ll run each
 round in 10 iterations to compute average computation times.</p>
@@ -300,7 +281,7 @@ round in 10 iterations to compute average computation times.</p>
 <code class="sourceCode R"><span><span class="va">nnls_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1e4</span>, <span class="fl">1e5</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span>  <span class="va">se_Visium_agg_subset</span> <span class="op">&lt;-</span> <span class="va">se_Visium_agg_large</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="va">i</span><span class="op">]</span></span>
 <span>  <span class="va">iters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"  iter: "</span>, <span class="va">n</span>, <span class="st">"\n"</span><span class="op">)</span><span class="op">)</span></span>
@@ -328,10 +309,10 @@ size.</p>
 <span>                     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1e4</span>, <span class="fl">1e5</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">50</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/NNLS_computation_time.jpg" alt=""><p class="caption">2. Computation time for NNLS on synthetic Visium
+<div class="float">
+<img src="synthetic_spots/NNLS_computation_time.jpg" alt="2. Computation time for NNLS on synthetic Visium data. The x-axis shows the number of spots and the y-axis shows the run time in seconds."><div class="figcaption">2. Computation time for NNLS on synthetic Visium
 data. The x-axis shows the number of spots and the y-axis shows the run
-time in seconds.</p>
+time in seconds.</div>
 </div>
 </div>
 </div>
@@ -350,7 +331,7 @@ indices.</p>
 <span><span class="op">}</span>, cl <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run NNLS for 1e4 spots</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/celltype-prediction.html">RunNNLS</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">se_Visium_agg</span>, </span>
 <span>                   singlecell_object <span class="op">=</span> <span class="va">se_allen</span>, </span>
 <span>                   groups <span class="op">=</span> <span class="st">"subclass"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, min_prop <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
@@ -365,7 +346,7 @@ indices.</p>
 <span><span class="va">props</span> <span class="op">&lt;-</span> <span class="va">props</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_Visium_agg</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Compare proportions</span></span>
-<span><span class="va">pred_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>inf_props_nnls <span class="op">=</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, slot <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">pred_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>inf_props_nnls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, slot <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>                     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>             exp_props <span class="op">=</span> <span class="va">props</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="op">)</span>, </span>
 <span>             celltype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_Visium_agg</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -380,14 +361,14 @@ data sets and we therefore only ran the deconvolution for 10,00 spots.
 Core i7, 16GB).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># set up reference</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"subclass"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html" class="external-link">Idents</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"subclass"</span></span>
 <span></span>
 <span><span class="co"># extract information to pass to the RCTD Reference function</span></span>
 <span><span class="va">celltypes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"\\/"</span>, replacement <span class="op">=</span> <span class="st">"."</span>, x <span class="op">=</span> <span class="va">se_allen</span><span class="op">$</span><span class="va">subclass</span><span class="op">)</span></span>
 <span><span class="va">celltypes</span> <span class="op">&lt;-</span> <span class="va">celltypes</span><span class="op">[</span><span class="va">celltypes</span> <span class="op">!=</span> <span class="st">"CR"</span><span class="op">]</span></span>
 <span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"\\/"</span>, replacement <span class="op">=</span> <span class="st">"."</span>, x <span class="op">=</span> <span class="va">celltypes</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">nUMI</span> <span class="op">&lt;-</span> <span class="fu">colSums</span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu">Reference</span><span class="op">(</span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">cluster</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">nUMI</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">nUMI</span> <span class="op">&lt;-</span> <span class="fu">colSums</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu">Reference</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/AssayData.html" class="external-link">GetAssayData</a></span><span class="op">(</span><span class="va">se_allen</span>, slot <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span><span class="op">[</span>, <span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">cluster</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span>, <span class="va">nUMI</span><span class="op">[</span><span class="va">barcodes</span><span class="op">$</span><span class="va">barcode</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># set up query with the RCTD function SpatialRNA</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"barcode"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">mini_bulk_umis</span><span class="op">)</span><span class="op">)</span></span>
@@ -434,13 +415,13 @@ metrics.</p>
 computation time running on synthetic Visium data from 10,000 to 100,000
 spots.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se_Visium_agg_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">SetIdent</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span>, value <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">se_Visium_agg_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html" class="external-link">SetIdent</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span>, value <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
 <span><span class="va">se_Visium_agg_large</span> <span class="op">&lt;-</span> <span class="va">se_Visium_agg_large</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">seurat_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1e4</span>, <span class="fl">1e5</span>, <span class="fl">1e4</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_Visium_agg_large</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span>  <span class="va">se_Visium_agg_subset</span> <span class="op">&lt;-</span> <span class="va">se_Visium_agg_large</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="va">i</span><span class="op">]</span></span>
 <span>  <span class="va">ti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">anchors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindTransferAnchors.html" class="external-link">FindTransferAnchors</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">se_allen</span>, </span>
@@ -470,10 +451,10 @@ spots.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotation_logticks.html" class="external-link">annotation_logticks</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">50</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/NNLS_vs_Seurat_computation_time.jpg" alt=""><p class="caption">3. Computation time for NNLS and Seurat label
+<div class="float">
+<img src="synthetic_spots/NNLS_vs_Seurat_computation_time.jpg" alt="3. Computation time for NNLS and Seurat label transfer on synthetic Visium data. The x-axis shows the number of spots and the y-axis shows the run time in seconds (log10 scale)."><div class="figcaption">3. Computation time for NNLS and Seurat label
 transfer on synthetic Visium data. The x-axis shows the number of spots
-and the y-axis shows the run time in seconds (log10 scale).</p>
+and the y-axis shows the run time in seconds (log10 scale).</div>
 </div>
 </div>
 <div class="section level3">
@@ -483,7 +464,7 @@ and the y-axis shows the run time in seconds (log10 scale).</p>
 normalize the results scores to obtain proportion estimates and
 calculate performance metrics.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html" class="external-link">SetIdent</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, value <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html" class="external-link">SetIdent</a></span><span class="op">(</span><span class="va">se_Visium_agg</span>, value <span class="op">=</span> <span class="st">"Spatial"</span><span class="op">)</span></span>
 <span><span class="va">se_Visium_agg</span> <span class="op">&lt;-</span> <span class="va">se_Visium_agg</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">anchors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindTransferAnchors.html" class="external-link">FindTransferAnchors</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">se_allen</span><span class="op">[</span>, <span class="va">se_allen</span><span class="op">$</span><span class="va">subclass</span> <span class="op">!=</span> <span class="st">"CR"</span><span class="op">]</span>, </span>
 <span>                               query <span class="op">=</span> <span class="va">se_Visium_agg</span><span class="op">)</span></span>
@@ -546,9 +527,10 @@ a NVIDIA A100-SMX4-80GB Tensor core GPU.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">method</span>, <span class="va">time</span>, label <span class="op">=</span> <span class="va">time_format</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Deconvolution method"</span>, y <span class="op">=</span> <span class="st">"time in seconds"</span>, title <span class="op">=</span> <span class="st">"Run time for 10,000 spots"</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/run_time_comparison_10k.jpg" alt=""><p class="caption">4. Computation time for 5 methods on synthetic Visium
-data with 10,000 spots. The y-axis shows the run time in seconds.</p>
+<div class="float">
+<img src="synthetic_spots/run_time_comparison_10k.jpg" alt="4. Computation time for 5 methods on synthetic Visium data with 10,000 spots. The y-axis shows the run time in seconds."><div class="figcaption">4. Computation time for 5 methods on synthetic
+Visium data with 10,000 spots. The y-axis shows the run time in
+seconds.</div>
 </div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rmse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span></span>
@@ -572,10 +554,10 @@ data with 10,000 spots. The y-axis shows the run time in seconds.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"RMSE (inferred vs expected proportions)"</span><span class="op">)</span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/performance_metrics.jpg" alt=""><p class="caption">5. Performance metrics for 5 methods. The pearson
-correlation scores and RMSE are calculated from the inferred vs expected
-proportions.</p>
+<div class="float">
+<img src="synthetic_spots/performance_metrics.jpg" alt="5. Performance metrics for 5 methods. The pearson correlation scores and RMSE are calculated from the inferred vs expected proportions."><div class="figcaption">5. Performance metrics for 5 methods. The
+pearson correlation scores and RMSE are calculated from the inferred vs
+expected proportions.</div>
 </div>
 <div class="section level3">
 <h3 id="scatter-plots">Scatter plots<a class="anchor" aria-label="anchor" href="#scatter-plots"></a>
@@ -596,11 +578,11 @@ proportions.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Expected proportions"</span>, y <span class="op">=</span> <span class="st">"Inferred proportions"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span></code></pre></div>
-<div class="figure">
-<img src="synthetic_spots/scatter_plots_comparison.jpg" alt=""><p class="caption">6. Scatter plot showing expected vs inferred cell
-type proportions for 5 methods on 10,000 synthetic Visium spots. The
-blue line indicates a fitter trend line and the dashed red lines
-indicate the expected 1 to 1 relationship.</p>
+<div class="float">
+<img src="synthetic_spots/scatter_plots_comparison.jpg" alt="6. Scatter plot showing expected vs inferred cell type proportions for 5 methods on 10,000 synthetic Visium spots. The blue line indicates a fitter trend line and the dashed red lines indicate the expected 1 to 1 relationship."><div class="figcaption">6. Scatter plot showing expected vs inferred
+cell type proportions for 5 methods on 10,000 synthetic Visium spots.
+The blue line indicates a fitter trend line and the dashed red lines
+indicate the expected 1 to 1 relationship.</div>
 </div>
 <p><br></p>
 <hr>
@@ -611,58 +593,57 @@ indicate the expected 1 to 1 relationship.</p>
 </ul></details><details><summary><strong>Session info</strong>
 </summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.2.3 (2023-03-15)</span></span>
-<span><span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span></span>
-<span><span class="co">## Running under: macOS Big Sur ... 10.16</span></span>
+<pre><code><span><span class="co">## R version 4.4.0 (2024-04-24)</span></span>
+<span><span class="co">## Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">## Running under: macOS Sonoma 14.5</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib</span></span>
-<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib</span></span>
+<span><span class="co">## BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">## LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## time zone: Europe/Stockholm</span></span>
+<span><span class="co">## tzcode source: internal</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] knitr_1.43          magrittr_2.0.3      R6_2.5.1           </span></span>
-<span><span class="co">##  [4] ragg_1.2.5          rlang_1.1.1         fastmap_1.1.1      </span></span>
-<span><span class="co">##  [7] stringr_1.5.0       tools_4.2.3         xfun_0.40          </span></span>
-<span><span class="co">## [10] cli_3.6.1           jquerylib_0.1.4     systemfonts_1.0.4  </span></span>
-<span><span class="co">## [13] htmltools_0.5.6     yaml_2.3.7          digest_0.6.33      </span></span>
-<span><span class="co">## [16] rprojroot_2.0.3     lifecycle_1.0.3     pkgdown_2.0.7      </span></span>
-<span><span class="co">## [19] textshaping_0.3.6   purrr_1.0.2         BiocManager_1.30.22</span></span>
-<span><span class="co">## [22] sass_0.4.7          vctrs_0.6.3         fs_1.6.3           </span></span>
-<span><span class="co">## [25] memoise_2.0.1       glue_1.6.2          cachem_1.0.8       </span></span>
-<span><span class="co">## [28] evaluate_0.21       rmarkdown_2.24      stringi_1.7.12     </span></span>
-<span><span class="co">## [31] compiler_4.2.3      bslib_0.5.1         desc_1.4.2         </span></span>
-<span><span class="co">## [34] jsonlite_1.8.7      renv_1.0.2</span></span></code></pre>
+<span><span class="co">##  [1] digest_0.6.37       desc_1.4.3          R6_2.5.1           </span></span>
+<span><span class="co">##  [4] fastmap_1.2.0       xfun_0.47           cachem_1.1.0       </span></span>
+<span><span class="co">##  [7] knitr_1.48          htmltools_0.5.8.1   rmarkdown_2.28     </span></span>
+<span><span class="co">## [10] lifecycle_1.0.4     cli_3.6.3           sass_0.4.9         </span></span>
+<span><span class="co">## [13] pkgdown_2.1.0       textshaping_0.4.0   jquerylib_0.1.4    </span></span>
+<span><span class="co">## [16] renv_1.0.2          systemfonts_1.1.0   compiler_4.4.0     </span></span>
+<span><span class="co">## [19] rstudioapi_0.16.0   tools_4.4.0         ragg_1.3.3         </span></span>
+<span><span class="co">## [22] bslib_0.8.0         evaluate_0.24.0     yaml_2.3.10        </span></span>
+<span><span class="co">## [25] BiocManager_1.30.25 jsonlite_1.8.8      htmlwidgets_1.6.4  </span></span>
+<span><span class="co">## [28] rlang_1.1.4         fs_1.6.4</span></span></code></pre>
 </details><p><br></p>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
+  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

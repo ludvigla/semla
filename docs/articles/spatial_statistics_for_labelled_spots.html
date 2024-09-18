@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="semla">
 <title>Spatial statistics for labelled spots • semla</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -14,117 +13,100 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Spatial statistics for labelled spots">
-<meta property="og:description" content="semla">
-<meta property="og:image" content="https://ludvigla.github.io/semla/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.6</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/semla.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/semla.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <h6 class="dropdown-header" data-toc-skip>Intro</h6>
-    <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
-    <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
-    <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
-    <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
-    <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
-    <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
-    <a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a>
-    <a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a>
-    <a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Analysis</h6>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a>
-    <a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a>
-    <a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
-    <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
-    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
-    <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+<li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
+    <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
+    <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
+    <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
+    <li><a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a></li>
+    <li><a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a></li>
+    <li><a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial methods</h6></li>
+    <li><a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a></li>
+    <li><a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Analysis</h6></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a></li>
+    <li><a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a></li>
+    <li><a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Image processing</h6></li>
+    <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
+    <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
+    <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+  </ul>
 </li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
-    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
-    <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a></li>
+    <li><a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a></li>
+    <li><a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a></li>
+    <li><a class="dropdown-item" href="../articles/IF_data.html">IF data</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub">
-    <span class="fa fa-github"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
 
 
-<script src="spatial_statistics_for_labelled_spots_files/htmlwidgets-1.6.2/htmlwidgets.js"></script><link href="spatial_statistics_for_labelled_spots_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="spatial_statistics_for_labelled_spots_files/datatables-binding-0.29/datatables.js"></script><link href="spatial_statistics_for_labelled_spots_files/dt-core-1.13.4/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="spatial_statistics_for_labelled_spots_files/dt-core-1.13.4/css/jquery.dataTables.extra.css" rel="stylesheet">
-<script src="spatial_statistics_for_labelled_spots_files/dt-core-1.13.4/js/jquery.dataTables.min.js"></script><link href="spatial_statistics_for_labelled_spots_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
-<script src="spatial_statistics_for_labelled_spots_files/crosstalk-1.2.0/js/crosstalk.min.js"></script><div class="row">
+<link href="spatial_statistics_for_labelled_spots_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="spatial_statistics_for_labelled_spots_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="spatial_statistics_for_labelled_spots_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="spatial_statistics_for_labelled_spots_files/datatables-binding-0.33/datatables.js"></script><link href="spatial_statistics_for_labelled_spots_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="spatial_statistics_for_labelled_spots_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="spatial_statistics_for_labelled_spots_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="spatial_statistics_for_labelled_spots_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="spatial_statistics_for_labelled_spots_files/crosstalk-1.2.1/js/crosstalk.min.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Spatial statistics for labelled spots</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 26 September
-2023</h4>
+            <h4 data-toc-skip class="date">Last compiled: 18 September
+2024</h4>
       
-      
+
       <div class="d-none name"><code>spatial_statistics_for_labelled_spots.Rmd</code></div>
     </div>
 
@@ -181,22 +163,7 @@ clusters using Seurat’s <code><a href="https://satijalab.org/seurat/reference/
 <span></span>
 <span><span class="va">infoTable</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">samples</span>, <span class="va">imgs</span>, <span class="va">spotfiles</span>, <span class="va">json</span><span class="op">)</span></span>
 <span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ReadVisiumData.html">ReadVisiumData</a></span><span class="op">(</span><span class="va">infoTable</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## ── <span style="font-weight: bold;">Reading 10x Visium data</span> ──</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading matrices:</span></span></code></pre>
-<pre><code><span><span class="co">## →   Finished loading expression matrix 1</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span>   There are <span style="color: #5555FF;">32285</span> features and <span style="color: #FF55FF;">1438</span> spots in the expression matrix.</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading coordinates:</span></span></code></pre>
-<pre><code><span><span class="co">## →   Finished loading coordinates for sample 1</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Collected coordinates for <span style="color: #FF55FF;">1438</span> spots.</span></span></code></pre>
-<pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## ── Creating `Seurat` object</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Expression matrices and coordinates are compatible</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Created `Seurat` object</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Created `Staffli` object</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning a `Seurat` object with <span style="color: #5555FF;">32285</span> features and <span style="color: #FF55FF;">1438</span> spots</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generate clusters</span></span>
 <span><span class="va">se</span> <span class="op">&lt;-</span> <span class="va">se</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -217,7 +184,7 @@ clusters using Seurat’s <code><a href="https://satijalab.org/seurat/reference/
 <span><span class="co">## Maximum modularity in 10 random starts: 0.7913</span></span>
 <span><span class="co">## Number of communities: 11</span></span>
 <span><span class="co">## Elapsed time: 0 seconds</span></span></code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">unique_clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">se</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span></span>
 <span><span class="va">cluster_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu">ggsci</span><span class="fu">::</span><span class="fu"><a href="https://nanx.me/ggsci/reference/pal_d3.html" class="external-link">pal_d3</a></span><span class="op">(</span><span class="st">"category20"</span><span class="op">)</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">unique_clusters</span><span class="op">)</span><span class="op">)</span>, nm <span class="op">=</span> <span class="va">unique_clusters</span><span class="op">)</span></span>
 <span></span>
@@ -228,7 +195,7 @@ clusters using Seurat’s <code><a href="https://satijalab.org/seurat/reference/
 <span>                 override_plot_dims <span class="op">=</span> <span class="cn">T</span>, </span>
 <span>                 bar_label_size <span class="op">=</span> <span class="fl">2.5</span>, </span>
 <span>                 colors <span class="op">=</span> <span class="va">cluster_colors</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p><br></p>
 <p>Looking at the clusters we just generated we can see that many of
 them seem to follow some kind of spatial pattern. Cluster 1 is
@@ -255,9 +222,9 @@ edges a node has to other nodes is described as that node’s
 table per sample), so we’ll need to fetch the first item of the list.
 Then we can add information about clusters before plotting it with
 <code>ggplot2</code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spatial_network</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get-network.html">GetSpatialNetwork</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span><span class="op">$</span><span class="va">random_clusters</span> <span class="op">&lt;-</span> <span class="va">se</span><span class="op">$</span><span class="va">seurat_clusters</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">spatial_network</span><span class="op">$</span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="va">se</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">spatial_network</span><span class="op">$</span><span class="va">from</span>, <span class="st">"seurat_clusters"</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">spatial_network</span><span class="op">$</span><span class="va">random_clusters</span> <span class="op">&lt;-</span> <span class="va">se</span><span class="op">[[</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">spatial_network</span><span class="op">$</span><span class="va">from</span>, <span class="st">"random_clusters"</span>, drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -270,7 +237,7 @@ Then we can add information about clusters before plotting it with
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> AAAC… CAGG…     137.     6    <span style="text-decoration: underline;">6</span>932    <span style="text-decoration: underline;">8</span>873  <span style="text-decoration: underline;">7</span>069  <span style="text-decoration: underline;">8</span>874 5       4              </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> AAAC… AAGA…     137      6    <span style="text-decoration: underline;">6</span>669    <span style="text-decoration: underline;">5</span>280  <span style="text-decoration: underline;">6</span>532  <span style="text-decoration: underline;">5</span>280 6       0              </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span> AAAC… ATCT…     137      6    <span style="text-decoration: underline;">5</span>279    <span style="text-decoration: underline;">9</span>107  <span style="text-decoration: underline;">5</span>142  <span style="text-decoration: underline;">9</span>107 3       8</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span>, color<span class="op">=</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -279,7 +246,7 @@ Then we can add information about clusters before plotting it with
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -309,7 +276,7 @@ therefore min-max scaled between the ⟨k⟩ of a randomized network
 <p>We run the analysis by calling the function
 <code><a href="../reference/label-assortativity.html">RunLabelAssortativityTest()</a></code> and storing the results in a
 new object.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_lat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label-assortativity.html">RunLabelAssortativityTest</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Running Label Assortativity Test</span> ──</span></span></code></pre>
@@ -331,15 +298,15 @@ equal to a randomly dispersed spatial pattern and values closer to 1
 indicating an aggregated and highly connected organization of the spots
 of that label.</p>
 <p>Let’s have a look at the results!</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span></span>
 <span>  <span class="va">res_lat</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">avg_k_scaled</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  rownames <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  caption <span class="op">=</span> <span class="st">"Label assortativity results"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-61044cef5569249bf319" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-61044cef5569249bf319">{"x":{"filter":"none","vertical":false,"caption":"<caption>Label assortativity results<\/caption>","data":[["1","4","10","9","6","0","3","5","2","8","7"],[0.8966708337852992,0.5094570514060366,0.3426392149688042,0.3050737148808744,0.2898094807201581,0.2586506100509623,0.2143857545803906,0.09366988216040839,0.08416953257351555,0.06021715267052771,-0.01039140607366548],[5.392070484581498,3.594405594405595,2.705882352941177,2.526315789473684,2.54368932038835,2.629310344827586,2.303448275862069,1.647058823529412,1.789473684210526,1.371428571428571,1.071428571428571],[1.437018418439596,1.254087897183615,1.068186919702071,1.068162987805845,1.19535644721595,1.50639339775623,1.336222462828468,1.212905354786547,1.416489243922024,1.084600023993963,1.120551708932445],[0.07961321775960466,0.09163980172880666,0.2118796731758706,0.1355446436556003,0.104627601431257,0.07625131365367292,0.07642656209551781,0.1006004854398896,0.08219055984843876,0.1500651825578394,0.1235769449080578],[5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>avg_k_scaled<\/th>\n      <th>avg_k<\/th>\n      <th>min_avg_k_mean<\/th>\n      <th>min_avg_k_sd<\/th>\n      <th>k_max<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5]}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><p><br></p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>Label assortativity results<\/caption>","data":[["1","4","10","9","6","0","3","5","2","8","7"],[0.8966708337852992,0.5094570514060366,0.3426392149688042,0.3050737148808744,0.2898094807201581,0.2586506100509623,0.2143857545803906,0.09366988216040839,0.08416953257351555,0.06021715267052771,-0.01039140607366548],[5.392070484581498,3.594405594405595,2.705882352941177,2.526315789473684,2.54368932038835,2.629310344827586,2.303448275862069,1.647058823529412,1.789473684210526,1.371428571428571,1.071428571428571],[1.437018418439596,1.254087897183615,1.068186919702071,1.068162987805845,1.19535644721595,1.50639339775623,1.336222462828468,1.212905354786547,1.416489243922024,1.084600023993963,1.120551708932445],[0.07961321775960463,0.09163980172880667,0.2118796731758704,0.1355446436556002,0.104627601431257,0.07625131365367291,0.07642656209551781,0.1006004854398896,0.08219055984843877,0.1500651825578395,0.1235769449080577],[5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286,5.847836655323286]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label<\/th>\n      <th>avg_k_scaled<\/th>\n      <th>avg_k<\/th>\n      <th>min_avg_k_mean<\/th>\n      <th>min_avg_k_sd<\/th>\n      <th>k_max<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5]},{"name":"label","targets":0},{"name":"avg_k_scaled","targets":1},{"name":"avg_k","targets":2},{"name":"min_avg_k_mean","targets":3},{"name":"min_avg_k_sd","targets":4},{"name":"k_max","targets":5}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><p><br></p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">res_lat</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/reorder.factor.html" class="external-link">reorder</a></span><span class="op">(</span><span class="va">label</span>, <span class="va">avg_k_scaled</span><span class="op">)</span>, y<span class="op">=</span><span class="va">avg_k_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_col</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_hline</a></span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">0</span>, color<span class="op">=</span><span class="st">"black"</span>, size<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -356,7 +323,7 @@ of that label.</p>
 <span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
 <span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p><br></p>
 <p>Not surprisingly, we see cluster 1 being clearly in the top as the
 most connected cluster. In the bottom we find cluster 7, which even has
@@ -366,7 +333,7 @@ of the randomized network, look below for more details).</p>
 its randomly dispersed counterpart to further prove the point. Here we
 can clearly see why this cluster’s network has a higher average degree
 than that of the random network.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"grey90"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="va">cluster</span> <span class="op">==</span> <span class="st">"1"</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">cluster_colors</span><span class="op">[</span><span class="st">"1"</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -382,7 +349,7 @@ than that of the random network.</p>
 <span>       <span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span>, plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p><br></p>
 <p>Cluster 7 on the other hand had a score corresponding to a completely
 random spatial pattern. Looking at the spatial distribution of the spots
@@ -390,7 +357,7 @@ belonging to that label we can understand why that is the case, but we
 can also see that this method does not describe everything about the
 spatial patterns as we see a trend of cluster 7 spots being localized to
 the outer rim of the section.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"grey90"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="va">cluster</span> <span class="op">==</span> <span class="st">"7"</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">cluster_colors</span><span class="op">[</span><span class="st">"7"</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -406,7 +373,7 @@ the outer rim of the section.</p>
 <span>       <span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span>, plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -419,9 +386,9 @@ value as it may give more robust results.</p>
 effect on the outcome of this analysis. For our current data set we can
 study the effect of this by running a few tests and looking at how the
 average degree differs if using a higher number of permutations</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">perm_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="fl">200</span>, to<span class="op">=</span><span class="fl">1000</span>, by<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lat_perm_test_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">perm_test</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n_perm</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">f_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/label-assortativity.html">RunLabelAssortativityTest</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">se</span>, </span>
 <span>                                                            column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, </span>
@@ -432,7 +399,7 @@ average degree differs if using a higher number of permutations</p>
 <span>  <span class="va">result</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="va">lat_perm_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">bind_rows</span>, <span class="va">lat_perm_test_list</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">lat_perm_test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">n_perm</span>, y <span class="op">=</span> <span class="va">min_avg_k_mean</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_errorbar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">min_avg_k_mean</span> <span class="op">-</span> <span class="va">min_avg_k_sd</span>, ymax <span class="op">=</span> <span class="va">min_avg_k_mean</span> <span class="op">+</span> <span class="va">min_avg_k_sd</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -442,8 +409,8 @@ average degree differs if using a higher number of permutations</p>
 <span>       caption <span class="op">=</span> <span class="st">"Black dots and error bars: average degree mean and s.d from permutations. Orange line: actual observed average degree."</span>,</span>
 <span>       y<span class="op">=</span><span class="st">"Average degree"</span>, x<span class="op">=</span><span class="st">"n permutations"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">lat_perm_test</span><span class="op">$</span><span class="va">min_avg_k_sd</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 0.1104268</span></span></code></pre>
 <p><br> Looking at these plots we can see that the number of
@@ -460,7 +427,7 @@ randomized distribution.</p>
 run time given different numbers of permutations. By not running
 excessive permutations we can save some time, however it is a matter of
 seconds.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t_plot</span> <span class="op">&lt;-</span> <span class="va">lat_perm_test</span></span>
 <span><span class="va">t_plot</span> <span class="op">&lt;-</span> <span class="va">t_plot</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">n_perm</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -472,7 +439,7 @@ seconds.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Function run time with increasing n permutations"</span>,</span>
 <span>       y<span class="op">=</span><span class="st">"time (s)"</span>, x<span class="op">=</span><span class="st">"n permutations"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <p><br></p>
 </div>
 </div>
@@ -487,11 +454,13 @@ labels, forming the null hypothesis saying that the spots of the two
 labels are distributed randomly and shares no connections other than
 that seen by chance. A <i>z-score</i> for each label pair is calculated
 as:</p>
-<p><span class="math inline">\(Z_{AB} = \frac{x_{AB} -
-µ_{AB}}{σ_{AB}}\)</span></p>
-<p>where <span class="math inline">\(x_{AB}\)</span> is the number of
-edges observed between spots of labels A and B, <span class="math inline">\(µ_{AB}\)</span> is the permutation mean of the
-edges between A and B, and <span class="math inline">\(σ_{AB}\)</span>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mi>x</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><mo>−</mo><msub><mi>µ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub></mrow><msub><mi>σ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">Z_{AB} = \frac{x_{AB} - µ_{AB}}{σ_{AB}}</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><annotation encoding="application/x-tex">x_{AB}</annotation></semantics></math>
+is the number of edges observed between spots of labels A and B,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>µ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><annotation encoding="application/x-tex">µ_{AB}</annotation></semantics></math>
+is the permutation mean of the edges between A and B, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mrow><mi>A</mi><mi>B</mi></mrow></msub><annotation encoding="application/x-tex">σ_{AB}</annotation></semantics></math>
 is the permutation standard deviation of the edges between A and B.</p>
 <p>Thus, a z-score of around 0 can be interpreted as a spatial label
 co-localization equal to that seen by chance given the number of spots
@@ -505,7 +474,7 @@ spatially.</p>
 <p>The neighborhood enrichment analysis is run by calling the function
 <code><a href="../reference/neighborhood-enrichment.html">RunNeighborhoodEnrichmentTest()</a></code> and storing the results in
 a new results object.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/neighborhood-enrichment.html">RunNeighborhoodEnrichmentTest</a></span><span class="op">(</span><span class="va">se</span>, column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, n_permutations <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> </span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Running Neighborhood Enrichment Analysis</span> ──</span></span></code></pre>
@@ -517,17 +486,17 @@ a new results object.</p>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Scores calculated for each label pair and returned as output tibble</span></span></code></pre>
 <p><br></p>
 <p>As output, we obtain a tibble with z-scores for each label pair.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span></span>
 <span>  <span class="va">res_net</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">z_score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>  rownames <span class="op">=</span> <span class="cn">F</span>, </span>
 <span>  caption <span class="op">=</span> <span class="st">"Neighborhood enrichment analysis output"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5b6f298a731cd88d2a9f" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-5b6f298a731cd88d2a9f">{"x":{"filter":"none","vertical":false,"caption":"<caption>Neighborhood enrichment analysis output<\/caption>","data":[["Label_4","Label_8","Label_0","Label_1","Label_1","Label_2","Label_0","Label_4","Label_1","Label_3","Label_2","Label_4","Label_1","Label_5","Label_3","Label_4","Label_1","Label_6","Label_4","Label_6","Label_1","Label_7","Label_4","Label_5","Label_3","Label_7","Label_2","Label_3","Label_1","Label_4","Label_3","Label_6","Label_0","Label_8","Label_1","Label_9","Label_2","Label_7","Label_2","Label_5","Label_1","Label_10","Label_2","Label_8","Label_0","Label_5","Label_3","Label_8","Label_4","Label_7","Label_5","Label_6","Label_1","Label_8","Label_4","Label_10","Label_0","Label_10","Label_5","Label_8","Label_3","Label_5","Label_2","Label_10","Label_6","Label_10","Label_5","Label_10","Label_7","Label_8","Label_4","Label_9","Label_7","Label_10","Label_3","Label_10","Label_8","Label_10","Label_2","Label_6","Label_3","Label_9","Label_5","Label_9","Label_0","Label_7","Label_5","Label_7","Label_8","Label_9","Label_7","Label_9","Label_0","Label_6","Label_6","Label_8","Label_9","Label_10","Label_0","Label_3","Label_2","Label_9","Label_0","Label_2","Label_6","Label_7","Label_0","Label_9","Label_6","Label_9"],["Label_8","Label_4","Label_1","Label_0","Label_2","Label_1","Label_4","Label_0","Label_3","Label_1","Label_4","Label_2","Label_5","Label_1","Label_4","Label_3","Label_6","Label_1","Label_6","Label_4","Label_7","Label_1","Label_5","Label_4","Label_7","Label_3","Label_3","Label_2","Label_4","Label_1","Label_6","Label_3","Label_8","Label_0","Label_9","Label_1","Label_7","Label_2","Label_5","Label_2","Label_10","Label_1","Label_8","Label_2","Label_5","Label_0","Label_8","Label_3","Label_7","Label_4","Label_6","Label_5","Label_8","Label_1","Label_10","Label_4","Label_10","Label_0","Label_8","Label_5","Label_5","Label_3","Label_10","Label_2","Label_10","Label_6","Label_10","Label_5","Label_8","Label_7","Label_9","Label_4","Label_10","Label_7","Label_10","Label_3","Label_10","Label_8","Label_6","Label_2","Label_9","Label_3","Label_9","Label_5","Label_7","Label_0","Label_7","Label_5","Label_9","Label_8","Label_9","Label_7","Label_6","Label_0","Label_8","Label_6","Label_10","Label_9","Label_3","Label_0","Label_9","Label_2","Label_2","Label_0","Label_7","Label_6","Label_9","Label_0","Label_9","Label_6"],["Label_4-Label_8","Label_8-Label_4","Label_0-Label_1","Label_1-Label_0","Label_1-Label_2","Label_2-Label_1","Label_0-Label_4","Label_4-Label_0","Label_1-Label_3","Label_3-Label_1","Label_2-Label_4","Label_4-Label_2","Label_1-Label_5","Label_5-Label_1","Label_3-Label_4","Label_4-Label_3","Label_1-Label_6","Label_6-Label_1","Label_4-Label_6","Label_6-Label_4","Label_1-Label_7","Label_7-Label_1","Label_4-Label_5","Label_5-Label_4","Label_3-Label_7","Label_7-Label_3","Label_2-Label_3","Label_3-Label_2","Label_1-Label_4","Label_4-Label_1","Label_3-Label_6","Label_6-Label_3","Label_0-Label_8","Label_8-Label_0","Label_1-Label_9","Label_9-Label_1","Label_2-Label_7","Label_7-Label_2","Label_2-Label_5","Label_5-Label_2","Label_1-Label_10","Label_10-Label_1","Label_2-Label_8","Label_8-Label_2","Label_0-Label_5","Label_5-Label_0","Label_3-Label_8","Label_8-Label_3","Label_4-Label_7","Label_7-Label_4","Label_5-Label_6","Label_6-Label_5","Label_1-Label_8","Label_8-Label_1","Label_4-Label_10","Label_10-Label_4","Label_0-Label_10","Label_10-Label_0","Label_5-Label_8","Label_8-Label_5","Label_3-Label_5","Label_5-Label_3","Label_2-Label_10","Label_10-Label_2","Label_6-Label_10","Label_10-Label_6","Label_5-Label_10","Label_10-Label_5","Label_7-Label_8","Label_8-Label_7","Label_4-Label_9","Label_9-Label_4","Label_7-Label_10","Label_10-Label_7","Label_3-Label_10","Label_10-Label_3","Label_8-Label_10","Label_10-Label_8","Label_2-Label_6","Label_6-Label_2","Label_3-Label_9","Label_9-Label_3","Label_5-Label_9","Label_9-Label_5","Label_0-Label_7","Label_7-Label_0","Label_5-Label_7","Label_7-Label_5","Label_8-Label_9","Label_9-Label_8","Label_7-Label_9","Label_9-Label_7","Label_0-Label_6","Label_6-Label_0","Label_6-Label_8","Label_8-Label_6","Label_9-Label_10","Label_10-Label_9","Label_0-Label_3","Label_3-Label_0","Label_2-Label_9","Label_9-Label_2","Label_0-Label_2","Label_2-Label_0","Label_6-Label_7","Label_7-Label_6","Label_0-Label_9","Label_9-Label_0","Label_6-Label_9","Label_9-Label_6"],[22.469,22.469,-17.926,-17.926,-15.202,-15.202,-14.237,-14.237,-13.753,-13.753,-12.305,-12.305,-11.516,-11.516,-11.11,-11.11,-10.346,-10.346,9.973000000000001,9.973000000000001,-8.705,-8.705,-8.340999999999999,-8.340999999999999,8.161,8.161,7.965,7.965,-7.746,-7.746,-7.633,-7.633,-7.574,-7.574,-7.027,-7.027,6.858,6.858,6.749,6.749,-6.621,-6.621,-6.371,-6.371,6.307,6.307,-6.232,-6.232,-6.099,-6.099,-5.913,-5.913,5.9,5.9,-5.053,-5.053,-4.76,-4.76,-4.465,-4.465,4.435,4.435,-4.338,-4.338,-4.207,-4.207,-3.911,-3.911,-3.821,-3.821,-3.696,-3.696,-3.436,-3.436,-3.107,-3.107,-2.803,-2.803,-2.675,-2.675,-2.582,-2.582,-2.442,-2.442,2.108,2.108,2.021,2.021,-1.982,-1.982,1.764,1.764,-1.728,-1.728,-1.654,-1.654,-1.512,-1.512,1.136,1.136,-1.086,-1.086,1.012,1.012,-0.723,-0.723,0.093,0.093,-0.03,-0.03],[137,137,0,0,0,0,0,0,1,1,5,5,0,0,2,2,3,3,136,136,0,0,3,3,106,106,241,241,53,53,14,14,0,0,0,0,108,108,159,159,0,0,2,2,177,177,0,0,4,4,10,10,78,78,0,0,12,12,1,1,117,117,11,11,0,0,2,2,0,0,8,8,0,0,12,12,0,0,68,68,18,18,10,10,87,87,43,43,3,3,19,19,92,92,13,13,3,3,191,191,32,32,227,227,27,27,46,46,19,19],[26.953,26.953,227.872,227.872,192.663,192.663,144.579,144.579,159.884,159.884,122.049,122.049,104.386,104.386,101.369,101.369,97.12,97.12,62.007,62.007,64.124,64.124,65.563,65.563,50.096,50.096,149.891,149.891,130.336,130.336,76.46599999999999,76.46599999999999,47.253,47.253,40.652,40.652,60.016,60.016,97.063,97.063,35.517,35.517,39.869,39.869,116.004,116.004,33.258,33.258,40.639,40.639,49.491,49.491,42.723,42.723,22.113,22.113,39.006,39.006,21.419,21.419,80.877,80.877,33.342,33.342,16.805,16.805,17.937,17.937,13.429,13.429,25.675,25.675,11.009,11.009,27.471,27.471,7.337,7.337,91.765,91.765,31.624,31.624,20.497,20.497,70.649,70.649,32.375,32.375,8.461,8.461,12.927,12.927,108.381,108.381,20.038,20.038,6.981,6.981,177.942,177.942,37.994,37.994,213.579,213.579,30.733,30.733,45.447,45.447,19.127,19.127],[4.897629812243651,4.897629812243651,12.71161678155856,12.71161678155856,12.67328067404187,12.67328067404187,10.15533799978562,10.15533799978562,11.55274902393409,11.55274902393409,9.512680489225426,9.512680489225426,9.064610922216749,9.064610922216749,8.944095026096035,8.944095026096035,9.096831995390062,9.096831995390062,7.41916403612934,7.41916403612934,7.366470585625716,7.366470585625716,7.500285680244805,7.500285680244805,6.850380406350563,6.850380406350563,11.4381795295821,11.4381795295821,9.983926220820283,9.983926220820283,8.183264007094591,8.183264007094591,6.239224224125858,6.239224224125858,5.784838836161329,5.784838836161329,6.996763444529098,6.996763444529098,9.177540970121477,9.177540970121477,5.36418544473301,5.36418544473301,5.94383446675361,5.94383446675361,9.671065789948567,9.671065789948567,5.33684531515744,5.33684531515744,6.007559385455109,6.007559385455109,6.678811685137224,6.678811685137224,5.978797288503518,5.978797288503518,4.376229242439475,4.376229242439475,5.673636766145163,5.673636766145163,4.573002443838331,4.573002443838331,8.145195836517082,8.145195836517082,5.150685931559559,5.150685931559559,3.994362268238815,3.994362268238815,4.075001427807926,4.075001427807926,3.514158264550461,3.514158264550461,4.781865874451231,4.781865874451231,3.20424502592829,3.20424502592829,4.97874953647469,4.97874953647469,2.617304201135451,2.617304201135451,8.883844758757196,8.883844758757196,5.277165192835304,5.277165192835304,4.299357565436432,4.299357565436432,7.757188470894141,7.757188470894141,5.257377199232999,5.257377199232999,2.755371312740095,2.755371312740095,3.443476227379612,3.443476227379612,9.481652848567107,9.481652848567107,4.254016061635482,4.254016061635482,2.632407371317853,2.632407371317853,11.4947276942416,11.4947276942416,5.521091055801058,5.521091055801058,13.26007498427473,13.26007498427473,5.163562081874622,5.163562081874622,5.961101049783146,5.961101049783146,4.270258318428302,4.270258318428302]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label_1<\/th>\n      <th>label_2<\/th>\n      <th>label_label<\/th>\n      <th>z_score<\/th>\n      <th>edges<\/th>\n      <th>perm_mean<\/th>\n      <th>perm_sd<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6]}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><p><br></p>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"caption":"<caption>Neighborhood enrichment analysis output<\/caption>","data":[["Label_4","Label_8","Label_0","Label_1","Label_1","Label_2","Label_0","Label_4","Label_1","Label_3","Label_2","Label_4","Label_1","Label_5","Label_3","Label_4","Label_1","Label_6","Label_4","Label_6","Label_1","Label_7","Label_4","Label_5","Label_3","Label_7","Label_2","Label_3","Label_1","Label_4","Label_3","Label_6","Label_0","Label_8","Label_1","Label_9","Label_2","Label_7","Label_2","Label_5","Label_1","Label_10","Label_2","Label_8","Label_0","Label_5","Label_3","Label_8","Label_4","Label_7","Label_5","Label_6","Label_1","Label_8","Label_4","Label_10","Label_0","Label_10","Label_5","Label_8","Label_3","Label_5","Label_2","Label_10","Label_6","Label_10","Label_5","Label_10","Label_7","Label_8","Label_4","Label_9","Label_7","Label_10","Label_3","Label_10","Label_8","Label_10","Label_2","Label_6","Label_3","Label_9","Label_5","Label_9","Label_0","Label_7","Label_5","Label_7","Label_8","Label_9","Label_7","Label_9","Label_0","Label_6","Label_6","Label_8","Label_9","Label_10","Label_0","Label_3","Label_2","Label_9","Label_0","Label_2","Label_6","Label_7","Label_0","Label_9","Label_6","Label_9"],["Label_8","Label_4","Label_1","Label_0","Label_2","Label_1","Label_4","Label_0","Label_3","Label_1","Label_4","Label_2","Label_5","Label_1","Label_4","Label_3","Label_6","Label_1","Label_6","Label_4","Label_7","Label_1","Label_5","Label_4","Label_7","Label_3","Label_3","Label_2","Label_4","Label_1","Label_6","Label_3","Label_8","Label_0","Label_9","Label_1","Label_7","Label_2","Label_5","Label_2","Label_10","Label_1","Label_8","Label_2","Label_5","Label_0","Label_8","Label_3","Label_7","Label_4","Label_6","Label_5","Label_8","Label_1","Label_10","Label_4","Label_10","Label_0","Label_8","Label_5","Label_5","Label_3","Label_10","Label_2","Label_10","Label_6","Label_10","Label_5","Label_8","Label_7","Label_9","Label_4","Label_10","Label_7","Label_10","Label_3","Label_10","Label_8","Label_6","Label_2","Label_9","Label_3","Label_9","Label_5","Label_7","Label_0","Label_7","Label_5","Label_9","Label_8","Label_9","Label_7","Label_6","Label_0","Label_8","Label_6","Label_10","Label_9","Label_3","Label_0","Label_9","Label_2","Label_2","Label_0","Label_7","Label_6","Label_9","Label_0","Label_9","Label_6"],["Label_4-Label_8","Label_8-Label_4","Label_0-Label_1","Label_1-Label_0","Label_1-Label_2","Label_2-Label_1","Label_0-Label_4","Label_4-Label_0","Label_1-Label_3","Label_3-Label_1","Label_2-Label_4","Label_4-Label_2","Label_1-Label_5","Label_5-Label_1","Label_3-Label_4","Label_4-Label_3","Label_1-Label_6","Label_6-Label_1","Label_4-Label_6","Label_6-Label_4","Label_1-Label_7","Label_7-Label_1","Label_4-Label_5","Label_5-Label_4","Label_3-Label_7","Label_7-Label_3","Label_2-Label_3","Label_3-Label_2","Label_1-Label_4","Label_4-Label_1","Label_3-Label_6","Label_6-Label_3","Label_0-Label_8","Label_8-Label_0","Label_1-Label_9","Label_9-Label_1","Label_2-Label_7","Label_7-Label_2","Label_2-Label_5","Label_5-Label_2","Label_1-Label_10","Label_10-Label_1","Label_2-Label_8","Label_8-Label_2","Label_0-Label_5","Label_5-Label_0","Label_3-Label_8","Label_8-Label_3","Label_4-Label_7","Label_7-Label_4","Label_5-Label_6","Label_6-Label_5","Label_1-Label_8","Label_8-Label_1","Label_4-Label_10","Label_10-Label_4","Label_0-Label_10","Label_10-Label_0","Label_5-Label_8","Label_8-Label_5","Label_3-Label_5","Label_5-Label_3","Label_2-Label_10","Label_10-Label_2","Label_6-Label_10","Label_10-Label_6","Label_5-Label_10","Label_10-Label_5","Label_7-Label_8","Label_8-Label_7","Label_4-Label_9","Label_9-Label_4","Label_7-Label_10","Label_10-Label_7","Label_3-Label_10","Label_10-Label_3","Label_8-Label_10","Label_10-Label_8","Label_2-Label_6","Label_6-Label_2","Label_3-Label_9","Label_9-Label_3","Label_5-Label_9","Label_9-Label_5","Label_0-Label_7","Label_7-Label_0","Label_5-Label_7","Label_7-Label_5","Label_8-Label_9","Label_9-Label_8","Label_7-Label_9","Label_9-Label_7","Label_0-Label_6","Label_6-Label_0","Label_6-Label_8","Label_8-Label_6","Label_9-Label_10","Label_10-Label_9","Label_0-Label_3","Label_3-Label_0","Label_2-Label_9","Label_9-Label_2","Label_0-Label_2","Label_2-Label_0","Label_6-Label_7","Label_7-Label_6","Label_0-Label_9","Label_9-Label_0","Label_6-Label_9","Label_9-Label_6"],[22.469,22.469,-17.926,-17.926,-15.202,-15.202,-14.237,-14.237,-13.753,-13.753,-12.305,-12.305,-11.516,-11.516,-11.11,-11.11,-10.346,-10.346,9.973000000000001,9.973000000000001,-8.705,-8.705,-8.340999999999999,-8.340999999999999,8.161,8.161,7.965,7.965,-7.746,-7.746,-7.633,-7.633,-7.574,-7.574,-7.027,-7.027,6.858,6.858,6.749,6.749,-6.621,-6.621,-6.371,-6.371,6.307,6.307,-6.232,-6.232,-6.099,-6.099,-5.913,-5.913,5.9,5.9,-5.053,-5.053,-4.76,-4.76,-4.465,-4.465,4.435,4.435,-4.338,-4.338,-4.207,-4.207,-3.911,-3.911,-3.821,-3.821,-3.696,-3.696,-3.436,-3.436,-3.107,-3.107,-2.803,-2.803,-2.675,-2.675,-2.582,-2.582,-2.442,-2.442,2.108,2.108,2.021,2.021,-1.982,-1.982,1.764,1.764,-1.728,-1.728,-1.654,-1.654,-1.512,-1.512,1.136,1.136,-1.086,-1.086,1.012,1.012,-0.723,-0.723,0.093,0.093,-0.03,-0.03],[137,137,0,0,0,0,0,0,1,1,5,5,0,0,2,2,3,3,136,136,0,0,3,3,106,106,241,241,53,53,14,14,0,0,0,0,108,108,159,159,0,0,2,2,177,177,0,0,4,4,10,10,78,78,0,0,12,12,1,1,117,117,11,11,0,0,2,2,0,0,8,8,0,0,12,12,0,0,68,68,18,18,10,10,87,87,43,43,3,3,19,19,92,92,13,13,3,3,191,191,32,32,227,227,27,27,46,46,19,19],[26.953,26.953,227.872,227.872,192.663,192.663,144.579,144.579,159.884,159.884,122.049,122.049,104.386,104.386,101.369,101.369,97.12,97.12,62.007,62.007,64.124,64.124,65.563,65.563,50.096,50.096,149.891,149.891,130.336,130.336,76.46599999999999,76.46599999999999,47.253,47.253,40.652,40.652,60.016,60.016,97.063,97.063,35.517,35.517,39.869,39.869,116.004,116.004,33.258,33.258,40.639,40.639,49.491,49.491,42.723,42.723,22.113,22.113,39.006,39.006,21.419,21.419,80.877,80.877,33.342,33.342,16.805,16.805,17.937,17.937,13.429,13.429,25.675,25.675,11.009,11.009,27.471,27.471,7.337,7.337,91.765,91.765,31.624,31.624,20.497,20.497,70.649,70.649,32.375,32.375,8.461,8.461,12.927,12.927,108.381,108.381,20.038,20.038,6.981,6.981,177.942,177.942,37.994,37.994,213.579,213.579,30.733,30.733,45.447,45.447,19.127,19.127],[4.897629812243645,4.897629812243645,12.71161678155856,12.71161678155856,12.67328067404187,12.67328067404187,10.15533799978562,10.15533799978562,11.55274902393407,11.55274902393407,9.512680489225431,9.512680489225431,9.064610922216755,9.064610922216755,8.944095026096029,8.944095026096029,9.096831995390062,9.096831995390062,7.419164036129346,7.419164036129346,7.366470585625717,7.366470585625717,7.500285680244805,7.500285680244805,6.850380406350563,6.850380406350563,11.4381795295821,11.4381795295821,9.983926220820276,9.983926220820276,8.183264007094593,8.183264007094593,6.239224224125865,6.239224224125865,5.78483883616133,5.78483883616133,6.996763444529099,6.996763444529099,9.17754097012147,9.17754097012147,5.364185444733009,5.364185444733009,5.943834466753604,5.943834466753604,9.671065789948576,9.671065789948576,5.33684531515744,5.33684531515744,6.007559385455109,6.007559385455109,6.678811685137215,6.678811685137215,5.978797288503525,5.978797288503525,4.376229242439472,4.376229242439472,5.673636766145171,5.673636766145171,4.573002443838331,4.573002443838331,8.145195836517091,8.145195836517091,5.150685931559553,5.150685931559553,3.994362268238808,3.994362268238808,4.07500142780793,4.07500142780793,3.514158264550463,3.514158264550463,4.78186587445124,4.78186587445124,3.204245025928305,3.204245025928305,4.97874953647469,4.97874953647469,2.617304201135465,2.617304201135465,8.883844758757188,8.883844758757188,5.277165192835301,5.277165192835301,4.299357565436432,4.299357565436432,7.757188470894143,7.757188470894143,5.257377199232999,5.257377199232999,2.755371312740096,2.755371312740096,3.443476227379618,3.443476227379618,9.481652848567112,9.481652848567112,4.25401606163548,4.25401606163548,2.632407371317854,2.632407371317854,11.49472769424156,11.49472769424156,5.521091055801065,5.521091055801065,13.26007498427473,13.26007498427473,5.163562081874625,5.163562081874625,5.961101049783144,5.961101049783144,4.270258318428304,4.270258318428304]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label_1<\/th>\n      <th>label_2<\/th>\n      <th>label_label<\/th>\n      <th>z_score<\/th>\n      <th>edges<\/th>\n      <th>perm_mean<\/th>\n      <th>perm_sd<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6]},{"name":"label_1","targets":0},{"name":"label_2","targets":1},{"name":"label_label","targets":2},{"name":"z_score","targets":3},{"name":"edges","targets":4},{"name":"perm_mean","targets":5},{"name":"perm_sd","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><p><br></p>
 <p>The results can also be plotted in a few different ways, where the
 most straightforward is to look at it as a heatmap.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Label_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">se</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">hm_plot_data</span> <span class="op">&lt;-</span> <span class="va">res_net</span></span>
 <span></span>
@@ -550,12 +519,12 @@ most straightforward is to look at it as a heatmap.</p>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>, </span>
 <span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <p><br></p>
 <p>We can also plot the top most enriched pairs as a bar chart. Since
 the output table contains each label pair in duplicate, we first need to
 remove the excessive duplicated values.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_n_plot</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="va">res_net</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/where.html" class="external-link">where</a></span><span class="op">(</span><span class="va">is.factor</span><span class="op">)</span>, <span class="va">as.character</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -585,7 +554,7 @@ remove the excessive duplicated values.</p>
 <span>        legend.position <span class="op">=</span> <span class="st">"top"</span>, </span>
 <span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>, </span>
 <span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 <p><br></p>
 <p>From the results we can see that spots of clusters 4 and 8 appear a
 lot more often next to each other than you would expect by chance, while
@@ -594,7 +563,7 @@ separated from each other spatially.</p>
 <p>We can also plot these cluster pairs spatially to have a look if
 these results make sense. First, let’s look at the top two most
 over-represented label pairs.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"grey90"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="va">cluster</span> <span class="op">==</span> <span class="st">"4"</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">cluster_colors</span><span class="op">[</span><span class="st">"4"</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -608,7 +577,7 @@ over-represented label pairs.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Clusters 3 and 7"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
 <p><br></p>
 <p>We can see that in the case of clusters 4 and 8, all spots except one
 appear next to another spot of the other label, which clearly
@@ -616,7 +585,7 @@ demonstrates that these two clusters really are co-localizing spatially
 in our tissue. Clusters 3 and 7 are also appearing very often next to
 one another, which makes sense given the high z-score.</p>
 <p>Now, let’s look at the bottom two enriched label pairs instead.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"grey90"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="va">cluster</span> <span class="op">==</span> <span class="st">"0"</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">cluster_colors</span><span class="op">[</span><span class="st">"0"</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
@@ -630,7 +599,7 @@ one another, which makes sense given the high z-score.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title<span class="op">=</span><span class="st">"Clusters 1 and 2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">p1</span> <span class="op">|</span> <span class="va">p2</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-28-1.png" width="700"></p>
 <p><br> Seeing these two label pair examples, it is clear why they have
 such negative z-scores since there is not a single instance where spots
 of the different labels appear adjacent to one another.</p>
@@ -647,9 +616,9 @@ z-score calculations and will therefore influence the results. It could
 be valuable to test a few different options for this and have a look at
 when the results starts to stabilize and can therefore be regarded as
 more robust</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">perm_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">50</span>, <span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="fl">200</span>, to<span class="op">=</span><span class="fl">1000</span>, by<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nea_perm_test_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">perm_test</span>, <span class="kw">function</span><span class="op">(</span><span class="va">n_perm</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">f_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/neighborhood-enrichment.html">RunNeighborhoodEnrichmentTest</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">se</span>, </span>
 <span>                                                                column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, </span>
@@ -660,7 +629,7 @@ more robust</p>
 <span>  <span class="va">result</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="va">nea_perm_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">bind_rows</span>, <span class="va">nea_perm_test_list</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">nea_perm_test</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">n_perm</span>, y <span class="op">=</span> <span class="va">z_score</span>, color<span class="op">=</span><span class="va">label_label</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -670,7 +639,7 @@ more robust</p>
 <span>       y<span class="op">=</span><span class="st">"Z-score"</span>, x<span class="op">=</span><span class="st">"n permutations"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>, axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-32-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
 <p><br> Here we can see that the scores are changing quite a lot with
 lower numbers of permutations and start to stabilize at around
 <code>n_permutations = 200</code> and above. If you are unsure of how
@@ -681,7 +650,7 @@ higher number.</p>
 increasing numbers of permutations used. This analysis runs relatively
 quick, so there is not much time loss for running the analysis with a
 large number of permutations.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">t_plot</span> <span class="op">&lt;-</span> <span class="va">nea_perm_test</span></span>
 <span><span class="va">t_plot</span> <span class="op">&lt;-</span> <span class="va">t_plot</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">n_perm</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -695,7 +664,7 @@ large number of permutations.</p>
 <span>       y<span class="op">=</span><span class="st">"time (s)"</span>, x<span class="op">=</span><span class="st">"n permutations"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-34-1.png" width="700"></p>
 <p><br></p>
 </div>
 <div class="section level3">
@@ -708,7 +677,7 @@ clusters in your data set you can specify this using the
 to contain only the specified labels prior to running the analysis, and
 therefore your results will end up being different as compared to
 running the analysis with all labels.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_selection</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"4"</span>, <span class="st">"6"</span>, <span class="st">"8"</span><span class="op">)</span></span>
 <span><span class="va">res_net_medulla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/neighborhood-enrichment.html">RunNeighborhoodEnrichmentTest</a></span><span class="op">(</span><span class="va">se</span>, </span>
 <span>                                                 column_name <span class="op">=</span> <span class="st">"seurat_clusters"</span>, </span>
@@ -723,14 +692,14 @@ running the analysis with all labels.</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Generating neighborhood adjacency data from randomized labels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Randomized label adjacency calculations complete from 1000 iterations</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Scores calculated for each label pair and returned as output tibble</span></span></code></pre>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span></span>
 <span>  <span class="va">res_net_medulla</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">z_score</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>  rownames <span class="op">=</span> <span class="cn">F</span>, </span>
 <span>  caption <span class="op">=</span> <span class="st">"Neighborhood enrichment analysis output for label subset"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7bd6fd26da292abebd83" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-7bd6fd26da292abebd83">{"x":{"filter":"none","vertical":false,"caption":"<caption>Neighborhood enrichment analysis output for label subset<\/caption>","data":[["Label_1","Label_6","Label_1","Label_4","Label_4","Label_8","Label_6","Label_8","Label_1","Label_8","Label_4","Label_6"],["Label_6","Label_1","Label_4","Label_1","Label_8","Label_4","Label_8","Label_6","Label_8","Label_1","Label_6","Label_4"],["Label_1-Label_6","Label_6-Label_1","Label_1-Label_4","Label_4-Label_1","Label_4-Label_8","Label_8-Label_4","Label_6-Label_8","Label_8-Label_6","Label_1-Label_8","Label_8-Label_1","Label_4-Label_6","Label_6-Label_4"],[-21.18,-21.18,-20.921,-20.921,9.114000000000001,9.114000000000001,-6.173,-6.173,-3.984,-3.984,-2.511,-2.511],[3,3,53,53,137,137,13,13,78,78,136,136],[256.577,256.577,342.041,342.041,71.006,71.006,52.987,52.987,111.479,111.479,162.536,162.536],[11.97252740286747,11.97252740286747,13.81565022686921,13.81565022686921,7.240883536861672,7.240883536861672,6.477405945885111,6.477405945885111,8.40393867095573,8.40393867095573,10.56959887698774,10.56959887698774]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label_1<\/th>\n      <th>label_2<\/th>\n      <th>label_label<\/th>\n      <th>z_score<\/th>\n      <th>edges<\/th>\n      <th>perm_mean<\/th>\n      <th>perm_sd<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6]}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"caption":"<caption>Neighborhood enrichment analysis output for label subset<\/caption>","data":[["Label_1","Label_6","Label_1","Label_4","Label_4","Label_8","Label_6","Label_8","Label_1","Label_8","Label_4","Label_6"],["Label_6","Label_1","Label_4","Label_1","Label_8","Label_4","Label_8","Label_6","Label_8","Label_1","Label_6","Label_4"],["Label_1-Label_6","Label_6-Label_1","Label_1-Label_4","Label_4-Label_1","Label_4-Label_8","Label_8-Label_4","Label_6-Label_8","Label_8-Label_6","Label_1-Label_8","Label_8-Label_1","Label_4-Label_6","Label_6-Label_4"],[-21.18,-21.18,-20.921,-20.921,9.114000000000001,9.114000000000001,-6.173,-6.173,-3.984,-3.984,-2.511,-2.511],[3,3,53,53,137,137,13,13,78,78,136,136],[256.577,256.577,342.041,342.041,71.006,71.006,52.987,52.987,111.479,111.479,162.536,162.536],[11.97252740286747,11.97252740286747,13.8156502268692,13.8156502268692,7.24088353686168,7.24088353686168,6.477405945885113,6.477405945885113,8.403938670955736,8.403938670955736,10.56959887698767,10.56959887698767]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>label_1<\/th>\n      <th>label_2<\/th>\n      <th>label_label<\/th>\n      <th>z_score<\/th>\n      <th>edges<\/th>\n      <th>perm_mean<\/th>\n      <th>perm_sd<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4,5,6]},{"name":"label_1","targets":0},{"name":"label_2","targets":1},{"name":"label_label","targets":2},{"name":"z_score","targets":3},{"name":"edges","targets":4},{"name":"perm_mean","targets":5},{"name":"perm_sd","targets":6}],"order":[],"autoWidth":false,"orderClasses":false},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script><div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cluster_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Label_"</span>, <span class="va">cluster_selection</span><span class="op">)</span></span>
 <span><span class="va">hm_plot_data</span> <span class="op">&lt;-</span> <span class="va">res_net_medulla</span></span>
 <span></span>
@@ -753,8 +722,8 @@ running the analysis with all labels.</p>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>        legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span>, </span>
 <span>        legend.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-36-1.png" width="700"></p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-37-1.png" width="700"></p>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">spatial_network</span>, <span class="va">cluster</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">cluster_selection</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, xend <span class="op">=</span> <span class="va">x_end</span>, y <span class="op">=</span> <span class="va">y_start</span>, yend <span class="op">=</span> <span class="va">y_end</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span>color<span class="op">=</span><span class="st">"grey90"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x_start</span>, y <span class="op">=</span> <span class="va">y_start</span>, color <span class="op">=</span> <span class="va">cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -763,7 +732,7 @@ running the analysis with all labels.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">&amp;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span>, plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-37-1.png" width="700"></p>
+<p><img src="spatial_statistics_for_labelled_spots_files/figure-html/unnamed-chunk-38-1.png" width="700"></p>
 <p><br></p>
 <p>Now we can see that clusters 1 and 8 no longer have a positive
 enrichment, even if their spatial relationship is the same as when using
@@ -784,28 +753,26 @@ label.</p>
 </ul></details><p><br></p>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
+  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

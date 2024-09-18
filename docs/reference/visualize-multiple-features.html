@@ -319,7 +319,9 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-in"><span><span class="co"># Composite plot</span></span></span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">data_use</span>, dims <span class="op">=</span> <span class="va">dims</span>, pt_size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">&amp;</span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-1.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: ggnewscale</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .spatial_feature_plot_multiple(gg = gg, nm = nm, features = features,     colors = colors, dims = dims, pt_size = pt_size, pt_stroke = pt_stroke,     cur_label = cur_label, coords_columns = coords_columns, drop_na = TRUE,     use_text = add_colorscale_text):</span> Package <span style="color: #FF55FF;">ggnewscale</span> is required. Please install it with: </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> install.packages('ggnewscale')</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ludvigla.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
@@ -334,26 +336,30 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Map selected features</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mbrain</span>, features <span class="op">=</span> <span class="va">sel_features</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="visualize-multiple-features-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summarize in one plot</span></span></span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>,</span></span>
 <span class="r-in"><span>                    features <span class="op">=</span> <span class="va">sel_features</span>,</span></span>
 <span class="r-in"><span>                    pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-3.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: ggnewscale</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .spatial_feature_plot_multiple(gg = gg, nm = nm, features = features,     colors = colors, dims = dims, pt_size = pt_size, pt_stroke = pt_stroke,     cur_label = cur_label, coords_columns = coords_columns, drop_na = TRUE,     use_text = add_colorscale_text):</span> Package <span style="color: #FF55FF;">ggnewscale</span> is required. Please install it with: </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> install.packages('ggnewscale')</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot with H&amp;E image</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="va">se_mbrain</span> <span class="op">|&gt;</span> <span class="fu"><a href="load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/lovisafranzen/Documents/PhD_Projects/stu2/semla/inst/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/8r/bfm2m_q17znfk0m_8dt330tm0000gp/T/Rtmp2iw7aU/temp_libpathc0196062f1ca/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span></span>
 <span class="r-in"><span>                    features <span class="op">=</span> <span class="va">sel_features</span>,</span></span>
 <span class="r-in"><span>                    pt_size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="visualize-multiple-features-4.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: ggnewscale</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .spatial_feature_plot_multiple(gg = gg, nm = nm, features = features,     colors = colors, dims = dims, pt_size = pt_size, pt_stroke = pt_stroke,     cur_label = cur_label, coords_columns = coords_columns, drop_na = TRUE,     use_text = add_colorscale_text):</span> Package <span style="color: #FF55FF;">ggnewscale</span> is required. Please install it with: </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> install.packages('ggnewscale')</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
