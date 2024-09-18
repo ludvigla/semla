@@ -105,12 +105,37 @@ library(SeuratData)
 
 ```{r eval=FALSE}
 InstallData("stxBrain")
-```
 
-```{r warning=FALSE, message=FALSE}
 # Load example Seurat object
 brain <- LoadData("stxBrain", type = "anterior1")
+```
 
+
+```{r include=FALSE}
+# Fetch data
+expr.url <- 'http://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5'
+curl::curl_download(url = expr.url, destfile = basename(path = expr.url))
+expr.data <- Seurat::Read10X_h5(filename = basename(path = expr.url))
+anterior1 <- Seurat::CreateSeuratObject(counts = expr.data, project = 'anterior1', assay = 'Spatial')
+anterior1$slice <- 1
+anterior1$region <- 'anterior'
+
+# Load the image data
+img.url <- 'http://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_spatial.tar.gz'
+curl::curl_download(url = img.url, destfile = basename(path = img.url))
+untar(tarfile = basename(path = img.url))
+img <- Seurat::Read10X_Image(image.dir = 'spatial')
+Seurat::DefaultAssay(object = img) <- 'Spatial'
+img <- img[colnames(x = anterior1)]
+anterior1[['anterior1']] <- img
+# Clean up downloaded files
+unlink(x = c(basename(path = c(expr.url, img.url)), 'spatial'), recursive = TRUE)
+
+brain <- anterior1; rm(anterior1)
+```
+
+
+```{r warning=FALSE, message=FALSE}
 # Make Seurat object compatible with semla
 brain_semla <- UpdateSeuratForSemla(brain)
 
