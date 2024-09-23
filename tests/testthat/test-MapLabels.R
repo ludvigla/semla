@@ -13,55 +13,114 @@ test_that("MapLabels works as expected", {
   
   # Test basic functionality
   expect_s3_class(MapLabels(se_merged, column_name = "selection"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", shape = "raster"), "patchwork")
   
   # Test image_use parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", image_use = "raw", shape = "tile"), "patchwork")
   
   # Test coords_use parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", coords_use = "transformed"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", coords_use = "transformed", shape = "tile"), "patchwork") # returns a plot but ignores the transformation, as it takes the xy coordiantes. if you plot with the image it works liek intended
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", coords_use = "transformed", shape = "raster"), "patchwork")
   
   # Test crop_area parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", crop_area = c(0.1, 0.1, 0.9, 0.9)), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "raster"), "patchwork")
   
   # Test pt_size parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_size = 2), "patchwork")
   
+  # Test spot_side parameter
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(2, 4), shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "transformed"), "patchwork")
+  
   # Test pt_alpha parameter
+  ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5), "patchwork")
+  ## tile
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile", image_use = "transformed"), "patchwork")
+  ## raster
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "raster"), "patchwork")
   
   # Test pt_stroke parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_stroke = 0.5), "patchwork")
   
   # Test scale_alpha parameter
+  ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE), "patchwork")
+  ## tile
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  ## raster
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "raster"), "patchwork")
   
   # Test section_number parameter
+  ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2), "patchwork")
+  ## tile
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "transformed"), "patchwork")
+  ## raster
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "raster"), "patchwork")
   
   # Test label_by parameter
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", label_by = "sample_id"), "patchwork")
+  ## point
   p <- MapLabels(se_merged, column_name = "selection", label_by = "sample_id")
+  expect_s3_class(p, "patchwork")
+  lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
+  expect_true(all(lbls == c("mousecolon", "mousebrain")))
+  ## tile
+  p <- MapLabels(se_merged, column_name = "selection", label_by = "sample_id", shape = "tile")
+  expect_s3_class(p, "patchwork")
+  lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
+  expect_true(all(lbls == c("mousecolon", "mousebrain")))
+  ## raster
+  p <- MapLabels(se_merged, column_name = "selection", label_by = "sample_id", shape = "raster")
   lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
   expect_true(all(lbls == c("mousecolon", "mousebrain")))
   
   # Test ncol parameter
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", ncol = 2), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", ncol = 1), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", shape = "tile", ncol = 1), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", shape = "raster", ncol = 1), "patchwork")
   
   # Test scalebar parameters
+  ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE), "patchwork")
   expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000)), "patchwork")
+  ## tile
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "transformed"), "patchwork")
   
   # Test colors parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", colors = c("red", "blue")), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", colors = c("red", "blue"), shape = "tile"), "patchwork")
+  expect_s3_class(MapLabels(se_merged, column_name = "selection", colors = c("red", "blue"), shape = "raster"), "patchwork")
   
   # Test that the correct samples and column_name are plotted
-  p <- MapLabels(se_merged, column_name = "selection", return_plot_list = TRUE)
+  p1 <- MapLabels(se_merged, column_name = "selection", return_plot_list = TRUE)
+  p2 <- MapLabels(se_merged, column_name = "selection", return_plot_list = TRUE, shape = "tile")
+  p3 <- MapLabels(se_merged, column_name = "selection", return_plot_list = TRUE, shape = "raster")
   
   # Test that the list contains correct classes
-  expect_true(all(sapply(p, function(p) class(p)[1]) == "gg"))
+  expect_true(all(sapply(p1, function(p) class(p)[1]) == "gg"))
+  expect_true(all(sapply(p2, function(p) class(p)[1]) == "gg"))
+  expect_true(all(sapply(p3, function(p) class(p)[1]) == "gg"))
   
   # Test that the correct column_name are plotted
-  expect_true(all(c("1", "2") == names(p)))
+  expect_true(all(c("1", "2") == names(p1)))
+  expect_true(all(c("1", "2") == names(p2)))
+  expect_true(all(c("1", "2") == names(p3)))
 })
 
 
@@ -103,4 +162,11 @@ test_that("MapLabels throws appropriate errors for invalid arguments", {
                "Invalid length for 'crop_area', expected a 'numeric' vector of length 4")
   expect_error(MapLabels(se_merged, column_name = "selection", crop_area = TRUE),
                "Invalid class 'logical' for 'crop_area', expected 'numeric'")
+  
+  # Test HE with raster
+  expect_error(MapLabels(se_merged, column_name = "selection", image_use = "raw", shape = "raster"))
+  
+  # Test error for scalebar with tiles/raster and no HE
+  expect_error(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile"))
+  expect_error(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "raster"))
 })

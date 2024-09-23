@@ -868,6 +868,31 @@ MapLabels.default <- function (
   }), nm = names(data))
   
   # Add scalebar
+  if (add_scalebar & all(coords_columns != c("x", "y"))) {
+    if (!requireNamespace("dbscan")) {
+      abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
+                 "install.packages('dbscan')"))
+    }
+      
+      scalebar_width <- scalebar_gg$labels$scalebar_width
+      sample_plots <- lapply(names(sample_plots), function(nm) {
+        gg <- data[[nm]]
+        nn_dist <- dbscan::kNN(gg |> select(all_of(coords_columns)), k = 1)$dist[, 1] |> min()
+        plots <- sample_plots[[nm]]
+        d <- dims |> filter(sampleID == nm)
+        sf <- scalebar_width/100
+        prop_width <- (nn_dist*sf)/(d$full_width - d$x_start)
+        scalebar_pos <- scalebar_position %||% c(0.8, 0.8)
+        scalebar_pos[1] <- ifelse((1 - prop_width) > scalebar_pos[1], scalebar_pos[1], (1 - prop_width))
+        scalebar_pos[2] <- ifelse((1 - scalebar_height) > scalebar_pos[2], scalebar_pos[2], (1 - scalebar_height))
+        plots <- plots +
+          inset_element(p = scalebar_gg, left = scalebar_pos[1], bottom = scalebar_pos[2], align_to = "full",
+                        right = scalebar_pos[1] + prop_width, top = scalebar_pos[2] + scalebar_height, on_top = TRUE)
+      }) |> setNames(nm = names(sample_plots))
+    } else if (add_scalebar & all(coords_columns == c("x", "y"))) {
+      abort(glue("For shape {col_br_green({shape})} without HE, no scalebar can be produced. Try setting {col_br_magenta('image_use')} to {col_br_green({'raw'})} or {col_br_green({'transformed'})}"))
+    }
+    
   if (add_scalebar) {
     if (!requireNamespace("dbscan")) {
       abort(glue("Package {cli::col_br_magenta('dbscan')} is required. Please install it with: \n",
@@ -1022,10 +1047,18 @@ MapLabels.Seurat <- function (
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = column_name, clean = FALSE) |> as_tibble())
   
+  # Set coords_columns
+  coords_columns <- .get_coords_column(image_use, coords_use, shape)
+  
   # Retrieve scalefactors if needed for tiles size
   if (shape == "tile") {
-    true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
-                               as.character(unique(data_use$sampleID)))
+    if ("xy" == paste(coords_columns, collapse = "")) { # if we are plotting without the HE, the "true side" should be 1
+      true_spot_side <- setNames(rep(x = 1, times = length(unique(data_use$sampleID))),
+                                 as.character(unique(data_use$sampleID)))
+    } else {
+      true_spot_side <- setNames(GetScaleFactors(object)$spot_diameter_fullres, 
+                                 as.character(unique(data_use$sampleID))) 
+    }
     if (is.null(spot_side)) {
       spot_side <- true_spot_side
     } else {
@@ -1058,9 +1091,6 @@ MapLabels.Seurat <- function (
       coords_use <- "transformed"
     }
   }
-
-  # Set coords_columns
-  coords_columns <- .get_coords_column(image_use, coords_use, shape)
   
   # Create crop area if override_plot_dims = TRUE
   if (override_plot_dims & paste(coords_columns, collapse = "") != "xy") {
@@ -1659,12 +1689,18 @@ MapLabels.Seurat <- function (
         # } else {
         #   x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
         # }
-        scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                      x_lim),
+        scale_x_reverse(limits = c(x_lim,
+                                   min(gg$x)),
                            expand = c(0, 0),
                            breaks = seq(0,  x_lim,
                                         length.out = 11),
-                           labels = seq(0, 1, length.out = 11) |> paste0())
+                           labels = seq(0, 1, length.out = 11) |> paste0())        
+        # scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
+        #                               x_lim),
+        #                    expand = c(0, 0),
+        #                    breaks = seq(0,  x_lim,
+        #                                 length.out = 11),
+        #                    labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimensions
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
@@ -1691,11 +1727,16 @@ MapLabels.Seurat <- function (
           y_max <- max(gg$y)
           y_min <- min(gg$y)
 
-          scale_y_continuous(limits = c(y_min, y_max),
-                             expand = c(0, 0),
-                             breaks = seq(0, max(y_min, y_max),
-                                          length.out = 11),
-                             labels = seq(0, 1, length.out = 11) |> paste0())
+          scale_y_reverse(limits = c(y_max,
+                                     y_min),
+                          expand = c(0, 0),
+                          breaks = seq(0, y_max, length.out = 11),
+                          labels = seq(0, 1, length.out = 11) |> paste0())
+          # scale_y_continuous(limits = c(y_min, y_max),
+          #                    expand = c(0, 0),
+          #                    breaks = seq(0, max(y_min, y_max),
+          #                                 length.out = 11),
+          #                    labels = seq(0, 1, length.out = 11) |> paste0())
         }
         # if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
         #   y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
@@ -1879,10 +1920,6 @@ MapLabels.Seurat <- function (
   p <- p +
     {
       if (shape == "tile"){
-        if ("xy" == paste(coords_columns, collapse = "")){ # if we are plotting without HE, readjust spot side to fit array coords
-          spot_side <- 1
-        }
-
         geom_tile(aes(
           width = spot_side,
           height = spot_side,
@@ -1904,6 +1941,7 @@ MapLabels.Seurat <- function (
         abort(glue("Available plotting shapes are {col_br_green('raster')} or {col_br_green('tile')}"))
       }
     } 
+
   # Set plot dimensions (the dimensions will depend on if we are plotting the HE image too or not)
   p <- p +
     {
