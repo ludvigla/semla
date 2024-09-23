@@ -45,8 +45,8 @@ test_that("MapFeatures works as expected", {
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2), "patchwork")
   
   ## Test label_by parameter
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id"), "patchwork")
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id")
+  expect_s3_class(p, "patchwork")
   lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
   expect_true(all(lbls == c("mousecolon", "mousebrain")))
   
@@ -122,8 +122,8 @@ test_that("MapFeatures works as expected", {
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test label_by parameter
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id"), "patchwork")
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id", shape = "tile")
+  expect_s3_class(p, "patchwork")
   lbls <- c(p$labels$title, p$patches$plots[[1]]$labels$title)
   expect_true(all(lbls == c("mousecolon", "mousebrain")))
   
