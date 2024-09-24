@@ -1689,6 +1689,8 @@ MapLabels.Seurat <- function (
         # } else {
         #   x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
         # }
+        print(x_lim)
+        print(min(gg$x))
         scale_x_reverse(limits = c(x_lim,
                                    min(gg$x)),
                            expand = c(0, 0),
@@ -1726,7 +1728,9 @@ MapLabels.Seurat <- function (
         } else if (tech == "vishd") {
           y_max <- max(gg$y)
           y_min <- min(gg$y)
-
+          print(y_max)
+          print(y_min)
+          
           scale_y_reverse(limits = c(y_max,
                                      y_min),
                           expand = c(0, 0),
