@@ -33,19 +33,19 @@ The high-resolution VisiumHD commercialized by 10x Genomics in spring 2024 follo
 
 So, 3 main things regarding VisiumHD: the spots are now squares instead of circles, the spots have no empty space in between them, and the size of the spots is 2um. This is a bit ugly, but maybe it can help put these numbers into context:
 
-![How many VisiumHD spots there is in one Visium spot!.](~/Documents/work/semla_development/semla/vignettes/visiumHD/visiumhd_in_context.png)
+![How many VisiumHD spots there is in one Visium spot!](~/Documents/work/semla_development/semla/vignettes/visiumHD/visiumhd_in_context.png)
 
 As a side note, maybe it is more accurate to refer to VisiumHD's capture areas as *squares*, but due to old habit we will still refer to them as *spots*.
 
 ### Data sparsity
 
-An inherited problem of high-resolution spatial transcriptomics, be that sequencing-based (like BGI's [Stereo-seq](https://en.stomics.tech/products/stereo-seq-transcriptomics-solution/list.html), Curio's [Slide-seq](https://curiobioscience.com/press/curio-bioscience-launches-spatial-transcriptomics-solution/), and other alternatives) or imaging-based (like 10x Genomics's [ISS platform](https://www.10xgenomics.com/platforms/xenium) Xenium, VIZGEN's [MERSCOPE](https://vizgen.com/merscope-ultra/), and others), is that the data tends to be quite sparse: few data points per spatial measurement. A common approach to circumvent this issue is to **bin/group** the spatial measurements to increase the density of the data. Nevertheless, the cost of this binning is that you lose spatial resolution. There are different ways to bin the spatial data, but the most common approaches are via cell segmentation and grid binning. So, with high-resolution data, you have the following problem: $HighSpatialResolution = SparseData = Binning = NotHighSpatialResolutionAnymore$.
+An inherited problem of high-resolution spatial transcriptomics, be that sequencing-based (like BGI's [Stereo-seq](https://en.stomics.tech/products/stereo-seq-transcriptomics-solution/list.html), Curio's [Slide-seq](https://curiobioscience.com/press/curio-bioscience-launches-spatial-transcriptomics-solution/), and other alternatives) or imaging-based (like 10x Genomics's [ISS platform](https://www.10xgenomics.com/platforms/xenium) Xenium, VIZGEN's [MERSCOPE](https://vizgen.com/merscope-ultra/), and others), is that the data tends to be quite sparse: few data points per spatial region. A common approach to circumvent this issue is to **bin/group** the spatial regions to increase the density of the data. Nevertheless, the cost of this binning is that you lose spatial resolution. There are different ways to bin the spatial data, but the most common approaches are via cell segmentation and grid binning. So, with high-resolution data, you have the following problem: $HighSpatialResolution = SparseData = Binning = NotHighSpatialResolutionAnymore$.
 
-This is a problem the field is facing, and it will be interesting to see what creative approaches the community takes in order to maximize the information while minimizing the decrease in spatial resolution. As of the time this markdown was last knitted, the approach taken by 10x Genomics is **grid binning**. What this means is that all spots that are within a certain distance of each other will be grouped under the same spot, and their expression data summed up. The spots in VisiumHD are 2um in side, so if we talk about an *8um bin* we mean that the new spots are going to be squares of 8um in side: we will be adding up the expression of $4*4$ adjacent 2um spots to generate one 8um spot.
+This is a problem the field is facing, and it will be interesting to see what creative approaches the community takes in order to maximize the information while minimizing the decrease in spatial resolution. As of the time this markdown was last knitted, the approach taken by 10x Genomics by default is **grid binning**. What this means is that all spots that are within a certain distance of each other will be grouped under the same spot, and their expression data summed up. The spots in VisiumHD are 2um in side, so if we talk about an *8um bin* we mean that the new spots are going to be squares of 8um in side: we will be adding up the expression of $4*4$ adjacent 2um spots to generate one 8um spot.
 
 ### Grid binning
 
-In VisiumHD, the "original" count data is the count data at the 2um spatial resolution, but 10x Genomics provides several *binned_outputs* by default when running [spaceranger](https://www.10xgenomics.com/support/software/space-ranger/latest/analysis/outputs/output-overview): 2, 8 and 16, with the option of specifying a custom resolution when calling the spaceranger script. At the 8um bin, each spot is a sum of $4*4$ 2um spots; at 16um bin, each spot is a sum of $8*8$ 2um spots; and so on.
+In VisiumHD, the "original" count data is the count data at the 2um spatial resolution, but 10x Genomics provides several *binned_outputs* by default when running [spaceranger](https://www.10xgenomics.com/support/software/space-ranger/latest/analysis/outputs/output-overview): 2, 8 and 16, with the option of specifying a custom resolution when calling spaceranger. At the 8um bin, each spot is a sum of $4*4$ 2um spots; at 16um bin, each spot is a sum of $8*8$ 2um spots; and so on.
 
 For each one of these resolutions, spaceranger returns an entire folder with the structure we are used to from the normal Visium. This folder will contain the spatial position of each spot, the count matrix, the tissue HE image and the json file required to map the spots to the HE image.
 
@@ -55,12 +55,12 @@ We can think of each subfolder in the *binned_outputs* directory as it's own sam
 
 ## Load data
 
-First we need to load some 10x Visium data. You can run the code chunk below or follow this [link](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-mouse-brain-he) to download it manually.
+First we need to load some 10x VisiumHD data. You can run the code chunk below or follow this [link](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-mouse-brain-he) to download it manually.
 
 ```{r eval=FALSE, include = TRUE}
 #| code-fold: true
 options(timeout=200)
-tmpdir <- "/Users/javierescudero/Documents/work/Visium_HD/data/10x_mousebrain" # Set current wd or change to tmpdir()
+tmpdir <- "." # Set current wd or change to tmpdir()
 dir.create(paste0(tmpdir, "/mousebrain"))
 targetdir <- paste0(tmpdir, "/mousebrain/visium-hd")
 dir.create(targetdir)
@@ -147,7 +147,7 @@ infoTable <- data.frame(
 
 Regardless of which resolution you want to load, with the built `infoTable` now we can load the data using `ReadVisiumData()` like you would in your standard Visium sections. If you have the 2um resolution in the infoTable, this can take a bit of time.
 
-```{r}
+```{r, message = FALSE}
 
 se.hd <- ReadVisiumData(infoTable)
 se.hd
@@ -156,7 +156,7 @@ se.hd
 
 As mentioned before, now each resolution of the VisiumHD experiment is stored in the Seurat object as an individual experiment. Let's take a look at the HE images. You can note how, even though we are labeling each image by expressing from which resolution they come from, they are exactly the same image.
 
-```{r}
+```{r, message = FALSE}
 
 se.hd <- LoadImages(se.hd)
 ImagePlot(se.hd, label_by = "resolution")
@@ -310,8 +310,6 @@ p
 <summary>**Package versions**</summary>
 
 -   `semla`: `r packageVersion("semla")`
-
--   `RcppML`: `r packageVersion("RcppML")`
 
 </details>
 

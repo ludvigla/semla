@@ -201,6 +201,7 @@ p_comp_brain + patchwork::plot_annotation(title = "Correlation between cell type
                                           theme = theme(plot.title = element_text(hjust=0.5, size=16, face = "bold")))
 dev.off()
 ```
+
 ![1. Correlation plots of cell type mapping results in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg)
 
 <br>
@@ -235,6 +236,7 @@ jpeg(filename = "compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg", width = 10
 p_bars
 dev.off()
 ```
+
 ![2. Comparison of correlation values against NNLS for cell types in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg)
 
 <br>
@@ -295,10 +297,10 @@ plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
 ```{r eval=FALSE, include=FALSE}
 saveRDS(plots_comp, "compare_cell_type_mapping_NNLS/mbrain_spatial_map_plots.rds")
 ```
+
 ```{r include=FALSE}
 plots_comp <- readRDS("compare_cell_type_mapping_NNLS/mbrain_spatial_map_plots.rds")
 ```
-
 
 ### Spatial cell type mapping {.tabset}
 
@@ -386,8 +388,8 @@ p_comp_kidney + patchwork::plot_annotation(title = "Correlation between cell typ
                                           theme = theme(plot.title = element_text(hjust=0.5, size=16, face = "bold")))
 dev.off()
 ```
-![3. Correlation plots of cell type mapping results in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg)
 
+![3. Correlation plots of cell type mapping results in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg)
 
 ```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=5.5, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
@@ -415,6 +417,7 @@ jpeg(filename = "compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg", width = 8
 p_bars_kidney
 dev.off()
 ```
+
 ![4. Comparison of correlation values against NNLS for cell types in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg)
 
 Also for this data set, there is an overall high cell-cell correlation between the NNLS results and those produced by stereoscope and cell2location. However, we can for instance see that all three methods seem to have difficulties correctly mapping B cells, as there seem to be very little concordance across the method mapping results.
@@ -465,6 +468,7 @@ kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
 ```{r eval=FALSE, include=FALSE}
 saveRDS(kdn_plots_comp, "compare_cell_type_mapping_NNLS/mkidney_spatial_map_plots.rds")
 ```
+
 ```{r include=FALSE}
 kdn_plots_comp <- readRDS("compare_cell_type_mapping_NNLS/mkidney_spatial_map_plots.rds")
 ```
