@@ -67,6 +67,7 @@ MapFeaturesSummary <- function (
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -129,6 +130,7 @@ MapFeaturesSummary <- function (
     pt_size = pt_size,
     pt_alpha = pt_alpha,
     pt_stroke = pt_stroke,
+    shape = shape, 
     scale_alpha = scale_alpha,
     section_number = section_number,
     label_by = label_by,
@@ -138,7 +140,7 @@ MapFeaturesSummary <- function (
     override_plot_dims = override_plot_dims,
     max_cutoff = max_cutoff,
     min_cutoff = min_cutoff,
-    return_plot_list = TRUE
+    return_plot_list = TRUE,
   )
 
   # Add names to list
