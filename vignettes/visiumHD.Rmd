@@ -3,8 +3,6 @@ title: "VisiumHD: loading and basic plotting"
 date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 format: html
 editor: visual
-  markdown: 
-    wrap: 72
 editor_options: 
   chunk_output_type: inline
 ---
@@ -19,6 +17,11 @@ We are going to be using the FFPE mouse brain test dataset that is available at 
 
 ```{r warning=FALSE, message=FALSE}
 library(semla)
+library(stringr)
+```
+
+```{r eval=FALSE, include = TRUE}
+library(tidyverse)
 ```
 
 ## Overview
@@ -33,7 +36,7 @@ The high-resolution VisiumHD commercialized by 10x Genomics in spring 2024 follo
 
 So, 3 main things regarding VisiumHD: the spots are now squares instead of circles, the spots have no empty space in between them, and the size of the spots is 2um. This is a bit ugly, but maybe it can help put these numbers into context:
 
-![How many VisiumHD spots there is in one Visium spot!](~/Documents/work/semla_development/semla/vignettes/visiumHD/visiumhd_in_context.png)
+![How many VisiumHD spots there is in one Visium spot!](visiumHD/visiumhd_in_context.png)
 
 As a side note, maybe it is more accurate to refer to VisiumHD's capture areas as *squares*, but due to old habit we will still refer to them as *spots*.
 
@@ -74,15 +77,16 @@ untar(paste0(targetdir, "mouse_brain_HD.tar.gz")
 As mentioned above, we can consider each resolution as its separate section, and load them as such into R using `semla`. Let's construct the `infoTable` with information regarding all the resolutions.
 
 ```{r, eval = FALSE, include = TRUE}
-
 # directory where the data is stored
-st.dir <- "/Users/javierescudero/Documents/work/Visium_HD/data/10x_mousebrain/binned_outputs"
+st.dir <- "./mousebrain/visium-hd/binned_outputs"
 # specify resolutions to load into memory
 res <- paste(0, c(2, 8, 16), "um", sep = "")
 all.res <- paste(res, collapse = "|")
+
 # retrieve the directories for each resolution
-res.dir <- list.dirs(st.dir, recursive = FALSE) |>
-  str_subset(., pattern = all.res)
+res.dir <- list.dirs(st.dir, recursive = FALSE) |> 
+  stringr::str_subset(pattern = all.res)
+
 # build the infoTable for all resolutions
 infoTable <- data.frame(
   samples = list.files(res.dir,
@@ -112,13 +116,14 @@ infoTable <- data.frame(
 Now that we have built the infoTable, we can load the VisiumHD data into memory. Be aware that the 2um data is very big, so due to RAM issues you might not be able to work with this data locally. For example, if you want to build the `infoTable` to store only the 8 and 16um resolutions, you could do the following:
 
 ```{r, eval = TRUE}
-
-st.dir <- "/Users/javierescudero/Documents/work/Visium_HD/data/10x_mousebrain/binned_outputs"
+st.dir <- "./mousebrain/visium-hd/binned_outputs"
 res <- paste(0, c(8, 16), "um", sep = "")
 all.res <- paste(res, collapse = "|")
+
 # retrieve the directories for each resolution
 res.dir <- list.dirs(st.dir, recursive = FALSE) |>
-  str_subset(., pattern = all.res)
+  str_subset(pattern = all.res)
+
 # build the infoTable for all resolutions
 infoTable <- data.frame(
   samples = list.files(res.dir,
@@ -148,19 +153,15 @@ infoTable <- data.frame(
 Regardless of which resolution you want to load, with the built `infoTable` now we can load the data using `ReadVisiumData()` like you would in your standard Visium sections. If you have the 2um resolution in the infoTable, this can take a bit of time.
 
 ```{r, message = FALSE}
-
 se.hd <- ReadVisiumData(infoTable)
 se.hd
-
 ```
 
 As mentioned before, now each resolution of the VisiumHD experiment is stored in the Seurat object as an individual experiment. Let's take a look at the HE images. You can note how, even though we are labeling each image by expressing from which resolution they come from, they are exactly the same image.
 
 ```{r, message = FALSE}
-
 se.hd <- LoadImages(se.hd)
 ImagePlot(se.hd, label_by = "resolution")
-
 ```
 
 This object is fully compatible with all of `semla`'s functions, so you can proceed normally with your analysis!
@@ -178,7 +179,6 @@ Thus, we are going to perform the standard analysis pipeline on the 8 and 16um b
 ### Seurat clustering
 
 ```{r, eval = FALSE, include = TRUE}
-
 # 16um
 se.16 <- SubsetSTData(se.hd, expression = resolution == "016um")
 se.16 <-  se.16 |>
@@ -188,6 +188,7 @@ se.16 <-  se.16 |>
   RunPCA() |>
   FindNeighbors(reduction = "pca", dims = 1:10) |>
   FindClusters(resolution = 0.2)
+
 # 8um
 se.8 <- SubsetSTData(se.hd, expression = resolution == "08um")
 se.8 <-  se.8 |>
@@ -205,7 +206,6 @@ se.8 <-  se.8 |>
 In the same way we can perform the standard Seurat analysis pipeline, we can also follow our [tutorial](https://ludvigla.github.io/semla/articles/NNMF.html) for performing non-Negative matrix factorization (NMF).
 
 ```{r, eval = FALSE, include = TRUE}
-
 library(singlet)
 
 # 16um
@@ -213,6 +213,7 @@ se.16 <- se.16[VariableFeatures(se.16), ]
 ## Set seed for reproducibility
 set.seed(42)
 se.16 <- RunNMF(se.16)
+
 # 8um
 se.8 <- se.8[VariableFeatures(se.8), ]
 ## Set seed for reproducibility
@@ -236,7 +237,6 @@ These arguments are compatible with all of the other arguments already present i
 With this information in mind, let's take a look at the results of our analysis, starting with Seurat's clustering:
 
 ```{r, eval = FALSE, include = TRUE}
-
 p <- MapLabels(se.16,
                column_name = "seurat_clusters", 
                override_plot_dims = TRUE,
@@ -245,13 +245,11 @@ p <- MapLabels(se.16,
                label_by = "resolution"
 )
 p
-
 ```
 
-![1. Seurat clusters identified at 16ums.](~/Documents/work/semla_development/semla/vignettes/visiumHD/clusters_16.jpg)
+![1. Seurat clusters identified at 16ums.](visiumHD/clusters_16.jpg)
 
 ```{r, eval = FALSE, include = TRUE}
-
 p <- MapLabels(se.8,
                column_name = "seurat_clusters", 
                override_plot_dims = TRUE,
@@ -260,10 +258,9 @@ p <- MapLabels(se.8,
                label_by = "resolution"
 )
 p
-
 ```
 
-![2. Seurat clusters identified at 8ums.](~/Documents/work/semla_development/semla/vignettes/visiumHD/clusters_8.jpg)
+![2. Seurat clusters identified at 8ums.](visiumHD/clusters_8.jpg)
 
 Next, let's take a quick look at the spatial distribution of some of the NMF factors computed in each resolution:
 
@@ -282,7 +279,7 @@ p
 
 ```
 
-![1. NMF factors identified at 16ums.](~/Documents/work/semla_development/semla/vignettes/visiumHD/NMF_16.jpg)
+![1. NMF factors identified at 16ums.](visiumHD/NMF_16.jpg)
 
 ```{r, eval = FALSE, include = TRUE}
 
@@ -299,7 +296,7 @@ p
 
 ```
 
-![2. NMF factors identified at 8ums.](~/Documents/work/semla_development/semla/vignettes/visiumHD/NMF_8.jpg)
+![2. NMF factors identified at 8ums.](visiumHD/NMF_8.jpg)
 
 <br>
 
