@@ -68,9 +68,6 @@ NULL
 #' visible in small plots.
 #' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
 #' relative to the plot area. Default is to place it in the top right corner.
-#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
-#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -96,12 +93,12 @@ NULL
 #'
 MapFeatures.default <- function (
   object,
+  spot_side,
   crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
-  spot_side,
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -120,7 +117,6 @@ MapFeatures.default <- function (
   scalebar_gg = NULL,
   scalebar_height = 0.05,
   scalebar_position = c(0.8, 0.8),
-  tech = NULL,
   ...
 ) {
 
@@ -263,8 +259,7 @@ MapFeatures.default <- function (
             coords_columns = coords_columns,
             cur_label = cur_label,
             drop_na = drop_na,
-            center_zero = center_zero,
-            tech = tech
+            center_zero = center_zero
           )
         })
         # Add names to feature_plots
@@ -285,8 +280,7 @@ MapFeatures.default <- function (
           coords_columns = coords_columns,
           cur_label = cur_label,
           drop_na = drop_na,
-          center_zero = center_zero,
-          tech = tech
+          center_zero = center_zero
         )
       }
     }
@@ -466,7 +460,6 @@ MapFeatures.Seurat <- function (
     scalebar_height = 0.05,
     scalebar_gg = scalebar(x = 500, text_height = 5),
     scalebar_position = c(0.8, 0.7),
-    tech = NULL,
     ...
 ) {
 
@@ -481,11 +474,6 @@ MapFeatures.Seurat <- function (
   # Check Seurat object
   .check_seurat_object(object)
   
-  # get what technology we are using
-  if (is.null(tech)) {
-    tech <- .get_tech(object)
-  }
-
   # fetch data from Seurat object. 
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
@@ -616,12 +604,12 @@ MapFeatures.Seurat <- function (
   # generate plots
   wrapped_plots <- MapFeatures(
     object = data_use,
+    spot_side = spot_side,
     crop_area = crop_area,
     pt_size = pt_size,
     pt_alpha = pt_alpha,
     pt_stroke = pt_stroke,
     shape = shape,
-    spot_side = spot_side,
     scale_alpha = scale_alpha,
     section_number = NULL,
     label_by = label_by,
@@ -639,8 +627,7 @@ MapFeatures.Seurat <- function (
     add_scalebar = add_scalebar,
     scalebar_height = scalebar_height,
     scalebar_gg = scalebar_gg,
-    scalebar_position = scalebar_position,
-    tech = tech
+    scalebar_position = scalebar_position
   )
 
   # Inject images if image_use is provided
@@ -702,9 +689,6 @@ MapFeatures.Seurat <- function (
 #' visible in small plots.
 #' @param scalebar_position A numeric vector of length 2 specifying the position of the scale bar
 #' relative to the plot area. Default is to place it in the top right corner.
-#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
-#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @importFrom patchwork wrap_plots
 #' @import dplyr
@@ -720,12 +704,12 @@ MapFeatures.Seurat <- function (
 #'
 MapLabels.default <- function (
   object,
+  spot_side,
   crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
-  spot_side,
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -739,7 +723,6 @@ MapLabels.default <- function (
   scalebar_gg = NULL,
   scalebar_height = 0.05,
   scalebar_position = c(0.8, 0.8),
-  tech = NULL,
   ...
 ) {
 
@@ -751,7 +734,7 @@ MapLabels.default <- function (
 
   # get label column
   label <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
-
+  
   # Check if label column only contains NA values
   if (object |> pull(all_of(label)) |> is.na() |> all()) abort(glue("Selected feature only contains NA values."))
 
@@ -853,8 +836,7 @@ MapLabels.default <- function (
         pt_alpha = pt_alpha,
         coords_columns = coords_columns,
         cur_label = cur_label,
-        drop_na = drop_na,
-        tech = tech
+        drop_na = drop_na
       )
     }
 
@@ -1022,7 +1004,6 @@ MapLabels.Seurat <- function (
   scalebar_height = 0.05,
   scalebar_gg = scalebar(x = 500, text_height = 5),
   scalebar_position = c(0.8, 0.7),
-  tech = NULL,
   ...
 ) {
 
@@ -1032,11 +1013,6 @@ MapLabels.Seurat <- function (
   # Check Seurat object
   .check_seurat_object(object)
 
-  # get what technology we are using
-  if (is.null(tech)) {
-    tech <- .get_tech(object)
-  }
-  
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
     bind_cols(FetchData(object, vars = column_name, clean = FALSE) |> as_tibble())
@@ -1158,12 +1134,12 @@ MapLabels.Seurat <- function (
   # generate plots
   wrapped_plots <- MapLabels(
     object = data_use,
+    spot_side = spot_side,
     crop_area = crop_area,
     pt_size = pt_size,
     pt_alpha = pt_alpha,
     pt_stroke = pt_stroke,
     shape = shape,
-    spot_side = spot_side,
     section_number = section_number,
     label_by = label_by,
     split_labels = split_labels,
@@ -1176,8 +1152,7 @@ MapLabels.Seurat <- function (
     add_scalebar = add_scalebar,
     scalebar_height = scalebar_height,
     scalebar_gg = scalebar_gg,
-    scalebar_position = scalebar_position,
-    tech = tech
+    scalebar_position = scalebar_position
   )
 
   # Inject images if image_use is provided
@@ -1528,8 +1503,6 @@ MapLabels.Seurat <- function (
 #' columns in which spatial coordinates are located
 #' @param drop_na Should NA values be dropped from the data?
 #' @param center_zero A logical specifying whether color scale should be centered at 0
-#' @param tech A string indicating which technology the data comes from. Defaults to \code{NULL} and will detect
-#' the technology automatically from the data. Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -1540,14 +1513,14 @@ MapLabels.Seurat <- function (
 .spatial_feature_grid_plot <- function (
     gg,
     nm,
-    ftr = NULL,
-    feature_limits = NULL,
     shape,
     spot_side,
-    smoothen = FALSE,
     image_use,
     colors,
     dims,
+    ftr = NULL,
+    feature_limits = NULL,
+    smoothen = FALSE,
     all_features = NULL,
     extreme_colors = NULL,
     pt_alpha = 1,
@@ -1555,8 +1528,7 @@ MapLabels.Seurat <- function (
     cur_label = NULL,
     coords_columns,
     drop_na = FALSE,
-    center_zero = FALSE,
-    tech = NULL
+    center_zero = FALSE
 ) {
   
   # Set global variables to NULL
@@ -1696,25 +1668,14 @@ MapLabels.Seurat <- function (
     {
       if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
         # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
-        if (tech == "vis") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-
-          scale_y_reverse(limits = c(y_max,
-                                     y_min),
-                          expand = c(0, 0),
-                          breaks = seq(0, y_max, length.out = 11),
-                          labels = seq(0, 1, length.out = 11) |> paste0())
-        } else if (tech == "vishd") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-
-          scale_y_reverse(limits = c(y_max,
-                                     y_min),
-                          expand = c(0, 0),
-                          breaks = seq(0, y_max, length.out = 11),
-                          labels = seq(0, 1, length.out = 11) |> paste0())
-        }
+        y_max <- max(gg$y)
+        y_min <- min(gg$y)
+        
+        scale_y_reverse(limits = c(y_max,
+                                   y_min),
+                        expand = c(0, 0),
+                        breaks = seq(0, y_max, length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimension (flip y axis)
         scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
@@ -1793,8 +1754,6 @@ MapLabels.Seurat <- function (
 #' columns in which the spatial coordinates are stored
 #' @param cur_label string with a title
 #' @param drop_na logical specifying whether NA values should be dropped
-#' @param tech A string indicating which technology the data comes from. Defaults to \code{NULL} and will detect
-#' the technology automatically from the data. Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @importFrom stats na.omit
@@ -1810,14 +1769,13 @@ MapLabels.Seurat <- function (
     lbl,
     shape,
     spot_side,
-    smoothen = FALSE,
     colors,
     dims,
-    pt_alpha = 1,
     coords_columns,
     cur_label,
-    drop_na = FALSE,
-    tech = NULL
+    smoothen = FALSE,
+    pt_alpha = 1,
+    drop_na = FALSE
 ) {
   
   # Set global variables to NULL
@@ -1898,12 +1856,12 @@ MapLabels.Seurat <- function (
         # Set plot dimensions (adjust for array coordinates used in raster)
         x_lim <- max(gg$x) + 1
 
-        scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                      x_lim),
-                           expand = c(0, 0),
-                           breaks = seq(0,  x_lim,
-                                        length.out = 11),
-                           labels = seq(0, 1, length.out = 11) |> paste0())
+        scale_x_reverse(limits = c(x_lim,
+                                   min(gg$x)),
+                        expand = c(0, 0),
+                        breaks = seq(0,  x_lim,
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimensions
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
@@ -1917,25 +1875,14 @@ MapLabels.Seurat <- function (
     {
       if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
         # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
-        if (tech == "vis") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-
-          scale_y_reverse(limits = c(y_max,
-                                     y_min),
-                          expand = c(0, 0),
-                          breaks = seq(0, y_max, length.out = 11),
-                          labels = seq(0, 1, length.out = 11) |> paste0())
-        } else if (tech == "vishd") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-
-          scale_y_continuous(limits = c(y_min, y_max),
-                             expand = c(0, 0),
-                             breaks = seq(0, max(y_min, y_max),
-                                          length.out = 11),
-                             labels = seq(0, 1, length.out = 11) |> paste0())
-        }
+        y_max <- max(gg$y)
+        y_min <- min(gg$y)
+        
+        scale_y_reverse(limits = c(y_max,
+                                   y_min),
+                        expand = c(0, 0),
+                        breaks = seq(0, y_max, length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimension (flip y axis)
         scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
@@ -2682,19 +2629,4 @@ MapLabels.Seurat <- function (
 .gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]
-}
-
-#' Check with what technology we are working
-#'
-#' @param obj A Seurat object with scalefactors loaded
-#'
-#' @return a string with tech ids
-#'
-#' @noRd
-.get_tech <- function(obj) {
-  if ("microns_per_pixel" %in% colnames(GetScaleFactors(obj))) {
-    tech <- "vishd"
-  } else {
-    tech <- "vis"
-  }
 }

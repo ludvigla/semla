@@ -69,11 +69,11 @@ NULL
 MapMultipleFeatures.default <- function (
     object,
     dims,
+    spot_side,
     scale = c("shared", "free"),
     crop_area = NULL,
     pt_size = 1,
     shape = "point",
-    spot_side,
     pt_stroke = 0,
     section_number = NULL,
     label_by = NULL,
@@ -82,7 +82,6 @@ MapMultipleFeatures.default <- function (
     coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
     return_plot_list = FALSE,
     add_colorscale_text = FALSE,
-    tech = NULL,
     ...
 ) {
 
@@ -98,9 +97,6 @@ MapMultipleFeatures.default <- function (
 
   # get features
   features <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
-  # features <- object |>
-  #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-  #   colnames()
 
   # Check features
   if (!length(features) > 1) abort(glue("Expected at least 2 features, got {length(features)}"))
@@ -227,8 +223,7 @@ MapMultipleFeatures.default <- function (
         cur_label = cur_label,
         coords_columns = coords_columns,
         drop_na = TRUE,
-        use_text = add_colorscale_text,
-        tech = tech
+        use_text = add_colorscale_text
       )
       return(p)
     }), nm = names(data))
@@ -309,7 +304,6 @@ MapMultipleFeatures.Seurat <- function (
     min_cutoff = NULL,
     return_plot_list = FALSE,
     add_colorscale_text = FALSE,
-    tech = NULL,
     ...
 ) {
 
@@ -322,11 +316,6 @@ MapMultipleFeatures.Seurat <- function (
 
   # Check Seurat object
   .check_seurat_object(object)
-  
-  # get what technology we are using
-  if (is.null(tech)) {
-    tech <- .get_tech(object)
-  }
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
@@ -437,8 +426,7 @@ MapMultipleFeatures.Seurat <- function (
     colors = colors,
     coords_columns = coords_columns,
     return_plot_list = (!is.null(image_use)) | return_plot_list,
-    add_colorscale_text = add_colorscale_text,
-    tech = tech
+    add_colorscale_text = add_colorscale_text
   )
 
   # Inject images if image_use is provided
@@ -623,9 +611,6 @@ MapMultipleFeatures.Seurat <- function (
 #' columns in which spatial coordinates are located
 #' @param drop_na should NA values be dropped from the data?
 #' @param use_text Logical specifying if values should be added to the color scales
-#' @param tech Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-#' Defaults to \code{NULL} and will detect the technology automatically from the data. 
-#' Possible values are \code{c("vis", "vishd")}
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -645,8 +630,7 @@ MapMultipleFeatures.Seurat <- function (
     cur_label = NULL,
     coords_columns,
     drop_na = TRUE,
-    use_text = FALSE,
-    tech = NULL
+    use_text = FALSE
 ) {
   
   # Set global variables to NULL
@@ -734,12 +718,13 @@ MapMultipleFeatures.Seurat <- function (
       if ((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")) {
         # Set plot dimensions (adjust for array coordinates used in raster)
         x_lim <- max(gg$x) + 1
-        scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
-                                      x_lim),
-                           expand = c(0, 0),
-                           breaks = seq(0,  x_lim,
-                                        length.out = 11),
-                           labels = seq(0, 1, length.out = 11) |> paste0())
+        
+        scale_x_reverse(limits = c(x_lim,
+                                   min(gg$x)),
+                        expand = c(0, 0),
+                        breaks = seq(0,  x_lim,
+                                     length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())      
       } else {
         # Set plot dimensions
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
@@ -753,25 +738,14 @@ MapMultipleFeatures.Seurat <- function (
     {
       if ((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")) {
         # Set plot dimensions (adjust for array coordinates used in raster, and flip y axis)
-        if (tech == "vis") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-          
-          scale_y_reverse(limits = c(y_max,
-                                     y_min),
-                          expand = c(0, 0),
-                          breaks = seq(0, y_max, length.out = 11),
-                          labels = seq(0, 1, length.out = 11) |> paste0())
-        } else if (tech == "vishd") {
-          y_max <- max(gg$y)
-          y_min <- min(gg$y)
-          
-          scale_y_continuous(limits = c(y_min, y_max),
-                             expand = c(0, 0),
-                             breaks = seq(0, max(y_min, y_max),
-                                          length.out = 11),
-                             labels = seq(0, 1, length.out = 11) |> paste0())
-        }
+        y_max <- max(gg$y)
+        y_min <- min(gg$y)
+        
+        scale_y_reverse(limits = c(y_max,
+                                   y_min),
+                        expand = c(0, 0),
+                        breaks = seq(0, y_max, length.out = 11),
+                        labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimension (flip y axis)
         scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
