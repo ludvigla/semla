@@ -137,9 +137,6 @@ MapFeatures.default <- function (
 
   # get features
   features <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
-  # features <- object |>
-  #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by), -pxl_col_in_fullres, -pxl_row_in_fullres) |>
-  #   colnames()
   
   # Split data by sampleID
   data <- object |>
@@ -754,9 +751,6 @@ MapLabels.default <- function (
 
   # get label column
   label <- setdiff(colnames(object), c("barcode", coords_columns, "sampleID", label_by, "pxl_col_in_fullres", "pxl_row_in_fullres"))
-  # label <- object |>
-  #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-  #   colnames()
 
   # Check if label column only contains NA values
   if (object |> pull(all_of(label)) |> is.na() |> all()) abort(glue("Selected feature only contains NA values."))
@@ -1682,25 +1676,13 @@ MapLabels.Seurat <- function (
       if((shape == "raster" | shape == "tile") & "xy" == paste(coords_columns, collapse = "")){
         # Set plot dimensions (adjust for array coordinates used in raster)
         x_lim <- max(gg$x) + 1
-        # if(max(gg$y) <= 77) { # 6.5x6.5 mm arrays, max y coord is 77
-        #   x_lim <- 127 + 1 # # 6.5x6.5 mm arrays, max x coord is 127 
-        # } else if(max(gg$x) <= 127) { # 11x11 mm arrays, max y coord is 127
-        #   x_lim <- 223 + 1 # 11x11 mm arrays, max x coord is 223
-        # } else {
-        #   x_lim <- max(gg$x) + 1 # for HD, all spots of the grid are kept
-        # }
+
         scale_x_reverse(limits = c(x_lim,
                                    min(gg$x)),
                            expand = c(0, 0),
                            breaks = seq(0,  x_lim,
                                         length.out = 11),
                            labels = seq(0, 1, length.out = 11) |> paste0())        
-        # scale_x_continuous(limits = c(min(gg$x), #dims[dims$sampleID == nm, "x_start", drop = TRUE],
-        #                               x_lim),
-        #                    expand = c(0, 0),
-        #                    breaks = seq(0,  x_lim,
-        #                                 length.out = 11),
-        #                    labels = seq(0, 1, length.out = 11) |> paste0())
       } else {
         # Set plot dimensions
         scale_x_continuous(limits = c(dims[dims$sampleID == nm, "x_start", drop = TRUE],
@@ -1732,40 +1714,7 @@ MapLabels.Seurat <- function (
                           expand = c(0, 0),
                           breaks = seq(0, y_max, length.out = 11),
                           labels = seq(0, 1, length.out = 11) |> paste0())
-          # scale_y_continuous(limits = c(y_min, y_max),
-          #                    expand = c(0, 0),
-          #                    breaks = seq(0, max(y_min, y_max),
-          #                                 length.out = 11),
-          #                    labels = seq(0, 1, length.out = 11) |> paste0())
         }
-        # if(x_lim == 127 + 1) { # the checking is done based on the x array coordinates
-        #   y_max <- 77 + 1 # 6.5x6.5 mm arrays, max y coord is 127
-        #   y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
-        #   
-        #   scale_y_reverse(limits = c(y_max,
-        #                              y_min),
-        #                   expand = c(0, 0),
-        #                   breaks = seq(0, y_max, length.out = 11),
-        #                   labels = seq(0, 1, length.out = 11) |> paste0())
-        # } else if(x_lim == 223 + 1) {
-        #   y_max <- 127 + 1 # 11x11 mm arrays, max y coord is 233
-        #   y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
-        #   
-        #   scale_y_reverse(limits = c(y_max,
-        #                              y_min),
-        #                   expand = c(0, 0),
-        #                   breaks = seq(0, y_max, length.out = 11),
-        #                   labels = seq(0, 1, length.out = 11) |> paste0())
-        # } else {
-        #   y_max <- x_lim # for HD, all spots of the grid are kept. the specification of coordinates is different in HD, so we do not need to flip y axis
-        #   y_min <- dims[dims$sampleID == nm, "y_start", drop = TRUE]
-        #   
-        #   scale_y_continuous(limits = c(y_min, y_max),
-        #                      expand = c(0, 0),
-        #                      breaks = seq(0, max(y_min, y_max), 
-        #                                   length.out = 11),
-        #                      labels = seq(0, 1, length.out = 11) |> paste0())
-        # }
       } else {
         # Set plot dimension (flip y axis)
         scale_y_reverse(limits = c(dims[dims$sampleID == nm, "full_height", drop = TRUE],
@@ -2092,9 +2041,6 @@ MapLabels.Seurat <- function (
     checks <- object |>
       select(all_of(remain)) |>
       sapply(is.numeric)
-    # checks <- object |>
-    #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-    #   sapply(is.numeric)
     if (any(!checks)) abort(glue("Features have to be numeric/integer. \n",
                                  "The following features are not valid: \n {paste(names(checks[!checks]))}"))
   } else {
@@ -2105,11 +2051,6 @@ MapLabels.Seurat <- function (
         sapply(function(x) {
           is.character(x) | is.factor(x)
         })
-      # checks <- object |>
-      #   select(-barcode, -all_of(coords_columns), -sampleID, -all_of(label_by)) |>
-      #   sapply(function(x) {
-      #     is.character(x) | is.factor(x)
-      #   })
       if (length(checks) > 1) abort("Only 1 meta.data column for a categorical variable is allowed.")
       if (!checks) abort(glue("Categorical variables have to be a character/factor."))
     }
