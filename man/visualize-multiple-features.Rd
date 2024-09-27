@@ -15,6 +15,8 @@ MapMultipleFeatures(object, ...)
   scale = c("shared", "free"),
   crop_area = NULL,
   pt_size = 1,
+  shape = "point",
+  spot_side,
   pt_stroke = 0,
   section_number = NULL,
   label_by = NULL,
@@ -23,6 +25,7 @@ MapMultipleFeatures(object, ...)
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
   add_colorscale_text = FALSE,
+  tech = NULL,
   ...
 )
 
@@ -36,6 +39,8 @@ MapMultipleFeatures(object, ...)
   crop_area = NULL,
   pt_size = 1,
   pt_stroke = 0,
+  shape = "point",
+  spot_side = NULL,
   section_number = NULL,
   label_by = NULL,
   ncol = NULL,
@@ -45,6 +50,7 @@ MapMultipleFeatures(object, ...)
   min_cutoff = NULL,
   return_plot_list = FALSE,
   add_colorscale_text = FALSE,
+  tech = NULL,
   ...
 )
 }
@@ -69,6 +75,13 @@ effects as the point sizes will remain constant. In this case it is better to ge
 separate plots for different tissue sections.}
 
 \item{pt_size}{A numeric value specifying the point size passed to \code{geom_point}}
+
+\item{shape}{A string specifying the shape to plot. Options are: 
+\code{c("point", "raster", "tile")}.}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for \code{"tile"} shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
 
@@ -98,6 +111,10 @@ if you want to manipulate each sub plot independently.}
 \item{add_colorscale_text}{A Logical specifying if labels should be added to
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and
 the meaning of these values depend on the choice of \code{scale}}
+
+\item{tech}{Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
+Defaults to \code{NULL} and will detect the technology automatically from the data. 
+Possible values are \code{c("vis", "vishd")}}
 
 \item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
@@ -139,7 +156,6 @@ a way that they are mutually exclusive, i.e. expressed in different spatial loca
 Each spot is assigned one color determined by the dominant feature in that spot. For instance,
 if cell type proportions are selected for the visualization, each cell type will be assigned a 
 specific color. Then, the cell type with the highest proportion value will determine the spot color
-with a spot opacity equal to the proportion value.
 
 The values of the selected features will be rescaled for the visualization
 depending on the choice of \code{scale}. If \code{scale="free"}, each numeric feature

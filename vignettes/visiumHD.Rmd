@@ -1,0 +1,323 @@
+---
+title: "VisiumHD: loading and basic plotting"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this article, we will show how to load and work with VisiumHD data using `semla`.
+
+We are going to be using the FFPE mouse brain test dataset that is available at 10x Genomics [website](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-mouse-brain-he). Specifically, we are going to use the *binned_outputs* folder. Mouse brain, FFPE, 6.5mm.
+
+```{r warning=FALSE, message=FALSE}
+library(semla)
+library(stringr)
+```
+
+```{r eval=FALSE, include = TRUE}
+library(tidyverse)
+```
+
+## Overview
+
+### Introduction to VisiumHD
+
+The high-resolution VisiumHD commercialized by 10x Genomics in spring 2024 follows the same philosophy as the traditional Visium platform we are used to: spatially barcoded spots capture the transcriptome (or most of the transcriptome since it is probe based but now there is FF protocol), and the location of the transcripts can be then mapped to the tissue by the spatial sequence that is specific to each spot. While similar in philosophy, both technologies have some fundamental differences:
+
+1.  The capture area in Visium are rounded spots distributed in a *honeycomb* or *hexagonal* pattern, while in VisiumHD they are squares distributed in a *grid* pattern.
+2.  In the traditional Visium, there is a distance of 100um between the spot's center, whereas in VisiumHD there is no gaps in between. All the spots are immediately next to each-other, leaving no space.
+3.  In Visium, the spots are 55um in diameter, meaning that the spatial resolution for the technology is 55um. In VisiumHD, the spots/squares are 2um in side, meaning that the spatial resolution is of 2um. In theory, this should allow for a sub-cellular resolution of the transcriptome. To put this into context, there is around $(55/2)^2$ VisiumHD spots per Visium spot.
+
+So, 3 main things regarding VisiumHD: the spots are now squares instead of circles, the spots have no empty space in between them, and the size of the spots is 2um. This is a bit ugly, but maybe it can help put these numbers into context:
+
+![How many VisiumHD spots there is in one Visium spot!](visiumHD/visiumhd_in_context.png)
+
+As a side note, maybe it is more accurate to refer to VisiumHD's capture areas as *squares*, but due to old habit we will still refer to them as *spots*.
+
+### Data sparsity
+
+An inherited problem of high-resolution spatial transcriptomics, be that sequencing-based (like BGI's [Stereo-seq](https://en.stomics.tech/products/stereo-seq-transcriptomics-solution/list.html), Curio's [Slide-seq](https://curiobioscience.com/press/curio-bioscience-launches-spatial-transcriptomics-solution/), and other alternatives) or imaging-based (like 10x Genomics's [ISS platform](https://www.10xgenomics.com/platforms/xenium) Xenium, VIZGEN's [MERSCOPE](https://vizgen.com/merscope-ultra/), and others), is that the data tends to be quite sparse: few data points per spatial region. A common approach to circumvent this issue is to **bin/group** the spatial regions to increase the density of the data. Nevertheless, the cost of this binning is that you lose spatial resolution. There are different ways to bin the spatial data, but the most common approaches are via cell segmentation and grid binning. So, with high-resolution data, you have the following problem: $HighSpatialResolution = SparseData = Binning = NotHighSpatialResolutionAnymore$.
+
+This is a problem the field is facing, and it will be interesting to see what creative approaches the community takes in order to maximize the information while minimizing the decrease in spatial resolution. As of the time this markdown was last knitted, the approach taken by 10x Genomics by default is **grid binning**. What this means is that all spots that are within a certain distance of each other will be grouped under the same spot, and their expression data summed up. The spots in VisiumHD are 2um in side, so if we talk about an *8um bin* we mean that the new spots are going to be squares of 8um in side: we will be adding up the expression of $4*4$ adjacent 2um spots to generate one 8um spot.
+
+### Grid binning
+
+In VisiumHD, the "original" count data is the count data at the 2um spatial resolution, but 10x Genomics provides several *binned_outputs* by default when running [spaceranger](https://www.10xgenomics.com/support/software/space-ranger/latest/analysis/outputs/output-overview): 2, 8 and 16, with the option of specifying a custom resolution when calling spaceranger. At the 8um bin, each spot is a sum of $4*4$ 2um spots; at 16um bin, each spot is a sum of $8*8$ 2um spots; and so on.
+
+For each one of these resolutions, spaceranger returns an entire folder with the structure we are used to from the normal Visium. This folder will contain the spatial position of each spot, the count matrix, the tissue HE image and the json file required to map the spots to the HE image.
+
+### Folder structure
+
+We can think of each subfolder in the *binned_outputs* directory as it's own sample. So for each tissue section, we will have at least "3 samples": one for the 2um resolution, another for the 8um and another for the 16um. But do not forget that all the bin sizes above 2um are made up by adding up the "original" count data, which is the 2um data.
+
+## Load data
+
+First we need to load some 10x VisiumHD data. You can run the code chunk below or follow this [link](https://www.10xgenomics.com/datasets/visium-hd-cytassist-gene-expression-libraries-of-mouse-brain-he) to download it manually.
+
+```{r eval=FALSE, include = TRUE}
+#| code-fold: true
+options(timeout=200)
+tmpdir <- "." # Set current wd or change to tmpdir()
+dir.create(paste0(tmpdir, "/mousebrain"))
+targetdir <- paste0(tmpdir, "/mousebrain/visium-hd")
+dir.create(targetdir)
+destfile <- paste0(targetdir, "/mouse_brain_HD.tar.gz")
+download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_HD_Mouse_Brain/Visium_HD_Mouse_Brain_binned_outputs.tar.gz", destfile = destfile)
+# now we decompress it
+untar(paste0(targetdir, "mouse_brain_HD.tar.gz")
+      
+```
+
+As mentioned above, we can consider each resolution as its separate section, and load them as such into R using `semla`. Let's construct the `infoTable` with information regarding all the resolutions.
+
+```{r, eval = FALSE, include = TRUE}
+# directory where the data is stored
+st.dir <- "./mousebrain/visium-hd/binned_outputs"
+# specify resolutions to load into memory
+res <- paste(0, c(2, 8, 16), "um", sep = "")
+all.res <- paste(res, collapse = "|")
+
+# retrieve the directories for each resolution
+res.dir <- list.dirs(st.dir, recursive = FALSE) |> 
+  stringr::str_subset(pattern = all.res)
+
+# build the infoTable for all resolutions
+infoTable <- data.frame(
+  samples = list.files(res.dir,
+                       full.names = TRUE, recursive = TRUE,
+                       pattern = paste0("^filtered_feature.+.h5$")
+  ),
+  spotfiles = list.files(res.dir,
+                         full.names = TRUE, recursive = TRUE,
+                         pattern = "parquet$|positions.csv$"
+  ),
+  imgs = list.files(res.dir,
+                    recursive = TRUE,
+                    full.names = TRUE, pattern = "hires"
+  ) |>
+    str_subset(all.res),
+  json = list.files(st.dir,
+                    recursive = TRUE,
+                    full.names = TRUE, pattern = "^scalefactors"
+  ) |>
+    str_subset(all.res),
+  resolution = res,
+  sample_ID = "mousebrain"
+)
+
+```
+
+Now that we have built the infoTable, we can load the VisiumHD data into memory. Be aware that the 2um data is very big, so due to RAM issues you might not be able to work with this data locally. For example, if you want to build the `infoTable` to store only the 8 and 16um resolutions, you could do the following:
+
+```{r, eval = TRUE}
+st.dir <- "./mousebrain/visium-hd/binned_outputs"
+res <- paste(0, c(8, 16), "um", sep = "")
+all.res <- paste(res, collapse = "|")
+
+# retrieve the directories for each resolution
+res.dir <- list.dirs(st.dir, recursive = FALSE) |>
+  str_subset(pattern = all.res)
+
+# build the infoTable for all resolutions
+infoTable <- data.frame(
+  samples = list.files(res.dir,
+                       full.names = TRUE, recursive = TRUE,
+                       pattern = paste0("^filtered_feature.+.h5$")
+  ),
+  spotfiles = list.files(res.dir,
+                         full.names = TRUE, recursive = TRUE,
+                         pattern = "parquet$|positions.csv$"
+  ),
+  imgs = list.files(res.dir,
+                    recursive = TRUE,
+                    full.names = TRUE, pattern = "hires"
+  ) |>
+    str_subset(all.res),
+  json = list.files(st.dir,
+                    recursive = TRUE,
+                    full.names = TRUE, pattern = "^scalefactors"
+  ) |>
+    str_subset(all.res),
+  resolution = res,
+  sample_ID = "mousebrain"
+)
+
+```
+
+Regardless of which resolution you want to load, with the built `infoTable` now we can load the data using `ReadVisiumData()` like you would in your standard Visium sections. If you have the 2um resolution in the infoTable, this can take a bit of time.
+
+```{r, message = FALSE}
+se.hd <- ReadVisiumData(infoTable)
+se.hd
+```
+
+As mentioned before, now each resolution of the VisiumHD experiment is stored in the Seurat object as an individual experiment. Let's take a look at the HE images. You can note how, even though we are labeling each image by expressing from which resolution they come from, they are exactly the same image.
+
+```{r, message = FALSE}
+se.hd <- LoadImages(se.hd)
+ImagePlot(se.hd, label_by = "resolution")
+```
+
+This object is fully compatible with all of `semla`'s functions, so you can proceed normally with your analysis!
+
+```{r, eval = TRUE, include = FALSE}
+rm(se.hd)
+```
+
+## Analysis
+
+Two of the main issues when working with high-resolution spatial transcriptomics is **data sparsity** and the **size of the datasets.** For example, do not be surprised if your standard analysis does not run at all at the higher resolutions in VisiumHD data. For standard Seurat clustering (v4 and prior), we recommend working on a high performance computing cluster.
+
+Thus, we are going to perform the standard analysis pipeline on the 8 and 16um bins.
+
+### Seurat clustering
+
+```{r, eval = FALSE, include = TRUE}
+# 16um
+se.16 <- SubsetSTData(se.hd, expression = resolution == "016um")
+se.16 <-  se.16 |>
+  NormalizeData() |>
+  ScaleData() |>
+  FindVariableFeatures() |>
+  RunPCA() |>
+  FindNeighbors(reduction = "pca", dims = 1:10) |>
+  FindClusters(resolution = 0.2)
+
+# 8um
+se.8 <- SubsetSTData(se.hd, expression = resolution == "08um")
+se.8 <-  se.8 |>
+  NormalizeData() |>
+  ScaleData() |>
+  FindVariableFeatures() |>
+  RunPCA() |>
+  FindNeighbors(reduction = "pca", dims = 1:10) |>
+  FindClusters(resolution = 0.2)
+
+```
+
+### Non-negative matrix factorization
+
+In the same way we can perform the standard Seurat analysis pipeline, we can also follow our [tutorial](https://ludvigla.github.io/semla/articles/NNMF.html) for performing non-Negative matrix factorization (NMF).
+
+```{r, eval = FALSE, include = TRUE}
+library(singlet)
+
+# 16um
+se.16 <- se.16[VariableFeatures(se.16), ]
+## Set seed for reproducibility
+set.seed(42)
+se.16 <- RunNMF(se.16)
+
+# 8um
+se.8 <- se.8[VariableFeatures(se.8), ]
+## Set seed for reproducibility
+set.seed(42)
+se.8 <- RunNMF(se.8)
+
+```
+
+## Plotting
+
+We have done a few changes to `semla`'s plotting functions to properly represent this new type of data. The capture areas of a Visium slide are circles, and we represent them as such when using `MapFeatures()`, `MapLabels()` or `MapMultipleFeatures()`. However, in VisiumHD the capture areas are no longer circles, but rather squares. Thus, we have added a new argument for all of the aforementioned functions named `shape =`. This new argument allows for 3 different options:
+
+-   `shape = "point"`. This would be the default argument that the functions will take. It will represent the capture areas as circles.
+
+-   `shape = "tile"`. One of the new options, it will represent the capture areas as squares. Unless specified otherwise in the argument `spot_side`, this shape will represent the exact dimensions of the capture areas in respect to the tissue.
+
+-   `shape = "raster"`. The other new plotting option. Like `tile`, it will represent the capture areas as squares. The main peculiarity of this argument is that it is a faster implementation of `tile`, which could be useful when plotting at high resolutions. However, this argument does not accept the HE image, so one should set `image_use = NULL` when using this argument.
+
+These arguments are compatible with all of the other arguments already present in the plotting functions, like `crop_area` and such. As a side note, even though these options make sense with VisiumHD data, you can also use them with normal Visium data in order to represent the capture areas as squares instead of the real circles.
+
+With this information in mind, let's take a look at the results of our analysis, starting with Seurat's clustering:
+
+```{r, eval = FALSE, include = TRUE}
+p <- MapLabels(se.16,
+               column_name = "seurat_clusters", 
+               override_plot_dims = TRUE,
+               shape = "tile", 
+               image_use = "raw", 
+               label_by = "resolution"
+)
+p
+```
+
+![1. Seurat clusters identified at 16ums.](visiumHD/clusters_16.jpg)
+
+```{r, eval = FALSE, include = TRUE}
+p <- MapLabels(se.8,
+               column_name = "seurat_clusters", 
+               override_plot_dims = TRUE,
+               shape = "tile", 
+               image_use = "raw", 
+               label_by = "resolution"
+)
+p
+```
+
+![2. Seurat clusters identified at 8ums.](visiumHD/clusters_8.jpg)
+
+Next, let's take a quick look at the spatial distribution of some of the NMF factors computed in each resolution:
+
+```{r, eval = FALSE, include = TRUE}
+
+p <- MapFeatures(se.16,
+                 features = "NMF_3", 
+                 label_by = "resolution",
+                 image_use = "raw", 
+                 override_plot_dims = TRUE,
+                 shape = "tile", 
+                 scale_alpha = TRUE,
+                 colors = c("darkblue", "cyan", "yellow", "red", "darkred")
+)
+p
+
+```
+
+![1. NMF factors identified at 16ums.](visiumHD/NMF_16.jpg)
+
+```{r, eval = FALSE, include = TRUE}
+
+p <- MapFeatures(se.8,
+                 features = "NMF_2", 
+                 label_by = "resolution",
+                 image_use = "raw", 
+                 override_plot_dims = TRUE,
+                 shape = "tile", 
+                 scale_alpha = TRUE,
+                 colors = c("darkblue", "cyan", "yellow", "red", "darkred")
+)
+p
+
+```
+
+![2. NMF factors identified at 8ums.](visiumHD/NMF_8.jpg)
+
+<br>
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package versions**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

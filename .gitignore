@@ -18,6 +18,7 @@ vignettes/synthetic_spots/
 vignettes/IF_data/
 vignettes/hBrCa_IF
 vignettes/10x_data
+vignettes/visiumHD
 BC_data/
 demo_data/
 manuscript_items/
@@ -25,3 +26,5 @@ stereoscope/
 renv/
 Dockerfile
 TODO.md
+tests/testthat/Rplots.pdf
+.DS_store
