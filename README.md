@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-1.1.6-blue.svg)](https://github.com/ludvigla/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
+[![](https://img.shields.io/badge/devel%20version-1.2.0-blue.svg)](https://github.com/ludvigla/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
 
 <!-- badges: end -->
 
