@@ -69,7 +69,7 @@ NULL
 MapMultipleFeatures.default <- function (
     object,
     dims,
-    spot_side,
+    spot_side = NULL,
     scale = c("shared", "free"),
     crop_area = NULL,
     pt_size = 1,
