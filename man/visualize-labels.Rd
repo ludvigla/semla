@@ -10,12 +10,12 @@ MapLabels(object, ...)
 
 \method{MapLabels}{default}(
   object,
+  spot_side = NULL,
   crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
-  spot_side,
   section_number = NULL,
   label_by = NULL,
   split_labels = FALSE,
@@ -29,7 +29,6 @@ MapLabels(object, ...)
   scalebar_gg = NULL,
   scalebar_height = 0.05,
   scalebar_position = c(0.8, 0.8),
-  tech = NULL,
   ...
 )
 
@@ -56,7 +55,6 @@ MapLabels(object, ...)
   scalebar_height = 0.05,
   scalebar_gg = scalebar(x = 500, text_height = 5),
   scalebar_position = c(0.8, 0.7),
-  tech = NULL,
   ...
 )
 }
@@ -64,6 +62,10 @@ MapLabels(object, ...)
 \item{object}{An object}
 
 \item{...}{Arguments passed to other methods}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for tile shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{crop_area}{A numeric vector of length 4 specifying a rectangular area to crop
 the plots by. These numbers should be within 0-1. The x-axis is goes from left=0 to
@@ -84,10 +86,6 @@ and a value of 1 will make the points completely opaque.}
 
 \item{shape}{A string specifying the shape to plot. Options are: 
 \code{c("point", "raster", "tile")}.}
-
-\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
-in the fullres image. Relevant for tile shape. Will default to each section's value  
-retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{section_number}{An integer select a tissue section number to subset data by}
 
@@ -129,10 +127,6 @@ visible in small plots.}
 
 \item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.}
-
-\item{tech}{Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-Defaults to \code{NULL} and will detect the technology automatically from the data. 
-Possible values are \code{c("vis", "vishd")}}
 
 \item{column_name}{A character specifying a meta data column holding the categorical
 feature vector.}

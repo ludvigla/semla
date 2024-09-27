@@ -12,11 +12,11 @@ MapMultipleFeatures(object, ...)
 \method{MapMultipleFeatures}{default}(
   object,
   dims,
+  spot_side = NULL,
   scale = c("shared", "free"),
   crop_area = NULL,
   pt_size = 1,
   shape = "point",
-  spot_side,
   pt_stroke = 0,
   section_number = NULL,
   label_by = NULL,
@@ -25,7 +25,6 @@ MapMultipleFeatures(object, ...)
   coords_columns = c("pxl_col_in_fullres", "pxl_row_in_fullres"),
   return_plot_list = FALSE,
   add_colorscale_text = FALSE,
-  tech = NULL,
   ...
 )
 
@@ -50,7 +49,6 @@ MapMultipleFeatures(object, ...)
   min_cutoff = NULL,
   return_plot_list = FALSE,
   add_colorscale_text = FALSE,
-  tech = NULL,
   ...
 )
 }
@@ -62,6 +60,10 @@ MapMultipleFeatures(object, ...)
 \item{dims}{A tibble with information about the tissue sections. This information is used to
 determine the limits of the plot area. If \code{dims} is not provided, the limits will be
 computed directly from the spatial coordinates provided in \code{object}.}
+
+\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
+in the fullres image. Relevant for \code{"tile"} shape. Will default to each section's value  
+retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{scale}{A string specifying a scaling mode. See details below}
 
@@ -78,10 +80,6 @@ separate plots for different tissue sections.}
 
 \item{shape}{A string specifying the shape to plot. Options are: 
 \code{c("point", "raster", "tile")}.}
-
-\item{spot_side}{A numeric value or vector of values specifying the size of the spots in pixels
-in the fullres image. Relevant for \code{"tile"} shape. Will default to each section's value  
-retrieved via GetScaleFactors: \code{GetScaleFactors()$spot_diameter_fullres)}.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
 
@@ -111,10 +109,6 @@ if you want to manipulate each sub plot independently.}
 \item{add_colorscale_text}{A Logical specifying if labels should be added to
 the color scales. The labels will be values from 0 to 1 ("low" to "high") and
 the meaning of these values depend on the choice of \code{scale}}
-
-\item{tech}{Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-Defaults to \code{NULL} and will detect the technology automatically from the data. 
-Possible values are \code{c("vis", "vishd")}}
 
 \item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}

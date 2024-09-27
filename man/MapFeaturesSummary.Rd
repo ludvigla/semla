@@ -15,6 +15,7 @@ MapFeaturesSummary(
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
+  shape = "point",
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -64,6 +65,9 @@ to \code{geom_point}. A value of 0 will make the points completely transparent
 and a value of 1 will make the points completely opaque.}
 
 \item{pt_stroke}{A numeric specifying the point stroke width}
+
+\item{shape}{A string specifying the shape to plot. Options are: 
+\code{c("point", "raster", "tile")}.}
 
 \item{scale_alpha}{Logical specifying if the spot colors should be scaled together with
 the feature values. This can be useful when you want to highlight regions with higher

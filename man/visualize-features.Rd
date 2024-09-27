@@ -15,7 +15,7 @@ MapFeatures(object, ...)
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
-  spot_side,
+  spot_side = NULL,
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -34,7 +34,6 @@ MapFeatures(object, ...)
   scalebar_gg = NULL,
   scalebar_height = 0.05,
   scalebar_position = c(0.8, 0.8),
-  tech = NULL,
   ...
 )
 
@@ -69,7 +68,6 @@ MapFeatures(object, ...)
   scalebar_height = 0.05,
   scalebar_gg = scalebar(x = 500, text_height = 5),
   scalebar_position = c(0.8, 0.7),
-  tech = NULL,
   ...
 )
 }
@@ -164,10 +162,6 @@ visible in small plots.}
 
 \item{scalebar_position}{A numeric vector of length 2 specifying the position of the scale bar
 relative to the plot area. Default is to place it in the top right corner.}
-
-\item{tech}{Relevant for tile and raster shapes. A string indicating which technology the data comes from. 
-Defaults to \code{NULL} and will detect the technology automatically from the data. 
-Possible values are \code{c("vis", "vishd")}}
 
 \item{features}{A character vector of features to plot. These features need to be
 fetchable with \code{link{FetchData}}}
