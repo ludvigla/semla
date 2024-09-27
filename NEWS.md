@@ -1,3 +1,24 @@
+# semla 1.2.0
+
+*2024-09-27*
+
+## Bug fixes
+
+- Dealt with an issue in `MapFeatures` and `MapLabels` if the specified column contains NA values and when using SeuratObject v.5.
+
+- When running `RegionNeighbors` and specifying a column in which labels contain any blank spaces, the function will abort and a message will be provided. ([#20](https://github.com/ludvigla/semla/issues/20))
+
+## Changes
+
+- Added a new argument to `UpdateSeuratFromSemla`. Now the user should be able to decide if they want to put the raw or the transformed image in the new object ([#33](https://github.com/ludvigla/semla/pull/33)). 
+
+## Added
+
+- Compatibility with parquet file format, used in Visium HD, when loading coordinate files using the `LoadSpatialCoordinates` function (used in `ReadVisiumData`).
+- New arguments, `shape` and `spot_side`, within the `MapFeatures`, `MapLabels`, `MapFeaturesSummary`, `MapLabelsSummary`, and `MapMultipleFeatures` functions to allow for square pixel plotting, particularly useful when working with VisiumHD data. A new vignette to demonstrate how to work with VisiumHD data has also been added to the website.
+- Optional alternative to compute p-values when calculating spatial autocorrelation scores using `CorSpatialFeatures`. The p-values are computed using the Student t Distribution, and adjusted p-values are calculated using the Benjamini & Hochberg (BH, or FDR) method. ([#22](https://github.com/ludvigla/semla/issues/22))
+
+
 # semla 1.1.6
 
 *2023-09-19*
