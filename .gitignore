@@ -26,3 +26,5 @@ stereoscope/
 renv/
 Dockerfile
 TODO.md
+tests/testthat/Rplots.pdf
+.DS_store
