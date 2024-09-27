@@ -62,7 +62,6 @@ First we need to load some 10x VisiumHD data. You can run the code chunk below o
 
 ```{r eval=FALSE, include = TRUE}
 #| code-fold: true
-options(timeout=200)
 tmpdir <- "." # Set current wd or change to tmpdir()
 dir.create(paste0(tmpdir, "/mousebrain"))
 targetdir <- paste0(tmpdir, "/mousebrain/visium-hd")
@@ -71,14 +70,13 @@ destfile <- paste0(targetdir, "/mouse_brain_HD.tar.gz")
 download.file("https://cf.10xgenomics.com/samples/spatial-exp/3.0.0/Visium_HD_Mouse_Brain/Visium_HD_Mouse_Brain_binned_outputs.tar.gz", destfile = destfile)
 # now we decompress it
 untar(paste0(targetdir, "mouse_brain_HD.tar.gz")
-      
 ```
 
 As mentioned above, we can consider each resolution as its separate section, and load them as such into R using `semla`. Let's construct the `infoTable` with information regarding all the resolutions.
 
 ```{r, eval = FALSE, include = TRUE}
 # directory where the data is stored
-st.dir <- "./mousebrain/visium-hd/binned_outputs"
+st.dir <- file.path(getwd(), "mousebrain/visium-hd/binned_outputs")
 # specify resolutions to load into memory
 res <- paste(0, c(2, 8, 16), "um", sep = "")
 all.res <- paste(res, collapse = "|")
@@ -116,7 +114,7 @@ infoTable <- data.frame(
 Now that we have built the infoTable, we can load the VisiumHD data into memory. Be aware that the 2um data is very big, so due to RAM issues you might not be able to work with this data locally. For example, if you want to build the `infoTable` to store only the 8 and 16um resolutions, you could do the following:
 
 ```{r, eval = TRUE}
-st.dir <- "./mousebrain/visium-hd/binned_outputs"
+st.dir <- file.path(getwd(), "mousebrain/visium-hd/binned_outputs")
 res <- paste(0, c(8, 16), "um", sep = "")
 all.res <- paste(res, collapse = "|")
 
