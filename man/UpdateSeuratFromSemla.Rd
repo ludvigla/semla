@@ -36,7 +36,7 @@ SpatialFeaturePlot(se_merged, features = "Nrgn")
 
 # Transform images in object
 se_merged <- LoadImages(se_merged)
-rotation_angle <- get_array_rotation(se, grid_pattern = "hexagonal")
+rotation_angle <- get_array_rotation(se_merged, grid_pattern = "hexagonal")
 transforms <- rbind(generate_rigid_transform(sampleID = 1L, angle = rotation_angle$`1`),
                     generate_rigid_transform(sampleID = 2L, angle = 12))
 se_merged <- RigidTransformImages(se_merged, transforms = transforms)

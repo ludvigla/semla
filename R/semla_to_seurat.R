@@ -32,7 +32,7 @@ NULL
 #' 
 #' # Transform images in object
 #' se_merged <- LoadImages(se_merged)
-#' rotation_angle <- get_array_rotation(se, grid_pattern = "hexagonal")
+#' rotation_angle <- get_array_rotation(se_merged, grid_pattern = "hexagonal")
 #' transforms <- rbind(generate_rigid_transform(sampleID = 1L, angle = rotation_angle$`1`),
 #'                     generate_rigid_transform(sampleID = 2L, angle = 12))
 #' se_merged <- RigidTransformImages(se_merged, transforms = transforms)
@@ -58,7 +58,7 @@ UpdateSeuratFromSemla <- function (
   
   # Set global variables to NULL
   pxl_row_in_fullres <- pxl_col_in_fullres <- sampleID <- pxl_row_in_fullres_transformed <- pxl_col_in_fullres_transformed <- NULL
-  
+  full_width <- full_height <- t_max <- f_max <- NULL
   # Check object
   if (!inherits(object, what = "Seurat")) abort(glue("Invalid class '{class(object)}'. Expected a 'Seurat' object."))
   .check_seurat_object(object)
@@ -95,21 +95,9 @@ UpdateSeuratFromSemla <- function (
     })
   } else if (image_use == "transformed") {
     if (verbose) cli_alert_info("Loading transformed raster")
-    # if (verbose) cli_alert_info("Converting hexadecimal colors to RGB")
     imgs <- lapply(object@tools[["Staffli"]]@rasterlists[["transformed"]], function(im) {
       ar <- image_read(im)[[1]] |> as.integer()
       ar <- ar/max(ar)
-      # # retrieve dimensions
-      # w <- ncol(im)
-      # h <- nrow(im)
-      # # flatten
-      # hex_flat <- as.vector(im)
-      # # hex to rgb 
-      # rgb_mat <- grDevices::col2rgb(hex_flat)
-      # # reshape and normalize
-      # ar <- array(rgb_mat, dim = c(3, w, h))
-      # ar <- aperm(ar, c(3,2,1))
-      # ar <- ar / 255
     })
   }
   
@@ -174,7 +162,7 @@ UpdateSeuratFromSemla <- function (
                                               scale.factors$tissue_lowres_scalef), 
                  coordinates = coords[[i]], 
                  spot.radius = spot_radius_list[[i]])
-    DefaultAssay(slice) <- DefaultAssay(object)
+    SeuratObject::DefaultAssay(slice) <- SeuratObject::DefaultAssay(object)
     return(slice)
   }) |> setNames(nm = paste0("slice", 1:length(coords)))
   
