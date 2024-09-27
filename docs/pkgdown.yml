@@ -24,7 +24,8 @@ articles:
   spatial_autocorrelation: spatial_autocorrelation.html
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
-last_built: 2024-09-18T08:43Z
+  visiumHD: visiumHD.html
+last_built: 2024-09-27T14:29Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles
