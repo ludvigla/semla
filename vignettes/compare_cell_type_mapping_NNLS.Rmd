@@ -261,10 +261,11 @@ plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
                 features = brain_selected_cells[i], 
                 colors = colors_nnls,
                 override_plot_dims = T) & 
-      labs(fill = "Metod: NNLS") &
+      labs(fill = "NNLS") &
       theme(plot.subtitle = element_blank(), 
             plot.title = element_blank())
-    p1 <- p1 + plot_layout(guides = "collect") & 
+    p1 <- p1 + 
+      # plot_layout(guides = "collect") & 
       theme(legend.position = "top")
     
     DefaultAssay(se_brain_spatial) <- "stereoscope"
@@ -272,10 +273,11 @@ plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
                 features = brain_selected_cells[i], 
                 colors = colors_ss,
                 override_plot_dims = T) & 
-      labs(fill = "Metod: stereoscope") &
+      labs(fill = "Stereoscope") &
       theme(plot.subtitle = element_blank(), 
             plot.title = element_blank())
-    p2 <- p2 + plot_layout(guides = "collect") & 
+    p2 <- p2 + 
+      # plot_layout(guides = "collect") & 
       theme(legend.position = "top")
     
     DefaultAssay(se_brain_spatial) <- "cell2location"
@@ -283,10 +285,11 @@ plots_comp <- lapply(seq_along(brain_selected_cells), function(i) {
                 features = brain_selected_cells[i], 
                 colors = colors_c2l,
                 override_plot_dims = T) & 
-      labs(fill = "Metod: cell2location") & 
+      labs(fill = "Cell2location") & 
       theme(plot.subtitle = element_blank(), 
             plot.title = element_blank())
-    p3 <- p3 + plot_layout(guides = "collect") & 
+    p3 <- p3 + 
+      # plot_layout(guides = "collect") & 
       theme(legend.position = "top")
     
     (p1 | p2 | p3) & patchwork::plot_annotation(title = brain_selected_cells[i], 
@@ -438,7 +441,7 @@ kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
                 features = kidney_selected_cells[i], 
                 colors = colors_nnls,
                 override_plot_dims = T) & 
-      labs(title = "Metod: NNLS") & 
+      labs(title = "NNLS") & 
       theme(plot.subtitle = element_blank(), 
             plot.title = element_text(size=12));p1
     
@@ -447,7 +450,7 @@ kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
                 features = kidney_selected_cells[i], 
                 colors = colors_ss,
                 override_plot_dims = T) & 
-      labs(title = "Metod: stereoscope") & 
+      labs(title = "Stereoscope") & 
       theme(plot.subtitle = element_blank(), 
             plot.title = element_text(size=12))
     
@@ -456,7 +459,7 @@ kdn_plots_comp <- lapply(seq_along(kidney_selected_cells), function(i) {
                 features = kidney_selected_cells[i], 
                 colors = colors_c2l,
                 override_plot_dims = T) & 
-      labs(title = "Metod: cell2location") & 
+      labs(title = "Cell2location") & 
       theme(plot.subtitle = element_blank(), 
             plot.title = element_text(size=12))
     

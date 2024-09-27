@@ -58,7 +58,7 @@ se <- ReadVisiumData(infoTable)
 
 ```{r include=FALSE}
 se <- readRDS("R_objects/se_kidney_spatial")
-DefaultAssay(se_kidney_spatial) <- "Spatial"
+DefaultAssay(se) <- "Spatial"
 ```
 
 ```{r}

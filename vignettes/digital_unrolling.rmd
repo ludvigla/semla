@@ -246,14 +246,14 @@ pheatmap::pheatmap(binMat, cluster_cols = FALSE, border_color = FALSE,
 
 ## Other applications
 
-The tools described here could also be used for other applications. Maybe we are interested in a 
-specific part of a tissue where we want to define an axis. Letäs make a manual selection of the outermost
-layer of the mouse brain and subset the `Seurat` object to contain spots from this layer.
+The tools described here could also be used for other applications. Maybe we are interested in a specific part of a tissue where we want to define an axis. Let's make a manual selection of the outermost layer of the mouse brain and subset the `Seurat` object to contain spots from this layer.
 
 ```{r eval=FALSE}
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mbrain <- LoadImages(se_mbrain)
+se_mbrain$region <- "NA"
 se_mbrain <- FeatureViewer(se_mbrain)
+
 se_mbrain_subset <- SubsetSTData(se_mbrain, expression = region == "outer_layer")
 ```
 
@@ -269,8 +269,7 @@ dev.off()
 
 ![](digital_unrolling/mBrain.jpg)
 
-Then we can create a spatial network from this layer and modify it a bit to make it 
-compatible with `AdjustTissueCoordinates`:
+Then we can create a spatial network from this layer and modify it a bit to make it compatible with `AdjustTissueCoordinates`:
 
 ```{r eval=FALSE}
 spatial_network <- GetSpatialNetwork(se_mbrain_subset)[[1]]
@@ -280,8 +279,7 @@ edges <- spatial_network |> select(from, to) |> mutate(keep = TRUE)
 spatial_network <- tidygraph::tbl_graph(nodes = nodes, edges = edges, directed = FALSE)
 ```
 
-Now that we have the spatial network, we can run `AdjustTissueCoordinates` to compute 
-distances between the end points of the selected region:
+Now that we have the spatial network, we can run `AdjustTissueCoordinates` to compute distances between the end points of the selected region:
 
 ```{r eval=FALSE}
 # Run adjust tissue coordinates

@@ -5,7 +5,7 @@ NULL
 #' Update a Seurat object created with \code{semla} for compatibility with \code{Seurat}'s spatial functions
 #' 
 #' @param object An object of class \code{Seurat} with Visium data, created with \code{semla}
-#' @param image_use Strig specifying image type to use, either "raw" or "transformed"
+#' @param image_use String specifying image type to use, either "raw" or "transformed"
 #' @param verbose Print messages
 #' 
 #' @import dplyr
@@ -67,7 +67,7 @@ UpdateSeuratFromSemla <- function (
   
   # Get Staffli object
   st_object <- GetStaffli(object)
-
+  
   # Add step for test data
   if (any(st_object@imgs %in% c("mousebrain", "mousecolon"))) {
     object <- LoadImages(object, verbose = FALSE)
@@ -94,19 +94,22 @@ UpdateSeuratFromSemla <- function (
       return(ar)
     })
   } else if (image_use == "transformed") {
-    if (verbose) cli_alert_info("Converting hexadecimal colors to RGB")
+    if (verbose) cli_alert_info("Loading transformed raster")
+    # if (verbose) cli_alert_info("Converting hexadecimal colors to RGB")
     imgs <- lapply(object@tools[["Staffli"]]@rasterlists[["transformed"]], function(im) {
-      # retrieve dimensions
-      w <- ncol(im)
-      h <- nrow(im)
-      # flatten
-      hex_flat <- as.vector(im)
-      # hex to rgb 
-      rgb_mat <- grDevices::col2rgb(hex_flat)
-      # reshape and normalize
-      ar <- array(rgb_mat, dim = c(3, w, h))
-      ar <- aperm(ar, c(3,2,1))
-      ar <- ar / 255
+      ar <- image_read(im)[[1]] |> as.integer()
+      ar <- ar/max(ar)
+      # # retrieve dimensions
+      # w <- ncol(im)
+      # h <- nrow(im)
+      # # flatten
+      # hex_flat <- as.vector(im)
+      # # hex to rgb 
+      # rgb_mat <- grDevices::col2rgb(hex_flat)
+      # # reshape and normalize
+      # ar <- array(rgb_mat, dim = c(3, w, h))
+      # ar <- aperm(ar, c(3,2,1))
+      # ar <- ar / 255
     })
   }
   
@@ -185,4 +188,3 @@ UpdateSeuratFromSemla <- function (
   if (verbose) cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
   return(object)
 }
-
