@@ -93,12 +93,12 @@ NULL
 #'
 MapFeatures.default <- function (
   object,
-  spot_side,
   crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
   pt_stroke = 0,
   shape = "point",
+  spot_side = NULL,
   scale_alpha = FALSE,
   section_number = NULL,
   label_by = NULL,
@@ -704,7 +704,7 @@ MapFeatures.Seurat <- function (
 #'
 MapLabels.default <- function (
   object,
-  spot_side,
+  spot_side = NULL,
   crop_area = NULL,
   pt_size = 1,
   pt_alpha = 1,
