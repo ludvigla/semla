@@ -22,6 +22,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
     <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
     <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><a class="dropdown-item" href="../articles/visiumHD.html">VisiumHD</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
     <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
@@ -68,6 +69,25 @@
 
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="semla-120">semla 1.2.0<a class="anchor" aria-label="anchor" href="#semla-120"></a></h2>
+<p><em>2024-09-27</em></p>
+<div class="section level3">
+<h3 id="bug-fixes-1-2-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-2-0"></a></h3>
+<ul><li><p>Dealt with an issue in <code>MapFeatures</code> and <code>MapLabels</code> if the specified column contains NA values and when using SeuratObject v.5.</p></li>
+<li><p>When running <code>RegionNeighbors</code> and specifying a column in which labels contain any blank spaces, the function will abort and a message will be provided. (<a href="https://github.com/ludvigla/semla/issues/20" class="external-link">#20</a>)</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-1-2-0">Changes<a class="anchor" aria-label="anchor" href="#changes-1-2-0"></a></h3>
+<ul><li>Added a new argument to <code>UpdateSeuratFromSemla</code>. Now the user should be able to decide if they want to put the raw or the transformed image in the new object (<a href="https://github.com/ludvigla/semla/pull/33" class="external-link">#33</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="added-1-2-0">Added<a class="anchor" aria-label="anchor" href="#added-1-2-0"></a></h3>
+<ul><li>Compatibility with parquet file format, used in Visium HD, when loading coordinate files using the <code>LoadSpatialCoordinates</code> function (used in <code>ReadVisiumData</code>).</li>
+<li>New arguments, <code>shape</code> and <code>spot_side</code>, within the <code>MapFeatures</code>, <code>MapLabels</code>, <code>MapFeaturesSummary</code>, <code>MapLabelsSummary</code>, and <code>MapMultipleFeatures</code> functions to allow for square pixel plotting, particularly useful when working with VisiumHD data. A new vignette to demonstrate how to work with VisiumHD data has also been added to the website.</li>
+<li>Optional alternative to compute p-values when calculating spatial autocorrelation scores using <code>CorSpatialFeatures</code>. The p-values are computed using the Student t Distribution, and adjusted p-values are calculated using the Benjamini &amp; Hochberg (BH, or FDR) method. (<a href="https://github.com/ludvigla/semla/issues/22" class="external-link">#22</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.1.6" id="semla-116">semla 1.1.6<a class="anchor" aria-label="anchor" href="#semla-116"></a></h2>
 <p><em>2023-09-19</em></p>
