@@ -244,7 +244,7 @@ RadialDistance.default <- function (
   )
 
   # Get spatial network
-  spatnet <- GetSpatialNetwork(object)
+  spatnet <- GetSpatialNetwork(object, ...)
   if (length(spatnet) > 1) {
     abort(glue("Default method can only handle 1 tissue section at the time, got {length(spatnet)}"))
   }
@@ -271,7 +271,8 @@ RadialDistance.default <- function (
   if (verbose) cli_alert_info("Extracting border spots from a region with {length(spots)} spots")
 
   # Find border
-  border_spots <- RegionNeighbors(spatnet, spots = spots, outer_border = FALSE)
+  border_spots <- RegionNeighbors(spatnet, spots = spots, outer_border = FALSE, 
+                                  ...)
   inside_spots <- setdiff(spots, border_spots)
 
   # Get indices for spot groups
