@@ -83,6 +83,7 @@ se_merged <- LoadImages(se_merged)
 }
 \seealso{
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAndMergeMatrices}()},
 \code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
@@ -92,6 +93,7 @@ Other pre-process:
 \code{\link{UpdateImageInfo}()}
 
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAndMergeMatrices}()},
 \code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},

@@ -23,6 +23,7 @@ width and height of the original H&E image which will be added to the output
 }
 \seealso{
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAndMergeMatrices}()},
 \code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},

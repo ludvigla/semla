@@ -23,6 +23,7 @@ Useful links:
 Authors:
 \itemize{
   \item Lovisa Franzen \email{lovisa.franzen@scilifelab.se} (\href{https://orcid.org/0000-0003-3755-718X}{ORCID})
+  \item Javier Escudero Morlanes \email{javier.escudero.morlanes@scilifelab.se}
 }
 
 Other contributors:

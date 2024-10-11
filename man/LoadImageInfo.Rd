@@ -28,6 +28,7 @@ image_info
 }
 \seealso{
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAndMergeMatrices}()},
 \code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImages}()},

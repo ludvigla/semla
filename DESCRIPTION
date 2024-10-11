@@ -98,6 +98,7 @@ Collate:
     'load_images.R'
     'local_G.R'
     'mask.R'
+    'multimodal_object.R'
     'neighborhood_analysis.R'
     'osddu.R'
     'paper.R'
