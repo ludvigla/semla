@@ -153,6 +153,8 @@ UpdateSeuratForSemla <- function (
       coordinates <- tibble(barcode = rownames(x), 
              pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
              pxl_row_in_fullres = x[, "imagerow", drop = TRUE],
+             x = x[, "col", drop = TRUE],
+             y = y[, "row", drop = TRUE],
              sampleID = i)
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
     } else if (slice_type == "SlideSeq") {
