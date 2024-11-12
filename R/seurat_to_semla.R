@@ -20,6 +20,16 @@ NULL
 #' tutorial on our package website for an example on how to convert a \code{Seurat} object with
 #' VisiumV1 data.
 #' 
+#' @section VisiumV2:
+#' Note that you need to specify what H&E image was loaded, 
+#' one of "tissue_lowres" or "tissue_hires". If this argument 
+#' is incorrect, the tissue coordinates will be misplaced.
+#' 
+#' The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started} tutorial
+#' applies also for VisiumV2 assays. If you are working with VisiumHD data however, we recommend
+#' loading the data using \code{semla}'s own functions, as detailed in the VisiumHD
+#' \href{https://ludvigla.github.io/semla/articles/visiumHD.html} tutorial.
+#'  
 #' @section SlideSeq:
 #' For SlideSeq data, there's no additional H&E image provided. If you convert
 #' a Seurat object containing SlideSeq data, all image related functionality 
@@ -47,7 +57,7 @@ NULL
 #' library(semla)
 #' library(SeuratData)
 #' 
-#' # Load example Seurat object with VisiumV1 data
+#' # Load example Seurat object with VisiumV1/VisiumV2 data (depends on your Seurat version)
 #' InstallData("stxBrain")
 #' brain <- LoadData("stxBrain", type = "anterior1")
 #' 
@@ -82,11 +92,11 @@ UpdateSeuratForSemla <- function (
     image |> class() |> as.character()
   })
   if (length(unique(slice_types)) > 1) abort(glue("Only one spatial data type allowed. Got {paste(slice_types, collapse = ',')}"))
-  if (!all(slice_types %in% c("SlideSeq", "VisiumV1"))) abort(glue("Only 'SlideSeq' and 'VisiumV1' are currently supported. Got {slice_types}"))
+  if (!all(slice_types %in% c("SlideSeq", "VisiumV1", "VisiumV2"))) abort(glue("Only 'SlideSeq', 'VisiumV1' and 'VisiumV2' are currently supported. Got {slice_types}"))
   slice_type <- unique(slice_types)
   cli_alert_info("Found {slice_type} object(s).")
   
-  if (slice_type == "VisiumV1") {
+  if (slice_type %in%  c("VisiumV1", "VisiumV2")) {
     image_type <- match.arg(arg = image_type, choices = c("tissue_lowres", "tissue_hires"))
     if (verbose) cli_alert_info("Expecting '{image_type}' format.")
     
@@ -108,11 +118,11 @@ UpdateSeuratForSemla <- function (
   for (i in seq_along(object@images)) {
     
     # Check if the slice represent Visium data
-    if (!inherits(object@images[[i]], what = c("VisiumV1", "SlideSeq"))) abort("Only 'VisiumV1' and 'SlideSeq' data is supported.")
+    if (!inherits(object@images[[i]], what = c("VisiumV1", "VisiumV2", "SlideSeq"))) abort("Only 'VisiumV1', 'VisiumV2' and 'SlideSeq' data is supported.")
     
     # Collect image paths
     if (verbose) cli_alert_info("Collecting data for sample {i}:")
-    if (slice_type == "VisiumV1") {
+    if (slice_type %in%  c("VisiumV1", "VisiumV2")) {
       dims <- dim(imgs[[i]])
       image_path <- paste0(temp_dir, "/", i, ".png")
       if (verbose) cli_alert("  Exporting H&E image width dimensions {dims[1]}x{dims[2]} to {image_path}")
@@ -145,10 +155,16 @@ UpdateSeuratForSemla <- function (
       img_info_tibble <- bind_rows(img_info_tibble, iminfo)
     }
     
-    # Collect spatial coordinates
+    # Collect spatial coordinates.
+    ## VisiumV1 and Slide-seq assays access the coordinates the same way. This changed for VisiumV2 assays
     slice <- object@images[[i]]
-    x <- slice@coordinates
-    
+    if (slice_type %in% c("VisiumV1", "SlideSeq")) {
+      x <- slice@coordinates
+    } else if (slice_type == "VisiumV2") {
+      x <- slice@boundaries$centroids@coords
+      rownames(x) <- slice@boundaries$centroids@cells
+    }
+
     if (slice_type == "VisiumV1") {
       coordinates <- tibble(barcode = rownames(x), 
              pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
@@ -157,6 +173,13 @@ UpdateSeuratForSemla <- function (
              y = y[, "row", drop = TRUE],
              sampleID = i)
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
+    } else  if (slice_type == "VisiumV2") {
+      coordinates <- tibble(barcode = rownames(x), 
+                            pxl_col_in_fullres = x[, "y", drop = TRUE],
+                            pxl_row_in_fullres = x[, "x", drop = TRUE],
+                            sampleID = as.integer(i))
+      coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
+      if (verbose) cli_alert_warning("  Missing array coordinates for VisiumV2 sample {i}.")
     } else if (slice_type == "SlideSeq") {
       coordinates <- tibble(barcode = rownames(x), 
                             pxl_col_in_fullres = x[, "x", drop = TRUE],
@@ -186,7 +209,7 @@ UpdateSeuratForSemla <- function (
   }
   
   # Create Staffli object
-  if (slice_type == "VisiumV1") {
+  if (slice_type %in%  c("VisiumV1", "VisiumV2")) {
     if (verbose) cli_alert_warning(glue("Paths to raw images are unavailable. See '?ReplaceImagePaths()' ",
                                         "for more information on how to update the paths."))
   }
