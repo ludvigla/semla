@@ -193,7 +193,6 @@ UpdateSeuratForSemla <- function (
       coordinates_tibble <- coordinates_tibble |> 
         arrange(y) |> 
         mutate(y = coord_y)
-      # if (verbose) cli_alert_warning("  Missing array coordinates for VisiumV2 sample {i}.")
     } else if (slice_type == "SlideSeq") {
       coordinates <- tibble(barcode = rownames(x), 
                             pxl_col_in_fullres = x[, "x", drop = TRUE],
