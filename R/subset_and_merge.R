@@ -166,13 +166,13 @@ MergeSTData <- function (
 
   # Merge image_info
   image_info <- do.call(bind_rows, lapply(st_objects, function(st_obj) {
-    st_obj@image_info
+    st_obj@image_info |> mutate(sampleID = as.character(sampleID))
   })) |>
     mutate(sampleID = paste0(unique(mergedMetaData$new_sampleID)))
 
   # Merge scalefactors
   scalefactors <- do.call(bind_rows, lapply(st_objects, function(st_obj) {
-    st_obj@scalefactors
+    st_obj@scalefactors |> mutate(sampleID = as.character(sampleID))
   }))
   if (length(scalefactors) > 0) {
     scalefactors <- scalefactors |>
