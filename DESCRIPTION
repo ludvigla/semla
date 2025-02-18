@@ -18,7 +18,8 @@ Authors@R:
     person(
         "Javier", "Escudero Morlanes",
         email = "javier.escudero.morlanes@scilifelab.se",
-        role = c("aut")
+        role = c("aut"),
+        comment = c(ORCID = "0009-0004-2885-2456")
     ),
     person(
         "Spatial", "Research", 
