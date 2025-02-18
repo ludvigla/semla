@@ -40,8 +40,13 @@ MapPointsToReference <- function(
   # Calculate minimum center-to-center distance between reference points
   min_cc_dist <- dbscan::kNN(ref_coords[, c(1, 2)], k = 1)$dist[, 1] |> min()
   half_cc_dist <- min_cc_dist / 2
-  if (is.null(distance_max) || distance_max > half_cc_dist) {
+  if (is.null(distance_max)) {
     distance_max <- half_cc_dist
+  }
+  if (distance_max > half_cc_dist) {
+    if (verbose) cli_alert_info(glue("The provided {cli::col_br_magenta('distance_max')}",
+                                     " exceeds the recommended expanded Visium spot radius", 
+                                     " ({cli::col_br_cyan(half_cc_dist)} pixels). Make sure to inspect your results."))
   }
   
   # Prepare dataframes with origin and ID information
