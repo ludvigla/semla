@@ -369,3 +369,19 @@ RunNNLS <- function(object, ...) {
 RunMixedNNLS <- function(object, ...) {
   UseMethod(generic = "RunMixedNNLS", object = object)
 }
+
+
+#' Create a multimodal object in a shared spot coordinate framework
+#'
+#' @param object_ref The reference semla object
+#' @param ... Arguments passed to other methods
+#'
+#' @rdname multimodal-object
+#' 
+#' @returns An object with each modality in a shared coordinate framework
+#'
+#' @export
+#'
+CreateMultiModalObject <- function(object_ref, ...) {
+  UseMethod(generic = 'CreateMultiModalObject', object = object_ref)
+}

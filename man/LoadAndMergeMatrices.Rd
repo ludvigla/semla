@@ -61,6 +61,7 @@ mergedMatrix <- LoadAndMergeMatrices(samples)
 }
 \seealso{
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAnnotationCSV}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},

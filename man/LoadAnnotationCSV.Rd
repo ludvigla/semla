@@ -52,6 +52,7 @@ MapLabels(se_merged, column_name = "test")
 }
 \seealso{
 Other pre-process: 
+\code{\link{CreateMultiModalObject}()},
 \code{\link{LoadAndMergeMatrices}()},
 \code{\link{LoadImageInfo}()},
 \code{\link{LoadImages}()},

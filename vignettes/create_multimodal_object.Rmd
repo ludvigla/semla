@@ -1,0 +1,193 @@
+---
+title: "Create a spatial multimodal object"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: inline
+---
+
+Recently, more and more spatial multimodal data are becoming available, however, the alignment and processing of some of these modalities can be challenging. One such example is the integration of Visium data with Mass Spectrometry Imaging (MSI) data, which can experimentally either be performed on the same or adjacent tissue sections. These two technologies produce data with different spatial resolution and mismatched spatial coordinate systems. In the case of MSI data, there is further a challenge with non-standardized file formats.
+
+To perform the task of integrating two spatial omics datasets into shared coordinates, we have developed a new function within `semla` that joins two semla objects into a single object, with each modality present as separate assays/layers.
+
+A few pre-requisites are required before joining the two samples, the primary one being that the spatial coordinates of the objects first needs to have been aligned and transformed into the same pixel dimensions. And secondly, both data sets needs to be available in the standardized Space Ranger output file formats. To for instance obtained aligned and properly preprocessed Visium and MSI spatial multimodal datasets, the pipeline *MAGPIE* (unpublished) can be used to perform these tasks in a streamlined fashion.
+
+For this tutorial, we have processed mouse lung tissue with both Visium and MSI, from consecutive sections. The MSI data was first preprocessed and thereafter spatially aligned into the matching Visium coordinate system using *MAGPIE*, which produces output files in the Space Ranger format for the aligned MSI data. In this dataset, we also have image of the H&E stained tissue section that used to obtain the MSI data.
+
+Let's get started!
+
+```{r message=FALSE, warning=FALSE}
+library(semla)
+library(patchwork)
+```
+
+```{r}
+col_scale_rocket <- viridis::rocket(11, direction = -1)
+col_scale_mako <- viridis::mako(11, direction = -1)
+```
+
+## Load data
+
+We will start by loading the two datasets, starting with the Visium data.
+
+```{r}
+infoTable_visium <- data.frame(
+  samples = file.path("multimodal_data/mm_bleo_visium", "filtered_feature_bc_matrix.h5"),
+  imgs = file.path("multimodal_data/mm_bleo_visium", "spatial/tissue_hires_image.png"),
+  spotfiles = file.path("multimodal_data/mm_bleo_visium", "spatial/tissue_positions_list.csv"),
+  json = file.path("multimodal_data/mm_bleo_visium", "spatial/scalefactors_json.json")
+)
+
+se_visium <- ReadVisiumData(infoTable = infoTable_visium, 
+                            assay = "Visium", 
+                            remove_spots_outside_HE = T, 
+                            remove_spots_outside_tissue = T)
+```
+
+```{r fig.height=4, fig.width=4}
+MapFeatures(se_visium, features = "nCount_Visium", colors = col_scale_rocket)
+```
+
+<br><br>
+
+Next, we read the MSI data available in the same stardardised Space Ranger format. To make it easier to separate the two objects, we can pass a unique name to the `assay` argument.
+
+```{r}
+infoTable_msi <- data.frame(
+  samples = file.path("multimodal_data/mm_bleo_msi", "filtered_feature_bc_matrix.h5"),
+  imgs = file.path("multimodal_data/mm_bleo_msi", "spatial/tissue_hires_image.png"),
+  spotfiles = file.path("multimodal_data/mm_bleo_msi", "spatial/tissue_positions_list.csv"),
+  json = file.path("multimodal_data/mm_bleo_msi", "spatial/scalefactors_json.json")
+)
+
+se_msi <- ReadVisiumData(infoTable = infoTable_msi, 
+                         assay = "MSI", 
+                         remove_spots_outside_HE = T, 
+                         remove_spots_outside_tissue = T)
+```
+
+```{r fig.height=4, fig.width=4}
+MapFeatures(se_msi, features = "nCount_MSI", colors = col_scale_mako, pt_size = 0.6, min_cutoff = 0.05)
+```
+
+<br>
+
+Here we see the transformed MSI data visualized in the same manner as we are used to see Visium data. The spatial resolution of MSI data is a lot higher, and since the coordinates here have been aligned to match the Visium H&E image, it is no longer present in a perfect grid but can rather appear slightly distorted.
+
+If we want, we can load the MSI H&E image and view it together with the data.
+
+```{r}
+se_msi_he <- LoadImages(se_msi)
+```
+
+```{r fig.height=4, fig.width=4}
+MapFeatures(se_msi_he, features = "nCount_MSI", colors = col_scale_mako, 
+            pt_size = 0.4,
+            image_use = "raw")
+```
+
+## Data processing
+
+Next, we will perform the standard processing of the expression data, starting with the Visium data.
+
+```{r}
+se_visium <- se_visium |> 
+  NormalizeData() |>
+  ScaleData() |>
+  FindVariableFeatures()
+```
+
+For the MSI data, the intensity values have already been normalized based on total ion count prior to creating the input data. However, to ease the integration and shorten the processing time, we will filter the data and only include the most spatially variable metabolites.
+
+First we can have a look at the distribution of metabolites and peak intensities across pixels to thereafter determine reasonable cutoffs.
+
+```{r fig.width=4, fig.height=4}
+VlnPlot(se_msi, features = c("nCount_MSI", "nFeature_MSI"), 
+        pt.size = 0, 
+        ncol = 2)
+```
+
+```{r}
+#' Pixel filter
+min_count_per_spot <- 14e5
+min_peaks_per_spot <- 300
+msi_coord_keep <- rownames(subset(se_msi@meta.data, 
+                                  nFeature_MSI > min_peaks_per_spot & nCount_MSI > min_count_per_spot))
+
+se_msi_filtered <- SubsetSTData(se_msi, spots = msi_coord_keep)
+se_msi_filtered
+```
+
+```{r}
+# Metabolite filter
+se_msi_filtered <- se_msi_filtered |> FindVariableFeatures()
+cor_features <- CorSpatialFeatures(se_msi_filtered, assay_use = "MSI", slot_use = "counts", verbose = T)
+
+top_n <- 500
+top_metabolites <- cor_features[[1]] |> head(n = top_n) |> pull(gene)
+
+se_msi_filtered <- SubsetSTData(se_msi, features = top_metabolites)
+```
+
+## Create the spatial multimodal object
+
+Now, each object is ready for being joined into a single object by using the `CreateMultiModalObject()` function. What this function does, is to use the second modality object (MSI in this case) and map it into the reference spatial object (here Visium). Since the spatial resolution of MSI is higher than for Visium, the function will detect and aggregate data from multiple MSI pixels per Visium spot, taking either mean of the sum of the MSI measurements (as specified with the `agg_func` argument).
+
+```{r}
+se_mmo <- CreateMultiModalObject(object_ref = se_visium, 
+                                 object_map = se_msi_filtered,
+                                 agg_func = "mean", 
+                                 new_assay_name = "MSI")
+```
+
+```{r fig.width=6, fig.height=8}
+MapFeatures(se_mmo, 
+            features = c("nCount_Visium", "nFeature_Visium"), 
+            ncol = 1, 
+            colors = col_scale_rocket) |
+  MapFeatures(se_mmo, 
+              features = c("nCount_MSI", "nFeature_MSI"), 
+              ncol = 1, 
+              colors = col_scale_mako)
+```
+
+As seen here, we now have the MSI and Visium data within the same object and coordinate system, allowing us to perform any desired downstream analyses, e.g. factor analysis with NMF or MOFA.
+
+As with any semla object, we can read in the tissue image and in this case the Visium H&E image will be selected by default as it acted as our reference dataset.
+
+```{r}
+se_mmo <- LoadImages(se_mmo)
+```
+
+```{r fig.width=6, fig.height=4}
+spot_size <- 0.6
+MapFeatures(se_mmo, 
+            features = c("nCount_Visium"), pt_size = spot_size,
+            colors = col_scale_rocket, image_use = "raw") |
+  MapFeatures(se_mmo, 
+              features = c("nCount_MSI"), pt_size = spot_size,
+              colors = col_scale_mako, image_use = "raw")
+```
+
+------------------------------------------------------------------------
+
+<details open>
+
+<summary>**Package version**</summary>
+
+-   `semla`: `r packageVersion("semla")`
+
+</details>
+
+<details>
+
+<summary>**Session info**</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+<br>

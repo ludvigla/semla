@@ -41,6 +41,18 @@ tutorial on our package website for an example on how to convert a \code{Seurat}
 VisiumV1 data.
 }
 
+\section{VisiumV2}{
+
+Note that you need to specify what H&E image was loaded, 
+one of "tissue_lowres" or "tissue_hires". If this argument 
+is incorrect, the tissue coordinates will be misplaced.
+
+The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started} tutorial
+applies also for VisiumV2 assays. If you are working with VisiumHD data however, we recommend
+loading the data using \code{semla}'s own functions, as detailed in the VisiumHD
+\href{https://ludvigla.github.io/semla/articles/visiumHD.html} tutorial.
+}
+
 \section{SlideSeq}{
 
 For SlideSeq data, there's no additional H&E image provided. If you convert
@@ -54,7 +66,7 @@ of \code{semla} will be inaccessible.
 library(semla)
 library(SeuratData)
 
-# Load example Seurat object with VisiumV1 data
+# Load example Seurat object with VisiumV1/VisiumV2 data (depends on your Seurat version)
 InstallData("stxBrain")
 brain <- LoadData("stxBrain", type = "anterior1")
 
