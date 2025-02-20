@@ -61,7 +61,6 @@ of \code{semla} will be inaccessible.
 }
 
 \examples{
-
 \dontrun{
 library(semla)
 library(SeuratData)

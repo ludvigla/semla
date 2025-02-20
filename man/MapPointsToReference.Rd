@@ -8,7 +8,8 @@ MapPointsToReference(
   ref_coords,
   map_coords,
   distance_max = NULL,
-  n_neighbors = 100
+  n_neighbors = 100,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ a spot as a neighbor (defaults to half the minimum distance between reference po
 
 \item{n_neighbors}{The maximum number of neighbors to consider for 
 each reference point (defaults to 100).}
+
+\item{verbose}{Logical indicating whether to print informative messages during 
+execution. Defaults to TRUE.}
 }
 \value{
 A dataframe with "map_coord_IDs" indicating the nearest map spot ID 
