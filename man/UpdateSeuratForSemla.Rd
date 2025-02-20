@@ -47,10 +47,10 @@ Note that you need to specify what H&E image was loaded,
 one of "tissue_lowres" or "tissue_hires". If this argument 
 is incorrect, the tissue coordinates will be misplaced.
 
-The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started} tutorial
-applies also for VisiumV2 assays. If you are working with VisiumHD data however, we recommend
-loading the data using \code{semla}'s own functions, as detailed in the VisiumHD
-\href{https://ludvigla.github.io/semla/articles/visiumHD.html} tutorial.
+The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started} 
+tutorial applies also for VisiumV2 assays. If you are working with VisiumHD data however, 
+we recommend loading the data using \code{semla}'s own functions, as detailed in the
+\href{https://ludvigla.github.io/semla/articles/visiumHD.html}{VisiumHD} tutorial.
 }
 
 \section{SlideSeq}{
