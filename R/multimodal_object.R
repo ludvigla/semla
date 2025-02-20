@@ -20,6 +20,8 @@ NULL
 #' a spot as a neighbor (defaults to half the minimum distance between reference points).
 #' @param n_neighbors The maximum number of neighbors to consider for 
 #' each reference point (defaults to 100).
+#' @param verbose Logical indicating whether to print informative messages during 
+#' execution. Defaults to TRUE.
 #' 
 #' @return A dataframe with "map_coord_IDs" indicating the nearest map spot ID 
 #' for each point in the reference dataframe.
@@ -31,7 +33,12 @@ MapPointsToReference <- function(
     ref_coords, 
     map_coords, 
     distance_max = NULL, 
-    n_neighbors = 100) {
+    n_neighbors = 100,
+    verbose = TRUE
+    ) {
+  
+  # Set global variables to NULL
+  ref_id <- map_id <- . <- NULL
   
   if (n_neighbors<1) {
     abort(glue("Invalid {col_br_magenta('n_neighbors')}. Expected a numeric of at least 1"))
@@ -167,6 +174,9 @@ CreateMultiModalObject.default <- function (
     verbose = TRUE,
     ...
 ) {
+  
+  # Set global variable to NULL
+  sampleID <- map_id <- ref_id <- coords_per_ref_coord <- NULL
   
   # Run checks
   # Check input objects
@@ -470,14 +480,18 @@ CreateMultiModalObject.Seurat <- function (
 #' 
 #' @noRd
 .aggDataPerSpot <- function (count_matrix, mapping_df) {
+  
+  # Set global variable to NULL
+  ref_id <- feature <- value <- coords_per_ref_coord <- NULL
+  
   feats <- colnames(count_matrix)
   count_matrix$map_id <- rownames(count_matrix)
   
   count_matrix_long <- pivot_longer(count_matrix,
                                     cols = all_of(feats),
                                     names_to = "feature", 
-                                    values_to = "value" 
-  )
+                                    values_to = "value"
+                                    )
   
   # Add reference coord IDs
   count_matrix_long$ref_id <- mapping_df$ref_id[match(count_matrix_long$map_id, mapping_df$map_id)]

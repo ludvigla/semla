@@ -52,7 +52,6 @@ NULL
 #' @importFrom grDevices dev.off png
 #' 
 #' @examples 
-#' 
 #' \dontrun{
 #' library(semla)
 #' library(SeuratData)
@@ -245,6 +244,9 @@ UpdateSeuratForSemla <- function (
 #'
 #' @noRd
 .pixel_normalize <- function(df){
+  # Set global variable to NULL
+  pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- NULL
+  
   # Normalize pixel coordinates
   coord <- df |> 
     mutate(x = pxl_col_in_fullres - min(pxl_col_in_fullres) + 1,

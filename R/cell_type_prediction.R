@@ -243,7 +243,7 @@ RunNNLS.Seurat <- function (
     assay_name,
     dimred_name,
     dimred_prefix = "cFactor_",
-    verbose
+    verbose = TRUE
 ) {
   # Return results as a DimReduc object or an Assay object
   if (return_as_dimred) {

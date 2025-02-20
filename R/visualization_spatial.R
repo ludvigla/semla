@@ -121,7 +121,7 @@ MapFeatures.default <- function (
 ) {
 
   # Set global variables to NULL
-  barcode <- sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- NULL
+  barcode <- sampleID <- pxl_col_in_fullres <- pxl_row_in_fullres <- image_use <- NULL
 
   # Check data
   .prep_data_for_plotting(object, colors, label_by, scale, arrange_features, coords_columns)
