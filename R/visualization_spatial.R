@@ -1541,7 +1541,8 @@ MapLabels.Seurat <- function (
   
   # Check that if raster, no HE image
   if (shape == "raster") {
-    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. ", 
+                                                                 "If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
   }
   
   # Check if the image has been derotated for tiles
@@ -1793,7 +1794,8 @@ MapLabels.Seurat <- function (
   
   # Check that if raster, no HE image
   if (shape == "raster") {
-    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided.", 
+                                                                 "If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
   }
   
   # Check if the image has been derotated for tiles
