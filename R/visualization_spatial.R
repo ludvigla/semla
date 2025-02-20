@@ -1325,12 +1325,17 @@ MapLabels.Seurat <- function (
     {
       if (!encoded_cols_present) {
         scale_fill_gradientn(colours = colors,
-                              limits = c(ifelse(!center_zero,
-                                                feature_limits[[nm]][1, ftr, drop = TRUE],
-                                                -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
-                                         ifelse(!center_zero,
-                                                feature_limits[[nm]][2, ftr, drop = TRUE],
-                                                max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))))
+                             limits = c(ifelse(!center_zero,
+                                               feature_limits[[nm]][1, ftr, drop = TRUE],
+                                               -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
+                                        ifelse(!center_zero,
+                                               feature_limits[[nm]][2, ftr, drop = TRUE],
+                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))),
+                             guide = guide_colourbar(frame.colour = "black",
+                                                     frame.linewidth = 0.25,
+                                                     ticks.colour = "black",
+                                                     ticks.linewidth = 0.25)
+                             )
       }
     } +
     # Create a title
@@ -1703,7 +1708,12 @@ MapLabels.Seurat <- function (
                                                -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
                                         ifelse(!center_zero,
                                                feature_limits[[nm]][2, ftr, drop = TRUE],
-                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))))
+                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))),
+                             guide = guide_colourbar(frame.colour = "black",
+                                                     frame.linewidth = 0.25,
+                                                     ticks.colour = "black",
+                                                     ticks.linewidth = 0.25)
+                             )
       }
     } +
     # Create a title
