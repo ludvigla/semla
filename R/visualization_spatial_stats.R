@@ -90,11 +90,16 @@ MapFeaturesSummary <- function (
   # Check subplot_type
   subplot_type_options <- c("box", "violin", "histogram", "density")
   subplot_type_options_coll <- glue::glue_collapse(subplot_type_options, sep = ', ', last = ' or ')
-  if (missing(subplot_type)) {abort(glue("No subplot type specified. Please provide either {subplot_type_options_coll}."))}
+  if (missing(subplot_type)) {
+    cli::cli_alert_info(glue("No subplot type specified; Defaults to violin plot. ",
+                             "To change, please provide either {subplot_type_options_coll}."))
+    subplot_type <- "violin"
+    }
   if (!missing(subplot_type)) {
     if (!is.character(subplot_type)) abort(glue("Invalid class '{class(subplot_type)}' of subplot_type."))
     if (length(subplot_type) > 1) abort(glue("Only 1 subplot type can be provided at the time."))
-    if(!subplot_type %in% subplot_type_options) abort(glue("{subplot_type} is not a valid choice.  Please provide either {subplot_type_options_coll}"))
+    if(!subplot_type %in% subplot_type_options) abort(glue("{subplot_type} is not a valid choice. ",
+                                                           "Please provide either {subplot_type_options_coll}"))
   }
 
   # Check features
