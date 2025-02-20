@@ -13,7 +13,8 @@ RunLocalG(object, ...)
   spatnet,
   alternative = c("two.sided", "greater", "less"),
   return_as_tibble = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 )
 
 \method{RunLocalG}{Seurat}(

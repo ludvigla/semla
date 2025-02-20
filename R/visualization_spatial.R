@@ -1325,12 +1325,17 @@ MapLabels.Seurat <- function (
     {
       if (!encoded_cols_present) {
         scale_fill_gradientn(colours = colors,
-                              limits = c(ifelse(!center_zero,
-                                                feature_limits[[nm]][1, ftr, drop = TRUE],
-                                                -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
-                                         ifelse(!center_zero,
-                                                feature_limits[[nm]][2, ftr, drop = TRUE],
-                                                max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))))
+                             limits = c(ifelse(!center_zero,
+                                               feature_limits[[nm]][1, ftr, drop = TRUE],
+                                               -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
+                                        ifelse(!center_zero,
+                                               feature_limits[[nm]][2, ftr, drop = TRUE],
+                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))),
+                             guide = guide_colourbar(frame.colour = "black",
+                                                     frame.linewidth = 0.25,
+                                                     ticks.colour = "black",
+                                                     ticks.linewidth = 0.25)
+                             )
       }
     } +
     # Create a title
@@ -1536,7 +1541,8 @@ MapLabels.Seurat <- function (
   
   # Check that if raster, no HE image
   if (shape == "raster") {
-    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. ", 
+                                                                 "If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
   }
   
   # Check if the image has been derotated for tiles
@@ -1703,7 +1709,12 @@ MapLabels.Seurat <- function (
                                                -max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE]))),
                                         ifelse(!center_zero,
                                                feature_limits[[nm]][2, ftr, drop = TRUE],
-                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))))
+                                               max(abs(feature_limits[[nm]][1:2, ftr, drop = TRUE])))),
+                             guide = guide_colourbar(frame.colour = "black",
+                                                     frame.linewidth = 0.25,
+                                                     ticks.colour = "black",
+                                                     ticks.linewidth = 0.25)
+                             )
       }
     } +
     # Create a title
@@ -1783,7 +1794,8 @@ MapLabels.Seurat <- function (
   
   # Check that if raster, no HE image
   if (shape == "raster") {
-    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided. If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
+    if ("xy" != paste(coords_columns, collapse = "")) abort(glue("For {col_br_green('raster')} plotting, no HE should be provided.", 
+                                                                 "If you want to plot the HE, consider using shapes {col_br_green('tile')} or {col_br_green('point')}."))
   }
   
   # Check if the image has been derotated for tiles

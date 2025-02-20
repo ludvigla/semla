@@ -548,7 +548,9 @@ MapMultipleFeatures.Seurat <- function (
                          guide = guide_colourbar(title.position = "right",
                                                  order = 1,
                                                  frame.colour = "black",
-                                                 frame.linewidth = 1,
+                                                 frame.linewidth = 0.25,
+                                                 ticks.colour = "black",
+                                                 ticks.linewidth = 0.25,
                                                  draw.ulim = FALSE,
                                                  draw.llim = FALSE,
                                                  label = FALSE)) +
@@ -582,7 +584,9 @@ MapMultipleFeatures.Seurat <- function (
                            guide = guide_colourbar(title.position = "right",
                                                    order = i,
                                                    frame.colour = "black",
-                                                   frame.linewidth = 1,
+                                                   frame.linewidth = 0.25,
+                                                   ticks.colour = "black",
+                                                   ticks.linewidth = 0.25,
                                                    draw.ulim = FALSE,
                                                    draw.llim = FALSE,
                                                    label = ifelse(i == length(features) & use_text, use_text, FALSE)))
@@ -764,7 +768,9 @@ MapMultipleFeatures.Seurat <- function (
                          guide = guide_colourbar(title.position = "right",
                                                  order = 1,
                                                  frame.colour = "black",
-                                                 frame.linewidth = 1,
+                                                 frame.linewidth = 0.25,
+                                                 ticks.colour = "black",
+                                                 ticks.linewidth = 0.25,
                                                  draw.ulim = FALSE,
                                                  draw.llim = FALSE,
                                                  label = FALSE)) +
@@ -808,7 +814,9 @@ MapMultipleFeatures.Seurat <- function (
                            guide = guide_colourbar(title.position = "right",
                                                    order = i,
                                                    frame.colour = "black",
-                                                   frame.linewidth = 1,
+                                                   frame.linewidth = 0.25,
+                                                   ticks.colour = "black",
+                                                   ticks.linewidth = 0.25,
                                                    draw.ulim = FALSE,
                                                    draw.llim = FALSE,
                                                    label = ifelse(i == length(features) & use_text, use_text, FALSE)))
