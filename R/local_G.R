@@ -93,7 +93,8 @@ RunLocalG.default <- function (
   spatnet,
   alternative = c("two.sided", "greater", "less"),
   return_as_tibble = TRUE,
-  verbose = TRUE
+  verbose = TRUE,
+  ...
 ) {
 
   # Set global variables to NULL
