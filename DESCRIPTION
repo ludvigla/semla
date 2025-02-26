@@ -53,8 +53,7 @@ Imports:
     RColorBrewer,
     shiny,
     shinyjs,
-    reactR,
-    arrow
+    reactR
 RoxygenNote: 7.3.2
 Suggests: 
     farver,
@@ -78,7 +77,8 @@ Suggests:
     scico,
     ggfittext,
     hdf5r,
-    spelling
+    spelling,
+    arrow
 Collate: 
     'checks.R'
     'generics.R'
