@@ -115,6 +115,8 @@ reference:
   - TileImage
   - export_coordinates
   - export_graph
+  - MapPointsToReference
+  - CreateMultiModalObject
 - subtitle: Visualization
 - contents:
   - MapFeatures
