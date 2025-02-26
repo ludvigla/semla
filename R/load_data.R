@@ -11,11 +11,12 @@ NULL
 #' be assigned with 0 expression.
 #'
 #' Spot IDs are renamed to be unique. Usually, the spots are named something similar to:
-#' \code{"ACGCCTGACACGCGCT-1", "TACCGATCCAACACTT-1"}
+#' \code{"ACGCCTGACACGCGCT-1", "TACCGATCCAACACTT-1"}. If a "-N" suffix is missing from
+#' the barcode IDs, it will be added.
 #'
 #' Since spot barcodes are shared across datasets, there is a risk that some of the spot IDs
-#' will be duplicated after merging. To avoid this, the prefix (e.g. "-1") is replaced by
-#' a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
+#' will be duplicated after merging. To avoid this, the suffix (e.g. "-1") is replaced by
+#' a unique suffix for each loaded matrix: "-1", "-2", "-3", ...
 #'
 #' @family pre-process
 #'
