@@ -11,11 +11,12 @@ NULL
 #' be assigned with 0 expression.
 #'
 #' Spot IDs are renamed to be unique. Usually, the spots are named something similar to:
-#' \code{"ACGCCTGACACGCGCT-1", "TACCGATCCAACACTT-1"}
+#' \code{"ACGCCTGACACGCGCT-1", "TACCGATCCAACACTT-1"}. If a "-N" suffix is missing from
+#' the barcode IDs, it will be added.
 #'
 #' Since spot barcodes are shared across datasets, there is a risk that some of the spot IDs
-#' will be duplicated after merging. To avoid this, the prefix (e.g. "-1") is replaced by
-#' a unique prefix for each loaded matrix: "-1", "-2", "-3", ...
+#' will be duplicated after merging. To avoid this, the suffix (e.g. "-1") is replaced by
+#' a unique suffix for each loaded matrix: "-1", "-2", "-3", ...
 #'
 #' @family pre-process
 #'
@@ -104,12 +105,19 @@ LoadAndMergeMatrices <- function (
         abort(glue("Data sets not supported: {paste(names(exprMat), collapse=', ')}"))
       antibodyMatrix <- exprMat[["Antibody Capture"]]
       exprMat <- exprMat[["Gene Expression"]]
-      colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
-      colnames(antibodyMatrix) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(antibodyMatrix))
+      if(!grepl("-\\d+$", colnames(exprMat)[1])){ # Check if missing "-N" suffix
+        colnames(exprMat) <- paste0(colnames(exprMat), "-1")
+        colnames(antibodyMatrix) <- paste0(colnames(antibodyMatrix), "-1")
+      }
+      colnames(exprMat) <- gsub(pattern = "-\\d+$", replacement = paste0("-", i), x = colnames(exprMat))
+      colnames(antibodyMatrix) <- gsub(pattern = "-\\d+$", replacement = paste0("-", i), x = colnames(antibodyMatrix))
       cli_alert("  Finished loading antibody capture matrix {i}")
       ab_exists <- TRUE
     } else {
-      colnames(exprMat) <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = colnames(exprMat))
+      if(!grepl("-\\d+$", colnames(exprMat)[1])){ # Check if missing "-N" suffix
+        colnames(exprMat) <- paste0(colnames(exprMat), "-1")
+      }
+      colnames(exprMat) <- gsub(pattern = "-\\d+$", replacement = paste0("-", i), x = colnames(exprMat))
       if (ab_exists) cli_alert_warning("  No antibody capture matrix found for sample {i}. Returning empty matrix.")
       if (!is.null(antibodyMatrix)) {
         capture_ids <- rownames(antibodyMatrix)
@@ -265,7 +273,10 @@ LoadSpatialCoordinates <- function (
         filter(selected == 1)
     }
     if (verbose) cli_alert("  Finished loading coordinates for sample {i}")
-    coords$barcode <- gsub(pattern = "-\\d+", replacement = paste0("-", i), x = coords$barcode)
+    if(!grepl("-\\d+$", coords$barcode[1])){ # Check if missing "-N" suffix
+      coords$barcode <- paste0(coords$barcode, "-1")
+    }
+    coords$barcode <- gsub(pattern = "-\\d+$", replacement = paste0("-", i), x = coords$barcode)
     coords$sampleID <- i
     return(coords)
   }))
@@ -478,8 +489,11 @@ LoadAnnotationCSV <- function (
       sample_ann <- sample_ann |> 
         rename(barcode = 1)
     }
+    if(!grepl("-\\d+$", sample_ann$barcode[1])){ # Check if missing "-N" suffix
+      sample_ann$barcode <- paste0(sample_ann$barcode, "-1")
+    }
     sample_ann <- sample_ann |> 
-      mutate(barcode = gsub(pattern = "-\\d+", replacement = paste0("-", i), x = barcode))
+      mutate(barcode = gsub(pattern = "-\\d+$", replacement = paste0("-", i), x = barcode))
     ann <- bind_rows(ann, sample_ann)
   }
   ann <- ann |> data.frame(row.names = 1, check.names = FALSE)
