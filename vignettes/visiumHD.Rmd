@@ -245,6 +245,7 @@ p <- MapLabels(se.16,
 p
 ```
 
+
 ![1. Seurat clusters identified at 16ums.](visiumHD/clusters_16.jpg)
 
 ```{r, eval = FALSE, include = TRUE}

@@ -43,25 +43,25 @@ se <- FeatureViewer(se)
 
 The app should open in your default browser:
 
-![](feature_viewer_start.png)
+![](images/viewer/feature_viewer_start.png)
 
 <br>
 
 To get started, you can click on the '**question mark**' icon which will give instructions on how to use the app:
 
-![](help_menu.png)
+![](images/viewer/help_menu.png)
 
 ### Zoom and pan
 
 You can zoom in and out using the mouse wheel and pan by dragging clicking and dragging the H&E image. The opacity slider allows us to hide spots if we wish to view clear the view of the H&E image:
 
-![](zoom_in.png)
+![](images/viewer/zoom_in.png)
 
 ### Selecting features
 
 From the Feature drop down list, we can select any numeric feature available in our `Seurat` object. This includes vectors stored in the `meta.data` slot as well as dimensionality reduction vectors stored in the `reductions` slot. If you have multiple assays available in your `Seurat` object, only features from the active assay will be available. This is to avoid naming conflicts as different assays can share identical feature IDs. If you want to select raw or scaled counts, you can specify what `Assay` slot to use with the `slot` argument in `FeatureViewer`.
 
-![](numeric_features.png)
+![](images/viewer/numeric_features.png)
 
 ### Other options
 
@@ -79,17 +79,17 @@ From the Feature drop down list, we can select any numeric feature available in 
 
 Categorical variables stored in the `Seurat` object `meta.data` slot are made available through the 'Category' drop-down list. You can select a new category or select the current category and press `ENTER` to update the view.
 
-![](categorical_features.png)
+![](images/viewer/categorical_features.png)
 
 ### Lasso tool
 
 In the example above, we selected the `meta.data` column called `orig.ident` which currently only contains one label. When a categorical variable is selected, we get the option to add new labels. Before we can add a new label, we need to select spots with the '**lasso tool**' in the top left corner of the toolbar:
 
-![](lasso_tool.png)
+![](images/viewer/lasso_tool.png)
 
 Select a color from the color picker, write a new label name and press `ENTER` to save the changes:
 
-![](new_label.png)
+![](images/viewer/new_label.png)
 
 Once a new label has been added, it should pop up in the color legend.
 
@@ -136,13 +136,13 @@ se_merged <- FeatureViewer(se_merged)
 
 ### Feature Viewer and docker
 
-The viewer uses image tiles to create interactive maps of tissues which are accessed from a static file server hosted locally. By default, the server is hosted on `127.0.0.1:8080` and the viewer can fetch the image tiles directly from this address. When using RStudio Server via docker, we need to make sure that the port we are using (inside the container) is exposed outside the container, otherwise the tiles will not be accessible to the viewer which will be blank. 
+The viewer uses image tiles to create interactive maps of tissues which are accessed from a static file server hosted locally. By default, the server is hosted on `127.0.0.1:8080` and the viewer can fetch the image tiles directly from this address. When using RStudio Server via docker, we need to make sure that the port we are using (inside the container) is exposed outside the container, otherwise the tiles will not be accessible to the viewer which will be blank.
 
 In the `docker run ...` command used to start the container, we set `-p 3030:3030` to expose port 3030 inside the container to port 3030 outside the container. Now we should be able to run the `Feature Viewer` with:
 
-````
+```         
 FeatureViewer(..., host = "0.0.0.0", port = 3030)
-````
+```
 
 <br>
 

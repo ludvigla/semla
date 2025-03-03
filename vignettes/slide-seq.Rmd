@@ -43,7 +43,7 @@ MapFeatures(slide_seq_semla, features = "nFeature_Spatial", colors = viridis::ma
 dev.off()
 ```
 
-![](slide-seq/unique_genes.jpg)
+![](images/slide-seq/unique_genes.jpg)
 
 Zoom in on Dentate gyrus:
 
@@ -63,7 +63,7 @@ MapFeatures(slide_seq_semla, features = "PROX1", colors = viridis::magma(n = 11,
 dev.off()
 ```
 
-![](slide-seq/DG.jpg)
+![](images/slide-seq/DG.jpg)
 
 <br>
 

@@ -18,7 +18,7 @@ library(dplyr)
 ```
 
 ```{r include=FALSE}
-se <- readRDS("bc_visium/bc")
+se <- readRDS("bc_visium/bc.rds")
 se <- LoadImages(se)
 ```
 

@@ -27,8 +27,10 @@ First we need to download some 10x Visium data. Here we'll use a breast cancer d
 # Create an empty folder in current directory
 dir.create(paste0("./bc_visium"))
 
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Breast_Cancer_Block_A_Section_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5", destfile = "./bc_visium/filtered_feature_bc_matrix.h5")
-download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Breast_Cancer_Block_A_Section_1/V1_Breast_Cancer_Block_A_Section_1_spatial.tar.gz", destfile = "./bc_visium/spatial.tar.gz")
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Breast_Cancer_Block_A_Section_1/V1_Breast_Cancer_Block_A_Section_1_filtered_feature_bc_matrix.h5", 
+              destfile = "./bc_visium/filtered_feature_bc_matrix.h5")
+download.file(url = "https://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Breast_Cancer_Block_A_Section_1/V1_Breast_Cancer_Block_A_Section_1_spatial.tar.gz", 
+              destfile = "./bc_visium/spatial.tar.gz")
 untar(tarfile = "./bc_visium/spatial.tar.gz", 
       exdir =  "./bc_visium/")
 file.remove("./bc_visium/spatial.tar.gz")
@@ -48,17 +50,23 @@ se <- ReadVisiumData(infoTable = infoTable)
 ```
 
 ```{r, include=FALSE}
-samples <- Sys.glob("10x_data/*/filtered_feature_bc_matrix.h5")[1:2]
-imgs <- Sys.glob("10x_data/*/spatial/tissue_hires_image.png")[1:2]
-spotfiles <- Sys.glob("10x_data/*/spatial/tissue_positions_list.csv")[1:2]
-json <- Sys.glob("10x_data/*/spatial/scalefactors_json.json")[1:2]
+# samples <- Sys.glob("10x_data/*/filtered_feature_bc_matrix.h5")[1:2]  # Do not read data from here
+# imgs <- Sys.glob("10x_data/*/spatial/tissue_hires_image.png")[1:2]
+# spotfiles <- Sys.glob("10x_data/*/spatial/tissue_positions_list.csv")[1:2]
+# json <- Sys.glob("10x_data/*/spatial/scalefactors_json.json")[1:2]
+samples <- Sys.glob("bc_visium/filtered_feature_bc_matrix.h5")  # Read data from same folder as downloaded data
+imgs <- Sys.glob("bc_visium/spatial/tissue_hires_image.png")
+spotfiles <- Sys.glob("bc_visium/spatial/tissue_positions_list.csv")
+json <- Sys.glob("bc_visium/spatial/scalefactors_json.json")
 
 # Create a tibble/data.frame with file paths
+# infoTable <- tibble(samples, imgs, spotfiles, 
+#                     json, sample_id = c("S1", "S2"))
 infoTable <- tibble(samples, imgs, spotfiles, 
-                    json, sample_id = c("S1", "S2"))
+                    json, sample_id = c("S1"))
 
 # Create Seurat object
-se <- ReadVisiumData(infoTable = infoTable[1, ])
+se <- ReadVisiumData(infoTable = infoTable)
 ```
 
 ## Data
@@ -289,7 +297,7 @@ MapFeatures(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
 ```
 
 ```{r include=FALSE, eval=FALSE}
-saveRDS(se, file = "bc_visium/bc")
+saveRDS(se, file = "bc_visium/bc.rds")
 ```
 
 <br>
