@@ -1,4 +1,4 @@
-pandoc: 3.1.11
+pandoc: '3.2'
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
@@ -7,6 +7,7 @@ articles:
   cell_type_mapping_benchmark: cell_type_mapping_benchmark.html
   cell_type_mapping_with_NNLS: cell_type_mapping_with_NNLS.html
   compare_cell_type_mapping_NNLS: compare_cell_type_mapping_NNLS.html
+  create_multimodal_object: create_multimodal_object.html
   create_object: create_object.html
   digital_unrolling: digital_unrolling.html
   feature_viewer: feature_viewer.html
@@ -25,7 +26,7 @@ articles:
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
   visiumHD: visiumHD.html
-last_built: 2024-09-30T09:45Z
+last_built: 2025-03-03T12:08Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles

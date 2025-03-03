@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Cell type mapping benchmark">
 </head>
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
 <li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
     <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
     <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><a class="dropdown-item" href="../articles/visiumHD.html">VisiumHD</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
     <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
@@ -99,8 +100,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cell type mapping benchmark</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 18 September
-2024</h4>
+            <h4 data-toc-skip class="date">Last compiled: 03 March
+2025</h4>
       
 
       <div class="d-none name"><code>cell_type_mapping_benchmark.Rmd</code></div>
@@ -138,24 +139,24 @@ data.</p>
 </h3>
 <p>Here we’ll create a synthetic Visium data set by sample single-cells
 from the Allen Brain atlas data set:</p>
-<ol style="list-style-type: decimal">
-<li>Downsample UMIs to 1%. This is to make sure that the synthetic data
-have roughly the same library sizes as the Visium mouse brain tissue
-section data set.</li>
-<li>Calculate cell type weights. These weights will be used to determine
-the probability of a cell type being samples for the synthetic spots.
-Abundant cell type will be assigned higher probabilities and vice
-versa.</li>
-<li>Sample cell numbers per synthetic spot. Here we’ll draw counts from
-a poisson distribution with the lambda (mean) parameter set to 10.</li>
-<li>Select cell indices. The indices will be randomly selected using the
-cell type weights defined in step 2.</li>
-<li>Aggregate expression vectors for selected indices. Each synthetic
-spot will consist of the averaged gene expression vectors obtained from
-the sampled cells.</li>
-<li>Combine aggregated expression profiles to a final synthetic count
-matrix.</li>
-</ol>
+<ul>
+<li><p>1. Downsample UMIs to 1%. This is to make sure that the synthetic
+data have roughly the same library sizes as the Visium mouse brain
+tissue section data set.</p></li>
+<li><p>2. Calculate cell type weights. These weights will be used to
+determine the probability of a cell type being samples for the synthetic
+spots. Abundant cell type will be assigned higher probabilities and vice
+versa.</p></li>
+<li><p>3. Sample cell numbers per synthetic spot. Here we’ll draw counts
+from a poisson distribution with the lambda (mean) parameter set to
+10.</p></li>
+<li><p>4. Select cell indices. The indices will be randomly selected
+using the cell type weights defined in step 2.</p></li>
+<li><p>5. Aggregate expression vectors for selected indices. Each
+synthetic spot will consist of the averaged gene expression vectors
+obtained from the sampled cells. 6. Combine aggregated expression
+profiles to a final synthetic count matrix.</p></li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_allen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">se_allen</span>, nfeatures <span class="op">=</span> <span class="fl">5e3</span><span class="op">)</span></span>
 <span><span class="va">se_allen</span> <span class="op">&lt;-</span> <span class="va">se_allen</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html" class="external-link">VariableFeatures</a></span><span class="op">(</span><span class="va">se_allen</span><span class="op">)</span>, <span class="op">]</span></span>
@@ -588,7 +589,7 @@ indicate the expected 1 to 1 relationship.</div>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.1.6</p></li>
+<li><p><code>semla</code>: 1.3.0</p></li>
 <li><p><code>RcppML</code>: 0.5.6</p></li>
 </ul></details><details><summary><strong>Session info</strong>
 </summary><div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -611,16 +612,16 @@ indicate the expected 1 to 1 relationship.</div>
 <span><span class="co">## [1] stats     graphics  grDevices datasets  utils     methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##  [1] digest_0.6.37       desc_1.4.3          R6_2.5.1           </span></span>
-<span><span class="co">##  [4] fastmap_1.2.0       xfun_0.47           cachem_1.1.0       </span></span>
-<span><span class="co">##  [7] knitr_1.48          htmltools_0.5.8.1   rmarkdown_2.28     </span></span>
-<span><span class="co">## [10] lifecycle_1.0.4     cli_3.6.3           sass_0.4.9         </span></span>
+<span><span class="co">##  [1] digest_0.6.37       desc_1.4.3          R6_2.6.1           </span></span>
+<span><span class="co">##  [4] fastmap_1.2.0       xfun_0.51           cachem_1.1.0       </span></span>
+<span><span class="co">##  [7] knitr_1.49          htmltools_0.5.8.1   rmarkdown_2.29     </span></span>
+<span><span class="co">## [10] lifecycle_1.0.4     cli_3.6.4           sass_0.4.9         </span></span>
 <span><span class="co">## [13] pkgdown_2.1.0       textshaping_0.4.0   jquerylib_0.1.4    </span></span>
 <span><span class="co">## [16] renv_1.0.2          systemfonts_1.1.0   compiler_4.4.0     </span></span>
 <span><span class="co">## [19] rstudioapi_0.16.0   tools_4.4.0         ragg_1.3.3         </span></span>
-<span><span class="co">## [22] bslib_0.8.0         evaluate_0.24.0     yaml_2.3.10        </span></span>
-<span><span class="co">## [25] BiocManager_1.30.25 jsonlite_1.8.8      htmlwidgets_1.6.4  </span></span>
-<span><span class="co">## [28] rlang_1.1.4         fs_1.6.4</span></span></code></pre>
+<span><span class="co">## [22] bslib_0.9.0         evaluate_1.0.3      yaml_2.3.10        </span></span>
+<span><span class="co">## [25] BiocManager_1.30.25 jsonlite_1.9.0      htmlwidgets_1.6.4  </span></span>
+<span><span class="co">## [28] rlang_1.1.5         fs_1.6.5</span></span></code></pre>
 </details><p><br></p>
 </div>
 </div>
@@ -631,7 +632,7 @@ indicate the expected 1 to 1 relationship.</div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
+  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://github.com/jemorlanes" class="external-link">Javier Escudero Morlanes</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

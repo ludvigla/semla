@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Interactive Feature Viewer">
 </head>
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.1.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
 <li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
     <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
     <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><a class="dropdown-item" href="../articles/visiumHD.html">VisiumHD</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
     <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
@@ -99,8 +100,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interactive Feature Viewer</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 18 September
-2024</h4>
+            <h4 data-toc-skip class="date">Last compiled: 03 March
+2025</h4>
       
 
       <div class="d-none name"><code>feature_viewer.Rmd</code></div>
@@ -140,7 +141,7 @@ use the <code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></cod
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/lovisafranzen/Library/Caches/org.R-project.R/R/renv/library/semla-41c099bc/R-4.4/aarch64-apple-darwin20/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/8r/bfm2m_q17znfk0m_8dt330tm0000gp/T/Rtmp8oqdQg/temp_libpath56b417ee1027/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 541x600 to 400x444 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -176,11 +177,11 @@ processed with <code>semla</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
 <p>The app should open in your default browser:</p>
-<p><img src="feature_viewer_start.png"></p>
+<p><img src="images/viewer/feature_viewer_start.png"></p>
 <p><br></p>
 <p>To get started, you can click on the ‘<strong>question mark</strong>’
 icon which will give instructions on how to use the app:</p>
-<p><img src="help_menu.png"></p>
+<p><img src="images/viewer/help_menu.png"></p>
 </div>
 <div class="section level3">
 <h3 id="zoom-and-pan">Zoom and pan<a class="anchor" aria-label="anchor" href="#zoom-and-pan"></a>
@@ -188,7 +189,7 @@ icon which will give instructions on how to use the app:</p>
 <p>You can zoom in and out using the mouse wheel and pan by dragging
 clicking and dragging the H&amp;E image. The opacity slider allows us to
 hide spots if we wish to view clear the view of the H&amp;E image:</p>
-<p><img src="zoom_in.png"></p>
+<p><img src="images/viewer/zoom_in.png"></p>
 </div>
 <div class="section level3">
 <h3 id="selecting-features">Selecting features<a class="anchor" aria-label="anchor" href="#selecting-features"></a>
@@ -203,7 +204,7 @@ naming conflicts as different assays can share identical feature IDs. If
 you want to select raw or scaled counts, you can specify what
 <code>Assay</code> slot to use with the <code>slot</code> argument in
 <code>FeatureViewer</code>.</p>
-<p><img src="numeric_features.png"></p>
+<p><img src="images/viewer/numeric_features.png"></p>
 </div>
 <div class="section level3">
 <h3 id="other-options">Other options<a class="anchor" aria-label="anchor" href="#other-options"></a>
@@ -231,7 +232,7 @@ appropriate to use a divergent color palette from ‘Colorscales’, such as
 <code>meta.data</code> slot are made available through the ‘Category’
 drop-down list. You can select a new category or select the current
 category and press <code>ENTER</code> to update the view.</p>
-<p><img src="categorical_features.png"></p>
+<p><img src="images/viewer/categorical_features.png"></p>
 </div>
 <div class="section level3">
 <h3 id="lasso-tool">Lasso tool<a class="anchor" aria-label="anchor" href="#lasso-tool"></a>
@@ -241,10 +242,10 @@ called <code>orig.ident</code> which currently only contains one label.
 When a categorical variable is selected, we get the option to add new
 labels. Before we can add a new label, we need to select spots with the
 ‘<strong>lasso tool</strong>’ in the top left corner of the toolbar:</p>
-<p><img src="lasso_tool.png"></p>
+<p><img src="images/viewer/lasso_tool.png"></p>
 <p>Select a color from the color picker, write a new label name and
 press <code>ENTER</code> to save the changes:</p>
-<p><img src="new_label.png"></p>
+<p><img src="images/viewer/new_label.png"></p>
 <p>Once a new label has been added, it should pop up in the color
 legend.</p>
 <p>Labels can share the same color, but if you wish to update the color
@@ -334,7 +335,7 @@ to run the <code>Feature Viewer</code> with:</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.1.6</li>
+<code>semla</code>: 1.3.0</li>
 </ul></details><p><br></p>
 </div>
 </div>
@@ -345,7 +346,7 @@ to run the <code>Feature Viewer</code> with:</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
+  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://github.com/jemorlanes" class="external-link">Javier Escudero Morlanes</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
