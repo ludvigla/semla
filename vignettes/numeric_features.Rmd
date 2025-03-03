@@ -63,6 +63,25 @@ p <- MapFeaturesSummary(se,
 p
 ```
 
+If the distribution of your gene or feature is very skewed, it can also ease the visualization to modify the `max_cutoff` and/or `min_cutoff` arguments, where you provide a number between 0-1, corresponding the k-th percentile of the feature's data range. By doing this, it can help you create more distinct visualizations, where spots with the more extreme values - see example below, where the plot to the right has been capped by minimum and maximum percentiles:
+
+```{r fig.asp=0.5, fig.width=9}
+p1 <- MapFeatures(se, 
+                  section_number = 1, # Show only the first sample
+                  features = "Ptgds", 
+                  max_cutoff = 1, # Full data
+                  colors = cols)
+
+p2 <- MapFeatures(se, 
+                  section_number = 1, # Show only the first sample
+                  features = "Ptgds", 
+                  max_cutoff = 0.95, # Max value set to the 95th percentile
+                  min_cutoff = 0.05, # Min value set to the 5th percentile
+                  colors = cols)
+
+p1 | p2
+```
+
 ## Map dimensionality reduction vectors
 
 `MapFeatures` handles any type of numeric features which can be fetched using the `Seurat` function `FetchData()`. This includes latent vectors from dimensionality reduction methods.

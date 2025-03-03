@@ -1,6 +1,6 @@
 ---
 title: "Comparison of cell type mapping with NNLS"
-date: "Posted: `r format(Sys.time(), '%d %B %Y')`"
+date: "Last compiled: `r format(Sys.time(), '%d %B %Y')`"
 output:
   html_document:
     code_folding: show
@@ -16,6 +16,7 @@ As described in the tutorial [Cell type mapping with NNLS](https://ludvigla.gith
 \operatorname*{arg\:min_{x}} \left||Ax-y\right||_2^2 \text{, subject to } x \geq 0
 \end{equation}
 ```
+
 where *A* is a matrix with cell type enrichment scores, *y* is a vector with mixed a mixed gene expression profile. The solution for x represents estimates of the fractional abundances of cell type estimates.
 
 <br>
@@ -307,7 +308,7 @@ plots_comp <- readRDS("compare_cell_type_mapping_NNLS/mbrain_spatial_map_plots.r
 
 ### Spatial cell type mapping {.tabset}
 
-```{r results='asis', echo=FALSE, fig.show='show', fig.width=13, fig.height=3.5}
+```{r results='asis', echo=FALSE, fig.show='show', fig.width=14, fig.height=3.5}
 for(i in seq_along(brain_selected_cells)){
   cat("#### ", brain_selected_cells[i], "\n")
   cat("\n")

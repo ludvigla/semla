@@ -129,8 +129,7 @@ p_global <- MapLabels(se,
                       column_name = "selection", 
                       image_use = "raw",
                       pt_size = 1, 
-                      section_number = 2, 
-                      override_plot_dims = TRUE) &
+                      section_number = 2) &
   guides(fill = guide_legend(override.aes = list(size = 3)))
 
 p_GALT <- MapLabels(se, 

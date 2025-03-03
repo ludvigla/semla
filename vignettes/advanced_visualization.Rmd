@@ -405,6 +405,20 @@ p_GALT <- MapFeatures(se_high_res,
 (p_global / p_GALT)
 ```
 
+### Map multiple numeric features
+
+With the `MapMultipleFeatures()` function, it is possible to plot several numeric features within the same plot.
+
+```{r fig.asp=1.2}
+MapMultipleFeatures(se, 
+                    features = c("Mbp", "Nrgn", "Prdx6", "Car1"), 
+                    colors = c("#AA4499", "#88CCEE", "#332288", "#44AA99"),
+                    ncol = 1, 
+                    pt_size = 1.2)
+```
+
+<br><br>
+
 ## Map categorical features
 
 For categorical data, we use `MapLabels()` instead of `MapFeatures()`. This function allows us to color our spots based on some column of our Seurat object containing categorical data.

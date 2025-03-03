@@ -7,7 +7,9 @@ editor_options:
   chunk_output_type: inline
 ---
 
-Cell type mapping with SRT data refers to a set of methods which allows you to infer the quantity of cells from SRT expression profiles. `semla` offers a quick method based on *Non-Negative Least Squares* to infer cell type proportions directly from Visium spot expression profiles. We utilize the NNLS method implemented in the [RcppML](https://github.com/zdebruine/RcppML) *v0.3.7* package available on CRAN: <https://cran.r-project.org/web/packages/RcppML/index.html>. Please ensure you have the correct version installed before proceeding with this tutorial.
+Cell type mapping with SRT data refers to a set of methods which allows you to infer the quantity of cells from SRT expression profiles. `semla` offers a quick method based on *Non-Negative Least Squares* to infer cell type proportions directly from Visium spot expression profiles.
+
+We utilize the NNLS method implemented in the [RcppML](https://github.com/zdebruine/RcppML) *v0.3.7* package available on CRAN: <https://cran.r-project.org/web/packages/RcppML/index.html>. Please ensure you have the correct version installed before proceeding with this tutorial.
 
 In this tutorial, we'll take a look at two examples. First, we have two tissue sections of a [mouse brain](#mbrain) and a single cell RNA-seq dataset from the Allen Brain Atlas. In the second example, we have a [mouse kidney](#mkidney) section and single cell RNA-seq data from the Tabula Muris Senis.
 

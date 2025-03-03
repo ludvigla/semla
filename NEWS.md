@@ -1,3 +1,31 @@
+
+# semla 1.3.0
+
+*2025-02-26*
+
+## Added
+- Functionalities added for creating a spatial multimodal object using the new function `CreateMultiModalObject()`. This new function takes two objects, which have had their pixel coordinates aligned to each other beforehand, and joins them into a new object where the spatial points from the second “mapping” modality are mapped and aggregated onto the first “reference” modality. The data in the two modalities are stored as separate assays in the new object.
+
+## Changes
+- Changed the appearance of the color scalebar in `MapFeatures()` and `MapMultipleFeatures()` so that the ticks and outline colors are black and have the same linewidth.
+- `MapFeaturesSummary()` now has a default option set for the `subplot_type` argument (dafault = “violin”). 
+
+## Bug fixes
+- Minor fixes in function documentations
+
+
+# semla 1.2.1
+
+*2025-01-24*
+
+## Bug fixes
+- Fixed an issue with the `RadialDistance()` function to make it possible to pass additional arguments, such as `maxDist` and `nNeighbors`. Related to Issue #36 
+
+## Added
+
+- The `UpdateSeuratForSemla` function now accepts VisiumV2 assays. Related to Issues #41 and #40  
+
+
 # semla 1.2.0
 
 *2024-09-27*

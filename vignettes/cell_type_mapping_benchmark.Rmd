@@ -52,12 +52,16 @@ dev.off()
 ## Create dummy expression profiles
 
 Here we'll create a synthetic Visium data set by sample single-cells from the Allen Brain atlas data set:
-1.  Downsample UMIs to 1%. This is to make sure that the synthetic data have roughly the same library sizes as the Visium mouse brain tissue section data set.
-2.  Calculate cell type weights. These weights will be used to determine the probability of a cell type being samples for the synthetic spots. Abundant cell type will be assigned higher probabilities and vice versa.
-3.  Sample cell numbers per synthetic spot. Here we'll draw counts from a poisson distribution with the lambda (mean) parameter set to 10.
-4.  Select cell indices. The indices will be randomly selected using the cell type weights defined in step 2.
-5.  Aggregate expression vectors for selected indices. Each synthetic spot will consist of the averaged gene expression vectors obtained from the sampled cells.
-6.  Combine aggregated expression profiles to a final synthetic count matrix.
+
+-   1\. Downsample UMIs to 1%. This is to make sure that the synthetic data have roughly the same library sizes as the Visium mouse brain tissue section data set.
+
+-   2\. Calculate cell type weights. These weights will be used to determine the probability of a cell type being samples for the synthetic spots. Abundant cell type will be assigned higher probabilities and vice versa.
+
+-   3\. Sample cell numbers per synthetic spot. Here we'll draw counts from a poisson distribution with the lambda (mean) parameter set to 10.
+
+-   4\. Select cell indices. The indices will be randomly selected using the cell type weights defined in step 2.
+
+-   5\. Aggregate expression vectors for selected indices. Each synthetic spot will consist of the averaged gene expression vectors obtained from the sampled cells. 6. Combine aggregated expression profiles to a final synthetic count matrix.
 
 ```{r eval=FALSE}
 se_allen <- FindVariableFeatures(se_allen, nfeatures = 5e3)
