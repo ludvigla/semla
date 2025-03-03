@@ -556,10 +556,9 @@ MapMultipleFeatures.Seurat <- function (
                                                  label = FALSE)) +
     theme(legend.position = "right",
           legend.direction = "horizontal",
-          legend.title.align = 0,
           legend.margin = margin(0, 0, 0, 0),
           plot.margin = margin(0, 10, 20, 10),
-          legend.title = element_text(vjust = 0.8)) +
+          legend.title = element_text(vjust = 0.8, hjust = 0)) +
     # Create a title
     labs(title = ifelse(!is.null(cur_label), cur_label, NA)) +
     # Fix coordinates so that plot cannot be stretched
@@ -776,10 +775,9 @@ MapMultipleFeatures.Seurat <- function (
                                                  label = FALSE)) +
     theme(legend.position = "right",
           legend.direction = "horizontal",
-          legend.title.align = 0,
           legend.margin = margin(0, 0, 0, 0),
           plot.margin = margin(0, 10, 20, 10),
-          legend.title = element_text(vjust = 0.8)) +
+          legend.title = element_text(vjust = 0.8), hjust = 0) +
     # Create a title
     labs(title = ifelse(!is.null(cur_label), cur_label, NA)) +
     # Fix coordinates so that plot cannot be stretched
