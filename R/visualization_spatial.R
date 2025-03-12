@@ -804,38 +804,35 @@ MapLabels.default <- function (
       cur_label <- paste0("label: ", nm)
     }
     
-    # Plotting point spots
-    if (shape == "point") {
-      p <- .spatial_label_plot(
-        gg = gg,
-        nm = nm,
-        lbl = label,
-        colors = colors,
-        dims = dims,
-        pt_size = pt_size,
-        pt_alpha = pt_alpha,
-        pt_stroke = pt_stroke,
-        coords_columns = coords_columns,
-        cur_label = cur_label,
-        drop_na = drop_na
-      )
-    }
-    # Plotting tiles or raster
-    if (shape %in% c("tile", "raster")) {
-      p <- .spatial_label_grid_plot(
-        gg = gg,
-        nm = nm,
-        lbl = label,
-        shape = shape,
-        spot_side = spot_side[[nm]],
-        colors = colors,
-        dims = dims,
-        pt_alpha = pt_alpha,
-        coords_columns = coords_columns,
-        cur_label = cur_label,
-        drop_na = drop_na
-      )
-    }
+    # Evaluate options and return plots
+    p <- switch(shape,
+                "point" = .spatial_label_plot(
+                  gg = gg,
+                  nm = nm,
+                  lbl = label,
+                  colors = colors,
+                  dims = dims,
+                  pt_size = pt_size,
+                  pt_alpha = pt_alpha,
+                  pt_stroke = pt_stroke,
+                  coords_columns = coords_columns,
+                  cur_label = cur_label,
+                  drop_na = drop_na
+                ),
+                "tile" = , # fall through to next scenario
+                "raster" = .spatial_label_grid_plot(
+                  gg = gg,
+                  nm = nm,
+                  lbl = label,
+                  shape = shape,
+                  spot_side = spot_side[[nm]],
+                  colors = colors,
+                  dims = dims,
+                  pt_alpha = pt_alpha,
+                  coords_columns = coords_columns,
+                  cur_label = cur_label,
+                  drop_na = drop_na
+                ))
 
     return(p)
   }), nm = names(data))

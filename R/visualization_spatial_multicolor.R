@@ -169,65 +169,62 @@ MapMultipleFeatures.default <- function (
   } 
 
   # Plot features on spatial coordinates for each sample
-  ## Plotting for point shape
-  if (shape == "point") {
-    sample_plots <- setNames(lapply(names(data), function(nm) {
-      
-      # Get data for plotting
-      gg <- data[[nm]]
-      
-      # Create an appropriate plot title
-      if (!is.null(label_by)) {
-        cur_label <- unique(gg |> pull(all_of(label_by)))
-      } else {
-        cur_label <- paste0("section ", nm)
-      }
-      
-      p <- .spatial_feature_plot_multiple(
-        gg = gg,
-        nm = nm,
-        features = features,
-        colors = colors,
-        dims = dims,
-        pt_size = pt_size,
-        pt_stroke = pt_stroke,
-        cur_label = cur_label,
-        coords_columns = coords_columns,
-        drop_na = TRUE,
-        use_text = add_colorscale_text
-      )
-      return(p)
-    }), nm = names(data))    
-  } 
-  ## Plotting for tiles and raster
-  if (shape %in% c("tile", "raster")) {
-    sample_plots <- setNames(lapply(names(data), function(nm) {
-      
-      # Get data for plotting
-      gg <- data[[nm]]
-      # Create an appropriate plot title
-      if (!is.null(label_by)) {
-        cur_label <- unique(gg |> pull(all_of(label_by)))
-      } else {
-        cur_label <- paste0("section ", nm)
-      }
-      
-      p <- .spatial_feature_plot_multiple_grid(
-        gg = gg,
-        nm = nm,
-        features = features,
-        shape = shape,
-        spot_side = spot_side[[nm]],
-        colors = colors,
-        dims = dims,
-        cur_label = cur_label,
-        coords_columns = coords_columns,
-        drop_na = TRUE,
-        use_text = add_colorscale_text
-      )
-      return(p)
-    }), nm = names(data))
-  }
+  sample_plots <- switch(shape,
+                         "point" = setNames(lapply(names(data), function(nm) {
+                           
+                           # Get data for plotting
+                           gg <- data[[nm]]
+                           
+                           # Create an appropriate plot title
+                           if (!is.null(label_by)) {
+                             cur_label <- unique(gg |> pull(all_of(label_by)))
+                           } else {
+                             cur_label <- paste0("section ", nm)
+                           }
+                           
+                           p <- .spatial_feature_plot_multiple(
+                             gg = gg,
+                             nm = nm,
+                             features = features,
+                             colors = colors,
+                             dims = dims,
+                             pt_size = pt_size,
+                             pt_stroke = pt_stroke,
+                             cur_label = cur_label,
+                             coords_columns = coords_columns,
+                             drop_na = TRUE,
+                             use_text = add_colorscale_text
+                           )
+                           return(p)
+                         }), nm = names(data)),
+                         "tile" = , # skip to next case
+                         "raster" = setNames(lapply(names(data), function(nm) {
+                           print("epic")
+                           # Get data for plotting
+                           gg <- data[[nm]]
+                           # Create an appropriate plot title
+                           if (!is.null(label_by)) {
+                             cur_label <- unique(gg |> pull(all_of(label_by)))
+                           } else {
+                             cur_label <- paste0("section ", nm)
+                           }
+                           
+                           p <- .spatial_feature_plot_multiple_grid(
+                             gg = gg,
+                             nm = nm,
+                             features = features,
+                             shape = shape,
+                             spot_side = spot_side[[nm]],
+                             colors = colors,
+                             dims = dims,
+                             cur_label = cur_label,
+                             coords_columns = coords_columns,
+                             drop_na = TRUE,
+                             use_text = add_colorscale_text
+                           )
+                           return(p)
+                         }), nm = names(data))
+  )
 
   # Create final patchwork
   if (!return_plot_list) {
