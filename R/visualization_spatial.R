@@ -195,95 +195,92 @@ MapFeatures.default <- function (
     } else {
       cur_label <- paste0("section ", nm)
     }
-
-    # Default for plotting points
-    if (shape == "point"){
-      # Default plotting for each feature when blend = FALSE
-      if (!blend) {
-        feature_plots <- lapply(features, function(ftr) {
-          .spatial_feature_plot(
-            gg = gg,
-            nm = nm,
-            ftr = ftr,
-            feature_limits = feature_limits,
-            colors = colors,
-            dims = dims,
-            pt_size = pt_size,
-            pt_alpha = pt_alpha,
-            pt_stroke = pt_stroke,
-            scale_alpha = scale_alpha,
-            coords_columns = coords_columns,
-            cur_label = cur_label,
-            drop_na = drop_na,
-            center_zero = center_zero
-          )
-        })
-        # Add names to feature_plots
-        p <- setNames(feature_plots, nm = features)
-      } else {
-        p <- .spatial_feature_plot(
-          gg = gg,
-          nm = nm,
-          colors = colors,
-          dims = dims,
-          all_features = features,
-          extreme_colors = extreme_colors,
-          pt_size = pt_size,
-          pt_alpha = pt_alpha,
-          pt_stroke = pt_stroke,
-          scale_alpha = scale_alpha,
-          cur_label = cur_label,
-          coords_columns = coords_columns,
-          drop_na = drop_na,
-          center_zero = center_zero
-        )
-      }
-    }
-    # Option for plotting tiles/raster
-    if (shape %in% c("tile", "raster")){
-      # Default plotting for each feature when blend = FALSE
-      if (!blend) {
-        feature_plots <- lapply(features, function(ftr) {
-          .spatial_feature_grid_plot(
-            gg = gg,
-            nm = nm,
-            ftr = ftr,
-            feature_limits = feature_limits,
-            colors = colors,
-            dims = dims,
-            image_use = image_use,
-            shape = shape,
-            spot_side = spot_side[[nm]],
-            pt_alpha = pt_alpha,
-            scale_alpha = scale_alpha,
-            coords_columns = coords_columns,
-            cur_label = cur_label,
-            drop_na = drop_na,
-            center_zero = center_zero
-          )
-        })
-        # Add names to feature_plots
-        p <- setNames(feature_plots, nm = features)
-      } else {
-        p <- .spatial_feature_grid_plot(
-          gg = gg,
-          nm = nm,
-          colors = colors,
-          dims = dims,
-          image_use = image_use,
-          all_features = features,
-          extreme_colors = extreme_colors,
-          shape = shape,
-          spot_side = spot_side[[nm]],
-          pt_alpha = pt_alpha,
-          scale_alpha = scale_alpha,
-          coords_columns = coords_columns,
-          cur_label = cur_label,
-          drop_na = drop_na,
-          center_zero = center_zero
-        )
-      }
-    }
+    
+    # Evaluate plotting options and return plots
+    switch(shape,
+           "point" = if (!blend) { # Default plotting for each feature when blend = FALSE
+             feature_plots <- lapply(features, function(ftr) {
+               .spatial_feature_plot(
+                 gg = gg,
+                 nm = nm,
+                 ftr = ftr,
+                 feature_limits = feature_limits,
+                 colors = colors,
+                 dims = dims,
+                 pt_size = pt_size,
+                 pt_alpha = pt_alpha,
+                 pt_stroke = pt_stroke,
+                 scale_alpha = scale_alpha,
+                 coords_columns = coords_columns,
+                 cur_label = cur_label,
+                 drop_na = drop_na,
+                 center_zero = center_zero
+               )
+             })
+             # Add names to feature_plots
+             p <- setNames(feature_plots, nm = features)
+           } else {
+             p <- .spatial_feature_plot(
+               gg = gg,
+               nm = nm,
+               colors = colors,
+               dims = dims,
+               all_features = features,
+               extreme_colors = extreme_colors,
+               pt_size = pt_size,
+               pt_alpha = pt_alpha,
+               pt_stroke = pt_stroke,
+               scale_alpha = scale_alpha,
+               cur_label = cur_label,
+               coords_columns = coords_columns,
+               drop_na = drop_na,
+               center_zero = center_zero
+             )
+           },
+           "tile" = , # fall through to next scenario
+           "raster" = if (!blend) {   # Default plotting for each feature when blend = FALSE
+             feature_plots <- lapply(features, function(ftr) {
+               .spatial_feature_grid_plot(
+                 gg = gg,
+                 nm = nm,
+                 ftr = ftr,
+                 feature_limits = feature_limits,
+                 colors = colors,
+                 dims = dims,
+                 image_use = image_use,
+                 shape = shape,
+                 spot_side = spot_side[[nm]],
+                 pt_alpha = pt_alpha,
+                 scale_alpha = scale_alpha,
+                 coords_columns = coords_columns,
+                 cur_label = cur_label,
+                 drop_na = drop_na,
+                 center_zero = center_zero
+               )
+             })
+             # Add names to feature_plots
+             p <- setNames(feature_plots, nm = features)
+           } else {
+             p <- .spatial_feature_grid_plot(
+               gg = gg,
+               nm = nm,
+               colors = colors,
+               dims = dims,
+               image_use = image_use,
+               all_features = features,
+               extreme_colors = extreme_colors,
+               shape = shape,
+               spot_side = spot_side[[nm]],
+               pt_alpha = pt_alpha,
+               scale_alpha = scale_alpha,
+               coords_columns = coords_columns,
+               cur_label = cur_label,
+               drop_na = drop_na,
+               center_zero = center_zero
+             )
+           }
+    )
+    
     return(p)
   }), nm = names(data))
 
