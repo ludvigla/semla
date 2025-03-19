@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-1.2.0-blue.svg)](https://github.com/ludvigla/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
+[![](https://img.shields.io/badge/devel%20version-1.3.1-blue.svg)](https://github.com/ludvigla/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
 
 <!-- badges: end -->
 
@@ -17,7 +17,7 @@ For a more scientific description of the package, check out our associated publi
 <br>
 
 > [!NOTE]\
-> Regarding [Seurat v5](https://satijalab.org/seurat/), most `semla` functionalities should work as expected, however, we have not tested compatibility with new Seurat v5 functions and many other packages built upon Seurat have not yet been made compatible with v5. You may therefore experience unexpected issues when using Seurat v5.
+> Regarding [Seurat v5](https://satijalab.org/seurat/), `semla` functionalities should work as expected. However, if you run into any problems, please open an issue.
 
 <br>
 
