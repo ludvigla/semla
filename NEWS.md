@@ -1,3 +1,12 @@
+# semla 1.3.1
+
+*2025-03-19*
+## Changes
+
+- If the spot barcode IDs are missing a “-N” (e.g. “-1”) suffix (like is standard in Visium data), it will be added to the IDs when running `ReadVisiumData()`. This ensures that multiple samples can be added and merged properly without conflicts with unique barcode identities.
+
+- Minor edits to the backend code for plotting functions
+
 
 # semla 1.3.0
 
