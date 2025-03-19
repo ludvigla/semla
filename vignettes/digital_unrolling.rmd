@@ -99,7 +99,7 @@ Once all edges has been cut, you have to press the `Quit & Save` button. If you 
 NB: We need to make sure to save the output to a variable. Here, we will save the output to `tidy_network`.
 
 ```{r include=FALSE}
-tidy_network <- readRDS("~/semla/repo/tests/digital_unrolling_mcolon")
+tidy_network <- readRDS("R_objects/digital_unrolling_mcolon")
 #saveRDS(tidy_network, "~/semla/repo/tests/digital_unrolling_mcolon")
 #export_tidygraph(tidy_network, outdir = tilepath)
 ```
