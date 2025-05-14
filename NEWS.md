@@ -17,7 +17,7 @@
 
 ## Changes
 - Changed the appearance of the color scalebar in `MapFeatures()` and `MapMultipleFeatures()` so that the ticks and outline colors are black and have the same linewidth.
-- `MapFeaturesSummary()` now has a default option set for the `subplot_type` argument (dafault = “violin”). 
+- `MapFeaturesSummary()` now has a default option set for the `subplot_type` argument (default = “violin”). 
 
 ## Bug fixes
 - Minor fixes in function documentations
