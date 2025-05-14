@@ -51,7 +51,7 @@ MapFeatures(se_visium, features = "nCount_Visium", colors = col_scale_rocket)
 
 <br><br>
 
-Next, we read the MSI data available in the same stardardised Space Ranger format. To make it easier to separate the two objects, we can pass a unique name to the `assay` argument.
+Next, we read the MSI data available in the same standarised Space Ranger format. To make it easier to separate the two objects, we can pass a unique name to the `assay` argument.
 
 ```{r}
 infoTable_msi <- data.frame(
