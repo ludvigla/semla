@@ -80,17 +80,17 @@ test_that("MapFeatures works as expected", {
   
   # Tile shape
   ## Test image_use parameter
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "raw", shape = "tile"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "raw", shape = "tile")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), image_use = "transformed", shape = "tile"), "patchwork")
   
   ## Test basic functionality
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = NULL), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test slot parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = NULL), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), slot = "scale.data", shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test coords_use parameter
@@ -98,28 +98,28 @@ test_that("MapFeatures works as expected", {
   
   ## Test crop_area parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), crop_area = c(0.1, 0.1, 0.9, 0.9), shape = "tile", image_use = "transformed")), "patchwork")
   
   ## Test spot_side parameter
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(2, 4), shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(2, 4), shape = "tile")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), spot_side = c(200, 400), shape = "tile", image_use = "transformed")), "patchwork")
   
   ## Test pt_alpha parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), pt_alpha = 0.5, shape = "tile", image_use = "transformed")), "patchwork")
   
   ## Test scale_alpha parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), scale_alpha = TRUE, shape = "tile", image_use = "transformed")), "patchwork")
   
   ## Test section_number parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), section_number = 2, shape = "tile", image_use = "transformed")), "patchwork")
   
   ## Test label_by parameter
   p <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), label_by = "sample_id", shape = "tile")
@@ -132,23 +132,23 @@ test_that("MapFeatures works as expected", {
   
   ## Test blend parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), blend = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test scalebar parameters
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test colors parameter
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile"), "patchwork")
-  expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), colors = magma(n = 11, direction = -1), shape = "tile", image_use = "transformed"), "patchwork")
   
   ## Test that the correct samples and features are plotted
   p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE)
-  p2 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE, image_use = "raw")
+  p2 <- suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE, image_use = "raw"))
   p3 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", return_plot_list = TRUE, image_use = "transformed")
   
   ## Test that the list contains correct classes
@@ -169,7 +169,7 @@ test_that("MapFeatures works as expected", {
   
   ## Test that the expected number of plots are produced
   p1 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile")
-  p2 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw")
+  p2 <- suppressWarnings(MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "raw"))
   p3 <- MapFeatures(se_merged, features = c("Clu", "Slc6a3", "Vip"), shape = "tile", image_use = "transformed")
   expect_equal(p1$patches$layout$ncol, 3)
   expect_equal(p2$patches$layout$ncol, 3)
