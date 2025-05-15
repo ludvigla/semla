@@ -110,7 +110,7 @@ MergeSTData <- function (
   # Rename spots in Seurat object
   se_objects <- lapply(seq_along(se_objects), function(i) {
     obj <- se_objects[[i]]
-    obj <- RenameCells(obj, new.names = mergedMetaData_split[[i]]$barcode, for.merge = TRUE)
+    obj <- RenameCells(obj, new.names = mergedMetaData_split[[i]]$barcode)
     return(obj)
   })
 
