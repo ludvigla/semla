@@ -122,10 +122,11 @@ FeatureViewer <- function (
   # Fetch all features
   # This will include all feature names of the DefaultAssay + slot,
   # the dimensionality reduction vector names
-  all_features <- c(rownames(GetAssayData(object, slot = slot)),
+  all_features <- c(rownames(LayerData(object, layer = slot)),
                     sapply(object@reductions, function(x) {
-                        colnames(x@cell.embeddings)
-                      })) |> unlist() |> unique()
+                      colnames(x@cell.embeddings)
+                    })) |> unlist() |> unique()
+  
   # Select all numeric features from the meta.data slot
   mdata_num_features <- object[[]] |>
     select_if(is.numeric) |>
