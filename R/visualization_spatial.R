@@ -473,7 +473,7 @@ MapFeatures.Seurat <- function (
   
   # fetch data from Seurat object. 
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, layer = slot, clean = FALSE) |> as_tibble())
   
   # Add label_by column if present
   if (!is.null(label_by)) {
