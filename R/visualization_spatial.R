@@ -2486,7 +2486,7 @@ MapLabels.Seurat <- function (
 #'
 #' @importFrom patchwork inset_element wrap_plots
 #' @importFrom rlang %||% warn
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #'
 #' @return A \code{patchwork} object or a list of \code{ggplot} objects
 #'
@@ -2505,7 +2505,7 @@ MapLabels.Seurat <- function (
     # Inject images
     wrapped_plots <- setNames(lapply(names(wrapped_plots), function(nm) {
       plot <- wrapped_plots[[nm]]
-      if (!is.ggplot(plot)) {
+      if (!is_ggplot(plot)) {
         plot <- setNames(lapply(plot, function(p) {
           p <- p + inset_element(
             images[[nm]],
