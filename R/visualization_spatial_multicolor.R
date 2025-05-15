@@ -315,7 +315,7 @@ MapMultipleFeatures.Seurat <- function (
 
   # fetch data from Seurat object
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features, slot = slot) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, layer = slot) |> as_tibble())
   
   # Retrieve scalefactors if needed for tiles size
   if (shape == "tile") {
