@@ -177,7 +177,7 @@ MapMultipleFeatures.default <- function (
                            
                            # Create an appropriate plot title
                            if (!is.null(label_by)) {
-                             cur_label <- unique(gg |> pull(all_of(label_by)))
+                             cur_label <- as.character(unique(gg |> pull(all_of(label_by))))
                            } else {
                              cur_label <- paste0("section ", nm)
                            }
@@ -199,12 +199,11 @@ MapMultipleFeatures.default <- function (
                          }), nm = names(data)),
                          "tile" = , # skip to next case
                          "raster" = setNames(lapply(names(data), function(nm) {
-                           print("epic")
                            # Get data for plotting
                            gg <- data[[nm]]
                            # Create an appropriate plot title
                            if (!is.null(label_by)) {
-                             cur_label <- unique(gg |> pull(all_of(label_by)))
+                             cur_label <- as.character(unique(gg |> pull(all_of(label_by))))
                            } else {
                              cur_label <- paste0("section ", nm)
                            }
