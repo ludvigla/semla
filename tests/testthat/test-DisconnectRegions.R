@@ -23,10 +23,10 @@ spots <- galt_spots$barcode[galt_spots$selection == "GALT"]
 # Load a full Seurat object for testing
 se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
 se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
+se_merged <- suppressWarnings(MergeSTData(se_mbrain, se_mcolon) |> 
   ScaleData() |> 
   LoadImages() |> 
-  RigidTransformImages(transforms = generate_rigid_transform(sampleID = 2, angle = 45))
+  RigidTransformImages(transforms = generate_rigid_transform(sampleID = 2, angle = 45)))
 
 # Test dummy object
 test_that("default method works as expected", {
