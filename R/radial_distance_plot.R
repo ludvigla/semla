@@ -124,7 +124,7 @@ AnglePlot <- function (
     abort(glue("'radius' must take a value between 0.1 and 1, got {radius}"))
 
   # Get spots
-  spots <- FetchData(object, vars = column_name) |>
+  spots <- suppressWarnings(FetchData(object, vars = column_name)) |>
     filter(!! sym(column_name) %in% select_groups) |>
     rownames()
 
