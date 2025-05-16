@@ -354,6 +354,7 @@ CreateMultiModalObject.default <- function (
 #' @importFrom glue glue
 #' @importFrom parallel detectCores
 #' @importFrom Matrix Matrix
+#' @importFrom SeuratObject GetAssayData
 #' @import cli
 #' @import rlang
 #' @import dplyr

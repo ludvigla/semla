@@ -265,7 +265,8 @@ CorSpatialFeatures.default <- function (
 #' assay will be used.
 #' @param slot_use Select slot to use from assay object.
 #'
-#' @importFrom Seurat FetchData VariableFeatures LayerData
+#' @importFrom Seurat FetchData VariableFeatures
+#' @importFrom SeuratObject LayerData
 #' @importFrom rlang %||%
 #'
 #' @rdname cor-features

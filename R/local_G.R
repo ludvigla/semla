@@ -256,7 +256,8 @@ RunLocalG.default <- function (
 #'
 #' @import dplyr
 #' @import cli
-#' @importFrom Seurat FetchData CreateAssayObject
+#' @importFrom Seurat FetchData
+#' @importFrom SeuratObject LayerData CreateAssay5Object
 #' @importFrom rlang inform abort
 #' @importFrom tibble rownames_to_column column_to_rownames
 #'

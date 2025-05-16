@@ -167,7 +167,8 @@ RunMixedNNLS.default <- function (
 #' the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated proportions for cell types and additional factors.
 #' 
-#' @importFrom Seurat LayerData CreateAssayObject CreateDimReducObject
+#' @importFrom Seurat CreateAssayObject CreateDimReducObject
+#' @importFrom SeuratObject LayerData
 #' @import cli
 #'
 #' @rdname celltype-prediction-mixed

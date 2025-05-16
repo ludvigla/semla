@@ -69,6 +69,7 @@ NULL
 #' @import glue
 #' @import cli
 #' @import shiny
+#' @importFrom SeuratObject LayerData
 #'
 #' @family spatial-visualization-methods
 #'

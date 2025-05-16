@@ -138,7 +138,8 @@ RunNNLS.default <- function (
 #' the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated cell type proportions.
 #'
-#' @importFrom Seurat LayerData CreateAssayObject CreateDimReducObject
+#' @importFrom Seurat CreateAssayObject CreateDimReducObject
+#' @importFrom SeuratObject LayerData
 #' @import cli
 #'
 #' @rdname celltype-prediction
@@ -231,7 +232,8 @@ RunNNLS.Seurat <- function (
 #'
 #' @import glue
 #' @import cli
-#' @importFrom Seurat CreateDimReducObject CreateAssayObject DefaultAssay
+#' @importFrom Seurat CreateDimReducObject CreateAssayObject
+#' @importFrom SeuratObject DefaultAssay<-
 #'
 #' @noRd
 .return_as <- function (
