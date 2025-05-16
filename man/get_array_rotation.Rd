@@ -37,7 +37,7 @@ calculating these rotation.
 The first step is to take the array coordinates and the pixel coordinates 
 and run center and scaling on both by subtracting the mean and dividing by 
 the maximum radius. This will center the coordinates at (0, 0) and make sure 
-that the coordinates share tha same scale. As the two sets of points are paired, 
+that the coordinates share the same scale. As the two sets of points are paired, 
 we can then use the Kabsch algorithm to find the rotation. 
 
 The coordinates might be flipped along the x- or y-axis in which case you can 
