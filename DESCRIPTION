@@ -31,10 +31,10 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
     R (>= 4.1.0),
-    Seurat (>= 4.0.0),
-    SeuratObject (>= 4.0.0),
+    Seurat (>= 5.0.0),
+    SeuratObject (>= 5.0.0),
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.3.0)
+    ggplot2 (>= 3.5.2)
 Imports:
     cli,
     forcats,
