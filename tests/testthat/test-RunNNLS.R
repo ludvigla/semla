@@ -38,7 +38,7 @@ test_that("RunNNLS returns valid results", {
   expect_true("celltypeprops" %in% names(res4@assays))
   
   # Test with negative values
-  mat1 <- GetAssayData(se_mbrain, slot = "data")
+  mat1 <- LayerData(se_mbrain, layer = "data")
   mat1[1, 1] <- -1
   res5 <- suppressWarnings({RunNNLS(mat1, singlecell_matrix = mat1, groups = se_mbrain$clusters)})
   expect_type(res5, "double")
