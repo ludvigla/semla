@@ -350,7 +350,7 @@ RunLocalG.Seurat <- function (
     fillMat <- matrix(data = 0, ncol = ncol(object), nrow = length(features),
                       dimnames = list(colnames(data), colnames(object)))
     fillMat[, rownames(data)] <- t(data)
-    gi_assay <- CreateAssayObject(data = fillMat)
+    gi_assay <- CreateAssay5Object(counts = as(fillMat, "sparseMatrix"))
     pvals <-  Gi_res |>
       select(barcode, starts_with("Pr(z")) |>
       column_to_rownames(var = "barcode") |>
