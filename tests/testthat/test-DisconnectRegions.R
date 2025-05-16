@@ -20,6 +20,15 @@ galt_spots <- read.csv(galt_spots_file) |>
 
 spots <- galt_spots$barcode[galt_spots$selection == "GALT"]
 
+# Load a full Seurat object for testing
+se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
+se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
+se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
+  ScaleData() |> 
+  LoadImages() |> 
+  RigidTransformImages(transforms = generate_rigid_transform(sampleID = 2, angle = 45))
+
+# Test dummy object
 test_that("default method works as expected", {
   
   # Check that the returned object is of class character
@@ -44,14 +53,7 @@ test_that("default method works as expected", {
   expect_equal(labels |> as.integer(), c(67, 6, 6, 5, 3, 3, 2, 2, 12))
 })
 
-# Load a dummy Seurat object for testing
-se_mbrain <- readRDS(system.file("extdata/mousebrain", "se_mbrain", package = "semla"))
-se_mcolon <- readRDS(system.file("extdata/mousecolon", "se_mcolon", package = "semla"))
-se_merged <- MergeSTData(se_mbrain, se_mcolon) |> 
-  ScaleData() |> 
-  LoadImages() |> 
-  RigidTransformImages(transforms = generate_rigid_transform(sampleID = 2, angle = 45))
-
+# Test Seurat object
 test_that("Seurat method works as expected", {
   
   # the returned object is of class Seurat
