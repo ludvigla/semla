@@ -1,3 +1,10 @@
+# semla 1.3.2
+
+*2025-07-1*
+## Changes
+
+- Bug fix for *UpdateSeuratForSemla()* when dealing with *VisiumV2* data.
+
 # semla 1.3.1
 
 *2025-03-19*
