@@ -147,7 +147,8 @@ UpdateSeuratForSemla <- function (
       sf_image <- ifelse(image_type == "tissue_lowres", sf$tissue_lowres_scalef, sf$tissue_hires_scalef)
       iminfo <- image_read(image_path) |> 
         image_info() |> 
-        mutate(full_width = ceiling(dims[1]/sf_image), full_height = ceiling(dims[2]/sf_image),
+        mutate(full_width = ceiling(dims[2]/sf_image), 
+               full_height = ceiling(dims[1]/sf_image),
                sampleID = paste0(i), type = image_type) |> 
         select(format, width, height, full_width, full_height, colorspace, filesize, density, sampleID, type)
       if (verbose) cli_alert("  Collected image information.")
@@ -163,14 +164,14 @@ UpdateSeuratForSemla <- function (
       x <- slice@boundaries$centroids@coords
       rownames(x) <- slice@boundaries$centroids@cells
     }
-
+    
     if (slice_type == "VisiumV1") {
       coordinates <- tibble(barcode = rownames(x), 
-             pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
-             pxl_row_in_fullres = x[, "imagerow", drop = TRUE],
-             x = x[, "col", drop = TRUE],
-             y = y[, "row", drop = TRUE],
-             sampleID = i)
+                            pxl_col_in_fullres = x[, "imagecol", drop = TRUE],
+                            pxl_row_in_fullres = x[, "imagerow", drop = TRUE],
+                            x = x[, "col", drop = TRUE],
+                            y = y[, "row", drop = TRUE],
+                            sampleID = i)
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
     } else  if (slice_type == "VisiumV2") {
       coordinates <- tibble(barcode = rownames(x), 
@@ -179,19 +180,14 @@ UpdateSeuratForSemla <- function (
                             sampleID = as.integer(i))
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
       # Normalize pixel coordinates
-      coordinates_tibble <- .pixel_normalize(df = coordinates_tibble)
-      # Generate array coordinates
-      coord_x <- .array_from_pixel(df = coordinates_tibble,
-                                  col = "x")
-      coord_y <- .array_from_pixel(df = coordinates_tibble,
-                                  col = "y")
-      # Append array coordinates
+      ## extract the x and y coordiantes of each spot
+      array_coords <- str_split_fixed(coordinates_tibble$barcode, pattern = "[[:punct:]]", n = 5)
+      ## add to coordinates tibble
       coordinates_tibble <- coordinates_tibble |> 
-        arrange(x) |> 
-        mutate(x = coord_x)
-      coordinates_tibble <- coordinates_tibble |> 
-        arrange(y) |> 
-        mutate(y = coord_y)
+        mutate(x = as.integer(array_coords[,4]),
+               y = as.integer(array_coords[,3]),
+               pxl_col_in_fullres = as.integer(pxl_col_in_fullres),
+               pxl_row_in_fullres = as.integer(pxl_row_in_fullres))
     } else if (slice_type == "SlideSeq") {
       coordinates <- tibble(barcode = rownames(x), 
                             pxl_col_in_fullres = x[, "x", drop = TRUE],
@@ -233,61 +229,6 @@ UpdateSeuratForSemla <- function (
   object@tools$Staffli <- st_object
   if (verbose) cat_line()
   if (verbose) cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
+  
   return(object)
-}
-
-#' Normalize pixel coordinates
-#'
-#' @param df A tibble containing pixel coordinates of the spots
-#'
-#' @return a tibble with normalized pixel coordinates
-#'
-#' @noRd
-.pixel_normalize <- function(df){
-  # Set global variable to NULL
-  pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- NULL
-  
-  # Normalize pixel coordinates
-  coord <- df |> 
-    mutate(x = pxl_col_in_fullres - min(pxl_col_in_fullres) + 1,
-           y = pxl_row_in_fullres - min(pxl_row_in_fullres) + 1)
-  # Extract array coordinates from pixel coordinates
-  coord <- coord |> 
-    mutate(x = x / min(x),
-           y = y / min(y))
-  
-  return(coord)
-}
-
-#' Generate array coordinates from normalized pixel coordinates
-#' Transform to array coordinates with only jumps of value 1. If spots are in the 
-#' same row/column, the consecutive difference of their pixeled array coordinates
-#' should not be greater than a few numbers (hist(coord_array)). Big consecutive differences 
-#' indicate row/column jumps. In order to identify the threshold used to define 
-#' the jumps, I will look at the consecutive differences vector
-#' @param df A tibble containing normalized pixel coordinates
-#' @param col A string indicating for which column to compute the array coordinates
-#' (\code{c("x", "y")})
-#'
-#' @return a vector with the array coordinates
-#'
-#' @noRd
-.array_from_pixel <- function(df, col){
-  # retrieve consecutive differences vector, that will indicate jumps
-  coord_array <- df |> 
-    arrange(.data[[col]]) |> 
-    pull(.data[[col]]) |> 
-    diff(lag = 1, differences = 1)
-  coord_array <- c(0, coord_array) # since the lagged difference is to the element after, the first spot will have no difference and thus must be manually added
-  # establish threshold for row/columns jumps. defined by values in the consecutive differences
-  coord_unique <- sort(unique(coord_array))
-  coord_range <- coord_unique |> 
-    diff() |> 
-    which.max()
-  coord_range <- c(coord_range, coord_range + 1)
-  coord_gap <- coord_unique[coord_range[2]] - coord_unique[coord_range[1]]
-  # create unique groups for each row/column. If the consecutive difference is greater than the gap, you will have a new group
-  coord_array <- cumsum(coord_array > coord_gap) + 1 # array coordinates are the same as the groups, but +1 because of R's coordinate specifications
-  
-  return(coord_array)
 }
