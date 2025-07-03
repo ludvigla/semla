@@ -179,15 +179,19 @@ UpdateSeuratForSemla <- function (
                             pxl_row_in_fullres = x[, "x", drop = TRUE],
                             sampleID = as.integer(i))
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
-      # Normalize pixel coordinates
+      # Create array coordinates
       ## extract the x and y coordiantes of each spot
-      array_coords <- str_split_fixed(coordinates_tibble$barcode, pattern = "[[:punct:]]", n = 5)
+      if (!requireNamespace("stringr", quietly = TRUE)) {
+        abort(glue("Package {cli::col_br_magenta('stringr')} is required. Please install it with: \n",
+                   "install.packages('stringr')"))
+      }
+      array_coords <- stringr::str_split_fixed(coordinates_tibble$barcode, pattern = "[[:punct:]]", n = 5)
       ## add to coordinates tibble
       coordinates_tibble <- coordinates_tibble |> 
         mutate(x = as.integer(array_coords[,4]),
                y = as.integer(array_coords[,3]),
-               pxl_col_in_fullres = as.integer(pxl_col_in_fullres),
-               pxl_row_in_fullres = as.integer(pxl_row_in_fullres))
+               pxl_col_in_fullres = as.integer(.data$pxl_col_in_fullres),
+               pxl_row_in_fullres = as.integer(.data$pxl_row_in_fullres))
     } else if (slice_type == "SlideSeq") {
       coordinates <- tibble(barcode = rownames(x), 
                             pxl_col_in_fullres = x[, "x", drop = TRUE],
