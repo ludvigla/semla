@@ -51,6 +51,10 @@ The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{gettin
 tutorial applies also for VisiumV2 assays. If you are working with VisiumHD data however, 
 we recommend loading the data using \code{semla}'s own functions, as detailed in the
 \href{https://ludvigla.github.io/semla/articles/visiumHD.html}{VisiumHD} tutorial.
+
+Note also that when adapting the object from hexagonal grid VisiumV2 to \code{semla}'s
+object structure, array coordinates are not available. Thus, some plotting methods 
+will not work.
 }
 
 \section{SlideSeq}{
