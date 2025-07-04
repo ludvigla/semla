@@ -29,6 +29,10 @@ NULL
 #' tutorial applies also for VisiumV2 assays. If you are working with VisiumHD data however, 
 #' we recommend loading the data using \code{semla}'s own functions, as detailed in the
 #' \href{https://ludvigla.github.io/semla/articles/visiumHD.html}{VisiumHD} tutorial.
+#' 
+#' Note also that when adapting the object from hexagonal grid VisiumV2 to \code{semla}'s
+#' object structure, array coordinates are not available. Thus, some plotting methods 
+#' will not work. 
 #'  
 #' @section SlideSeq:
 #' For SlideSeq data, there's no additional H&E image provided. If you convert
@@ -179,19 +183,20 @@ UpdateSeuratForSemla <- function (
                             pxl_row_in_fullres = x[, "x", drop = TRUE],
                             sampleID = as.integer(i))
       coordinates_tibble <- bind_rows(coordinates_tibble, coordinates)
-      # Create array coordinates
-      ## extract the x and y coordiantes of each spot
-      if (!requireNamespace("stringr", quietly = TRUE)) {
-        abort(glue("Package {cli::col_br_magenta('stringr')} is required. Please install it with: \n",
-                   "install.packages('stringr')"))
+      # Create array coordinates if possible 
+      if (grepl("^s", coordinates_tibble$barcode[1])) {
+        coordinates_tibble <- .get_array_coords(df = coordinates_tibble)
+      } else {
+        cli_alert_warning(
+          glue(
+            "Array coordinates are not available for non-VisiumHD datasets. ",
+            "Please consider using {cli::col_br_yellow('semla')}'s own functions to load the data. ",
+            "See '?ReadVisiumData()'"
+          )
+        )
       }
-      array_coords <- stringr::str_split_fixed(coordinates_tibble$barcode, pattern = "[[:punct:]]", n = 5)
-      ## add to coordinates tibble
-      coordinates_tibble <- coordinates_tibble |> 
-        mutate(x = as.integer(array_coords[,4]),
-               y = as.integer(array_coords[,3]),
-               pxl_col_in_fullres = as.integer(.data$pxl_col_in_fullres),
-               pxl_row_in_fullres = as.integer(.data$pxl_row_in_fullres))
+      
+      
     } else if (slice_type == "SlideSeq") {
       coordinates <- tibble(barcode = rownames(x), 
                             pxl_col_in_fullres = x[, "x", drop = TRUE],
@@ -235,4 +240,30 @@ UpdateSeuratForSemla <- function (
   if (verbose) cli_alert_success("Returning updated {col_br_magenta('Seurat')} object.")
   
   return(object)
+}
+
+#' Get the coordinates of the spots in a normal array form
+#'
+#' @param df A tibble containing pixel coordinates of the spots
+#'
+#' @return a tibble with normalized pixel coordinates
+#'
+#' @noRd
+.get_array_coords <- function(df){
+  # Set global variable to NULL
+  pxl_col_in_fullres <- pxl_row_in_fullres <- x <- y <- NULL
+  if (!requireNamespace("stringr", quietly = TRUE)) {
+    abort(glue("Package {cli::col_br_magenta('stringr')} is required. Please install it with: \n",
+               "install.packages('stringr')"))
+  }
+  # Extract the x and y coordiantes of each spot
+  array_coords <- str_split_fixed(df$barcode, pattern = "[[:punct:]]", n = 5)
+  ## add to coordinates tibble
+  coord <- df |> 
+    mutate(x = as.integer(array_coords[,4]),
+           y = as.integer(array_coords[,3]),
+           pxl_col_in_fullres = as.integer(pxl_col_in_fullres),
+           pxl_row_in_fullres = as.integer(pxl_row_in_fullres))
+  
+  return(coord)
 }
