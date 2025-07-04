@@ -1,9 +1,9 @@
 # semla 1.3.2
 
-*2025-07-1*
+*2025-07-4*
 ## Changes
 
-- Bug fix for *UpdateSeuratForSemla()* when dealing with *VisiumV2* data.
+- Bug fix for *UpdateSeuratForSemla()* when dealing with *VisiumV2* data. *VisiumV2* assays can contain both VisiumHD and Visium data. With Visium data, regular array coordinates cannot be returned, which could cause issues when running specific plotting methods downstream. Thus, we recommend using `semla`'s `ReadVisiumData()` in order to read the data into memory.
 
 # semla 1.3.1
 
