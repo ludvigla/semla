@@ -30,11 +30,11 @@ Description: Spatially Resolved Transcriptomics data exploration and analysis. '
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
-    R (>= 4.4.0),
+    R (>= 4.1.0),
     Seurat (>= 5.0.0),
     SeuratObject (>= 5.0.0),
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.5.2)
+    ggplot2 (>= 3.5.0)
 Imports:
     cli,
     forcats,
