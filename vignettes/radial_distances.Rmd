@@ -54,7 +54,7 @@ se <- ReadVisiumData(infoTable = infoTable)
 # imgs <- Sys.glob("10x_data/*/spatial/tissue_hires_image.png")[1:2]
 # spotfiles <- Sys.glob("10x_data/*/spatial/tissue_positions_list.csv")[1:2]
 # json <- Sys.glob("10x_data/*/spatial/scalefactors_json.json")[1:2]
-samples <- Sys.glob("bc_visium/filtered_feature_bc_matrix.h5")  # Read data from same folder as downloaded data
+samples <- Sys.glob("bc_visium/filtered_feature_bc_matrix.h5") # Read data from same folder as downloaded data
 imgs <- Sys.glob("bc_visium/spatial/tissue_hires_image.png")
 spotfiles <- Sys.glob("bc_visium/spatial/tissue_positions_list.csv")
 json <- Sys.glob("bc_visium/spatial/scalefactors_json.json")
@@ -106,11 +106,11 @@ MapLabels(se, column_name = "seurat_clusters",
   guides(fill = guide_legend(override.aes = list(size = 3), ncol = 2))
 ```
 
-For the purpose of this analysis, we just need to define a region of interest in our tissue sections. We could just as well use the tissue morphology as a basis to define this region. From the plot above, we can see that some clusters are confined to distinct regions, for example cluster 9:
+For the purpose of this analysis, we just need to define a region of interest in our tissue sections. We could just as well use the tissue morphology as a basis to define this region. From the plot above, we can see that some clusters are confined to distinct regions, for example cluster 10:
 
 ```{r fig.asp=1}
-se$cluster_9 <- ifelse(se$seurat_clusters %in% "9", "9", NA)
-MapLabels(se, column_name = "cluster_9", override_plot_dims = TRUE, 
+se$cluster_10 <- ifelse(se$seurat_clusters %in% "10", "10", NA)
+MapLabels(se, column_name = "cluster_10", override_plot_dims = TRUE, 
           image_use = "raw", drop_na = TRUE, pt_size = 2) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right") &
@@ -119,12 +119,12 @@ MapLabels(se, column_name = "cluster_9", override_plot_dims = TRUE,
 
 ## Disconnect regions
 
-Cluster 9 is concentrated to a region rich with cancer cells but there are also a few spots in other parts of the tissue. At this point we might only be interested in one of these regions in which case we can split cluster_9 into spatially disconnected compartments. For this purpose, we can use `DisconnectRegions`:
+Cluster 10 is concentrated to a region rich with cancer cells but there are also a few spots in other parts of the tissue. At this point we might only be interested in one of these regions in which case we can split cluster_10 into spatially disconnected compartments. For this purpose, we can use `DisconnectRegions`:
 
 ```{r fig.asp=1}
-se <- DisconnectRegions(se, column_name = "seurat_clusters", selected_groups = "9")
+se <- DisconnectRegions(se, column_name = "seurat_clusters", selected_groups = "10")
 
-MapLabels(se, column_name = "9_split", override_plot_dims = TRUE, 
+MapLabels(se, column_name = "10_split", override_plot_dims = TRUE, 
           image_use = "raw", drop_na = TRUE, pt_size = 2) +
   plot_layout(guides = "collect") &
   theme(legend.position = "right") &
@@ -135,24 +135,24 @@ Each spatially disconnected region in cluster 9 now has its own label, order fro
 
 ## Radial distance
 
-Imagine that we are interested in looking at the expression of certain genes as a function of distance to a region of interest. We can compute distances from a region of interest (ROI) using `RadialDistances`. Here we'll use cluster 3 as our ROI for the computation.
+Imagine that we are interested in looking at the expression of certain genes as a function of distance to a region of interest. We can compute distances from a region of interest (ROI) using `RadialDistances`. Here we'll use cluster 2 as our ROI for the computation.
 
 ```{r fig.asp=1}
-se$cluster_3 <- ifelse(se$seurat_clusters %in% "3", "3", NA)
-MapLabels(se, column_name = "cluster_3", override_plot_dims = TRUE, 
+se$cluster_2 <- ifelse(se$seurat_clusters %in% "2", "2", NA)
+MapLabels(se, column_name = "cluster_2", override_plot_dims = TRUE, 
           image_use = "raw", drop_na = TRUE, pt_size = 2) +
   theme(legend.position = "right") &
   guides(fill = guide_legend(override.aes = list(size = 5), ncol = 2))
 ```
 
 ```{r}
-se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3")
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "2")
 ```
 
-We can illustrate the results by coloring the spots based on the radial distances from cluster "3":
+We can illustrate the results by coloring the spots based on the radial distances from cluster "2":
 
 ```{r fig.asp=1}
-MapFeatures(se, features = "r_dist_3", center_zero = TRUE, pt_size = 2, 
+MapFeatures(se, features = "r_dist_2", center_zero = TRUE, pt_size = 2, 
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(),
             override_plot_dims = TRUE)
 ```
@@ -165,7 +165,7 @@ The distances are given as pixels relative to the image pixels coordinates that 
 
 ```{r eval=FALSE}
 
-se$r_dist_3 <- (100/273)*se$r_dist_3
+se$r_dist_2 <- (100/273)*se$r_dist_2
 
 ```
 
@@ -173,7 +173,7 @@ Alternatively, you can set `convert_to_microns = TRUE` to make `RadialDistance` 
 
 ```{r}
 se <- RadialDistance(se, column_name = "seurat_clusters", 
-                     selected_groups = "3", convert_to_microns = TRUE)
+                     selected_groups = "2", convert_to_microns = TRUE)
 ```
 
 ### Convert radial distances
@@ -182,13 +182,13 @@ The scale of the distances is somewhat inconvenient for our color scale, so we c
 
 ```{r fig.asp=1}
 
-se$r_dist_3_sqrt <- sign(se$r_dist_3)*sqrt(abs(se$r_dist_3))
-MapFeatures(se, features = "r_dist_3_sqrt", center_zero = TRUE, pt_size = 2, 
+se$r_dist_2_sqrt <- sign(se$r_dist_2)*sqrt(abs(se$r_dist_2))
+MapFeatures(se, features = "r_dist_2_sqrt", center_zero = TRUE, pt_size = 2, 
             colors = RColorBrewer::brewer.pal(n = 11, name = "RdBu") |> rev(),
             override_plot_dims = TRUE)
 ```
 
-With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 3, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 3. The red dashed line represents the tumor border.
+With these distances, we can now explore the expression of certain genes as a function of distance from our ROI. Here we are only interested in the microenvironment outside of our cluster 2, so we will filter the data to have a maximum radial distance of 1000 microns outside of cluster 2. The red dashed line represents the tumor border.
 
 ```{r fig.asp=0.5}
 
@@ -196,18 +196,18 @@ sel_genes <- c("CRISP3", "IGLC2")
 
 se[[]] |> 
   bind_cols(FetchData(se, vars = sel_genes)) |> 
-  filter(r_dist_3 < 1e3) |> 
+  filter(r_dist_2 < 1e3) |> 
   pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |> 
-  ggplot(aes(r_dist_3, value, color = variable)) +
+  ggplot(aes(r_dist_2, value, color = variable)) +
     geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
     geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed")
 
 ```
 
-Here we can see that the expression of CRISP3 is high inside cluster "3" and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:
+Here we can see that the expression of CRISP3 is high inside cluster "2" and declines rapidly at the border whereas IGLC2 show the opposite trend. We can also visualize these trends spatially:
 
 ```{r fig.asp=0.6}
-MapFeatures(SubsetSTData(se, expression = r_dist_3 < 1e3), 
+MapFeatures(SubsetSTData(se, expression = r_dist_2 < 1e3), 
             features = sel_genes, override_plot_dims = TRUE, scale_alpha = TRUE,
             image_use = "raw", pt_size = 2)
 ```
@@ -223,7 +223,7 @@ It is rarely the case that the microenvironment is homogeneous in all directions
 The plot below (generated with `AnglePlot`) should give you an idea about how the angles are calculated for a certain region. The ROI center is defined by taking the median of the x, y coordinates for the spots of the ROI. The angles are defined clockwise where 0° = right, 90° = down, ...
 
 ```{r fig.asp=1}
-AnglePlot(se, column_name = "cluster_3", selected_group = "3", pt_size = 2,
+AnglePlot(se, column_name = "cluster_2", selected_group = "2", pt_size = 2,
           crop_area = c(0.2, 0.3, 1, 1), image_use = "raw", radius = 0.3, drop_na = TRUE)
 ```
 
@@ -231,38 +231,38 @@ AnglePlot(se, column_name = "cluster_3", selected_group = "3", pt_size = 2,
 
 Before you proceed, note that it is important that the ROI is spatially connected. If not, `RadialDistance` will complain that it finds disconnected components and will abort the function. This is intended to prevent users from defining a center outside of the ROI which would likely happen if multiple ROIs are present. It doesn't make much sense to compute radial distances from one center when there are multiple centers present. Instead, you can split the disconnected components with `DisconnectRegions` and focus on one ROI.
 
-Now that we have an idea about how the angles are defined, we can provide an interval of angles to narrow down the search area and calculate radial distances. The color scale in the plot below represents the radial distances from the tumor (cluster 3) center.
+Now that we have an idea about how the angles are defined, we can provide an interval of angles to narrow down the search area and calculate radial distances. The color scale in the plot below represents the radial distances from the tumor (cluster 2) center.
 
 ```{r fig.asp=1}
-se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3", 
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "2", 
                      angles = c(200, 240))
 
-MapFeatures(se, features = "r_dist_3", pt_size = 2)
+MapFeatures(se, features = "r_dist_2", pt_size = 2)
 ```
 
 If we want to go for a more exploratory approach, we can split the radial distances into slices by setting `angles_nbreaks`. In the example below, we narrow the search area to angles between 120-320 degrees and split it into 6 even slices.
 
 ```{r fig.asp=1}
-se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "3", 
+se <- RadialDistance(se, column_name = "seurat_clusters", selected_groups = "2", 
                     angles = c(120, 320), angles_nbreaks = 6)
-MapLabels(se, column_name = "intervals_3", pt_size = 2, drop_na = TRUE,
+MapLabels(se, column_name = "intervals_2", pt_size = 2, drop_na = TRUE,
           colors = RColorBrewer::brewer.pal(n = 6, name = "Spectral")) &
   guides(fill = guide_legend(override.aes = list(size = 5), ncol = 3))
 ```
 
-Inside our `Seurat` object meta data slot, we now have three new columns: 'angle_3', 'r_dist_3' and 'intervals_3'. The 'intervals_3' columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:
+Inside our `Seurat` object meta data slot, we now have three new columns: 'angle_2', 'r_dist_2' and 'intervals_2'. The 'intervals_2' columns tells us what slice each spot belongs to. With this data, we can modify our previous plot and split it by slice. If we look at the same genes as before (CRISP3 and IGLC2), we can see that the trends is quite similar in all 6 directions:
 
 ```{r fig.asp=0.5}
 sel_genes <- c("CRISP3", "IGLC2")
 
 se[[]] |> 
   bind_cols(FetchData(se, vars = sel_genes)) |> 
-  filter(r_dist_3 < 1e3) |> 
+  filter(r_dist_2 < 1e3) |> 
   pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |> 
-  ggplot(aes(r_dist_3, value, color = variable)) +
+  ggplot(aes(r_dist_2, value, color = variable)) +
     geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
     geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed") +
-    facet_wrap(~ intervals_3, ncol = 3) +
+    facet_wrap(~ intervals_2, ncol = 3) +
     theme_minimal()
 ```
 
@@ -273,14 +273,14 @@ sel_genes <- c("PGM5-AS1", "CXCL14", "IGHG3")
 
 se[[]] |> 
   bind_cols(FetchData(se, vars = sel_genes)) |> 
-  filter(r_dist_3 < 1e3) |> 
+  filter(r_dist_2 < 1e3) |> 
   pivot_longer(all_of(sel_genes), names_to = "variable", values_to = "value") |> 
   group_by(variable) |> 
   mutate(value_centered = value - mean(value)) |> # Note that the values have been centered
-  ggplot(aes(r_dist_3, value_centered, color = variable)) +
+  ggplot(aes(r_dist_2, value_centered, color = variable)) +
     geom_smooth(method = "gam", formula = y ~ s(x, bs = "cs")) +
     geom_vline(aes(xintercept = 0, color = "border"), linetype = "dashed") +
-    facet_wrap(~ intervals_3, ncol = 3) +
+    facet_wrap(~ intervals_2, ncol = 3) +
     theme_minimal()
 ```
 
