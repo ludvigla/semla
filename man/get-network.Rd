@@ -8,9 +8,23 @@
 \usage{
 GetSpatialNetwork(object, ...)
 
-\method{GetSpatialNetwork}{default}(object, nNeighbors = 6, maxDist = NULL, minK = 0, ...)
+\method{GetSpatialNetwork}{default}(
+  object,
+  nNeighbors = 6,
+  maxDist = NULL,
+  minK = 0,
+  coords = "pixels",
+  ...
+)
 
-\method{GetSpatialNetwork}{Seurat}(object, nNeighbors = 6, maxDist = NULL, minK = 0, ...)
+\method{GetSpatialNetwork}{Seurat}(
+  object,
+  nNeighbors = 6,
+  maxDist = NULL,
+  minK = 0,
+  coords = "pixels",
+  ...
+)
 }
 \arguments{
 \item{object}{An object}
@@ -26,6 +40,11 @@ a factor of \code{1.2}.}
 
 \item{minK}{Minimum nearest neighbors [default: 0]. Spots with fewer neighbors will be discarded.
 Useful if you want to remove spots with few or no neighbors.}
+
+\item{coords}{A string indicating which coordinate system to use. Options are \code{c("array", "pixels")}, 
+with [default: "pixels"]. If set to "array", the network will be computed using the x and y array coordinates,
+representing the integer positions of the spots on the grid. The "pixels" option regards the pixel coordinates of
+the spots. The mode is relevant for setting the \code{maxDist} parameter, as the pixel coordinates are on a different scale}
 }
 \value{
 A list of tibbles, each containing information about the nearest neighbors of each spot.
