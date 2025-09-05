@@ -18,9 +18,6 @@ We are going to be using the FFPE mouse brain test dataset that is available at 
 ```{r warning=FALSE, message=FALSE}
 library(semla)
 library(stringr)
-```
-
-```{r eval=FALSE, include = TRUE}
 library(tidyverse)
 ```
 
@@ -244,7 +241,6 @@ p <- MapLabels(se.16,
 )
 p
 ```
-
 
 ![1. Seurat clusters identified at 16ums.](visiumHD/clusters_16.jpg)
 
