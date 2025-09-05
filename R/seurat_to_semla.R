@@ -257,7 +257,7 @@ UpdateSeuratForSemla <- function (
                "install.packages('stringr')"))
   }
   # Extract the x and y coordiantes of each spot
-  array_coords <- str_split_fixed(df$barcode, pattern = "[[:punct:]]", n = 5)
+  array_coords <- stringr::str_split_fixed(df$barcode, pattern = "[[:punct:]]", n = 5)
   ## add to coordinates tibble
   coord <- df |> 
     mutate(x = as.integer(array_coords[,4]),
