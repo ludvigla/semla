@@ -33,7 +33,7 @@ The high-resolution VisiumHD commercialized by 10x Genomics in spring 2024 follo
 
 So, 3 main things regarding VisiumHD: the spots are now squares instead of circles, the spots have no empty space in between them, and the size of the spots is 2um. This is a bit ugly, but maybe it can help put these numbers into context:
 
-![How many VisiumHD spots there is in one Visium spot!](visiumHD/visiumhd_in_context.png)
+![*One Visium spot contains multiple VisiumHD capture areas*](visiumHD/visiumhd_in_context.png)
 
 As a side note, maybe it is more accurate to refer to VisiumHD's capture areas as *squares*, but due to old habit we will still refer to them as *spots*.
 
