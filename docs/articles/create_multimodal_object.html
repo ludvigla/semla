@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="semla">
 <title>Create a spatial multimodal object • semla</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -15,100 +14,82 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Create a spatial multimodal object">
-<meta property="og:description" content="semla">
-<meta property="og:image" content="https://ludvigla.github.io/semla/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/semla.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+<li class="nav-item"><a class="nav-link" href="../articles/semla.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+<li><h6 class="dropdown-header" data-toc-skip>Intro</h6></li>
+    <li><a class="dropdown-item" href="../articles/getting_started.html">Get started</a></li>
+    <li><a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a></li>
+    <li><a class="dropdown-item" href="../articles/visiumHD.html">VisiumHD</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6></li>
+    <li><a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a></li>
+    <li><a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a></li>
+    <li><a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a></li>
+    <li><a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Spatial methods</h6></li>
+    <li><a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a></li>
+    <li><a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Analysis</h6></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a></li>
+    <li><a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a></li>
+    <li><a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Image processing</h6></li>
+    <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
+    <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
+    <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+  </ul>
 </li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-    <h6 class="dropdown-header" data-toc-skip>Intro</h6>
-    <a class="dropdown-item" href="../articles/getting_started.html">Get started</a>
-    <a class="dropdown-item" href="../articles/subset_and_merge.html">Subset/merge</a>
-    <a class="dropdown-item" href="../articles/visiumHD.html">VisiumHD</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial visualization</h6>
-    <a class="dropdown-item" href="../articles/numeric_features.html">Map numeric features</a>
-    <a class="dropdown-item" href="../articles/categorical_features.html">Map categorical features</a>
-    <a class="dropdown-item" href="../articles/advanced_visualization.html">Advanced visualization</a>
-    <a class="dropdown-item" href="../articles/feature_viewer.html">Feature viewer</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Spatial methods</h6>
-    <a class="dropdown-item" href="../articles/radial_distances.html">Radial distances</a>
-    <a class="dropdown-item" href="../articles/region_neighbors.html">Region neighbors</a>
-    <a class="dropdown-item" href="../articles/spatial_statistics_for_labelled_spots.html">Statistics for labelled spots</a>
-    <a class="dropdown-item" href="../articles/spatial_autocorrelation.html">Spatial autocorrelation</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Analysis</h6>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_with_NNLS.html">Cell type mapping</a>
-    <a class="dropdown-item" href="../articles/digital_unrolling.html">Digital unrolling</a>
-    <a class="dropdown-item" href="../articles/NNMF.html">Non-negative Matrix Factorization</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Image processing</h6>
-    <a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a>
-    <a class="dropdown-item" href="../articles/mask_images.html">Image masking</a>
-    <a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a></li>
+    <li><a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a></li>
+    <li><a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a></li>
+    <li><a class="dropdown-item" href="../articles/IF_data.html">IF data</a></li>
+  </ul>
 </li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/create_object.html">Create a Staffli object</a>
-    <a class="dropdown-item" href="../articles/compare_cell_type_mapping_NNLS.html">Cell type mapping comparison</a>
-    <a class="dropdown-item" href="../articles/cell_type_mapping_benchmark.html">Cell type mapping benchmark</a>
-    <a class="dropdown-item" href="../articles/slide-seq.html">Slide-Seq data</a>
-    <a class="dropdown-item" href="../articles/IF_data.html">IF data</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub">
-    <span class="fa fa-github"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -119,10 +100,10 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Create a spatial multimodal object</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 19 March
+            <h4 data-toc-skip class="date">Last compiled: 08 September
 2025</h4>
       
-      
+
       <div class="d-none name"><code>create_multimodal_object.Rmd</code></div>
     </div>
 
@@ -199,7 +180,7 @@ data.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_visium</span>, features <span class="op">=</span> <span class="st">"nCount_Visium"</span>, colors <span class="op">=</span> <span class="va">col_scale_rocket</span><span class="op">)</span></span></code></pre></div>
 <p><img src="create_multimodal_object_files/figure-html/unnamed-chunk-4-1.png" width="384"></p>
 <p><br><br></p>
-<p>Next, we read the MSI data available in the same stardardised Space
+<p>Next, we read the MSI data available in the same standarised Space
 Ranger format. To make it easier to separate the two objects, we can
 pass a unique name to the <code>assay</code> argument.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -267,7 +248,9 @@ starting with the Visium data.</p>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Normalizing layer: counts</span></span></code></pre>
 <pre><code><span><span class="co">## Centering and scaling data matrix</span></span></code></pre>
+<pre><code><span><span class="co">## Finding variable features for layer counts</span></span></code></pre>
 <p>For the MSI data, the intensity values have already been normalized
 based on total ion count prior to creating the input data. However, to
 ease the integration and shorten the processing time, we will filter the
@@ -275,12 +258,28 @@ data and only include the most spatially variable metabolites.</p>
 <p>First we can have a look at the distribution of metabolites and peak
 intensities across pixels to thereafter determine reasonable
 cutoffs.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html" class="external-link">VlnPlot</a></span><span class="op">(</span><span class="va">se_msi</span>, features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nCount_MSI"</span>, <span class="st">"nFeature_MSI"</span><span class="op">)</span>, </span>
 <span>        pt.size <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>        ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning: Default search for "data" layer in "MSI" assay yielded no results;</span></span>
+<span><span class="co">## utilizing "counts" layer instead.</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: The `slot` argument of `FetchData()` is deprecated as of SeuratObject 5.0.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use the `layer` argument instead.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
+<pre><code><span><span class="co">## Warning: `PackageCheck()` was deprecated in SeuratObject 5.0.0.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `rlang::check_installed()` instead.</span></span>
+<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">Seurat</span> package.</span></span>
+<span><span class="co">##   Please report the issue at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/satijalab/seurat/issues&gt;</span>.</span></span>
+<span><span class="co">## <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
 <p><img src="create_multimodal_object_files/figure-html/unnamed-chunk-10-1.png" width="384"></p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' Pixel filter</span></span>
 <span><span class="va">min_count_per_spot</span> <span class="op">&lt;-</span> <span class="fl">14e5</span></span>
 <span><span class="va">min_peaks_per_spot</span> <span class="op">&lt;-</span> <span class="fl">300</span></span>
@@ -292,11 +291,13 @@ cutoffs.</p>
 <pre><code><span><span class="co">## An object of class Seurat </span></span>
 <span><span class="co">## 2633 features across 10770 samples within 1 assay </span></span>
 <span><span class="co">## Active assay: MSI (2633 features, 0 variable features)</span></span>
-<span><span class="co">##  2 layers present: counts, data</span></span></code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<span><span class="co">##  1 layer present: counts</span></span></code></pre>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Metabolite filter</span></span>
-<span><span class="va">se_msi_filtered</span> <span class="op">&lt;-</span> <span class="va">se_msi_filtered</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">cor_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cor-features.html">CorSpatialFeatures</a></span><span class="op">(</span><span class="va">se_msi_filtered</span>, assay_use <span class="op">=</span> <span class="st">"MSI"</span>, slot_use <span class="op">=</span> <span class="st">"counts"</span>, verbose <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">se_msi_filtered</span> <span class="op">&lt;-</span> <span class="va">se_msi_filtered</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Finding variable features for layer counts</span></span></code></pre>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cor_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cor-features.html">CorSpatialFeatures</a></span><span class="op">(</span><span class="va">se_msi_filtered</span>, assay_use <span class="op">=</span> <span class="st">"MSI"</span>, slot_use <span class="op">=</span> <span class="st">"counts"</span>, verbose <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Computing spatial autocorrelation</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
@@ -305,7 +306,7 @@ cutoffs.</p>
 <pre><code><span><span class="co">## →   Computed feature lag expression</span></span></code></pre>
 <pre><code><span><span class="co">## →   Computed feature spatial autocorrelation scores</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span>   Returning results</span></span></code></pre>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">top_n</span> <span class="op">&lt;-</span> <span class="fl">500</span></span>
 <span><span class="va">top_metabolites</span> <span class="op">&lt;-</span> <span class="va">cor_features</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">top_n</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">gene</span><span class="op">)</span></span>
 <span></span>
@@ -322,7 +323,7 @@ spatial resolution of MSI is higher than for Visium, the function will
 detect and aggregate data from multiple MSI pixels per Visium spot,
 taking either mean of the sum of the MSI measurements (as specified with
 the <code>agg_func</code> argument).</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_mmo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/multimodal-object.html">CreateMultiModalObject</a></span><span class="op">(</span>object_ref <span class="op">=</span> <span class="va">se_visium</span>, </span>
 <span>                                 object_map <span class="op">=</span> <span class="va">se_msi_filtered</span>,</span>
 <span>                                 agg_func <span class="op">=</span> <span class="st">"mean"</span>, </span>
@@ -333,11 +334,11 @@ the <code>agg_func</code> argument).</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Excluding <span style="color: #55FFFF;">4651</span> coordinates from the mapping dataset due to being outside of reference coordinate scope</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Aggregating assay data in mapping coordinates per reference coordinate (this step may take long if the data is large)</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Using 7 threads</span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Data aggregation finished in 0.1 minutes</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Data aggregation finished in 0.08 minutes</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Storing aggregated data summarized by mean values</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Adding second modality data to a new 'Assay' named 'MSI', containing <span style="color: #5555FF;">500</span> features</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Returning a `Seurat` object with <span style="color: #5555FF;">32285</span> features and <span style="color: #FF55FF;">4086</span> spots</span></span></code></pre>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mmo</span>, </span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nCount_Visium"</span>, <span class="st">"nFeature_Visium"</span><span class="op">)</span>, </span>
 <span>            ncol <span class="op">=</span> <span class="fl">1</span>, </span>
@@ -353,7 +354,7 @@ downstream analyses, e.g. factor analysis with NMF or MOFA.</p>
 <p>As with any semla object, we can read in the tissue image and in this
 case the Visium H&amp;E image will be selected by default as it acted as
 our reference dataset.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_mmo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_mmo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
@@ -361,7 +362,7 @@ our reference dataset.</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from multimodal_data/mm_bleo_visium/spatial/tissue_hires_image.png</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 1945x2000 to 400x411 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spot_size</span> <span class="op">&lt;-</span> <span class="fl">0.6</span></span>
 <span><span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_mmo</span>, </span>
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nCount_Visium"</span><span class="op">)</span>, pt_size <span class="op">=</span> <span class="va">spot_size</span>,</span>
@@ -374,99 +375,97 @@ our reference dataset.</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.3.1</li>
+<code>semla</code>: 1.4.0</li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R version 4.3.3 (2024-02-29)</span></span>
-<span><span class="co">## Platform: aarch64-apple-darwin20.0.0 (64-bit)</span></span>
-<span><span class="co">## Running under: macOS 15.3</span></span>
+<pre><code><span><span class="co">## R version 4.4.2 (2024-10-31)</span></span>
+<span><span class="co">## Platform: aarch64-apple-darwin20.0.0</span></span>
+<span><span class="co">## Running under: macOS Sequoia 15.5</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS/LAPACK: /Users/javierescudero/miniconda3/envs/r-semla/lib/libopenblas.0.dylib;  LAPACK version 3.12.0</span></span>
+<span><span class="co">## BLAS/LAPACK: /Users/javierescudero/miniconda3/envs/r-semlaupd/lib/libopenblas.0.dylib;  LAPACK version 3.12.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## time zone: Europe/Stockholm</span></span>
-<span><span class="co">## tzcode source: internal</span></span>
+<span><span class="co">## tzcode source: system (macOS)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attached base packages:</span></span>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] patchwork_1.2.0    semla_1.3.1        ggplot2_3.5.0      dplyr_1.1.4       </span></span>
-<span><span class="co">## [5] SeuratObject_5.0.1 Seurat_4.3.0.1    </span></span>
+<span><span class="co">## [1] patchwork_1.3.1    semla_1.4.0        ggplot2_3.5.2      dplyr_1.1.4       </span></span>
+<span><span class="co">## [5] Seurat_5.3.0       SeuratObject_5.1.0 sp_2.2-0          </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
-<span><span class="co">##   [1] RColorBrewer_1.1-3     rstudioapi_0.15.0      jsonlite_1.8.8        </span></span>
-<span><span class="co">##   [4] magrittr_2.0.3         spatstat.utils_3.0-5   magick_2.8.3          </span></span>
-<span><span class="co">##   [7] farver_2.1.1           rmarkdown_2.26         fs_1.6.3              </span></span>
+<span><span class="co">##   [1] RColorBrewer_1.1-3     rstudioapi_0.17.1      jsonlite_1.9.0        </span></span>
+<span><span class="co">##   [4] magrittr_2.0.3         spatstat.utils_3.1-4   magick_2.8.7          </span></span>
+<span><span class="co">##   [7] farver_2.1.2           rmarkdown_2.29         fs_1.6.5              </span></span>
 <span><span class="co">##  [10] ragg_1.3.3             vctrs_0.6.5            ROCR_1.0-11           </span></span>
-<span><span class="co">##  [13] memoise_2.0.1          spatstat.explore_3.2-6 htmltools_0.5.7       </span></span>
-<span><span class="co">##  [16] forcats_1.0.0          sass_0.4.8             sctransform_0.4.1     </span></span>
-<span><span class="co">##  [19] parallelly_1.38.0      KernSmooth_2.23-22     bslib_0.6.1           </span></span>
-<span><span class="co">##  [22] htmlwidgets_1.6.4      desc_1.4.3             ica_1.0-3             </span></span>
-<span><span class="co">##  [25] plyr_1.8.9             plotly_4.10.4          zoo_1.8-12            </span></span>
-<span><span class="co">##  [28] cachem_1.0.8           igraph_2.0.2           mime_0.12             </span></span>
-<span><span class="co">##  [31] lifecycle_1.0.4        pkgconfig_2.0.3        Matrix_1.6-3          </span></span>
-<span><span class="co">##  [34] R6_2.5.1               fastmap_1.1.1          fitdistrplus_1.1-11   </span></span>
-<span><span class="co">##  [37] future_1.34.0          shiny_1.8.0            digest_0.6.34         </span></span>
-<span><span class="co">##  [40] colorspace_2.1-0       tensor_1.5             irlba_2.3.5.1         </span></span>
-<span><span class="co">##  [43] textshaping_0.3.7      labeling_0.4.3         progressr_0.14.0      </span></span>
-<span><span class="co">##  [46] fansi_1.0.6            spatstat.sparse_3.0-3  httr_1.4.7            </span></span>
-<span><span class="co">##  [49] polyclip_1.10-6        abind_1.4-5            compiler_4.3.3        </span></span>
-<span><span class="co">##  [52] bit64_4.0.5            withr_3.0.0            viridis_0.6.5         </span></span>
-<span><span class="co">##  [55] highr_0.10             float_0.3-2            MASS_7.3-60           </span></span>
-<span><span class="co">##  [58] tools_4.3.3            lmtest_0.9-40          httpuv_1.6.14         </span></span>
-<span><span class="co">##  [61] future.apply_1.11.1    goftest_1.2-3          glue_1.7.0            </span></span>
-<span><span class="co">##  [64] dbscan_1.1-12          nlme_3.1-164           promises_1.2.1        </span></span>
-<span><span class="co">##  [67] grid_4.3.3             Rtsne_0.17             cluster_2.1.6         </span></span>
-<span><span class="co">##  [70] reshape2_1.4.4         generics_0.1.3         hdf5r_1.3.10          </span></span>
-<span><span class="co">##  [73] gtable_0.3.4           spatstat.data_3.0-4    tidyr_1.3.1           </span></span>
-<span><span class="co">##  [76] data.table_1.15.2      sp_2.1-3               utf8_1.2.4            </span></span>
-<span><span class="co">##  [79] spatstat.geom_3.2-9    RcppAnnoy_0.0.22       ggrepel_0.9.5         </span></span>
-<span><span class="co">##  [82] RANN_2.6.1             pillar_1.9.0           stringr_1.5.1         </span></span>
-<span><span class="co">##  [85] spam_2.10-0            later_1.3.2            splines_4.3.3         </span></span>
-<span><span class="co">##  [88] lattice_0.22-5         bit_4.0.5              survival_3.5-8        </span></span>
-<span><span class="co">##  [91] deldir_2.0-4           tidyselect_1.2.0       miniUI_0.1.1.1        </span></span>
-<span><span class="co">##  [94] pbapply_1.7-2          knitr_1.45             gridExtra_2.3         </span></span>
-<span><span class="co">##  [97] scattermore_1.2        RhpcBLASctl_0.23-42    xfun_0.42             </span></span>
-<span><span class="co">## [100] matrixStats_1.2.0      stringi_1.8.3          lazyeval_0.2.2        </span></span>
-<span><span class="co">## [103] yaml_2.3.8             evaluate_0.23          codetools_0.2-19      </span></span>
-<span><span class="co">## [106] tibble_3.2.1           cli_3.6.2              uwot_0.1.16           </span></span>
-<span><span class="co">## [109] xtable_1.8-4           reticulate_1.35.0      systemfonts_1.0.5     </span></span>
-<span><span class="co">## [112] munsell_0.5.0          jquerylib_0.1.4        Rcpp_1.0.12           </span></span>
-<span><span class="co">## [115] globals_0.16.3         spatstat.random_3.2-3  zeallot_0.1.0         </span></span>
-<span><span class="co">## [118] png_0.1-8              parallel_4.3.3         ellipsis_0.3.2        </span></span>
-<span><span class="co">## [121] pkgdown_2.0.7          dotCall64_1.1-1        listenv_0.9.1         </span></span>
-<span><span class="co">## [124] viridisLite_0.4.2      MatrixExtra_0.1.15     scales_1.3.0          </span></span>
-<span><span class="co">## [127] ggridges_0.5.6         leiden_0.4.3.1         purrr_1.0.2           </span></span>
-<span><span class="co">## [130] rlang_1.1.3            cowplot_1.1.3          shinyjs_2.1.0</span></span></code></pre>
+<span><span class="co">##  [13] spatstat.explore_3.4-3 htmltools_0.5.8.1      forcats_1.0.0         </span></span>
+<span><span class="co">##  [16] sass_0.4.9             sctransform_0.4.2      parallelly_1.42.0     </span></span>
+<span><span class="co">##  [19] KernSmooth_2.23-26     bslib_0.9.0            htmlwidgets_1.6.4     </span></span>
+<span><span class="co">##  [22] desc_1.4.3             ica_1.0-3              plyr_1.8.9            </span></span>
+<span><span class="co">##  [25] plotly_4.11.0          zoo_1.8-13             cachem_1.1.0          </span></span>
+<span><span class="co">##  [28] igraph_2.1.4           mime_0.12              lifecycle_1.0.4       </span></span>
+<span><span class="co">##  [31] pkgconfig_2.0.3        Matrix_1.7-2           R6_2.6.1              </span></span>
+<span><span class="co">##  [34] fastmap_1.2.0          fitdistrplus_1.2-3     future_1.34.0         </span></span>
+<span><span class="co">##  [37] shiny_1.10.0           digest_0.6.37          colorspace_2.1-1      </span></span>
+<span><span class="co">##  [40] tensor_1.5.1           RSpectra_0.16-2        irlba_2.3.5.1         </span></span>
+<span><span class="co">##  [43] textshaping_0.4.0      labeling_0.4.3         progressr_0.15.1      </span></span>
+<span><span class="co">##  [46] spatstat.sparse_3.1-0  httr_1.4.7             polyclip_1.10-7       </span></span>
+<span><span class="co">##  [49] abind_1.4-5            compiler_4.4.2         bit64_4.5.2           </span></span>
+<span><span class="co">##  [52] withr_3.0.2            viridis_0.6.5          fastDummies_1.7.5     </span></span>
+<span><span class="co">##  [55] float_0.3-3            MASS_7.3-64            tools_4.4.2           </span></span>
+<span><span class="co">##  [58] lmtest_0.9-40          httpuv_1.6.15          future.apply_1.11.3   </span></span>
+<span><span class="co">##  [61] goftest_1.2-3          glue_1.8.0             dbscan_1.2.2          </span></span>
+<span><span class="co">##  [64] nlme_3.1-167           promises_1.3.2         grid_4.4.2            </span></span>
+<span><span class="co">##  [67] Rtsne_0.17             cluster_2.1.8          reshape2_1.4.4        </span></span>
+<span><span class="co">##  [70] generics_0.1.3         hdf5r_1.3.12           gtable_0.3.6          </span></span>
+<span><span class="co">##  [73] spatstat.data_3.1-6    tidyr_1.3.1            data.table_1.17.0     </span></span>
+<span><span class="co">##  [76] spatstat.geom_3.4-1    RcppAnnoy_0.0.22       ggrepel_0.9.6         </span></span>
+<span><span class="co">##  [79] RANN_2.6.2             pillar_1.10.1          stringr_1.5.1         </span></span>
+<span><span class="co">##  [82] spam_2.11-1            RcppHNSW_0.6.0         later_1.4.1           </span></span>
+<span><span class="co">##  [85] splines_4.4.2          lattice_0.22-6         bit_4.5.0.1           </span></span>
+<span><span class="co">##  [88] survival_3.8-3         deldir_2.0-4           tidyselect_1.2.1      </span></span>
+<span><span class="co">##  [91] miniUI_0.1.1.1         pbapply_1.7-2          knitr_1.50            </span></span>
+<span><span class="co">##  [94] gridExtra_2.3          scattermore_1.2        RhpcBLASctl_0.23-42   </span></span>
+<span><span class="co">##  [97] xfun_0.53              matrixStats_1.5.0      stringi_1.8.4         </span></span>
+<span><span class="co">## [100] lazyeval_0.2.2         yaml_2.3.10            evaluate_1.0.5        </span></span>
+<span><span class="co">## [103] codetools_0.2-20       tibble_3.2.1           cli_3.6.4             </span></span>
+<span><span class="co">## [106] uwot_0.2.3             xtable_1.8-4           reticulate_1.42.0     </span></span>
+<span><span class="co">## [109] systemfonts_1.2.1      munsell_0.5.1          jquerylib_0.1.4       </span></span>
+<span><span class="co">## [112] Rcpp_1.1.0             globals_0.16.3         spatstat.random_3.4-1 </span></span>
+<span><span class="co">## [115] zeallot_0.2.0          png_0.1-8              spatstat.univar_3.1-3 </span></span>
+<span><span class="co">## [118] parallel_4.4.2         pkgdown_2.1.1          dotCall64_1.2         </span></span>
+<span><span class="co">## [121] listenv_0.9.1          viridisLite_0.4.2      MatrixExtra_0.1.15    </span></span>
+<span><span class="co">## [124] scales_1.3.0           ggridges_0.5.6         crayon_1.5.3          </span></span>
+<span><span class="co">## [127] purrr_1.0.4            rlang_1.1.5            cowplot_1.1.3         </span></span>
+<span><span class="co">## [130] shinyjs_2.1.0</span></span></code></pre>
 </details><p><br></p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://github.com/jemorlanes" class="external-link">Javier Escudero Morlanes</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference/figures/sr-logo.png" height="36" alt="spatialresearch"></a>.</p>
+  <p>Developed by <a href="https://github.com/ludvigla" class="external-link">Ludvig Larsson</a>, <a href="https://github.com/lfranzen" class="external-link">Lovisa Franzen</a>, <a href="https://github.com/jemorlanes" class="external-link">Javier Escudero Morlanes</a>, <a href="https://www.spatialresearch.org/" class="external-link"><img src="reference%2Ffigures%2Fsr-logo.png" height="36" alt="spatialresearch"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

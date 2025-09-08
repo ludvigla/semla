@@ -1,5 +1,5 @@
-pandoc: 3.7.0.2
-pkgdown: 2.1.3
+pandoc: 3.6.3
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   advanced_visualization: advanced_visualization.html
@@ -26,7 +26,7 @@ articles:
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
   visiumHD: visiumHD.html
-last_built: 2025-07-04T13:12Z
+last_built: 2025-09-08T11:07Z
 urls:
   reference: https://ludvigla.github.io/semla/reference
   article: https://ludvigla.github.io/semla/articles
