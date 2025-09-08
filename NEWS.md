@@ -1,3 +1,14 @@
+
+# semla 1.4.0
+
+*2025-09-08*
+## Changes
+- Increased versions of *semla*’s dependencies: 
+	- *Seurat* v5 or above
+	- *ggplot2* v3.5.2 or above
+- *GetSpatialNetwork()* can compute the network on either array or pixel spot coordinates.
+- Cleaned up warnings that come inside testing
+
 # semla 1.3.2
 
 *2025-07-4*
