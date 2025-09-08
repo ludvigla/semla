@@ -35,6 +35,7 @@ Fxyd
 GALT
 Genomics's
 GetScaleFactors
+GetSpatialNetwork
 Getis
 Gi
 Github
@@ -113,6 +114,7 @@ Triche
 UI
 UMAP
 UMIs
+UpdateSeuratForSemla
 VIZGEN's
 Visium
 VisiumHD
@@ -258,3 +260,4 @@ zag
 zig
 µ
 σ
+’s
