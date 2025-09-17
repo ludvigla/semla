@@ -167,7 +167,8 @@ RunMixedNNLS.default <- function (
 #' the \code{Seurat} object with either a new \code{Assay} or \code{DimReduc} object containing
 #' estimated proportions for cell types and additional factors.
 #' 
-#' @importFrom Seurat GetAssayData CreateAssayObject CreateDimReducObject
+#' @importFrom Seurat CreateAssayObject CreateDimReducObject
+#' @importFrom SeuratObject LayerData
 #' @import cli
 #'
 #' @rdname celltype-prediction-mixed
@@ -209,8 +210,8 @@ RunMixedNNLS.Seurat <- function (
   groups <- .prep_groups(singlecell_object, groups, verbose)
   
   # Get expression matrix for single cell data and Visium data
-  x_singlecell <- GetAssayData(singlecell_object, slot = slot, assay = singlecell_assay)[features, ]
-  x_spatial <- GetAssayData(object, slot = slot, assay = spatial_assay)[features, ]
+  x_singlecell <- LayerData(singlecell_object, layer = slot, assay = singlecell_assay)[features, ]
+  x_spatial <- LayerData(object, layer = slot, assay = spatial_assay)[features, ]
 
   results <- RunMixedNNLS.default(
     object = x_spatial,

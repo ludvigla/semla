@@ -256,7 +256,8 @@ RunLocalG.default <- function (
 #'
 #' @import dplyr
 #' @import cli
-#' @importFrom Seurat FetchData CreateAssayObject
+#' @importFrom Seurat FetchData
+#' @importFrom SeuratObject LayerData CreateAssay5Object
 #' @importFrom rlang inform abort
 #' @importFrom tibble rownames_to_column column_to_rownames
 #'
@@ -350,7 +351,7 @@ RunLocalG.Seurat <- function (
     fillMat <- matrix(data = 0, ncol = ncol(object), nrow = length(features),
                       dimnames = list(colnames(data), colnames(object)))
     fillMat[, rownames(data)] <- t(data)
-    gi_assay <- CreateAssayObject(data = fillMat)
+    gi_assay <- CreateAssay5Object(counts = as(fillMat, "sparseMatrix"))
     pvals <-  Gi_res |>
       select(barcode, starts_with("Pr(z")) |>
       column_to_rownames(var = "barcode") |>

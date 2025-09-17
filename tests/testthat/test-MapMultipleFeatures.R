@@ -128,12 +128,12 @@ test_that("MapMultipleFeatures works with example dataset", {
     shape = "tile"
   )
   
-  p8 <- MapMultipleFeatures(
+  p8 <- suppressWarnings(MapMultipleFeatures(
     object = se_mbrain,
     features = sel_features, 
     image_use = "raw",
     shape = "tile"
-  )
+  ))
   
   p9 <- MapMultipleFeatures(
     object = se_mbrain,

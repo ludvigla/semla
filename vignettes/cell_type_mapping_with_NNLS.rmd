@@ -13,9 +13,11 @@ We utilize the NNLS method implemented in the [RcppML](https://github.com/zdebru
 
 In this tutorial, we'll take a look at two examples. First, we have two tissue sections of a [mouse brain](#mbrain) and a single cell RNA-seq dataset from the Allen Brain Atlas. In the second example, we have a [mouse kidney](#mkidney) section and single cell RNA-seq data from the Tabula Muris Senis.
 
-```{r include=FALSE, eval=FALSE}
-install.packages(url = "https://cran.r-project.org/src/contrib/RcppML_0.3.7.tar.gz", 
+```{r include=FALSE, eval=TRUE}
+if (packageVersion("RcppML") != "0.3.7") {
+  install.packages("https://cran.r-project.org/src/contrib/RcppML_0.3.7.tar.gz", 
                  repos=NULL, type="source")
+}
 ```
 
 ```{r, message=FALSE, warning=FALSE}
@@ -253,7 +255,7 @@ We can also use the predicted cell type proportions to compute factors using NMF
 nmf_data <- FetchData(se_brain_spatial, selected_celltypes) |> 
   RcppML::nmf(k = 10, verbose = F)
 
-nmf_data_h <- nmf_data@h |> as.data.frame()
+nmf_data_h <- nmf_data$h |> as.data.frame()
 rownames(nmf_data_h) <- paste0("Factor_", 1:10)
 colnames(nmf_data_h) <- selected_celltypes
 

@@ -1,7 +1,7 @@
 Package: semla
 Type: Package
 Title: Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization
-Version: 1.3.2
+Version: 1.4.0
 Authors@R:
     c(person(
         "Ludvig", "Larsson",
@@ -31,10 +31,10 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Depends:
     R (>= 4.1.0),
-    Seurat (>= 4.0.0),
-    SeuratObject (>= 4.0.0),
+    Seurat (>= 5.0.0),
+    SeuratObject (>= 5.0.0),
     dplyr (>= 1.0.0),
-    ggplot2 (>= 3.3.0)
+    ggplot2 (>= 3.5.2)
 Imports:
     cli,
     forcats,

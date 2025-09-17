@@ -473,7 +473,7 @@ MapFeatures.Seurat <- function (
   
   # fetch data from Seurat object. 
   data_use <- GetStaffli(object)@meta_data |>
-    bind_cols(FetchData(object, vars = features, slot = slot, clean = FALSE) |> as_tibble())
+    bind_cols(FetchData(object, vars = features, layer = slot, clean = FALSE) |> as_tibble())
   
   # Add label_by column if present
   if (!is.null(label_by)) {
@@ -2486,7 +2486,7 @@ MapLabels.Seurat <- function (
 #'
 #' @importFrom patchwork inset_element wrap_plots
 #' @importFrom rlang %||% warn
-#' @importFrom ggplot2 is.ggplot
+#' @importFrom ggplot2 is_ggplot
 #'
 #' @return A \code{patchwork} object or a list of \code{ggplot} objects
 #'
@@ -2505,7 +2505,7 @@ MapLabels.Seurat <- function (
     # Inject images
     wrapped_plots <- setNames(lapply(names(wrapped_plots), function(nm) {
       plot <- wrapped_plots[[nm]]
-      if (!is.ggplot(plot)) {
+      if (!is_ggplot(plot)) {
         plot <- setNames(lapply(plot, function(p) {
           p <- p + inset_element(
             images[[nm]],

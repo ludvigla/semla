@@ -1,13 +1,28 @@
+
+# semla 1.4.0
+
+*2025-09-08*
+
+## Changes
+
+- Increased versions of *semla*’s dependencies: 
+	- *Seurat* v5 or above
+	- *ggplot2* v3.5.2 or above
+- `GetSpatialNetwork()` can compute the network on either array or pixel spot coordinates.
+- Cleaned up warnings that come inside testing
+
 # semla 1.3.2
 
 *2025-07-4*
+
 ## Changes
 
-- Bug fix for *UpdateSeuratForSemla()* when dealing with *VisiumV2* data. *VisiumV2* assays can contain both VisiumHD and Visium data. With Visium data, regular array coordinates cannot be returned, which could cause issues when running specific plotting methods downstream. Thus, we recommend using `semla`'s `ReadVisiumData()` in order to read the data into memory.
+- Bug fix for `UpdateSeuratForSemla()` when dealing with *VisiumV2* data. *VisiumV2* assays can contain both VisiumHD and Visium data. With Visium data, regular array coordinates cannot be returned, which could cause issues when running specific plotting methods downstream. Thus, we recommend using `semla`'s `ReadVisiumData()` in order to read the data into memory.
 
 # semla 1.3.1
 
 *2025-03-19*
+
 ## Changes
 
 - If the spot barcode IDs are missing a “-N” (e.g. “-1”) suffix (like is standard in Visium data), it will be added to the IDs when running `ReadVisiumData()`. This ensures that multiple samples can be added and merged properly without conflicts with unique barcode identities.
@@ -24,7 +39,7 @@
 
 ## Changes
 - Changed the appearance of the color scalebar in `MapFeatures()` and `MapMultipleFeatures()` so that the ticks and outline colors are black and have the same linewidth.
-- `MapFeaturesSummary()` now has a default option set for the `subplot_type` argument (dafault = “violin”). 
+- `MapFeaturesSummary()` now has a default option set for the `subplot_type` argument (default = “violin”). 
 
 ## Bug fixes
 - Minor fixes in function documentations

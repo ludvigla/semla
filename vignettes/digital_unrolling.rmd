@@ -92,7 +92,7 @@ Now we are ready to run the app! Once the app loads, you should see the H&E imag
 
 The image below illustrates how edges between two layers have been sliced.
 
-![*Sliced edges are colored in red*](cut.png)
+![*Sliced edges are colored in red*](images/cut.png)
 
 Once all edges has been cut, you have to press the `Quit & Save` button. If you just close the app without pressing "Quit & Save", the results will not be returned back to R.
 
@@ -110,7 +110,7 @@ tidy_network <- CutSpatialNetwork(se_mcolon, datadir = tilepath$datapath)
 
 For downstream steps, it is *crucial* that the layers have been separated appropriately. Even a single edge between two layer will make it impossible to run down stream steps reliably. The image below demonstrates a situation where the separation will fail.
 
-![*The arrow points at two edges (colored in black) which still connects two separate layers*](wrong.png)
+![*The arrow points at two edges (colored in black) which still connects two separate layers*](images/wrong.png)
 
 Luckily, any changes you made in the app are by default written to the spatial network file, so if you miss something, you can simply run the app again and fix the issue.
 

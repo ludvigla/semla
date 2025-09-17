@@ -18,7 +18,7 @@ test_that("MapLabels works as expected", {
   
   # Test image_use parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", image_use = "raw", shape = "tile"), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", image_use = "raw", shape = "tile")), "patchwork")
   
   # Test coords_use parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", coords_use = "transformed"), "patchwork")
@@ -34,16 +34,16 @@ test_that("MapLabels works as expected", {
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_size = 2), "patchwork")
   
   # Test spot_side parameter
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(2, 4), shape = "tile"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", spot_side = c(2, 4), shape = "tile")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", spot_side = c(200, 400), shape = "tile", image_use = "transformed")), "patchwork")
   
   # Test pt_alpha parameter
   ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5), "patchwork")
   ## tile
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile", image_use = "raw"), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile", image_use = "raw")), "patchwork")
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "tile", image_use = "transformed"), "patchwork")
   ## raster
   expect_s3_class(MapLabels(se_merged, column_name = "selection", pt_alpha = 0.5, shape = "raster"), "patchwork")
@@ -56,8 +56,8 @@ test_that("MapLabels works as expected", {
   expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE), "patchwork")
   ## tile
   expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "tile", image_use = "transformed")), "patchwork")
   ## raster
   expect_s3_class(MapLabels(se_merged, column_name = "selection", scale_alpha = TRUE, shape = "raster"), "patchwork")
   
@@ -66,8 +66,8 @@ test_that("MapLabels works as expected", {
   expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2), "patchwork")
   ## tile
   expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "transformed"), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "tile", image_use = "transformed")), "patchwork")
   ## raster
   expect_s3_class(MapLabels(se_merged, column_name = "selection", section_number = 2, shape = "raster"), "patchwork")
   
@@ -96,11 +96,11 @@ test_that("MapLabels works as expected", {
   ## point
   expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE), "patchwork")
   expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000)), "patchwork")
-  ## tile
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "transformed"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw"), "patchwork")
-  expect_s3_class(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "transformed"), "patchwork")
+  ## tile. suppress tile image rotated warning
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, shape = "tile", image_use = "transformed")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "raw")), "patchwork")
+  expect_s3_class(suppressWarnings(MapLabels(se_merged, column_name = "selection", add_scalebar = TRUE, scalebar_gg = scalebar(x = 1000), shape = "tile", image_use = "transformed")), "patchwork")
   
   # Test colors parameter
   expect_s3_class(MapLabels(se_merged, column_name = "selection", colors = c("red", "blue")), "patchwork")

@@ -265,7 +265,8 @@ CorSpatialFeatures.default <- function (
 #' assay will be used.
 #' @param slot_use Select slot to use from assay object.
 #'
-#' @importFrom Seurat FetchData VariableFeatures GetAssayData
+#' @importFrom Seurat FetchData VariableFeatures
+#' @importFrom SeuratObject LayerData
 #' @importFrom rlang %||%
 #'
 #' @rdname cor-features
@@ -349,7 +350,7 @@ CorSpatialFeatures.Seurat <- function (
     }
     stopifnot(is.character(assay_use),
               length(assay_use) == 1)
-    featureMat <- GetAssayData(object, assay = assay_use, slot = slot_use)
+    featureMat <- LayerData(object, assay = assay_use, layer = slot_use)
     featureMat <- MatrixExtra::t(featureMat[features, ])
   } else {
     featureMat <- FetchData(object, vars = features)

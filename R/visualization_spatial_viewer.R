@@ -69,6 +69,7 @@ NULL
 #' @import glue
 #' @import cli
 #' @import shiny
+#' @importFrom SeuratObject LayerData
 #'
 #' @family spatial-visualization-methods
 #'
@@ -122,10 +123,11 @@ FeatureViewer <- function (
   # Fetch all features
   # This will include all feature names of the DefaultAssay + slot,
   # the dimensionality reduction vector names
-  all_features <- c(rownames(GetAssayData(object, slot = slot)),
+  all_features <- c(rownames(LayerData(object, layer = slot)),
                     sapply(object@reductions, function(x) {
-                        colnames(x@cell.embeddings)
-                      })) |> unlist() |> unique()
+                      colnames(x@cell.embeddings)
+                    })) |> unlist() |> unique()
+  
   # Select all numeric features from the meta.data slot
   mdata_num_features <- object[[]] |>
     select_if(is.numeric) |>
@@ -408,7 +410,7 @@ FeatureViewer <- function (
           rv$lastBtn = "feature"
           rv$curFeature = input$feature
           # fetch numeric data with FetchData and pull out the vector
-          rv$values = FetchData(object, cells = rv$curbarcodes, slot = slot, vars = input$feature) |> pull(all_of(input$feature))
+          rv$values = FetchData(object, cells = rv$curbarcodes, layer = slot, vars = input$feature) |> pull(all_of(input$feature))
           if (sum(!is.finite(rv$values)) > 0) {
             cli_alert_danger("Found non-finite values for selected feature '{input$feature}' in sample '{input$sample}'. These will be replaced with a value of 0.")
             rv$values[!is.finite(rv$values)] <- 0
