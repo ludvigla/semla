@@ -54,7 +54,7 @@ Imports:
     shiny,
     shinyjs,
     reactR
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     farver,
     tidygraph,
