@@ -24,8 +24,8 @@ NULL
 #' \code{.tsv}/\code{.tsv.gz} files. Alternatively, the paths could specify directories including \code{barcodes.tsv},
 #' \code{features.tsv} and \code{matrix.mtx} files.
 #' @param verbose Print messages
-#' @param use.names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
-#' features are labeled with feature names; if \code{FALSE}, feature IDs
+#' @param use_names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+#' features are labeled with HUGO names; if \code{FALSE}, feature IDs
 #' (for example Ensembl IDs) are used instead.
 #' 
 #' @section IF data:
@@ -69,7 +69,7 @@ NULL
 LoadAndMergeMatrices <- function (
     samplefiles,
     verbose = TRUE,
-    use.names = TRUE
+    use_names = TRUE
 ) {
 
   # Run checks
@@ -91,7 +91,7 @@ LoadAndMergeMatrices <- function (
     } else if (checks$is[i] == "file") {
       ext <- file_ext(samplefiles[i])
       if (ext == "h5") {
-        exprMat <- suppressMessages({Read10X_h5(samplefiles[i], use.names = use.names)})
+        exprMat <- suppressMessages({Read10X_h5(samplefiles[i], use.names = use_names)})
         if (verbose) cli_alert("  Finished loading expression matrix {i}")
       } else if (ext %in% c("tsv", "tsv.gz")) {
         if (!requireNamespace("data.table")) 
@@ -660,7 +660,7 @@ LoadAnnotationCSV <- function (
 #' entire tissue section.
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
-#' @param use.names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+#' @param use_names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
 #' features are labeled with feature names; if \code{FALSE}, feature IDs
 #' (for example Ensembl IDs) are used instead.
 #' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
@@ -720,7 +720,7 @@ ReadVisiumData <- function (
   remove_spots_outside_HE = FALSE,
   remove_spots_outside_tissue = TRUE,
   verbose = TRUE,
-  use.names = TRUE,
+  use_names = TRUE,
   ...
 ) {
 
@@ -783,7 +783,7 @@ ReadVisiumData <- function (
   # Read expression matrices
   mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
                                     verbose = verbose,
-                                    use.names = use.names)
+                                    use.names = use_names)
   
   # Check if multiple matrices are loaded
   if (inherits(mergedMat, what = "list")) {
