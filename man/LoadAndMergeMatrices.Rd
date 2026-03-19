@@ -4,7 +4,7 @@
 \alias{LoadAndMergeMatrices}
 \title{Load and merge multiple gene expression matrices}
 \usage{
-LoadAndMergeMatrices(samplefiles, verbose = TRUE, use.names = TRUE)
+LoadAndMergeMatrices(samplefiles, verbose = TRUE, use_names = TRUE)
 }
 \arguments{
 \item{samplefiles}{Character vector of file/directory paths. Paths should specify \code{.h5} or
@@ -13,8 +13,8 @@ LoadAndMergeMatrices(samplefiles, verbose = TRUE, use.names = TRUE)
 
 \item{verbose}{Print messages}
 
-\item{use.names}{Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
-features are labeled with feature names; if \code{FALSE}, feature IDs
+\item{use_names}{Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+features are labeled with HUGO names; if \code{FALSE}, feature IDs
 (for example Ensembl IDs) are used instead.}
 }
 \value{

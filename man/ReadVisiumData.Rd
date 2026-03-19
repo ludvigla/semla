@@ -10,7 +10,7 @@ ReadVisiumData(
   remove_spots_outside_HE = FALSE,
   remove_spots_outside_tissue = TRUE,
   verbose = TRUE,
-  use.names = TRUE,
+  use_names = TRUE,
   ...
 )
 }
@@ -27,7 +27,7 @@ entire tissue section.}
 
 \item{verbose}{Print messages}
 
-\item{use.names}{Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+\item{use_names}{Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
 features are labeled with feature names; if \code{FALSE}, feature IDs
 (for example Ensembl IDs) are used instead.}
 
