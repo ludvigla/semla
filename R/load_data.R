@@ -783,7 +783,7 @@ ReadVisiumData <- function (
   # Read expression matrices
   mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
                                     verbose = verbose,
-                                    use.names = use_names)
+                                    use_names = use_names)
   
   # Check if multiple matrices are loaded
   if (inherits(mergedMat, what = "list")) {
