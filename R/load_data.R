@@ -24,6 +24,9 @@ NULL
 #' \code{.tsv}/\code{.tsv.gz} files. Alternatively, the paths could specify directories including \code{barcodes.tsv},
 #' \code{features.tsv} and \code{matrix.mtx} files.
 #' @param verbose Print messages
+#' @param use.names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+#' features are labeled with feature names; if \code{FALSE}, feature IDs
+#' (for example Ensembl IDs) are used instead.
 #' 
 #' @section IF data:
 #' If the provided h5 files store antibody capture data, \code{LoadAndMergeMatrices} will
@@ -65,7 +68,8 @@ NULL
 #' @export
 LoadAndMergeMatrices <- function (
     samplefiles,
-    verbose = TRUE
+    verbose = TRUE,
+    use.names = TRUE
 ) {
 
   # Run checks
@@ -87,7 +91,7 @@ LoadAndMergeMatrices <- function (
     } else if (checks$is[i] == "file") {
       ext <- file_ext(samplefiles[i])
       if (ext == "h5") {
-        exprMat <- suppressMessages({Read10X_h5(samplefiles[i])})
+        exprMat <- suppressMessages({Read10X_h5(samplefiles[i], use.names = use.names)})
         if (verbose) cli_alert("  Finished loading expression matrix {i}")
       } else if (ext %in% c("tsv", "tsv.gz")) {
         if (!requireNamespace("data.table")) 
@@ -656,6 +660,9 @@ LoadAnnotationCSV <- function (
 #' entire tissue section.
 #' @param remove_spots_outside_tissue Should spots outside the tissue be removed?
 #' @param verbose Print messages
+#' @param use.names Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+#' features are labeled with feature names; if \code{FALSE}, feature IDs
+#' (for example Ensembl IDs) are used instead.
 #' @param ... Parameters passed to \code{\link{CreateSeuratObject}}
 #'
 #' @import cli
@@ -713,6 +720,7 @@ ReadVisiumData <- function (
   remove_spots_outside_HE = FALSE,
   remove_spots_outside_tissue = TRUE,
   verbose = TRUE,
+  use.names = TRUE,
   ...
 ) {
 
@@ -774,7 +782,8 @@ ReadVisiumData <- function (
 
   # Read expression matrices
   mergedMat <- LoadAndMergeMatrices(samplefiles = infoTable$samples,
-                                    verbose = verbose)
+                                    verbose = verbose,
+                                    use.names = use.names)
   
   # Check if multiple matrices are loaded
   if (inherits(mergedMat, what = "list")) {
