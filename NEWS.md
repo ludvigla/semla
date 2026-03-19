@@ -1,4 +1,14 @@
 
+# semla 1.4.1
+
+*2026-03-19*
+
+## Changes
+
+- QoL update to load data functions: user can decide on using HUGO or ENSEMBL gene names
+- Fixed a bug on the website's search bar
+- Modified cluster number on [Region neighbors' tutorial](https://ludvigla.github.io/semla/articles/region_neighbors.html)
+
 # semla 1.4.0
 
 *2025-09-08*
