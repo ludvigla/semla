@@ -28,34 +28,34 @@ In the previous tutorial we calculated radial distances from the center of a tum
 
 If you are only interested in finding spots that are located at the border of a region of interest, you can use the `RegionNeighbors()` function instead. `RegionNeighbors` automatically detects spots that are located inside or outside the border or both.
 
-Let's demonstrate how it works with an example. If we want to find the spots that are neighbors to cluster 3, we set `column_name = "seurat_clusters"` and `column_labels = "3"`:
+Let's demonstrate how it works with an example. If we want to find the spots that are neighbors to cluster 2, we set `column_name = "seurat_clusters"` and `column_labels = "2"`:
 
 ```{r}
 se <- RegionNeighbors(se, 
                       column_name = "seurat_clusters", 
-                      column_labels = "3")
+                      column_labels = "2")
 ```
 
-In our `meta.data` slot, we now have a new column called "nb_to_3", short for "neighbors to cluster 3". In the plot below, you can see that this column provides information about which spots are outside the border of cluster 3.
+In our `meta.data` slot, we now have a new column called "nb_to_2", short for "neighbors to cluster 2". In the plot below, you can see that this column provides information about which spots are outside the border of cluster 2.
 
 ```{r fig.asp=1, fig.width=6}
 MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
-          column_name = "nb_to_3", drop_na = TRUE,
+          column_name = "nb_to_2", drop_na = TRUE,
           image_use = "raw", pt_size = 3)
 ```
 
-We can tweak the function to identify the inner border instead, i.e. the spots that are located at the "tumor edge". When we run `RegionNeighbors` with `mode="inner"`, we get a column called `inner_border_3` which tells us what spots are on the "tumor edge".
+We can tweak the function to identify the inner border instead, i.e. the spots that are located at the "tumor edge". When we run `RegionNeighbors` with `mode="inner"`, we get a column called `inner_border_2` which tells us what spots are on the "tumor edge".
 
 ```{r fig.asp=1, fig.width=6}
 
 se <- RegionNeighbors(se, 
                       column_name = "seurat_clusters", 
-                      column_labels = "3", 
+                      column_labels = "2", 
                       mode = "inner")
 
 MapLabels(se, 
           crop_area = c(0.45, 0.6, 0.8, 0.93),
-          column_name = "inner_border_3",
+          column_name = "inner_border_2",
           image_use = "raw", 
           pt_size = 3, 
           drop_na = TRUE)
@@ -67,10 +67,10 @@ NB: If we run a mode that returns "outer" border spots, the prefix of the return
 
 ```{r fig.asp=1, fig.width=6}
 se <- RegionNeighbors(se, column_name = "seurat_clusters", 
-                      column_labels = "3", mode = "inner_outer")
+                      column_labels = "2", mode = "inner_outer")
 
 MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
-          column_name = "nb_to_3",
+          column_name = "nb_to_2",
           image_use = "raw", pt_size = 3, drop_na = TRUE)
 ```
 
@@ -79,18 +79,18 @@ The last mode (`mode="all_inner_outer"`) allows us to select the outer border sp
 ```{r fig.asp=1, fig.width=6}
 
 se <- RegionNeighbors(se, column_name = "seurat_clusters", column_key = "(all)nb_to_",
-                      column_labels = "3", mode = "all_inner_outer")
+                      column_labels = "2", mode = "all_inner_outer")
 
 MapLabels(se, crop_area = c(0.45, 0.6, 0.8, 0.93),
-          column_name = "(all)nb_to_3",
+          column_name = "(all)nb_to_2",
           image_use = "raw", pt_size = 3, drop_na = TRUE)
 ```
 
 One example of how this information can be used is to run a DE test between the outer and inner borders to find genes that are differentially expressed in spots just outside the "tumor edge":
 
 ```{r fig.asp=0.9}
-border_markers <- FindMarkers(se, ident.1 = "nb_to_3", 
-                              ident.2 = "3", group.by = "nb_to_3")
+border_markers <- FindMarkers(se, ident.1 = "nb_to_2", 
+                              ident.2 = "2", group.by = "nb_to_2")
 
 # Filter results
 border_markers_up <- border_markers |> 
@@ -99,10 +99,10 @@ border_markers_up <- border_markers |>
   slice_head(n = 10)
 
 # Subset Seurat object to include border spots
-se_border_spots <- SubsetSTData(se, expression = nb_to_3 %in% c("3", "nb_to_3"))
+se_border_spots <- SubsetSTData(se, expression = nb_to_2 %in% c("2", "nb_to_2"))
 
 # Violin plot
-VlnPlot(se_border_spots, features = rownames(border_markers_up), group.by = "nb_to_3") &
+VlnPlot(se_border_spots, features = rownames(border_markers_up), group.by = "nb_to_2") &
   theme(axis.title = element_blank())
   
 ```

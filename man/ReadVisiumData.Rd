@@ -10,6 +10,7 @@ ReadVisiumData(
   remove_spots_outside_HE = FALSE,
   remove_spots_outside_tissue = TRUE,
   verbose = TRUE,
+  use_names = TRUE,
   ...
 )
 }
@@ -25,6 +26,10 @@ entire tissue section.}
 \item{remove_spots_outside_tissue}{Should spots outside the tissue be removed?}
 
 \item{verbose}{Print messages}
+
+\item{use_names}{Logical. Passed to \code{Seurat::Read10X_h5()}. If \code{TRUE},
+features are labeled with feature names; if \code{FALSE}, feature IDs
+(for example Ensembl IDs) are used instead.}
 
 \item{...}{Parameters passed to \code{\link{CreateSeuratObject}}}
 }
