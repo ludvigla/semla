@@ -85,6 +85,10 @@ navbar:
         href: articles/mask_images.html
       - text: Image alignment
         href: articles/image_alignment.html
+      - text: '-------'
+      - text: Multiple modalities
+      - text: Integrating with MSI
+        href: articles/create_multimodal_object.html
     articles: 
       text: Articles
       menu:
