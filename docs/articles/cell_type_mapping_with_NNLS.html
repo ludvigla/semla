@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,9 @@
     <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
     <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
     <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Multiple modalities</h6></li>
+    <li><a class="dropdown-item" href="../articles/create_multimodal_object.html">Integrating with MSI</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -100,8 +103,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Cell type mapping with NNLS</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 08 September
-2025</h4>
+            <h4 data-toc-skip class="date">Last compiled: 20 March
+2026</h4>
       
 
       <div class="d-none name"><code>cell_type_mapping_with_NNLS.rmd</code></div>
@@ -255,6 +258,8 @@ single-cell <code>Seurat</code> object, the labels are stored in the
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Fetching data from Seurat objects</span></span></code></pre>
 <pre><code><span><span class="co">## →   Filtering out features that are only present in one data set</span></span></code></pre>
 <pre><code><span><span class="co">## →   Kept 3378 features for deconvolution</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: The NNLS function might break if a dev version of RcppML is used. </span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Preparing data for NNLS</span></span></code></pre>
 <pre><code><span><span class="co">## →   Downsampling scRNA-seq data to include a maximum of 50 cells per cell type</span></span></code></pre>
 <pre><code><span><span class="co">## → <span style="color: #FF55FF;">  Cell type(s) CR have too few cells (&lt;10) and will be excluded</span></span></span></code></pre>
@@ -265,10 +270,10 @@ single-cell <code>Seurat</code> object, the labels are stored in the
 <pre><code><span><span class="co">## Warning: Layer counts isn't present in the assay object; returning NULL</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting default assay to 'celltypeprops'</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Finished</span></span></code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"RunNNLS completed in %s seconds"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "RunNNLS completed in 2.15 seconds"</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [1] "RunNNLS completed in 3.1 seconds"</span></span></code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check available cell types</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_brain_spatial</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "Astro"      "Endo"       "L2/3 IT"    "L4"         "L5 IT"     </span></span>
@@ -282,7 +287,7 @@ cell type but this can be overridden with
 <code>minCells_per_celltype</code>.</p>
 <p>The plots below show the spatial distributions of proportions for a
 selected set of cell types.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot selected cell types</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_brain_spatial</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"celltypeprops"</span></span>
 <span></span>
@@ -290,7 +295,7 @@ selected set of cell types.</p>
 <span>                       <span class="st">"L5 PT"</span>, <span class="st">"L6 CT"</span>, <span class="st">"L6 IT"</span>, <span class="st">"L6b"</span>, </span>
 <span>                       <span class="st">"Oligo"</span>, <span class="st">"Pvalb"</span>, <span class="st">"Meis2"</span>, <span class="st">"Astro"</span>,</span>
 <span>                       <span class="st">"VLMC"</span>, <span class="st">"SMC"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_brain_spatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, image_height <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
@@ -300,7 +305,7 @@ selected set of cell types.</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from ./mousebrain/visium/S2/spatial/tissue_hires_image.png</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 1998x2000 to 1000x1001 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">selected_celltypes</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/visualize-features.html">MapFeatures</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, pt_size <span class="op">=</span> <span class="fl">1.3</span>,</span>
 <span>            features <span class="op">=</span> <span class="va">selected_celltypes</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span>
@@ -405,7 +410,7 @@ selected set of cell types.</p>
 </h3>
 <p>We can also visualize some of these cell types in one single plot
 with <code><a href="../reference/visualize-multiple-features.html">MapMultipleFeatures()</a></code>.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load H&amp;E images</span></span>
 <span><span class="va">se_brain_spatial</span> <span class="op">&lt;-</span> <span class="va">se_brain_spatial</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -427,7 +432,7 @@ with <code><a href="../reference/visualize-multiple-features.html">MapMultipleFe
 <p>By computing the pair-wise correlation between cell types across
 spots, we can get an idea of which cell types often appear together in
 the same spots.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cor_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, <span class="va">selected_celltypes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">.x</span><span class="op">&lt;</span><span class="fl">0.1</span>, <span class="fl">0</span>, <span class="va">.x</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Filter lowest values (-&gt; set as 0)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -447,7 +452,7 @@ the same spots.</p>
 factors using NMF, and thereby summarizing the cell types presence
 within the same location into a set of predefined factors. Each factor
 can be viewed as a niche of a certain cell type composition.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nmf_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/FetchData.html" class="external-link">FetchData</a></span><span class="op">(</span><span class="va">se_brain_spatial</span>, <span class="va">selected_celltypes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">RcppML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RcppML/man/nmf.html" class="external-link">nmf</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">10</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span></span>
@@ -484,13 +489,13 @@ can be viewed as a niche of a certain cell type composition.</p>
 obtain the single-cell data with the <code>TabulaMurisSenisData</code> R
 package from bioconductor. Let’s load the data and create a
 <code>Seurat</code> object from it.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/TabulaMurisSenisData/man/TabulaMurisSenisDroplet.html" class="external-link">TabulaMurisSenisDroplet</a></span><span class="op">(</span>tissues <span class="op">=</span> <span class="st">"Kidney"</span><span class="op">)</span><span class="op">$</span><span class="va">Kidney</span></span>
 <span><span class="va">umis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html" class="external-link">as</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/dge.html" class="external-link">counts</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span>, <span class="st">"dgCMatrix"</span><span class="op">)</span></span>
 <span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/CreateSeuratObject.html" class="external-link">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">umis</span>, meta.data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The 10x Visium mouse kidney data can be downloaded from the 10x
 genomics website.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"/kidney"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">targetdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"/kidney"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">targetdir</span>, <span class="st">"/visium"</span><span class="op">)</span><span class="op">)</span></span>
@@ -519,17 +524,17 @@ genomics website.</p>
 <code>se_kidney_spatial</code> and <code>se_kidney_singlecell</code> and
 run <code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures()</a></code> to detect the top most variable
 genes.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="va">se_kidney_spatial</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span>nfeatures <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
 <p>For the single-cell kidney data, we’ll also filter the data prior to
 normalization to include cells collected at age 18m and remove cells
 with labels “nan” and “CD45”. This leaves us with 17 cell types.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">keep_cells</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se_kidney_singlecell</span><span class="op">)</span><span class="op">[</span><span class="va">se_kidney_singlecell</span><span class="op">$</span><span class="va">age</span> <span class="op">==</span> <span class="st">"18m"</span> <span class="op">&amp;</span> <span class="op">(</span><span class="op">!</span><span class="va">se_kidney_singlecell</span><span class="op">$</span><span class="va">free_annotation</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nan"</span>, <span class="st">"CD45"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">se_kidney_singlecell</span>, cells <span class="op">=</span> <span class="va">keep_cells</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se_kidney_singlecell</span> <span class="op">&lt;-</span> <span class="va">se_kidney_singlecell</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -547,7 +552,7 @@ with labels “nan” and “CD45”. This leaves us with 17 cell types.</p>
 <code>Seurat</code> object and a 10x Visium <code>Seurat</code> object.
 The cell type annotations are stored in the “free_annotation”
 column.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ti</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"Spatial"</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/celltype-prediction.html">RunNNLS</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">se_kidney_spatial</span>, </span>
@@ -559,6 +564,8 @@ column.</p>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Fetching data from Seurat objects</span></span></code></pre>
 <pre><code><span><span class="co">## →   Filtering out features that are only present in one data set</span></span></code></pre>
 <pre><code><span><span class="co">## →   Kept 4993 features for deconvolution</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: The NNLS function might break if a dev version of RcppML is used. </span></span>
+<span><span class="co">## <span style="color: #00BBBB;">•</span> If RcppML::project(...) fails, try installing CRAN version 0.3.7 of RcppML.</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Preparing data for NNLS</span></span></code></pre>
 <pre><code><span><span class="co">## →   Downsampling scRNA-seq data to include a maximum of 50 cells per cell type</span></span></code></pre>
 <pre><code><span><span class="co">## → <span style="color: #FF55FF;">  Cell type(s) CD45    NK cell,CD45    plasma cell have too few cells (&lt;10) and will be excluded</span></span></span></code></pre>
@@ -569,10 +576,10 @@ column.</p>
 <pre><code><span><span class="co">## Warning: Layer counts isn't present in the assay object; returning NULL</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Setting default assay to 'celltypeprops'</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BB00;">✔</span> Finished</span></span></code></pre>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"RunNNLS finished in %s seconds"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "RunNNLS finished in 0.51 seconds"</span></span></code></pre>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"RunNNLS finished in %s seconds"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="va">ti</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "RunNNLS finished in 0.54 seconds"</span></span></code></pre>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check available cell types</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "CD45    B cell"                                            </span></span>
@@ -593,7 +600,7 @@ column.</p>
 <p>NB: two cell types were discarded as they didn’t pass the minimum
 allowed cells per cell type threshold. The cell types discarded were NK
 cells and plasma cells.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot selected cell types</span></span>
 <span><span class="fu"><a href="https://satijalab.github.io/seurat-object/reference/DefaultAssay.html" class="external-link">DefaultAssay</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"celltypeprops"</span></span>
 <span></span>
@@ -687,7 +694,7 @@ cells and plasma cells.</p>
 </h3>
 <p>We can select some of these cell types and visualize them in one
 plot</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load H&amp;E images</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="va">se_kidney_spatial</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -702,7 +709,7 @@ plot</p>
 <span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>guides <span class="op">=</span> <span class="st">"collect"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="cell_type_mapping_with_NNLS_files/figure-html/unnamed-chunk-28-1.png" width="960"></p>
 <p>Or zoom in on a region of interest</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Reload H&amp;E image in higher resolution</span></span>
 <span><span class="va">se_kidney_spatial</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load-images.html">LoadImages</a></span><span class="op">(</span><span class="va">se_kidney_spatial</span>, image_height <span class="op">=</span> <span class="fl">1500</span><span class="op">)</span></span>
 <span></span>
@@ -730,14 +737,14 @@ plot</p>
 <hr>
 <details open><summary><strong>Package versions</strong>
 </summary><ul>
-<li><p><code>semla</code>: 1.4.0</p></li>
-<li><p><code>RcppML</code>: 0.3.7</p></li>
+<li><p><code>semla</code>: 1.4.1</p></li>
+<li><p><code>RcppML</code>: 0.5.6</p></li>
 </ul></details><details><summary><strong>Session info</strong>
-</summary><div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.4.2 (2024-10-31)</span></span>
 <span><span class="co">## Platform: aarch64-apple-darwin20.0.0</span></span>
-<span><span class="co">## Running under: macOS Sequoia 15.5</span></span>
+<span><span class="co">## Running under: macOS Sequoia 15.7.3</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
 <span><span class="co">## BLAS/LAPACK: /Users/javierescudero/miniconda3/envs/r-semlaupd/lib/libopenblas.0.dylib;  LAPACK version 3.12.0</span></span>
@@ -753,14 +760,14 @@ plot</p>
 <span><span class="co">## [8] base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">##  [1] RcppML_0.3.7                patchwork_1.3.1            </span></span>
+<span><span class="co">##  [1] RcppML_0.5.6                patchwork_1.3.1            </span></span>
 <span><span class="co">##  [3] purrr_1.0.4                 SingleCellExperiment_1.28.1</span></span>
 <span><span class="co">##  [5] SummarizedExperiment_1.36.0 Biobase_2.66.0             </span></span>
 <span><span class="co">##  [7] GenomicRanges_1.58.0        GenomeInfoDb_1.42.3        </span></span>
 <span><span class="co">##  [9] IRanges_2.40.0              S4Vectors_0.44.0           </span></span>
 <span><span class="co">## [11] BiocGenerics_0.52.0         MatrixGenerics_1.18.0      </span></span>
 <span><span class="co">## [13] matrixStats_1.5.0           TabulaMurisSenisData_1.12.0</span></span>
-<span><span class="co">## [15] tibble_3.2.1                semla_1.4.0                </span></span>
+<span><span class="co">## [15] tibble_3.2.1                semla_1.4.1                </span></span>
 <span><span class="co">## [17] ggplot2_3.5.2               dplyr_1.1.4                </span></span>
 <span><span class="co">## [19] Seurat_5.3.0                SeuratObject_5.1.0         </span></span>
 <span><span class="co">## [21] sp_2.2-0                   </span></span>
@@ -783,7 +790,7 @@ plot</p>
 <span><span class="co">##  [43] DelayedArray_0.32.0     codetools_0.2-20        tidyselect_1.2.1       </span></span>
 <span><span class="co">##  [46] UCSC.utils_1.2.0        farver_2.1.2            BiocFileCache_2.14.0   </span></span>
 <span><span class="co">##  [49] spatstat.explore_3.4-3  jsonlite_1.9.0          progressr_0.15.1       </span></span>
-<span><span class="co">##  [52] ggridges_0.5.6          survival_3.8-3          systemfonts_1.2.1      </span></span>
+<span><span class="co">##  [52] ggridges_0.5.6          survival_3.8-3          systemfonts_1.3.1      </span></span>
 <span><span class="co">##  [55] dbscan_1.2.2            ggnewscale_0.5.2        tools_4.4.2            </span></span>
 <span><span class="co">##  [58] ragg_1.3.3              ica_1.0-3               Rcpp_1.1.0             </span></span>
 <span><span class="co">##  [61] glue_1.8.0              SparseArray_1.6.0       gridExtra_2.3          </span></span>

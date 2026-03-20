@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,9 @@
     <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
     <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
     <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Multiple modalities</h6></li>
+    <li><a class="dropdown-item" href="../articles/create_multimodal_object.html">Integrating with MSI</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -100,8 +103,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Interactive Feature Viewer</h1>
             
-            <h4 data-toc-skip class="date">Last compiled: 08 September
-2025</h4>
+            <h4 data-toc-skip class="date">Last compiled: 20 March
+2026</h4>
       
 
       <div class="d-none name"><code>feature_viewer.Rmd</code></div>
@@ -141,7 +144,7 @@ use the <code><a href="../reference/FeatureViewer.html">FeatureViewer()</a></cod
 <pre><code><span><span class="co">## </span></span></code></pre>
 <pre><code><span><span class="co">## ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span></span></code></pre>
 <pre><code><span><span class="co">## </span></span></code></pre>
-<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/RtmpAdeL2K/temp_libpath109e41827971/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Loading image from /Users/javierescudero/miniconda3/envs/r-semlaupd/lib/R/library/semla/extdata/mousecolon/spatial/tissue_lowres_image.jpg</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Scaled image from 541x600 to 400x444 pixels</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span></span></code></pre>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -177,11 +180,11 @@ processed with <code>semla</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/FeatureViewer.html">FeatureViewer</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span></code></pre></div>
 <p>The app should open in your default browser:</p>
-<p><img src="images/viewer/feature_viewer_start.png"></p>
+<p><img src="../reference/figures/images/viewer/feature_viewer_start.png"></p>
 <p><br></p>
 <p>To get started, you can click on the ‘<strong>question mark</strong>’
 icon which will give instructions on how to use the app:</p>
-<p><img src="images/viewer/help_menu.png"></p>
+<p><img src="../reference/figures/images/viewer/help_menu.png"></p>
 </div>
 <div class="section level3">
 <h3 id="zoom-and-pan">Zoom and pan<a class="anchor" aria-label="anchor" href="#zoom-and-pan"></a>
@@ -189,7 +192,7 @@ icon which will give instructions on how to use the app:</p>
 <p>You can zoom in and out using the mouse wheel and pan by dragging
 clicking and dragging the H&amp;E image. The opacity slider allows us to
 hide spots if we wish to view clear the view of the H&amp;E image:</p>
-<p><img src="images/viewer/zoom_in.png"></p>
+<p><img src="../reference/figures/images/viewer/zoom_in.png"></p>
 </div>
 <div class="section level3">
 <h3 id="selecting-features">Selecting features<a class="anchor" aria-label="anchor" href="#selecting-features"></a>
@@ -204,7 +207,7 @@ naming conflicts as different assays can share identical feature IDs. If
 you want to select raw or scaled counts, you can specify what
 <code>Assay</code> slot to use with the <code>slot</code> argument in
 <code>FeatureViewer</code>.</p>
-<p><img src="images/viewer/numeric_features.png"></p>
+<p><img src="../reference/figures/images/viewer/numeric_features.png"></p>
 </div>
 <div class="section level3">
 <h3 id="other-options">Other options<a class="anchor" aria-label="anchor" href="#other-options"></a>
@@ -232,7 +235,7 @@ appropriate to use a divergent color palette from ‘Colorscales’, such as
 <code>meta.data</code> slot are made available through the ‘Category’
 drop-down list. You can select a new category or select the current
 category and press <code>ENTER</code> to update the view.</p>
-<p><img src="images/viewer/categorical_features.png"></p>
+<p><img src="../reference/figures/images/viewer/categorical_features.png"></p>
 </div>
 <div class="section level3">
 <h3 id="lasso-tool">Lasso tool<a class="anchor" aria-label="anchor" href="#lasso-tool"></a>
@@ -242,10 +245,10 @@ called <code>orig.ident</code> which currently only contains one label.
 When a categorical variable is selected, we get the option to add new
 labels. Before we can add a new label, we need to select spots with the
 ‘<strong>lasso tool</strong>’ in the top left corner of the toolbar:</p>
-<p><img src="images/viewer/lasso_tool.png"></p>
+<p><img src="../reference/figures/images/viewer/lasso_tool.png"></p>
 <p>Select a color from the color picker, write a new label name and
 press <code>ENTER</code> to save the changes:</p>
-<p><img src="images/viewer/new_label.png"></p>
+<p><img src="../reference/figures/images/viewer/new_label.png"></p>
 <p>Once a new label has been added, it should pop up in the color
 legend.</p>
 <p>Labels can share the same color, but if you wish to update the color
@@ -335,7 +338,7 @@ to run the <code>Feature Viewer</code> with:</p>
 <details open><summary><strong>Package version</strong>
 </summary><ul>
 <li>
-<code>semla</code>: 1.4.0</li>
+<code>semla</code>: 1.4.1</li>
 </ul></details><p><br></p>
 </div>
 </div>

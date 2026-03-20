@@ -11,7 +11,7 @@ are determined from the automatically."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,9 @@ are determined from the automatically."><meta property="og:image" content="https
     <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
     <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
     <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Multiple modalities</h6></li>
+    <li><a class="dropdown-item" href="../articles/create_multimodal_object.html">Integrating with MSI</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -166,11 +169,11 @@ are determined from the automatically.</p>
 <span class="r-in"><span><span class="va">tile_res</span> <span class="op">&lt;-</span> <span class="fu">TileImage</span><span class="op">(</span><span class="va">im</span>, outpath <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, nCores <span class="op">=</span> <span class="fl">1</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Got an image of dimensions 2000x1882 for sample 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Tiling image into 3 zoom levels</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/RtmpUDQZBH/viewer_data/tiles1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing directory /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/Rtmp2Cubp6/viewer_data/tiles1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Creating tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting tiles</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> →   Exporting meta data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/RtmpUDQZBH/viewer_data/image_info_1.json</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span>   Replacing file /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/Rtmp2Cubp6/viewer_data/image_info_1.json</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a simple viewer with leaflet</span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>

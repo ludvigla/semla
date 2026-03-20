@@ -13,7 +13,7 @@ stored inside the tools slot of the Seurat object in Staffli object."><meta prop
 
     <a class="navbar-brand me-2" href="../index.html">semla</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,6 +51,9 @@ stored inside the tools slot of the Seurat object in Staffli object."><meta prop
     <li><a class="dropdown-item" href="../articles/images_and_coordinates.html">Images and spot coordinates</a></li>
     <li><a class="dropdown-item" href="../articles/mask_images.html">Image masking</a></li>
     <li><a class="dropdown-item" href="../articles/image_alignment.html">Image alignment</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Multiple modalities</h6></li>
+    <li><a class="dropdown-item" href="../articles/create_multimodal_object.html">Integrating with MSI</a></li>
   </ul></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -91,6 +94,7 @@ stored inside the tools slot of the <code>Seurat</code> object in <code>Staffli<
 <span>  remove_spots_outside_HE <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  remove_spots_outside_tissue <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  use_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -119,6 +123,12 @@ entire tissue section.</p></dd>
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Print messages</p></dd>
+
+
+<dt id="arg-use-names">use_names<a class="anchor" aria-label="anchor" href="#arg-use-names"></a></dt>
+<dd><p>Logical. Passed to <code><a href="https://satijalab.org/seurat/reference/Read10X_h5.html" class="external-link">Seurat::Read10X_h5()</a></code>. If <code>TRUE</code>,
+features are labeled with feature names; if <code>FALSE</code>, feature IDs
+(for example Ensembl IDs) are used instead.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
