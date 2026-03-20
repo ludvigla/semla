@@ -49,7 +49,7 @@ The app should open in your default browser:
 
 To get started, you can click on the '**question mark**' icon which will give instructions on how to use the app:
 
-![](images/viewer/help_menu.png)
+![](../man/figures/images/viewer/help_menu.png)
 
 ### Zoom and pan
 

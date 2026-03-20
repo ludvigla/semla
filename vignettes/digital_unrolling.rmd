@@ -267,7 +267,7 @@ MapLabels(se_mbrain_subset, column_name = "region", image_use = "raw")
 dev.off()
 ```
 
-![](digital_unrolling/mBrain.jpg)
+![](../man/figures/digital_unrolling/mBrain.jpg)
 
 Then we can create a spatial network from this layer and modify it a bit to make it compatible with `AdjustTissueCoordinates`:
 
