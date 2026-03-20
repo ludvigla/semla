@@ -43,7 +43,7 @@ se <- FeatureViewer(se)
 
 The app should open in your default browser:
 
-![](images/viewer/feature_viewer_start.png)
+![](../man/figures/images/viewer/feature_viewer_start.png)
 
 <br>
 
@@ -55,13 +55,13 @@ To get started, you can click on the '**question mark**' icon which will give in
 
 You can zoom in and out using the mouse wheel and pan by dragging clicking and dragging the H&E image. The opacity slider allows us to hide spots if we wish to view clear the view of the H&E image:
 
-![](images/viewer/zoom_in.png)
+![](../man/figures/images/viewer/zoom_in.png)
 
 ### Selecting features
 
 From the Feature drop down list, we can select any numeric feature available in our `Seurat` object. This includes vectors stored in the `meta.data` slot as well as dimensionality reduction vectors stored in the `reductions` slot. If you have multiple assays available in your `Seurat` object, only features from the active assay will be available. This is to avoid naming conflicts as different assays can share identical feature IDs. If you want to select raw or scaled counts, you can specify what `Assay` slot to use with the `slot` argument in `FeatureViewer`.
 
-![](images/viewer/numeric_features.png)
+![](../man/figures/images/viewer/numeric_features.png)
 
 ### Other options
 
@@ -79,17 +79,17 @@ From the Feature drop down list, we can select any numeric feature available in 
 
 Categorical variables stored in the `Seurat` object `meta.data` slot are made available through the 'Category' drop-down list. You can select a new category or select the current category and press `ENTER` to update the view.
 
-![](images/viewer/categorical_features.png)
+![](../man/figures/images/viewer/categorical_features.png)
 
 ### Lasso tool
 
 In the example above, we selected the `meta.data` column called `orig.ident` which currently only contains one label. When a categorical variable is selected, we get the option to add new labels. Before we can add a new label, we need to select spots with the '**lasso tool**' in the top left corner of the toolbar:
 
-![](images/viewer/lasso_tool.png)
+![](../man/figures/images/viewer/lasso_tool.png)
 
 Select a color from the color picker, write a new label name and press `ENTER` to save the changes:
 
-![](images/viewer/new_label.png)
+![](../man/figures/images/viewer/new_label.png)
 
 Once a new label has been added, it should pop up in the color legend.
 

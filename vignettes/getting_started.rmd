@@ -110,7 +110,6 @@ InstallData("stxBrain")
 brain <- LoadData("stxBrain", type = "anterior1")
 ```
 
-
 ```{r include=FALSE}
 # Fetch data
 expr.url <- 'http://cf.10xgenomics.com/samples/spatial-exp/1.0.0/V1_Mouse_Brain_Sagittal_Anterior/V1_Mouse_Brain_Sagittal_Anterior_filtered_feature_bc_matrix.h5'
@@ -133,7 +132,6 @@ unlink(x = c(basename(path = c(expr.url, img.url)), 'spatial'), recursive = TRUE
 
 brain <- anterior1; rm(anterior1)
 ```
-
 
 ```{r warning=FALSE, message=FALSE}
 # Make Seurat object compatible with semla

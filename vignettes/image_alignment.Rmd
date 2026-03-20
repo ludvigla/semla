@@ -108,15 +108,15 @@ se_merged <- RunAlignment(se_merged)
 
 When we call `RunAlignment`, an interactive application will open up in a separate window.
 
-![](images/alignment/alignment_start.png)
+![](../man/figures/images/alignment/alignment_start.png)
 
 If you click on `Help`, you will see instructions on how to use the app:
 
-![](images/alignment/help_menu.png)
+![](../man/figures/images/alignment/help_menu.png)
 
 We can select what H&E images should be put into view by clicking on the button above the alignment panel:
 
-![](images/alignment/selected_image.png)
+![](../man/figures/images/alignment/selected_image.png)
 
 H&E images can be moved around by dragging the image with the cursor. The dotted borders around the H&E images highlights the dimensions of the 'canvas'. Anything outside of these borders will be removed.
 
@@ -126,11 +126,11 @@ We can rotate an H&E image by holding `SHIFT` and dragging the blue dot in the c
 
 In the example below, we can see that 'image2' has been scaled and rotated to align with 'image1'. All that is left is align 'image2' with 'image1':
 
-![](images/alignment/rotated_and_scaled.png)
+![](../man/figures/images/alignment/rotated_and_scaled.png)
 
 In the end, we should be able to get a decent alignment of the three H&E images. The table on top of the alignment panel shows the transformations that have been applied:
 
-![](images/alignment/aligned_images.png)
+![](../man/figures/images/alignment/aligned_images.png)
 
 Once we are satisfied with the alignment, we can press the `Quit & Save` button which will trigger the alignment of our H&E images (in R) and the results will be saved to our `Seurat` object.
 
@@ -143,7 +143,7 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
   theme(legend.position = "right", legend.text = element_text(angle = 0))
 ```
 
-![](images/alignment/unique_genes_aligned.jpeg)
+![](../man/figures/images/alignment/unique_genes_aligned.jpeg)
 
 Now that the data is aligned, it will be easier to look at specific areas of the tissue sections with the `crop_area` option
 
@@ -154,7 +154,7 @@ MapFeatures(se_merged, features = "nFeature_Spatial", image_use = "transformed",
   theme(legend.position = "right", legend.text = element_text(angle = 0))
 ```
 
-![](images/alignment/aligned_cropped.jpg)
+![](../man/figures/images/alignment/aligned_cropped.jpg)
 
 ## Images with different dimensions
 
@@ -174,13 +174,13 @@ se_merged <- MergeSTData(se_mbrain, se_mcolon) |> LoadImages()
 se_merged <- RunAlignment(se_merged)
 ```
 
-![](images/alignment/alignment_brain_colon.png) If we apply rigid transformations according to the image above, the result will be this:
+![](../man/figures/images/alignment/alignment_brain_colon.png) If we apply rigid transformations according to the image above, the result will be this:
 
 ```{r eval=FALSE}
 ImagePlot(se_merged, image_use = "transformed")
 ```
 
-![](images/alignment/transformed_images_brain_colon.jpg)
+![](../man/figures/images/alignment/transformed_images_brain_colon.jpg)
 
 Here you can see that the second image fits the top and bottom of the dashed box, but the sides are wider than the box.
 

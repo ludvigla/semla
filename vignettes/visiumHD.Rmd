@@ -33,7 +33,7 @@ The high-resolution VisiumHD commercialized by 10x Genomics in spring 2024 follo
 
 So, 3 main things regarding VisiumHD: the spots are now squares instead of circles, the spots have no empty space in between them, and the size of the spots is 2um. This is a bit ugly, but maybe it can help put these numbers into context:
 
-![*One Visium spot contains multiple VisiumHD capture areas*](visiumHD/visiumhd_in_context.png)
+![*One Visium spot contains multiple VisiumHD capture areas*](../man/figures/visiumHD/visiumhd_in_context.png)
 
 As a side note, maybe it is more accurate to refer to VisiumHD's capture areas as *squares*, but due to old habit we will still refer to them as *spots*.
 
@@ -242,7 +242,7 @@ p <- MapLabels(se.16,
 p
 ```
 
-![1. Seurat clusters identified at 16ums.](visiumHD/clusters_16.jpg)
+![1. Seurat clusters identified at 16ums.](../man/figures/visiumHD/clusters_16.jpg)
 
 ```{r, eval = FALSE, include = TRUE}
 p <- MapLabels(se.8,
@@ -255,7 +255,7 @@ p <- MapLabels(se.8,
 p
 ```
 
-![2. Seurat clusters identified at 8ums.](visiumHD/clusters_8.jpg)
+![2. Seurat clusters identified at 8ums.](../man/figures/visiumHD/clusters_8.jpg)
 
 Next, let's take a quick look at the spatial distribution of some of the NMF factors computed in each resolution:
 
@@ -274,7 +274,7 @@ p
 
 ```
 
-![1. NMF factors identified at 16ums.](visiumHD/NMF_16.jpg)
+![1. NMF factors identified at 16ums.](../man/figures/visiumHD/NMF_16.jpg)
 
 ```{r, eval = FALSE, include = TRUE}
 
@@ -291,7 +291,7 @@ p
 
 ```
 
-![2. NMF factors identified at 8ums.](visiumHD/NMF_8.jpg)
+![2. NMF factors identified at 8ums.](../man/figures/visiumHD/NMF_8.jpg)
 
 <br>
 

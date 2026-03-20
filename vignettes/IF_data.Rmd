@@ -57,7 +57,7 @@ ImagePlot(hBrCa, mar = c(0, 0, 0, 0))
 dev.off()
 ```
 
-![](IF_data/raw_image.jpg)
+![](../man/figures/IF_data/raw_image.jpg)
 
 Now we can plot both RNA expression values and antibody capture measurements with `semla`. But first, let's normalize the expression values.
 
@@ -88,7 +88,7 @@ print(p1 + p2 + plot_layout(ncol = 2))
 dev.off()
 ```
 
-![](IF_data/MS4A1_no_HE.jpg)
+![](../man/figures/IF_data/MS4A1_no_HE.jpg)
 
 If we include the immunofluorescence image as the background for our plots, we might want to modify the plots to have a black theme.
 
@@ -121,7 +121,7 @@ p1 + p2 + plot_layout(ncol = 2)
 dev.off()
 ```
 
-![](IF_data/MS4A1_IF_bg.jpg)
+![](../man/figures/IF_data/MS4A1_IF_bg.jpg)
 
 With this global visualization, it's quite difficult to see the immunofluorescence image in the background. If we zoom in on a smaller area, it become slightly easier to compare the expression values with the background image.
 
@@ -156,7 +156,7 @@ p3 + p1 + p2 + plot_layout(design = c(area(t = 1, l = 1, b = 2, r = 2),
 dev.off()
 ```
 
-![](IF_data/MS4A1_IF_bg_zoom.jpg)
+![](../man/figures/IF_data/MS4A1_IF_bg_zoom.jpg)
 
 # Change background image for visualization
 
@@ -240,7 +240,7 @@ p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
 dev.off()
 ```
 
-![](IF_data/PCNA_composite.jpg)
+![](../man/figures/IF_data/PCNA_composite.jpg)
 
 ## Use red channel (VIM) as background
 
@@ -273,7 +273,7 @@ p1 + p2 + p3 + plot_layout(ncol = 2) & dark_theme
 dev.off()
 ```
 
-![](IF_data/VIM_composite.jpg)
+![](../man/figures/IF_data/VIM_composite.jpg)
 
 ## Use normalized IF image as background
 
@@ -292,7 +292,7 @@ ImagePlot(hBrCa)
 dev.off()
 ```
 
-![](IF_data/norm_IF.jpg)
+![](../man/figures/IF_data/norm_IF.jpg)
 
 ```{r fig.asp=0.5, fig.width=10, eval=FALSE}
 DefaultAssay(hBrCa) <- "AbCapture"
@@ -313,7 +313,7 @@ MapFeatures(hBrCa, features = c("PCNA.1", "VIM.1"), image_use = "raw",
 dev.off()
 ```
 
-![](IF_data/norm_IF_and_expr.jpg)
+![](../man/figures/IF_data/norm_IF_and_expr.jpg)
 
 <br>
 

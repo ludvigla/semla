@@ -203,7 +203,7 @@ p_comp_brain + patchwork::plot_annotation(title = "Correlation between cell type
 dev.off()
 ```
 
-![1. Correlation plots of cell type mapping results in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg)
+![1. Correlation plots of cell type mapping results in mouse brain dataset.](../man/figures/compare_cell_type_mapping_NNLS/mbrain_cor_heatmaps.jpg)
 
 <br>
 
@@ -238,7 +238,7 @@ p_bars
 dev.off()
 ```
 
-![2. Comparison of correlation values against NNLS for cell types in mouse brain dataset.](compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg)
+![2. Comparison of correlation values against NNLS for cell types in mouse brain dataset.](../man/figures/compare_cell_type_mapping_NNLS/mbrain_cor_bars.jpg)
 
 <br>
 
@@ -393,7 +393,7 @@ p_comp_kidney + patchwork::plot_annotation(title = "Correlation between cell typ
 dev.off()
 ```
 
-![3. Correlation plots of cell type mapping results in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg)
+![3. Correlation plots of cell type mapping results in mouse kidney dataset.](../man/figures/compare_cell_type_mapping_NNLS/mkidney_cor_heatmaps.jpg)
 
 ```{r eval=FALSE, include=FALSE, fig.width=8, fig.height=5.5, class.source = 'fold-hide'}
 gg_bar <- bind_rows(
@@ -422,7 +422,7 @@ p_bars_kidney
 dev.off()
 ```
 
-![4. Comparison of correlation values against NNLS for cell types in mouse kidney dataset.](compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg)
+![4. Comparison of correlation values against NNLS for cell types in mouse kidney dataset.](../man/figures/compare_cell_type_mapping_NNLS/mkidney_cor_bars.jpg)
 
 Also for this data set, there is an overall high cell-cell correlation between the NNLS results and those produced by stereoscope and cell2location. However, we can for instance see that all three methods seem to have difficulties correctly mapping B cells, as there seem to be very little concordance across the method mapping results.
 

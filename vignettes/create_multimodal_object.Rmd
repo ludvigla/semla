@@ -11,9 +11,9 @@ Recently, more and more spatial multimodal data are becoming available, however,
 
 To perform the task of integrating two spatial omics datasets into shared coordinates, we have developed a new function within `semla` that joins two semla objects into a single object, with each modality present as separate assays/layers.
 
-A few pre-requisites are required before joining the two samples, the primary one being that the spatial coordinates of the objects first needs to have been aligned and transformed into the same pixel dimensions. And secondly, both data sets needs to be available in the standardized Space Ranger output file formats. To for instance obtained aligned and properly preprocessed Visium and MSI spatial multimodal datasets, the pipeline *MAGPIE* (unpublished) can be used to perform these tasks in a streamlined fashion.
+A few pre-requisites are required before joining the two samples, the primary one being that the spatial coordinates of the objects first needs to have been aligned and transformed into the same pixel dimensions. And secondly, both data sets needs to be available in the standardized Space Ranger output file formats. To for instance obtained aligned and properly preprocessed Visium and MSI spatial multimodal datasets, the pipeline [MAGPIE](https://www.nature.com/articles/s41467-025-68003-w) can be used to perform these tasks in a streamlined fashion.
 
-For this tutorial, we have processed mouse lung tissue with both Visium and MSI, from consecutive sections. The MSI data was first preprocessed and thereafter spatially aligned into the matching Visium coordinate system using *MAGPIE*, which produces output files in the Space Ranger format for the aligned MSI data. In this dataset, we also have image of the H&E stained tissue section that used to obtain the MSI data.
+For this tutorial, we have processed mouse lung tissue with both Visium and MSI, from consecutive sections. The MSI data was first preprocessed and thereafter spatially aligned into the matching Visium coordinate system using [MAGPIE](https://www.nature.com/articles/s41467-025-68003-w), which produces output files in the Space Ranger format for the aligned MSI data. In this dataset, we also have image of the H&E stained tissue section that used to obtain the MSI data.
 
 Let's get started!
 

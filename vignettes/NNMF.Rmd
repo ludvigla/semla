@@ -70,7 +70,7 @@ RankPlot(se_mbrain)
 dev.off()
 ```
 
-![](NNMF/rank_plot.jpg)
+![](../man/figures/NNMF/rank_plot.jpg)
 
 <br>
 
@@ -96,7 +96,7 @@ MapFeatures(se_mbrain,
 dev.off()
 ```
 
-![](NNMF/spatial_plot.jpg)
+![](../man/figures/NNMF/spatial_plot.jpg)
 
 <br>
 
@@ -126,7 +126,7 @@ PlotFeatureLoadings(se_mbrain,
 dev.off()
 ```
 
-![](NNMF/gene_loadings.jpg)
+![](../man/figures/NNMF/gene_loadings.jpg)
 
 <br>
 
@@ -163,7 +163,7 @@ MapMultipleFeatures(se_mbrain,
 dev.off()
 ```
 
-![](NNMF/multiple_factors.jpg)
+![](../man/figures/NNMF/multiple_factors.jpg)
 
 <br>
 
@@ -191,7 +191,7 @@ PlotFeatureLoadings(se_mbrain,
 dev.off()
 ```
 
-![](NNMF/multiple_factors_heatmap.jpg)
+![](../man/figures/NNMF/multiple_factors_heatmap.jpg)
 
 ## Functional Enrichment Analysis (FEA)
 
