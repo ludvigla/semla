@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-1.4.1-blue.svg)](https://github.com/ludvigla/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
+[![](https://img.shields.io/badge/devel%20version-1.4.1-blue.svg)](https://github.com/spatial-research/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
 
 <!-- badges: end -->
 
@@ -10,7 +10,7 @@
 
 `semla` is an R package that collects useful tools for Spatially Resolved Transcriptomics data analysis and visualization.
 
-If you are visiting our Github page, please find more information at our package [website](https://ludvigla.github.io/semla/). Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis and visualization of 10x Visium data.
+If you are visiting our Github page, please find more information at our package [website](https://spatial-research.github.io/semla/). Here, you can find documentation of functions together with examples on how to use them, as well as tutorials showing how to use `semla` for analysis and visualization of 10x Visium data.
 
 For a more scientific description of the package, check out our associated publication "<i>Semla: a versatile toolkit for spatially resolved transcriptomics analysis and visualization</i>" in Bioinformatics ([DOI:10.1093/bioinformatics/btad626](https://doi.org/10.1093/bioinformatics/btad626)). Please cite this article if you use `semla` in your studies, and we'd be very grateful!
 
@@ -27,7 +27,7 @@ The dev version of the package can be installed through GitHub using;
 
 ```         
 install.packages("remotes")
-remotes::install_github("ludvigla/semla")
+remotes::install_github("spatial-research/semla")
 ```
 
 <br>
@@ -58,7 +58,7 @@ Now you should be able to install `semla` in your conda environment:
 
 ```         
 install.packages("remotes")
-remotes::install_github("ludvigla/semla")
+remotes::install_github("spatial-research/semla")
 ```
 
 The `magick` R package might fail to install in your conda environment and in that case you can install it with conda instead:
