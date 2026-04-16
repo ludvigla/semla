@@ -26,7 +26,7 @@ articles:
   spatial_statistics_for_labelled_spots: spatial_statistics_for_labelled_spots.html
   subset_and_merge: subset_and_merge.html
   visiumHD: visiumHD.html
-last_built: 2026-04-16T08:08Z
+last_built: 2026-04-16T08:57Z
 urls:
-  reference: https://ludvigla.github.io/semla/reference
-  article: https://ludvigla.github.io/semla/articles
+  reference: https://spatial-research.github.io/semla/reference
+  article: https://spatial-research.github.io/semla/articles

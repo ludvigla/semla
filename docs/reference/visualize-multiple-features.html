@@ -5,7 +5,7 @@ features using RGB color blending, whereas MapMultipleFeatures can handle
 more than 3 features. See details below for more information."><meta property="og:description" content="MapMultipleFeatures can be used to map multiple numeric feature on the
 same tissue section(s). MapFeatures provides an option to map 2 or 3
 features using RGB color blending, whereas MapMultipleFeatures can handle
-more than 3 features. See details below for more information."><meta property="og:image" content="https://ludvigla.github.io/semla/logo.png"></head><body>
+more than 3 features. See details below for more information."><meta property="og:image" content="https://spatial-research.github.io/semla/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -66,7 +66,7 @@ more than 3 features. See details below for more information."><meta property="o
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ludvigla/semla" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/spatial-research/semla" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
 
 
@@ -319,7 +319,7 @@ of features that are expressed in different regions. It is best to map such feat
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://spatial-research.github.io/semla/" class="external-link">semla</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://spatial-research.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>, <span class="st">"se_mbrain"</span>, package <span class="op">=</span> <span class="st">"semla"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -341,7 +341,7 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-plt img"><img src="visualize-multiple-features-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://spatial-research.github.io/semla/" class="external-link">semla</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://spatial-research.github.io/semla/">semla</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load example Visium data</span></span></span>
 <span class="r-in"><span><span class="va">se_mbrain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/mousebrain"</span>,</span></span>
@@ -366,7 +366,7 @@ of features that are expressed in different regions. It is best to map such feat
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="font-weight: bold;">Loading H&amp;E images</span> ──</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/RtmpWo9Llf/temp_libpatheef515ed773b/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading image from /private/var/folders/z8/nrcst881607gn95xh3_4qvb00000gp/T/RtmpWo9Llf/temp_libpatheef56d33cedd/semla/extdata/mousebrain/spatial/tissue_lowres_image.jpg</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Scaled image from 600x565 to 400x377 pixels</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Saving loaded H&amp;E images as 'rasters' in Seurat object</span>
 <span class="r-in"><span><span class="fu">MapMultipleFeatures</span><span class="op">(</span><span class="va">se_mbrain</span>, image_use <span class="op">=</span> <span class="st">"raw"</span>,</span></span>
