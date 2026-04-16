@@ -19,7 +19,7 @@ The goal with this package is to provide simple, fast and flexible methods for p
 `semla` is currently only available as a development version on GitHub:
 
 ```{r eval=FALSE}
-remotes::install_github("ludvigla/semla")
+remotes::install_github("spatial-research/semla")
 ```
 
 Load library

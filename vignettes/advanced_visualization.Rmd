@@ -11,7 +11,7 @@ In this tutorial, we'll have a look at different ways of creating spatial plots 
 
 The `patchwork` R package is extremely versatile and makes it easy to customize your figures! Here we'll have a look at some options that comes with `MapFeatures` and `MapLabels` a couple of tips and tricks for how to use the `patchwork` R package.
 
-This tutorial is an extension of the '[Map numeric features](https://ludvigla.github.io/semla/articles/numeric_features.html)' and '[Map categorical features](https://ludvigla.github.io/semla/articles/categorical_features.html)' tutorials. Here you can find more in depth details about how to manipulate various components of the plots generated with `MapFeatures` and `MapLabels` as well as some additional plot functions.
+This tutorial is an extension of the '[Map numeric features](https://spatial-research.github.io/semla/articles/numeric_features.html)' and '[Map categorical features](https://spatial-research.github.io/semla/articles/categorical_features.html)' tutorials. Here you can find more in depth details about how to manipulate various components of the plots generated with `MapFeatures` and `MapLabels` as well as some additional plot functions.
 
 ```{r message=FALSE, warning=FALSE}
 library(semla)

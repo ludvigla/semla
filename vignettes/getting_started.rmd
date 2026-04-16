@@ -14,7 +14,7 @@ editor_options:
 To install `semla`, run the following command from R:
 
 ```{r eval=FALSE}
-remotes::install_github("ludvigla/semla")
+remotes::install_github("spatial-research/semla")
 ```
 
 Load libraries
@@ -91,7 +91,7 @@ ImagePlot(se)
 
 This should be enough to get you started with the rest of the tutorials!
 
-NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `semla`. Instead, use the `SubsetSTData()` and `MergeSTData()` functions - See the vignette [Subset/merge](https://ludvigla.github.io/semla/articles/subset_and_merge.html).
+NB: An important thing to know is that some generic functions, such as `subset` and `merge` should not be used with `semla`. Instead, use the `SubsetSTData()` and `MergeSTData()` functions - See the vignette [Subset/merge](https://spatial-research.github.io/semla/articles/subset_and_merge.html).
 
 ## Make Seurat object compatible with semla
 

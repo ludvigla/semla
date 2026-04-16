@@ -198,7 +198,7 @@ se.8 <-  se.8 |>
 
 ### Non-negative matrix factorization
 
-In the same way we can perform the standard Seurat analysis pipeline, we can also follow our [tutorial](https://ludvigla.github.io/semla/articles/NNMF.html) for performing non-Negative matrix factorization (NMF).
+In the same way we can perform the standard Seurat analysis pipeline, we can also follow our [tutorial](https://spatial-research.github.io/semla/articles/NNMF.html) for performing non-Negative matrix factorization (NMF).
 
 ```{r, eval = FALSE, include = TRUE}
 library(singlet)

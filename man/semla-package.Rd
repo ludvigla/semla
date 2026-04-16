@@ -13,7 +13,7 @@ Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provid
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://ludvigla.github.io/semla/}
+  \item \url{https://spatial-research.github.io/semla/}
 }
 
 }
