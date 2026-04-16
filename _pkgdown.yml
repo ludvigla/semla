@@ -1,4 +1,4 @@
-url: https://ludvigla.github.io/semla/
+url: https://spatial-research.github.io/semla/
 
 home:
   title: semla - analysis of SRT data
@@ -37,7 +37,7 @@ navbar:
   components:
     github:
       icon: fa-github
-      href: https://github.com/ludvigla/semla
+      href: https://github.com/spatial-research/semla
       aria-label: GitHub
     tutorials:
       text: Tutorials
