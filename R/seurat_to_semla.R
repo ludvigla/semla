@@ -16,7 +16,7 @@ NULL
 #' one of "tissue_lowres" or "tissue_hires". If this argument 
 #' is incorrect, the tissue coordinates will be misplaced.
 #' 
-#' Visit the \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started}
+#' Visit the \href{https://spatial-research.github.io/semla/articles/getting_started.html}{getting started}
 #' tutorial on our package website for an example on how to convert a \code{Seurat} object with
 #' VisiumV1 data.
 #' 
@@ -25,10 +25,10 @@ NULL
 #' one of "tissue_lowres" or "tissue_hires". If this argument 
 #' is incorrect, the tissue coordinates will be misplaced.
 #' 
-#' The \href{https://ludvigla.github.io/semla/articles/getting_started.html}{getting started} 
+#' The \href{https://spatial-research.github.io/semla/articles/getting_started.html}{getting started} 
 #' tutorial applies also for VisiumV2 assays. If you are working with VisiumHD data however, 
 #' we recommend loading the data using \code{semla}'s own functions, as detailed in the
-#' \href{https://ludvigla.github.io/semla/articles/visiumHD.html}{VisiumHD} tutorial.
+#' \href{https://spatial-research.github.io/semla/articles/visiumHD.html}{VisiumHD} tutorial.
 #' 
 #' Note also that when adapting the object from hexagonal grid VisiumV2 to \code{semla}'s
 #' object structure, array coordinates are not available. Thus, some plotting methods 

@@ -9,7 +9,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-As described in the tutorial [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html), there is an implementation of a cell type mapping approach in `semla` based on the Non-Negative Least Squares (NNLS) method, as implemented in the [RcppML](https://github.com/zdebruine/RcppML) R package. Cell type mapping algorithms utilizes a well annotated scRNA-seq data set to learn cell type expression profiles in order to infer their relative abundance or proportions onto the spatial data. In short, the approach implemented in `semla` works by initially estimating enrichment scores for each available cell type in the scRNA-seq data and assigning weights to genes based on their cell type specificity. This information is in the following steps leveraged in the NNLS methods to solve the following optimization problem in order to assign cell type composition predictions to each spatial coordinate in the Visium data,
+As described in the tutorial [Cell type mapping with NNLS](https://spatial-research.github.io/semla/articles/cell_type_mapping_with_NNLS.html), there is an implementation of a cell type mapping approach in `semla` based on the Non-Negative Least Squares (NNLS) method, as implemented in the [RcppML](https://github.com/zdebruine/RcppML) R package. Cell type mapping algorithms utilizes a well annotated scRNA-seq data set to learn cell type expression profiles in order to infer their relative abundance or proportions onto the spatial data. In short, the approach implemented in `semla` works by initially estimating enrichment scores for each available cell type in the scRNA-seq data and assigning weights to genes based on their cell type specificity. This information is in the following steps leveraged in the NNLS methods to solve the following optimization problem in order to assign cell type composition predictions to each spatial coordinate in the Visium data,
 
 ```{=latex}
 \begin{equation}
@@ -49,7 +49,7 @@ To demonstrate the utility of this approach, we have performed a basic compariso
 
     -   Visium: Mouse kidney coronal section data made available by [10x Genomics](https://www.10xgenomics.com/cn/resources/datasets/mouse-kidney-section-coronal-1-standard-1-1-0), processed using the Space Ranger pipeline v1.1.0
 
-The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://ludvigla.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performance computing servers using default parameter settings.
+The same Visium and reference scRNA-seq data sets were used as input for all cell type deconvolution methods tested. The code displayed in the [Cell type mapping with NNLS](https://spatial-research.github.io/semla/articles/cell_type_mapping_with_NNLS.html) vignette was used to produce the NNLS mapping results, while *stereoscope* and *cell2location* were run in python on high-performance computing servers using default parameter settings.
 
 <br>
 
@@ -92,26 +92,26 @@ se_kidney_spatial <- LoadImages(se_kidney_spatial)
 ```{r eval=FALSE, include=FALSE}
 # Replace with paths to local files
 se_brain_spatial[["celltypeprops"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousebrain/celltypeprops?raw=true")))
 se_brain_spatial[["stereoscope"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousebrain/stereoscope?raw=true")))
 se_brain_spatial[["cell2location"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousebrain/cell2location?raw=true")))
 ```
 
 ```{r eval=FALSE, include=FALSE}
 # Replace with paths to local files
 se_kidney_spatial[["celltypeprops"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousekidney/celltypeprops?raw=true")))
 se_kidney_spatial[["stereoscope"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousekidney/stereoscope?raw=true")))
 se_kidney_spatial[["cell2location"]] <-
-  readRDS(url(file.path("https://github.com/ludvigla/semla/blob/main/vignettes",
+  readRDS(url(file.path("https://github.com/spatial-research/semla/blob/main/vignettes",
                         "comparison/mousekidney/cell2location?raw=true")))
 ```
 

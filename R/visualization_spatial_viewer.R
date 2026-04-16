@@ -32,7 +32,7 @@ NULL
 #' which contain non-finite values before launching the viewer.
 #' 
 #' @section Examples:
-#' A tutorial can be found on our [package website](https://ludvigla.github.io/semla/).
+#' A tutorial can be found on our [package website](https://spatial-research.github.io/semla/).
 #' Go to tutorials -> Feature Viewer
 #'
 #' @param object A \code{Seurat} object created with \code{semla}

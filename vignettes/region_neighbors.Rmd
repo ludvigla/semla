@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-In this notebook, we'll have a look at how you can use spatial methods in `semla`. we will continue with the same Seurat object that we created in the '[radial distances](https://ludvigla.github.io/semla/articles/radial_distances.html)' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial before continuing with the analysis presented here.
+In this notebook, we'll have a look at how you can use spatial methods in `semla`. we will continue with the same Seurat object that we created in the '[radial distances](https://spatial-research.github.io/semla/articles/radial_distances.html)' tutorial. If you haven't downloaded and processed the data yet, you should go back to that tutorial before continuing with the analysis presented here.
 
 ```{r warning=FALSE, message=FALSE}
 library(semla)

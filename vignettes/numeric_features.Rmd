@@ -13,7 +13,7 @@ Functions such as `MapFeatures()` and `MapLabels()` produce patchworks (see R pa
 
 For those who are familiar with `Seurat`, these functions are similar to `SpatialFeaturePlot()` and `SpatialDimPlot()` in the sense that the first can be used to visualize numeric data and the latter can be used to color data points based on categorical data.
 
-If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the ['Advanced visualization' tutorial](https://ludvigla.github.io/semla/articles/advanced_visualization.html).
+If you are interested in more advanced features - including details about how to use the patchwork system and other visualization methods - you can skip directly to the ['Advanced visualization' tutorial](https://spatial-research.github.io/semla/articles/advanced_visualization.html).
 
 Here we'll have a look at basic usage of the `MapFeatures()` function.
 
