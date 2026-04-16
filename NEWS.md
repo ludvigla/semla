@@ -1,4 +1,15 @@
 
+# semla 1.4.2
+
+*2026-04-16*
+
+## Changes
+
+- Migrated repo to https://github.com/spatial-research/semla
+- Updated links and hyperlinks pointing to https://github.com/ludvigla
+- Updated maintainer information
+
+
 # semla 1.4.1
 
 *2026-03-19*
