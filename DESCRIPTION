@@ -1,7 +1,7 @@
 Package: semla
 Type: Package
 Title: Spatially Resolved Transcriptomics Data Processing, Analysis and Visualization
-Version: 1.4.1
+Version: 1.4.2
 Authors@R:
     c(person(
         "Ludvig", "Larsson",
@@ -25,7 +25,7 @@ Authors@R:
         "Spatial", "Research", 
         role = c('fnd'))
     )
-Maintainer: Ludvig Larsson <ludvig.larsson@scilifelab.se>
+Maintainer: Javier Escudero Morlanes <javier.escudero.morlanes@scilifelab.se>
 Description: Spatially Resolved Transcriptomics data exploration and analysis. 'semla' provides interactive tools for image alignment and data exploration together with several analysis and visualization methods.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -131,6 +131,6 @@ Collate:
     'visualization_spatial_stats.R'
     'visualization_spatial_viewer.R'
     'zzz.R'
-URL: https://ludvigla.github.io/semla/
+URL: https://spatial-research.github.io/semla/
 Config/testthat/edition: 3
 Language: en-US
