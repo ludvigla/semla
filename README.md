@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-1.4.1-blue.svg)](https://github.com/spatial-research/semla/releases) [![](https://img.shields.io/github/last-commit/ludvigla/semla.svg)](https://github.com/ludvigla/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
+[![](https://img.shields.io/badge/devel%20version-1.4.2-blue.svg)](https://github.com/spatial-research/semla/releases) [![](https://img.shields.io/github/last-commit/spatial-research/semla.svg)](https://github.com/spatial-research/semla/commits/main) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit/) [![DOI](https://zenodo.org/badge/599058747.svg)](https://zenodo.org/badge/latestdoi/599058747) [![Publication - 10.1093/bioinformatics/btad626](https://img.shields.io/badge/Publication-10.1093%2Fbioinformatics%2Fbtad626-2ea44f)](https://doi.org/10.1093/bioinformatics/btad626)
 
 <!-- badges: end -->
 
@@ -79,7 +79,7 @@ If you are familiar with [renv](https://rstudio.github.io/renv/articles/renv.htm
 
 As an additional option, we provide a docker image on [Docker Hub](https://hub.docker.com/r/ludlar/semla) that you can download to run a container from. The image is based on the [rocker](https://hub.docker.com/r/rocker/rstudio) RStudio Server image and comes with RStudio Server pre-installed.
 
-To access the server we need to publish a port for our container, we’ll use the --publish flag (-p for short) on the docker run command. The format of the --publish command is [host port]:[container port]. So, if we wanted to expose port 8000 inside the container to port 8080 outside the container, we would pass 8080:8000 to the --publish flag. We can also expose multiple ports which will be useful to use some of the interactive features in `semla` (see our `Interactive Viewer` section [here](https://ludvigla.github.io/semla/articles/feature_viewer.html)).
+To access the server we need to publish a port for our container, we’ll use the --publish flag (-p for short) on the docker run command. The format of the --publish command is [host port]:[container port]. So, if we wanted to expose port 8000 inside the container to port 8080 outside the container, we would pass 8080:8000 to the --publish flag. We can also expose multiple ports which will be useful to use some of the interactive features in `semla` (see our `Interactive Viewer` section [here](https://spatial-research.github.io/semla/articles/feature_viewer.html)).
 
 `<YOURPASSWORD>` can be any password you want to use for RStudio Server and the default username is `rstudio`. `<SOURCEPATH>` should be a path on your local machine which will be accessible from the docker container at `/home/rstudio`. Use `source="$(pwd)"` for current working directory.
 
